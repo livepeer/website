@@ -66,14 +66,6 @@ export default function DevelopersPage() {
     <>
       {/* Hero */}
       <section className="relative flex items-center overflow-hidden py-32 lg:py-40">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(24,121,78,0.08) 0%, transparent 70%)",
-          }}
-        />
         <Container className="relative">
           <motion.div
             className="mx-auto max-w-3xl text-center"
@@ -81,10 +73,10 @@ export default function DevelopersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Developers
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl">
               Build with Livepeer
             </h1>
             <p className="mt-6 text-lg text-white/60">
@@ -104,7 +96,8 @@ export default function DevelopersPage() {
       </section>
 
       {/* Use cases */}
-      <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -113,10 +106,10 @@ export default function DevelopersPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 What you can build
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 From traditional video streaming to cutting-edge AI — all on open infrastructure.
               </p>
             </motion.div>
@@ -147,7 +140,8 @@ export default function DevelopersPage() {
       </section>
 
       {/* SDKs */}
-      <section className="py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -156,10 +150,10 @@ export default function DevelopersPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 SDKs & tools
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 Client libraries and developer tools to get you building fast.
               </p>
             </motion.div>
@@ -182,7 +176,8 @@ export default function DevelopersPage() {
       </section>
 
       {/* Grants CTA */}
-      <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             className="mx-auto max-w-2xl text-center"
@@ -191,10 +186,10 @@ export default function DevelopersPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Grants
             </p>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Get funded to build
             </h2>
             <p className="mt-4 text-lg text-white/60">

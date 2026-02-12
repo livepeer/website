@@ -81,7 +81,10 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
+              Blog
+            </p>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl">
               Blog
             </h1>
             <p className="mt-6 text-lg text-white/60">
@@ -92,7 +95,8 @@ export default function BlogPage() {
       </section>
 
       {/* Posts grid */}
-      <section className="border-t border-white/5 pb-24 lg:pb-32">
+      <section className="relative pb-24 lg:pb-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"

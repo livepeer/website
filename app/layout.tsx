@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en" className={`${favoritPro.variable} ${favoritMono.variable}`}>
       <body className="min-h-screen bg-dark font-sans text-white antialiased">
         <Header />
-        <main className="pt-16">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

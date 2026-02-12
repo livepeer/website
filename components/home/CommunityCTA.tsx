@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import ImageMask from "@/components/ui/ImageMask";
 import { EXTERNAL_LINKS } from "@/lib/constants";
 
 const channels = [
@@ -22,13 +23,7 @@ const channels = [
     href: "/community",
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -38,13 +33,7 @@ const channels = [
     href: EXTERNAL_LINKS.forum,
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -57,8 +46,22 @@ const fadeUp = {
 
 export default function CommunityCTA() {
   return (
-    <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
-      <Container>
+    <section className="relative py-24 lg:py-32 overflow-hidden">
+      {/* B&W Muybridge plate photo behind tile mask — bold background */}
+      <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
+        <ImageMask
+          video="/videos/ai-face.mp4"
+          cols={5}
+          rows={4}
+
+          seed={55}
+          className="h-full w-full"
+        />
+      </div>
+
+      <div className="divider-gradient absolute top-0 left-0 right-0" />
+
+      <Container className="relative">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -70,13 +73,13 @@ export default function CommunityCTA() {
             transition={{ duration: 0.5 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Community
             </p>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Join the network
             </h2>
-            <p className="mt-4 text-lg text-white/60">
+            <p className="mx-auto mt-4 max-w-xl text-lg text-white/70">
               Livepeer is built by a global community of developers, operators,
               and token holders working together to create open video
               infrastructure.
@@ -101,9 +104,9 @@ export default function CommunityCTA() {
                 }
                 variants={fadeUp}
                 transition={{ duration: 0.5 }}
-                className="group flex items-start gap-4 rounded-2xl border border-dark-border bg-dark p-6 transition-colors hover:border-green/20"
+                className="group flex items-start gap-4 rounded-2xl border border-dark-border bg-dark-card/80 p-6 backdrop-blur-sm transition-all hover:border-green/20"
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-dark-border bg-dark-card text-green">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-dark-border bg-dark text-green transition-colors group-hover:border-green/20">
                   {channel.icon}
                 </div>
                 <div>

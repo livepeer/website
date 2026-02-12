@@ -12,13 +12,7 @@ const resources = [
     href: EXTERNAL_LINKS.docs,
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M4 4h16v16H4V4zm4 4h8m-8 4h8m-8 4h4"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M4 4h16v16H4V4zm4 4h8m-8 4h8m-8 4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -28,13 +22,7 @@ const resources = [
     href: EXTERNAL_LINKS.github,
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M16 18l6-6-6-6M8 6l-6 6 6 6"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -44,13 +32,7 @@ const resources = [
     href: EXTERNAL_LINKS.grants,
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -63,7 +45,9 @@ const fadeUp = {
 
 export default function DeveloperCTA() {
   return (
-    <section className="py-24 lg:py-32">
+    <section className="relative py-24 lg:py-32">
+      <div className="divider-gradient absolute top-0 left-0 right-0" />
+
       <Container>
         <motion.div
           initial="hidden"
@@ -76,13 +60,13 @@ export default function DeveloperCTA() {
             transition={{ duration: 0.5 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Developers
             </p>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Start building today
             </h2>
-            <p className="mt-4 text-lg text-white/60">
+            <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
               Everything you need to integrate real-time video and AI processing
               into your application.
             </p>
@@ -105,7 +89,7 @@ export default function DeveloperCTA() {
                 rel="noopener noreferrer"
                 variants={fadeUp}
                 transition={{ duration: 0.5 }}
-                className="group rounded-2xl border border-dark-border bg-dark-card p-6 transition-colors hover:border-green/20"
+                className="group rounded-2xl border border-dark-border bg-dark-card p-6 transition-colors hover:border-white/10"
               >
                 <div className="text-green">{resource.icon}</div>
                 <h3 className="mt-4 text-lg font-medium">{resource.title}</h3>

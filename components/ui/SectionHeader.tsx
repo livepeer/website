@@ -12,15 +12,15 @@ export default function SectionHeader({
   return (
     <div className={align === "center" ? "text-center" : ""}>
       {label && (
-        <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+        <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
           {label}
         </p>
       )}
-      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+      <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         {title}
       </h2>
       {description && (
-        <p className="mt-4 max-w-2xl text-lg text-white/60 mx-auto">
+        <p className={`mt-4 max-w-xl text-lg text-white/60 ${align === "center" ? "mx-auto" : ""}`}>
           {description}
         </p>
       )}

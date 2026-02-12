@@ -4,7 +4,15 @@
   --color-green: #18794e;
   --color-green-light: #1e9960;
   --color-green-dark: #115c3b;
+  --color-green-bright: #52ba8b;
   --color-green-subtle: rgba(24, 121, 78, 0.15);
+
+  --color-blue: #0891b2;
+  --color-blue-light: #06b6d4;
+  --color-blue-bright: #22d3ee;
+  --color-blue-dark: #0e7490;
+  --color-blue-subtle: rgba(8, 145, 178, 0.15);
+
   --color-dark: #181818;
   --color-dark-lighter: #1e1e1e;
   --color-dark-card: #242424;
@@ -28,6 +36,88 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Tile grid background — subtle, structural */
+.tile-bg {
+  background-image:
+    linear-gradient(to right, rgba(24, 121, 78, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 121, 78, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Section divider — off-white gradient line */
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent
+  );
+}
+
+/* Gradient text — green-only, no blue */
+.text-gradient {
+  background: linear-gradient(to right, #52ba8b, #1e9960);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ImageMask — slow-flowing gradient behind tiles */
+.image-mask-flow {
+  animation: imageMaskFlow 20s ease infinite;
+}
+
+@keyframes imageMaskFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Animated scan line — moves down slowly like a CRT */
+.scan-line {
+  animation: scanLine 4s linear infinite;
+}
+
+@keyframes scanLine {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Subtle opacity breathe for shape borders */
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Starburst node pulse — brightens every ~6s */
+@keyframes node-pulse {
+  0%, 82%, 100% { transform: scale(1); }
+  86% { transform: scale(1.3); }
+  92% { transform: scale(1); }
+}
+
+
+/* Primer dropdown animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Primer scroll arrow bounce */
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

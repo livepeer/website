@@ -7,7 +7,7 @@ const footerNav = [
   {
     title: "Network",
     links: [
-      { label: "Explore", href: "/network" },
+      { label: "Explorer", href: EXTERNAL_LINKS.explorer },
       { label: "Orchestrators", href: EXTERNAL_LINKS.explorer },
       { label: "Staking", href: EXTERNAL_LINKS.staking },
       { label: "Governance", href: "/community" },
@@ -34,7 +34,7 @@ const footerNav = [
   {
     title: "Token",
     links: [
-      { label: "About LPT", href: "/lpt" },
+      { label: "About the Token", href: "/lpt" },
       { label: "Stake LPT", href: EXTERNAL_LINKS.staking },
       { label: "Explorer", href: EXTERNAL_LINKS.explorer },
     ],
@@ -82,7 +82,8 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-dark">
+    <footer className="relative border-t border-white/5 bg-dark">
+      <div className="divider-gradient absolute top-0 left-0 right-0" />
       <Container className="py-16 lg:py-20">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
           {/* Logo + tagline */}

@@ -91,14 +91,6 @@ export default function CommunityPage() {
     <>
       {/* Hero */}
       <section className="relative flex items-center overflow-hidden py-32 lg:py-40">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(24,121,78,0.08) 0%, transparent 70%)",
-          }}
-        />
         <Container className="relative">
           <motion.div
             className="mx-auto max-w-3xl text-center"
@@ -106,10 +98,10 @@ export default function CommunityPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Community
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl">
               Built by the community
             </h1>
             <p className="mt-6 text-lg text-white/60">
@@ -127,7 +119,8 @@ export default function CommunityPage() {
       </section>
 
       {/* Community channels */}
-      <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -136,10 +129,10 @@ export default function CommunityPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 Connect
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 Find the Livepeer community across these channels.
               </p>
             </motion.div>
@@ -175,7 +168,8 @@ export default function CommunityPage() {
       </section>
 
       {/* Governance */}
-      <section className="py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -184,10 +178,10 @@ export default function CommunityPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 Governance
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 The Livepeer protocol is governed by its community through
                 transparent, on-chain mechanisms.
               </p>
@@ -210,7 +204,8 @@ export default function CommunityPage() {
       </section>
 
       {/* Contribute CTA */}
-      <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             className="mx-auto max-w-2xl text-center"
@@ -219,7 +214,7 @@ export default function CommunityPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Contribute
             </h2>
             <p className="mt-4 text-lg text-white/60">

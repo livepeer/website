@@ -81,14 +81,6 @@ export default function LPTPage() {
     <>
       {/* Hero */}
       <section className="relative flex items-center overflow-hidden py-32 lg:py-40">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(24,121,78,0.08) 0%, transparent 70%)",
-          }}
-        />
         <Container className="relative">
           <motion.div
             className="mx-auto max-w-3xl text-center"
@@ -96,10 +88,10 @@ export default function LPTPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-green uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               LPT Token
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl">
               The Livepeer token
             </h1>
             <p className="mt-6 text-lg text-white/60">
@@ -119,7 +111,8 @@ export default function LPTPage() {
       </section>
 
       {/* Token roles */}
-      <section className="border-t border-white/5 bg-dark-lighter py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -128,10 +121,10 @@ export default function LPTPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 What LPT does
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 LPT is a work token that serves three essential functions in the
                 Livepeer protocol.
               </p>
@@ -155,7 +148,8 @@ export default function LPTPage() {
       </section>
 
       {/* How to stake */}
-      <section className="py-24 lg:py-32">
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -164,10 +158,10 @@ export default function LPTPage() {
             transition={{ staggerChildren: 0.1 }}
           >
             <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 How to stake
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
                 Delegate your LPT to an orchestrator and start earning rewards
                 in four steps.
               </p>
@@ -181,7 +175,7 @@ export default function LPTPage() {
                   transition={{ duration: 0.5 }}
                   className="rounded-2xl border border-dark-border bg-dark-card p-6"
                 >
-                  <span className="font-mono text-2xl font-bold text-green">
+                  <span className="font-mono text-2xl font-bold text-gradient">
                     {item.step}
                   </span>
                   <h3 className="mt-3 text-sm font-medium">{item.title}</h3>
