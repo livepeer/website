@@ -38,7 +38,8 @@ next-env.d.ts
 
 # reference materials
 brand_guidelines/
-fonts/
+/fonts/
+!public/fonts/
 img/
 *.pdf
 .claude/

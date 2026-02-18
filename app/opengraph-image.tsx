@@ -7,12 +7,10 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OGImage() {
-  const fontBold = await readFile(
-    join(process.cwd(), "fonts/FavoritPro-Bold.otf")
-  );
-  const fontRegular = await readFile(
-    join(process.cwd(), "fonts/FavoritPro-Regular.otf")
-  );
+  const [fontBold, fontRegular] = await Promise.all([
+    readFile(join(process.cwd(), "public/fonts/FavoritPro-Bold.otf")),
+    readFile(join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")),
+  ]);
 
   return new ImageResponse(
     (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -555,6 +556,7 @@ function PipelinesVisual() {
 const capabilities: {
   title: string;
   description: string;
+  href: string;
   Visual: React.ComponentType;
   colSpan: 2 | 3 | 4;
 }[] = [
@@ -562,6 +564,7 @@ const capabilities: {
     title: "AI-Generated Worlds",
     description:
       "Interactive environments produced frame-by-frame with real-time inference on live video.",
+    href: "/use-cases/ai-generated-worlds",
     Visual: WorldsVisual,
     colSpan: 4,
   },
@@ -569,6 +572,7 @@ const capabilities: {
     title: "Real-Time Video Analysis",
     description:
       "Computer vision and object detection running as always-on AI pipelines with low latency.",
+    href: "/use-cases/real-time-video-analysis",
     Visual: AnalysisVisual,
     colSpan: 2,
   },
@@ -576,6 +580,7 @@ const capabilities: {
     title: "Composable AI Pipelines",
     description:
       "Chain inference models into multi-stage pipelines that process video end to end.",
+    href: "/use-cases/composable-ai-pipelines",
     Visual: PipelinesVisual,
     colSpan: 2,
   },
@@ -583,6 +588,7 @@ const capabilities: {
     title: "Live Transcoding & Streaming",
     description:
       "Adaptive bitrate transcoding across a global GPU network with sub-second latency.",
+    href: "/use-cases/live-transcoding-and-streaming",
     Visual: TranscodingVisual,
     colSpan: 4,
   },
@@ -590,6 +596,7 @@ const capabilities: {
     title: "AI Avatars & Agents",
     description:
       "Motion capture and style transfer powering persistent digital identities in real time.",
+    href: "/use-cases/ai-avatars-and-agents",
     Visual: AvatarsVisual,
     colSpan: 3,
   },
@@ -597,6 +604,7 @@ const capabilities: {
     title: "Synthetic Data Generation",
     description:
       "Generate labeled training data at scale — video frames, annotations, and augmentations.",
+    href: "/use-cases/synthetic-data-generation",
     Visual: SyntheticDataVisual,
     colSpan: 3,
   },
@@ -633,17 +641,22 @@ export default function Capabilities() {
                 key={cap.title}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className={`group overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors duration-200 hover:border-white/[0.12] md:col-span-1 ${colSpanClass[cap.colSpan]}`}
+                className={`md:col-span-1 ${colSpanClass[cap.colSpan]}`}
               >
-                <div className={`p-2.5 pb-0 ${cap.colSpan === 4 ? "h-[180px] lg:h-[240px]" : "h-[180px]"}`}>
-                  <cap.Visual />
-                </div>
-                <div className="px-5 py-5">
-                  <h3 className="text-lg font-medium text-white/90">{cap.title}</h3>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-white/40">
-                    {cap.description}
-                  </p>
-                </div>
+                <Link
+                  href={cap.href}
+                  className="group block h-full overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors duration-200 hover:border-white/[0.12]"
+                >
+                  <div className={`p-2.5 pb-0 ${cap.colSpan === 4 ? "h-[180px] lg:h-[240px]" : "h-[180px]"}`}>
+                    <cap.Visual />
+                  </div>
+                  <div className="px-5 py-5">
+                    <h3 className="text-lg font-medium text-white/90">{cap.title}</h3>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-white/40">
+                      {cap.description}
+                    </p>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
