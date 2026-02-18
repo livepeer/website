@@ -630,7 +630,7 @@ export default function Capabilities() {
             <SectionHeader
               label="Use Cases"
               title="What you can build"
-              description="Real-time AI video workloads on open, elastic GPU infrastructure."
+              description="From real-time video analysis to AI-generated worlds — one network, infinite applications."
             />
           </motion.div>
 
