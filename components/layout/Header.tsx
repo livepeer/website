@@ -112,17 +112,34 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
+  const isPrimer = pathname === "/primer";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      setScrolled(currentY > 20);
+
+      if (isPrimer) {
+        if (currentY < 50) {
+          setHeaderHidden(false);
+        } else if (currentY > lastScrollY.current + 5) {
+          setHeaderHidden(true);
+        } else if (currentY < lastScrollY.current - 5) {
+          setHeaderHidden(false);
+        }
+        lastScrollY.current = currentY;
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isPrimer]);
 
   return (
-    <header className="fixed top-0 z-50 w-full">
+    <header className={`fixed top-0 z-50 w-full transition-transform duration-300 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
       {/* Floating pill nav — Raycast-inspired */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-4 pt-4">
         <div

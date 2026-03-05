@@ -97,25 +97,49 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
 
 
       {/* ─── Fixed Contents button — top right, aligned with nav bar ─── */}
-      <div className="fixed top-[18px] right-6 z-50" ref={tocRef}>
+      <div className="fixed top-[19px] right-4 z-50 md:top-[18px] md:right-6" ref={tocRef}>
         <button
           onClick={() => setTocOpen(!tocOpen)}
-          className="flex items-center gap-[18px] rounded-[5px] border-[1.5px] border-black px-[17px] py-3 uppercase transition-shadow hover:shadow-none"
+          className={`flex items-center justify-center uppercase transition-all
+            h-12 w-12 rounded-full border border-white/40 bg-white/20 backdrop-blur-2xl shadow-[0_2px_16px_rgba(0,0,0,0.1)]
+            md:h-[44px] md:w-auto md:gap-3 md:px-5 md:border-[1.5px] md:border-black md:bg-[#a6adeb]/80 md:backdrop-blur-xl ${tocOpen ? "md:shadow-[0_0_#000]" : "md:shadow-[3px_3px_#000]"} md:hover:shadow-none`}
           style={{
-            backgroundColor: "#a6adeb",
             fontFamily: "var(--font-mono), monospace",
             fontSize: "16px",
             lineHeight: "19px",
-            boxShadow: tocOpen ? "0 0 #000" : "3px 3px #000",
           }}
         >
-          <span>CHAPTERS</span>
+          {/* Mobile: book/chapters icon */}
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            className="md:hidden"
+          >
+            <path
+              d="M2 2.5C2 2.5 4 1.5 6.5 1.5C9 1.5 9 2.5 9 2.5V15.5C9 15.5 9 14.5 6.5 14.5C4 14.5 2 15.5 2 15.5V2.5Z"
+              stroke="#131418"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M9 2.5C9 2.5 9 1.5 11.5 1.5C14 1.5 16 2.5 16 2.5V15.5C16 15.5 14 14.5 11.5 14.5C9 14.5 9 15.5 9 15.5V2.5Z"
+              stroke="#131418"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {/* Desktop: full label */}
+          <span className="hidden md:inline">CHAPTERS</span>
           <svg
             width="10"
             height="6"
             viewBox="0 0 10 6"
             fill="none"
-            className="transition-transform"
+            className="hidden transition-transform md:block"
             style={{
               transform: tocOpen ? "rotate(180deg)" : "rotate(0deg)",
             }}
