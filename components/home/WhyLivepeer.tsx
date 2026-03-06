@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -281,6 +282,20 @@ export default function WhyLivepeer() {
               </div>
             </AdvantageCard>
           </div>
+
+          <motion.p
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="mt-10 text-center text-sm text-white/40"
+          >
+            Curious how it all works?{" "}
+            <Link
+              href="/primer"
+              className="text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors"
+            >
+              Read the 10-minute primer &rarr;
+            </Link>
+          </motion.p>
         </motion.div>
       </Container>
     </section>

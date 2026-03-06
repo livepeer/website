@@ -630,7 +630,7 @@ export default function Capabilities() {
             <SectionHeader
               label="Use Cases"
               title="What you can build with Livepeer"
-              description="From generated worlds and real-time video analysis to autonomous avatars and live transcoding — the network powers every AI video use case."
+              description="From generated worlds and real-time video analysis to autonomous avatars and live transcoding — the network powers every real-time AI video use case."
               align="split"
             />
           </motion.div>

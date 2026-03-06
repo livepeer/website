@@ -8,17 +8,18 @@ const footerNav = [
     title: "Network",
     links: [
       { label: "Explorer", href: EXTERNAL_LINKS.explorer },
-      { label: "Orchestrators", href: EXTERNAL_LINKS.explorer },
-      { label: "Staking", href: EXTERNAL_LINKS.staking },
-      { label: "Governance", href: "/community" },
+      { label: "Delegate", href: EXTERNAL_LINKS.staking },
+      { label: "Provide Compute", href: "https://docs.livepeer.org/orchestrators/guides/get-started" },
+      { label: "Roadmap", href: "https://github.com/livepeer/catalyst/milestones" },
     ],
   },
   {
-    title: "Developers",
+    title: "Resources",
     links: [
-      { label: "Documentation", href: EXTERNAL_LINKS.docs },
-      { label: "Grants", href: EXTERNAL_LINKS.grants },
-      { label: "GitHub", href: EXTERNAL_LINKS.github },
+      { label: "10-Minute Primer", href: "/primer" },
+      { label: "Blog", href: "/blog" },
+      { label: "Brand", href: "/brand" },
+      { label: "Careers", href: "https://livepeer.org/jobs" },
     ],
   },
   {
@@ -27,15 +28,6 @@ const footerNav = [
       { label: "Discord", href: EXTERNAL_LINKS.discord },
       { label: "X / Twitter", href: EXTERNAL_LINKS.twitter },
       { label: "Forum", href: EXTERNAL_LINKS.forum },
-      { label: "Blog", href: "/blog" },
-    ],
-  },
-  {
-    title: "Token",
-    links: [
-      { label: "About the Token", href: "/lpt" },
-      { label: "Stake LPT", href: EXTERNAL_LINKS.staking },
-      { label: "Explorer", href: EXTERNAL_LINKS.explorer },
     ],
   },
 ];
@@ -84,9 +76,9 @@ export default function Footer() {
     <footer className="relative border-t border-white/5 bg-dark">
       <div className="divider-gradient absolute top-0 left-0 right-0" />
       <Container className="py-16 lg:py-20">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
           {/* Logo + tagline */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Link href="/" aria-label="Livepeer home">
               <LivepeerLockup className="h-5 w-auto text-white" />
             </Link>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useMotionValueEvent, animate } from "framer-motion";
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 import EarlyAccessCTA from "@/components/ui/EarlyAccessCTA";
@@ -297,6 +298,21 @@ export default function Hero() {
           >
             <EarlyAccessCTA />
           </motion.div>
+
+          <motion.p
+            className="mt-4 text-sm text-white/40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            New to Livepeer?{" "}
+            <Link
+              href="/primer"
+              className="text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors"
+            >
+              Read the 10-minute primer &rarr;
+            </Link>
+          </motion.p>
         </motion.div>
       </Container>
 

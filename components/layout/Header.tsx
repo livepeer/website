@@ -139,6 +139,7 @@ export default function Header() {
   }, [isPrimer]);
 
   return (
+    <>
     <header className={`fixed top-0 z-50 w-full transition-transform duration-300 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
       {/* Floating pill nav — Raycast-inspired */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-4 pt-4">
@@ -196,105 +197,107 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-dark/95 backdrop-blur-xl pt-20 md:hidden">
-          <nav className="flex flex-col gap-1 px-6" aria-label="Mobile">
-            {NAV_ITEMS.map((item) => {
-              const active = pathname === item.href;
-
-              if (item.children) {
-                const expanded = mobileExpanded === item.label;
-                return (
-                  <div key={item.label}>
-                    <button
-                      onClick={() =>
-                        setMobileExpanded(expanded ? null : item.label)
-                      }
-                      className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-lg transition-colors ${
-                        expanded
-                          ? "bg-white/10 text-white font-medium"
-                          : "text-white/50 hover:bg-white/5 hover:text-white"
-                      }`}
-                    >
-                      {item.label}
-                      <svg
-                        className={`h-4 w-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
-                        fill="none"
-                        viewBox="0 0 12 12"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path
-                          d="M3 5l3 3 3-3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    {expanded && (
-                      <div className="ml-4 mt-1 flex flex-col gap-0.5">
-                        {item.children.map((child) => {
-                          const isExternal = child.external;
-                          const Tag = isExternal ? "a" : Link;
-                          const extraProps = isExternal
-                            ? {
-                                target: "_blank" as const,
-                                rel: "noopener noreferrer",
-                              }
-                            : {};
-
-                          return (
-                            <Tag
-                              key={child.label}
-                              href={child.href}
-                              onClick={() => setMobileOpen(false)}
-                              className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-white/50 transition-colors hover:bg-white/5 hover:text-white"
-                              {...extraProps}
-                            >
-                              {child.label}
-                              {isExternal && (
-                                <svg
-                                  className="h-3 w-3 text-white/30"
-                                  fill="none"
-                                  viewBox="0 0 12 12"
-                                  stroke="currentColor"
-                                  strokeWidth="1.5"
-                                >
-                                  <path
-                                    d="M3.5 2H10v6.5M10 2L2 10"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              )}
-                            </Tag>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`rounded-xl px-4 py-3 text-lg transition-colors ${
-                    active
-                      ? "bg-white/10 text-white font-medium"
-                      : "text-white/50 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      )}
     </header>
+
+    {/* Mobile overlay — rendered outside header to avoid translate containing block */}
+    {mobileOpen && (
+      <div className="fixed inset-0 z-[45] bg-dark/95 backdrop-blur-xl pt-20 md:hidden">
+        <nav className="flex flex-col gap-1 px-6" aria-label="Mobile">
+          {NAV_ITEMS.map((item) => {
+            const active = pathname === item.href;
+
+            if (item.children) {
+              const expanded = mobileExpanded === item.label;
+              return (
+                <div key={item.label}>
+                  <button
+                    onClick={() =>
+                      setMobileExpanded(expanded ? null : item.label)
+                    }
+                    className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-lg transition-colors ${
+                      expanded
+                        ? "bg-white/10 text-white font-medium"
+                        : "text-white/50 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    {item.label}
+                    <svg
+                      className={`h-4 w-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 12 12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        d="M3 5l3 3 3-3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  {expanded && (
+                    <div className="ml-4 mt-1 flex flex-col gap-0.5">
+                      {item.children.map((child) => {
+                        const isExternal = child.external;
+                        const Tag = isExternal ? "a" : Link;
+                        const extraProps = isExternal
+                          ? {
+                              target: "_blank" as const,
+                              rel: "noopener noreferrer",
+                            }
+                          : {};
+
+                        return (
+                          <Tag
+                            key={child.label}
+                            href={child.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+                            {...extraProps}
+                          >
+                            {child.label}
+                            {isExternal && (
+                              <svg
+                                className="h-3 w-3 text-white/30"
+                                fill="none"
+                                viewBox="0 0 12 12"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              >
+                                <path
+                                  d="M3.5 2H10v6.5M10 2L2 10"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            )}
+                          </Tag>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`rounded-xl px-4 py-3 text-lg transition-colors ${
+                  active
+                    ? "bg-white/10 text-white font-medium"
+                    : "text-white/50 hover:bg-white/5 hover:text-white"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    )}
+    </>
   );
 }

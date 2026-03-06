@@ -35,17 +35,10 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    label: "Developers",
-    href: "https://docs.livepeer.org",
-    children: [
-      { label: "Documentation", href: "https://docs.livepeer.org", external: true },
-      { label: "API Reference", href: "https://docs.livepeer.org/api-reference", external: true },
-    ],
-  },
-  {
     label: "Resources",
     href: "/brand",
     children: [
+      { label: "10-Minute Primer", href: "/primer" },
       { label: "Blog", href: "/blog" },
       { label: "Brand", href: "/brand" },
       { label: "Careers", href: "https://livepeer.org/jobs", external: true },
