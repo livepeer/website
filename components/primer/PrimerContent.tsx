@@ -289,9 +289,9 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             />
           </FlexSection>
 
-          {/* Image flush left, text right */}
-          <FlexSection flush="left" reverse>
-            <TextBlock className="px-6 lg:pr-[max(2rem,calc((100vw-960px)/2))]">
+          {/* Image left, text right */}
+          <FlexSection reverse>
+            <TextBlock className="max-w-[360px]">
               <Text18>
                 AI-generated worlds, real-time video analysis, AI-driven
                 avatars and agents &mdash; demand for these applications is
@@ -303,16 +303,16 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             </TextBlock>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`${IMG}/scissors.svg`}
-              alt="Cost barrier"
-              className="w-full max-w-[750px] flex-shrink-0"
+              src={`${IMG}/bob_gpu.svg`}
+              alt="GPU compute demand"
+              className="w-full max-w-[260px] flex-shrink-0"
             />
           </FlexSection>
 
-          <ContentBlock className="mb-40">
+          <ContentBlock className="mb-40 !max-w-[580px]">
             <Text28 center>
-              Real-time video AI needs GPU infrastructure that&rsquo;s
-              specialized, scalable, and cost-effective.
+              What if there were an open network purpose-built for
+              this?
             </Text28>
           </ContentBlock>
         </div>
@@ -360,21 +360,16 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           </ContentBlock>
 
           <ContentBlock className="mb-40">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-10">
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-10 md:max-w-[740px] mx-auto">
               <PersonaCard
                 icon={`${IMG}/icon-developers.svg`}
                 title="Developers"
                 description="building real-time AI video applications — generative worlds, live video analysis, AI avatars, interactive streaming — can use Livepeer to access GPU compute via simple API calls."
               />
               <PersonaCard
-                icon={`${IMG}/icon-broadcasters.svg`}
+                icon={`${IMG}/icon-gpu.svg`}
                 title="GPU Providers"
                 description="contribute GPU compute to the network by running nodes. Anyone with capable hardware can join and earn fees for running AI inference workloads."
-              />
-              <PersonaCard
-                icon={`${IMG}/icon-users.svg`}
-                title="Token Holders"
-                description="who hold LPT can stake their tokens to GPU providers, helping secure the network and earning rewards for their participation."
               />
             </div>
           </ContentBlock>

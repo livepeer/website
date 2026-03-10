@@ -1,0 +1,42 @@
+<svg width="81" height="80" viewBox="0 0 81 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_gpu)">
+<path d="M40.5 80C62.5914 80 80.5 62.0914 80.5 40C80.5 17.9086 62.5914 0 40.5 0C18.4086 0 0.5 17.9086 0.5 40C0.5 62.0914 18.4086 80 40.5 80Z" fill="#9FEFE4"/>
+<!-- GPU card body -->
+<path d="M16.5 24C16.5 22.3431 17.8431 21 19.5 21H61.5C63.1569 21 64.5 22.3431 64.5 24V50C64.5 51.6569 63.1569 53 61.5 53H19.5C17.8431 53 16.5 51.6569 16.5 50V24Z" stroke="black" stroke-width="2.4"/>
+<!-- Fan 1 -->
+<circle cx="31" cy="37" r="9.5" stroke="black" stroke-width="2.2"/>
+<circle cx="31" cy="37" r="4" stroke="black" stroke-width="1.8"/>
+<!-- Fan blade hints for fan 1 -->
+<line x1="31" y1="27.5" x2="31" y2="33" stroke="black" stroke-width="1.6"/>
+<line x1="31" y1="41" x2="31" y2="46.5" stroke="black" stroke-width="1.6"/>
+<line x1="21.5" y1="37" x2="27" y2="37" stroke="black" stroke-width="1.6"/>
+<line x1="35" y1="37" x2="40.5" y2="37" stroke="black" stroke-width="1.6"/>
+<!-- Fan 2 -->
+<circle cx="52" cy="37" r="9.5" stroke="black" stroke-width="2.2"/>
+<circle cx="52" cy="37" r="4" stroke="black" stroke-width="1.8"/>
+<!-- Fan blade hints for fan 2 -->
+<line x1="52" y1="27.5" x2="52" y2="33" stroke="black" stroke-width="1.6"/>
+<line x1="52" y1="41" x2="52" y2="46.5" stroke="black" stroke-width="1.6"/>
+<line x1="42.5" y1="37" x2="48" y2="37" stroke="black" stroke-width="1.6"/>
+<line x1="56" y1="37" x2="61.5" y2="37" stroke="black" stroke-width="1.6"/>
+<!-- PCIe connector pins at bottom -->
+<rect x="22.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<rect x="28.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<rect x="34.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<rect x="40.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<rect x="46.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<rect x="52.5" y="53" width="3" height="5" rx="0.5" stroke="black" stroke-width="1.8"/>
+<!-- Power connector dots on top edge -->
+<circle cx="55" cy="21" r="1.5" fill="black"/>
+<circle cx="59" cy="21" r="1.5" fill="black"/>
+<!-- Backplate bracket on left -->
+<path d="M16.5 26H13.5V48H16.5" stroke="black" stroke-width="2"/>
+<circle cx="13.5" cy="23" r="1.2" fill="black"/>
+<circle cx="13.5" cy="51" r="1.2" fill="black"/>
+</g>
+<defs>
+<clipPath id="clip0_gpu">
+<rect width="80" height="80" fill="white" transform="translate(0.5)"/>
+</clipPath>
+</defs>
+</svg>
