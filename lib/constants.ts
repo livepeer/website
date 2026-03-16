@@ -17,7 +17,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "https://explorer.livepeer.org",
     children: [
       { label: "Explorer", href: "https://explorer.livepeer.org", external: true },
-      { label: "Delegate", href: "https://explorer.livepeer.org/staking", external: true },
+      { label: "Delegate", href: "https://explorer.livepeer.org/", external: true },
       { label: "Provide Compute", href: "https://docs.livepeer.org/orchestrators/guides/get-started", external: true },
       { label: "Roadmap", href: "https://github.com/livepeer/catalyst/milestones", external: true },
     ],
@@ -43,5 +43,5 @@ export const EXTERNAL_LINKS = {
   forum: "https://forum.livepeer.org",
   grants: "https://github.com/livepeer/grants",
   studio: "https://livepeer.studio",
-  staking: "https://explorer.livepeer.org/staking",
+  staking: "https://explorer.livepeer.org/",
 } as const;

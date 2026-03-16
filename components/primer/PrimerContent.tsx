@@ -848,10 +848,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                   href="https://messari.io/project/livepeer/markets"
                   label="Get token"
                 />
-                <Text18>Stake token towards an Orchestrator</Text18>
+                <Text18>Delegate stake towards an Orchestrator</Text18>
                 <InvolvedButton
                   href="https://explorer.livepeer.org"
-                  label="Stake"
+                  label="Delegate Stake"
                 />
               </InvolvedCard>
             </div>
