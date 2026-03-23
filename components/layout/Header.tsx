@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LayoutGrid, Hammer, Globe } from "lucide-react";
 import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
-import { NAV_ITEMS } from "@/lib/constants";
+import { NAV_ITEMS, APP_LINKS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
 
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
@@ -108,6 +109,89 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   );
 }
 
+function AppsButton() {
+  const [open, setOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const handleEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 200);
+  };
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all ${
+          open
+            ? "bg-white text-dark"
+            : "bg-white text-dark hover:bg-white/90 active:bg-white/80"
+        }`}
+      >
+        <LayoutGrid className="h-3.5 w-3.5" />
+        Apps
+      </button>
+
+      {open && (
+        <div className="absolute left-1/2 top-[calc(100%+8px)] z-50 -translate-x-1/2">
+          <div className="w-[320px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#161616] shadow-2xl shadow-black/40">
+            {/* App grid */}
+            <div className="grid grid-cols-2 divide-x divide-white/[0.06]">
+              {APP_LINKS.map((app) => {
+                const isExternal = !app.comingSoon;
+                const Tag = isExternal ? "a" : Link;
+                const linkProps = isExternal
+                  ? { target: "_blank" as const, rel: "noopener noreferrer" }
+                  : {};
+
+                return (
+                  <Tag
+                    key={app.label}
+                    href={app.href}
+                    onClick={() => setOpen(false)}
+                    className="group flex flex-col items-center gap-3.5 px-6 py-7 transition-colors hover:bg-white/[0.04]"
+                    {...linkProps}
+                  >
+                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${
+                      app.icon === "studio"
+                        ? "bg-green/15 text-green-bright"
+                        : "bg-blue/15 text-blue-bright"
+                    }`}>
+                      {app.icon === "studio" ? (
+                        <Hammer className="h-5 w-5" />
+                      ) : (
+                        <Globe className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-white">{app.label}</p>
+                      <p className="mt-0.5 text-[11px] text-white/30">{app.description}</p>
+                      {app.comingSoon && (
+                        <span className="mt-1.5 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
+                          Early Access
+                        </span>
+                      )}
+                    </div>
+                  </Tag>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
@@ -169,14 +253,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop Apps button */}
           <div className="hidden md:flex items-center ml-1">
-            <Link
-              href="/#early-access"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80"
-            >
-              Get Early Access
-            </Link>
+            <AppsButton />
           </div>
 
           {/* Mobile hamburger */}
@@ -306,15 +385,48 @@ export default function Header() {
             );
           })}
 
-          {/* Mobile CTA */}
+          {/* Mobile Apps section */}
           <div className="mt-6 px-4">
-            <Link
-              href="/#early-access"
-              onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark"
-            >
-              Get Early Access
-            </Link>
+            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]">
+              {APP_LINKS.map((app) => {
+                const isExternal = !app.comingSoon;
+                const Tag = isExternal ? "a" : Link;
+                const linkProps = isExternal
+                  ? { target: "_blank" as const, rel: "noopener noreferrer" }
+                  : {};
+
+                return (
+                  <Tag
+                    key={app.label}
+                    href={app.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex flex-col items-center gap-3 bg-[#161616] px-4 py-6 transition-colors hover:bg-white/[0.04]"
+                    {...linkProps}
+                  >
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+                      app.icon === "studio"
+                        ? "bg-green/15 text-green-bright"
+                        : "bg-blue/15 text-blue-bright"
+                    }`}>
+                      {app.icon === "studio" ? (
+                        <Hammer className="h-6 w-6" />
+                      ) : (
+                        <Globe className="h-6 w-6" />
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-white">{app.label}</p>
+                      <p className="mt-0.5 text-xs text-white/35">{app.description}</p>
+                      {app.comingSoon && (
+                        <span className="mt-1.5 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
+                          Early Access
+                        </span>
+                      )}
+                    </div>
+                  </Tag>
+                );
+              })}
+            </div>
           </div>
         </nav>
       </div>
