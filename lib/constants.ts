@@ -25,6 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Resources",
     href: "/brand",
     children: [
+      { label: "Ecosystem", href: "/ecosystem" },
       { label: "10-Minute Primer", href: "/primer" },
       { label: "Blog", href: "/blog" },
       { label: "Brand", href: "/brand" },
@@ -51,7 +52,7 @@ export const APP_LINKS: AppLink[] = [
   {
     label: "Studio",
     description: "Developer Dashboard",
-    href: "/#early-access",
+    href: "/studio",
     icon: "studio",
     comingSoon: true,
   },

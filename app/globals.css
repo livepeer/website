@@ -13,6 +13,10 @@
   --color-blue-dark: #145571;
   --color-blue-subtle: rgba(20, 106, 143, 0.15);
 
+  --color-amber: #d97706;
+  --color-amber-bright: #f59e0b;
+  --color-amber-subtle: rgba(217, 119, 6, 0.15);
+
   --color-dark: #121212;
   --color-dark-lighter: #181818;
   --color-dark-card: #1e1e1e;

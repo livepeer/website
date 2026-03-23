@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { favoritPro, favoritMono } from "@/lib/fonts";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -38,9 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${favoritPro.variable} ${favoritMono.variable}`}>
       <body className="min-h-screen bg-dark font-sans text-white antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
