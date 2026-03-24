@@ -30,7 +30,25 @@ export default function EcosystemPage() {
   const hasMore = visible < filtered.length;
 
   return (
-    <section className="mx-auto max-w-7xl px-6 pt-32 pb-24">
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Tile grid + green gradient — fades out after hero area */}
+      <div
+        className="tile-bg pointer-events-none absolute inset-x-0 top-0 h-[600px]"
+        style={{
+          maskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[500px]"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(24,121,78,0.04) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-7xl px-4 pt-28 pb-24 sm:px-6 sm:pt-32">
+
       {/* Submit your app — fixed top-right */}
       <Link
         href="/ecosystem/submit"
@@ -44,18 +62,24 @@ export default function EcosystemPage() {
       </Link>
 
       {/* Header */}
-      <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+      <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
         Ecosystem
+      </p>
+      <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+        Built on Livepeer
       </h1>
+      <p className="mt-4 max-w-2xl text-base text-white/40 sm:text-lg">
+        Explore what developers and teams are building with real-time video and AI inference on Livepeer.
+      </p>
 
       {/* Filter bar */}
-      <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-1.5">
+      <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto">
           {ECOSYSTEM_CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-sm border px-3 py-1 text-sm transition-colors ${
+              className={`whitespace-nowrap rounded-md border px-4 py-2 text-sm transition-colors ${
                 activeCategory === cat
                   ? "border-white/20 bg-white/10 font-medium text-white"
                   : "border-dark-border text-white/40 hover:border-white/10 hover:text-white/60"
@@ -73,7 +97,7 @@ export default function EcosystemPage() {
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-56 rounded-sm border border-dark-border bg-transparent py-1.5 pl-9 pr-4 text-sm text-white placeholder:text-white/25 focus:border-white/15 focus:outline-none"
+            className="w-full rounded-sm border border-dark-border bg-transparent py-1.5 pl-9 pr-4 text-sm text-white placeholder:text-white/25 focus:border-white/15 focus:outline-none sm:w-56"
           />
         </div>
       </div>
@@ -87,7 +111,7 @@ export default function EcosystemPage() {
               href={app.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col rounded-2xl border border-dark-border bg-dark-card p-6 transition-all hover:border-white/10 hover:bg-white/[0.02]"
+              className="group flex flex-col rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all hover:border-white/10 hover:bg-white/[0.04] sm:p-6"
             >
               <div className="mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06]">
                 {app.logo ? (
@@ -117,7 +141,7 @@ export default function EcosystemPage() {
                 {app.categories.map((cat) => (
                   <span
                     key={cat}
-                    className="border border-dark-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/25"
+                    className="rounded border border-green/20 bg-green/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-green-light/60"
                   >
                     {cat}
                   </span>
@@ -145,6 +169,7 @@ export default function EcosystemPage() {
           </button>
         </div>
       )}
+      </div>
     </section>
   );
 }

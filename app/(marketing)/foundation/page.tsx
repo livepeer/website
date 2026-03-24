@@ -493,7 +493,7 @@ export default function FoundationPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <p className="mb-6 font-mono text-xs font-medium tracking-wider text-white/60 uppercase">
+              <p className="mb-6 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
                 The Livepeer Foundation
               </p>
               <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-7xl">

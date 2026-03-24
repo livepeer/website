@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, Hammer, Globe } from "lucide-react";
@@ -66,7 +67,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-full z-50 pt-2 -translate-x-1/2">
+        <div className="absolute left-1/2 top-full z-50 pt-3 -translate-x-1/2">
           <div className="min-w-[220px] rounded-xl border border-white/10 bg-dark/95 p-1.5 shadow-xl shadow-black/30 backdrop-blur-xl">
             {item.children.map((child) => {
               const isExternal = child.external;
@@ -109,6 +110,8 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   );
 }
 
+// ─── Desktop Apps Button (hover dropdown) ───
+
 function AppsButton() {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -131,10 +134,10 @@ function AppsButton() {
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all ${
+        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium outline-none transition-all duration-150 ${
           open
-            ? "bg-white text-dark"
-            : "bg-white text-dark hover:bg-white/90 active:bg-white/80"
+            ? "bg-white/90 text-dark scale-95"
+            : "bg-white text-dark hover:bg-white/90 active:scale-95 active:bg-white/80"
         }`}
       >
         <LayoutGrid className="h-3.5 w-3.5" />
@@ -142,52 +145,115 @@ function AppsButton() {
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-[calc(100%+8px)] z-50 -translate-x-1/2">
-          <div className="w-[320px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#161616] shadow-2xl shadow-black/40">
-            {/* App grid */}
-            <div className="grid grid-cols-2 divide-x divide-white/[0.06]">
-              {APP_LINKS.map((app) => {
-                const isExternal = !app.comingSoon;
-                const Tag = isExternal ? "a" : Link;
-                const linkProps = isExternal
-                  ? { target: "_blank" as const, rel: "noopener noreferrer" }
-                  : {};
-
-                return (
-                  <Tag
-                    key={app.label}
-                    href={app.href}
-                    onClick={() => setOpen(false)}
-                    className="group flex flex-col items-center gap-3.5 px-6 py-7 transition-colors hover:bg-white/[0.04]"
-                    {...linkProps}
-                  >
-                    <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-                      app.icon === "studio"
-                        ? "bg-green/15 text-green-bright"
-                        : "bg-blue/15 text-blue-bright"
-                    }`}>
-                      {app.icon === "studio" ? (
-                        <Hammer className="h-5 w-5" />
-                      ) : (
-                        <Globe className="h-5 w-5" />
-                      )}
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-medium text-white">{app.label}</p>
-                      <p className="mt-0.5 text-[11px] text-white/30">{app.description}</p>
-                      {app.comingSoon && (
-                        <span className="mt-1.5 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
-                          Early Access
-                        </span>
-                      )}
-                    </div>
-                  </Tag>
-                );
-              })}
-            </div>
-          </div>
+        <div className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-3">
+          <AppsDropdownContent onClose={() => setOpen(false)} />
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Mobile Apps Button (tap dropdown, always visible in top bar) ───
+
+function MobileAppsButton() {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside tap
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        buttonRef.current && !buttonRef.current.contains(target) &&
+        panelRef.current && !panelRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <>
+      <div className="relative ml-2" ref={buttonRef}>
+        <button
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-label="Apps"
+          className={`flex h-8 w-8 items-center justify-center rounded-full outline-none transition-all duration-150 ${
+            open
+              ? "bg-white/90 text-dark scale-95"
+              : "bg-white text-dark hover:bg-white/90 active:scale-95 active:bg-white/80"
+          }`}
+        >
+          <LayoutGrid className="h-4 w-4" />
+        </button>
+      </div>
+
+      {open && createPortal(
+        <div className="fixed right-4 left-4 top-18 z-50" ref={panelRef}>
+          <AppsDropdownContent onClose={() => setOpen(false)} mobile />
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
+// ─── Shared Apps Dropdown Content ───
+
+function AppsDropdownContent({ onClose, mobile }: { onClose: () => void; mobile?: boolean }) {
+  return (
+    <div className={`overflow-hidden rounded-2xl border border-white/8 bg-[#161616] shadow-2xl shadow-black/40 backdrop-blur-xl ${mobile ? "w-full" : "w-70"}`}>
+      <div className={`grid grid-cols-2 ${mobile ? "divide-x divide-y divide-white/6" : "divide-x divide-white/6"}`}>
+        {APP_LINKS.map((app) => {
+          const isExternal = !app.comingSoon;
+          const Tag = isExternal ? "a" : Link;
+          const linkProps = isExternal
+            ? { target: "_blank" as const, rel: "noopener noreferrer" }
+            : {};
+
+          return (
+            <Tag
+              key={app.label}
+              href={app.href}
+              onClick={onClose}
+              className={`group flex flex-col items-center transition-colors hover:bg-white/4 ${mobile ? "gap-3 py-8" : "gap-3 px-5 py-6"}`}
+              {...linkProps}
+            >
+              <div
+                className={`flex items-center justify-center ${
+                  mobile ? "h-12 w-12 rounded-xl" : "h-11 w-11 rounded-xl"
+                } ${
+                  app.icon === "studio"
+                    ? "bg-green/15 text-green-bright"
+                    : "bg-blue/15 text-blue-bright"
+                }`}
+              >
+                {app.icon === "studio" ? (
+                  <Hammer className={mobile ? "h-6 w-6" : "h-5 w-5"} />
+                ) : (
+                  <Globe className={mobile ? "h-6 w-6" : "h-5 w-5"} />
+                )}
+              </div>
+              <div className="text-center">
+                <p className={`font-medium text-white ${mobile ? "text-sm" : "text-sm"}`}>{app.label}</p>
+                <p className={`text-white/30 ${mobile ? "mt-0.5 text-xs" : "mt-0.5 text-[11px]"}`}>
+                  {app.description}
+                </p>
+                {app.comingSoon && (
+                  <span className="mt-1.5 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
+                    Early Access
+                  </span>
+                )}
+              </div>
+            </Tag>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -225,16 +291,16 @@ export default function Header() {
   return (
     <>
     <header className={`fixed top-0 z-50 w-full transition-transform duration-300 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
-      {/* Floating pill nav — Raycast-inspired */}
+      {/* Floating pill nav */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-4 pt-4">
+        {/* Desktop: standard pill nav */}
         <div
-          className={`flex items-center gap-1.5 rounded-full border px-3 py-2 transition-all duration-300 ${
+          className={`hidden md:flex items-center gap-1.5 rounded-full border px-3 py-2 transition-all duration-300 ${
             scrolled
               ? "border-white/10 bg-dark/80 shadow-lg shadow-black/20 backdrop-blur-xl"
               : "border-white/[0.06] bg-dark/40 backdrop-blur-md"
           }`}
         >
-          {/* Logo */}
           <Link
             href="/"
             className="flex flex-shrink-0 items-center rounded-full px-2 py-1 transition-colors hover:bg-white/5"
@@ -243,24 +309,30 @@ export default function Header() {
             <LivepeerWordmark className="h-3.5 w-auto text-white" />
           </Link>
 
-          {/* Separator */}
           <div className="mx-1 h-5 w-px bg-white/10" />
 
-          {/* Desktop nav links */}
-          <nav className="hidden items-center gap-0.5 md:flex" aria-label="Main">
+          <nav className="flex items-center gap-0.5" aria-label="Main">
             {NAV_ITEMS.filter((item) => item.href !== "/").map((item) => (
               <NavLink key={item.label} item={item} pathname={pathname} />
             ))}
           </nav>
 
-          {/* Desktop Apps button */}
-          <div className="hidden md:flex items-center ml-1">
+          <div className="flex items-center ml-1">
             <AppsButton />
           </div>
+        </div>
 
-          {/* Mobile hamburger */}
+        {/* Mobile: hamburger | logo | apps */}
+        <div
+          className={`flex md:hidden items-center justify-between rounded-full border px-2.5 py-1.5 transition-all duration-300 ${
+            scrolled
+              ? "border-white/10 bg-dark/80 shadow-lg shadow-black/20 backdrop-blur-xl"
+              : "border-white/[0.06] bg-dark/40 backdrop-blur-md"
+          }`}
+        >
+          {/* Hamburger (left) */}
           <button
-            className="relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5 md:hidden"
+            className="relative flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-white/5"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -283,12 +355,30 @@ export default function Header() {
               />
             </div>
           </button>
+
+          {/* Separator */}
+          <div className="mx-1.5 h-5 w-px bg-white/10" />
+
+          {/* Logo (center) */}
+          <Link
+            href="/"
+            className="flex flex-shrink-0 items-center rounded-full px-2 py-1 transition-colors hover:bg-white/5"
+            aria-label="Livepeer home"
+          >
+            <LivepeerWordmark className="h-3.5 w-auto text-white" />
+          </Link>
+
+          {/* Separator */}
+          <div className="mx-1.5 h-5 w-px bg-white/10" />
+
+          {/* Apps (right) */}
+          <MobileAppsButton />
         </div>
       </div>
 
     </header>
 
-    {/* Mobile overlay — rendered outside header to avoid translate containing block */}
+    {/* Mobile overlay — nav only, no apps (apps live in the top bar now) */}
     {mobileOpen && (
       <div className="fixed inset-0 z-[45] bg-dark/95 backdrop-blur-xl pt-20 md:hidden">
         <nav className="flex flex-col gap-1 px-6" aria-label="Mobile">
@@ -384,50 +474,6 @@ export default function Header() {
               </Link>
             );
           })}
-
-          {/* Mobile Apps section */}
-          <div className="mt-6 px-4">
-            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.06]">
-              {APP_LINKS.map((app) => {
-                const isExternal = !app.comingSoon;
-                const Tag = isExternal ? "a" : Link;
-                const linkProps = isExternal
-                  ? { target: "_blank" as const, rel: "noopener noreferrer" }
-                  : {};
-
-                return (
-                  <Tag
-                    key={app.label}
-                    href={app.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="flex flex-col items-center gap-3 bg-[#161616] px-4 py-6 transition-colors hover:bg-white/[0.04]"
-                    {...linkProps}
-                  >
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${
-                      app.icon === "studio"
-                        ? "bg-green/15 text-green-bright"
-                        : "bg-blue/15 text-blue-bright"
-                    }`}>
-                      {app.icon === "studio" ? (
-                        <Hammer className="h-6 w-6" />
-                      ) : (
-                        <Globe className="h-6 w-6" />
-                      )}
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-medium text-white">{app.label}</p>
-                      <p className="mt-0.5 text-xs text-white/35">{app.description}</p>
-                      {app.comingSoon && (
-                        <span className="mt-1.5 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
-                          Early Access
-                        </span>
-                      )}
-                    </div>
-                  </Tag>
-                );
-              })}
-            </div>
-          </div>
         </nav>
       </div>
     )}
