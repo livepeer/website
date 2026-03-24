@@ -25,8 +25,8 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Resources",
     href: "/brand",
     children: [
-      { label: "Ecosystem", href: "/ecosystem" },
       { label: "10-Minute Primer", href: "/primer" },
+      { label: "Ecosystem", href: "/ecosystem" },
       { label: "Blog", href: "/blog" },
       { label: "Brand", href: "/brand" },
       { label: "Foundation", href: "/foundation" },
