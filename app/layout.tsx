@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { favoritPro, favoritMono } from "@/lib/fonts";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -37,6 +38,40 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${favoritPro.variable} ${favoritMono.variable}`}>
+      <head>
+        {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (
+          <>
+            {/* Google Analytics 4 */}
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-4BFECXFFJD"
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-4BFECXFFJD');
+                gtag('config', 'G-E4Q3BR9X93');
+              `}
+            </Script>
+
+            {/* Hotjar */}
+            <Script id="hotjar-init" strategy="afterInteractive">
+              {`
+                (function(h,o,t,j,a,r){
+                  h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                  h._hjSettings={hjid:6388940,hjsv:6};
+                  a=o.getElementsByTagName('head')[0];
+                  r=o.createElement('script');r.async=1;
+                  r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                  a.appendChild(r);
+                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+              `}
+            </Script>
+          </>
+        )}
+      </head>
       <body className="min-h-screen bg-dark font-sans text-white antialiased">
         <Header />
         <main>{children}</main>
