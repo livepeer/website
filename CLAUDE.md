@@ -3,8 +3,9 @@
 **Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: npm. No test framework.
 
 **Environment variables** (set in Vercel / `.env.local`):
-- `RESEND_API_KEY` — Resend email service (early access signups)
-- `RESEND_AUDIENCE_ID` — Resend audience/contact list
+- `MAILCHIMP_API_KEY` — Mailchimp API key (early access signups)
+- `MAILCHIMP_AUDIENCE_ID` — Mailchimp audience/list ID
+- `MAILCHIMP_TAG` — Mailchimp tag applied to new subscribers (default: "v2 Website Signups")
 - `THEGRAPH_API_KEY` — optional; authenticated subgraph requests for live protocol stats (falls back to hardcoded values)
 
 ## Commands
@@ -20,7 +21,7 @@
 
 - **Routes**: home (`/`), blog, blog/[slug], primer, foundation, brand
 - **Redirects**: developers, lpt, community → `/` via `redirect()`; use-cases/world-models → `/`
-- **API routes**: `api/early-access` — POST endpoint that creates contacts in a Resend audience
+- **API routes**: `api/early-access` — POST endpoint that subscribes contacts to a Mailchimp audience
 - **Use cases**: `use-cases/` has 7 sub-routes — all currently redirect to home. No `/use-cases` index page.
 - **Layout**: `layout.tsx` wraps all pages with Header + Footer. Global metadata and font classes defined here.
 - **SEO**: OG images generated via `next/og` at root and `/blog` levels. Primer and blog pages have per-page metadata.
@@ -93,7 +94,7 @@ The site's signature visual is a layered grid system that combines B&W video/ima
 - **No `next/image`** — use raw `<img>` tags. `ImageMask` needs direct CSS filter/absolute stacking that `next/image`'s wrapper breaks. Primer SVGs are incompatible with required width/height props. WebGL components use `<video>` as GPU textures. Don't introduce without discussion.
 - **No global state** — local `useState` only. No context providers, no state libraries.
 - **No CMS** — page content is static/hardcoded. Blog posts are local markdown files, not fetched from an external CMS.
-- **Minimal server-side fetching** — the only external data sources are the Livepeer subgraph (protocol stats, ISR-cached) and Resend (email signups via API route). Don't add new external dependencies without discussion.
+- **Minimal server-side fetching** — the only external data sources are the Livepeer subgraph (protocol stats, ISR-cached) and Mailchimp (email signups via API route). Don't add new external dependencies without discussion.
 
 ## Brand & Styling
 
