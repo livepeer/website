@@ -17,6 +17,7 @@ const footerNav = [
     title: "Resources",
     links: [
       { label: "10-Minute Primer", href: "/primer" },
+      { label: "Ecosystem", href: "/ecosystem" },
       { label: "Foundation", href: "/foundation" },
       { label: "Blog", href: "/blog" },
       { label: "Brand", href: "/brand" },

@@ -43,3 +43,5 @@ brand_guidelines/
 img/
 *.pdf
 .claude/
+.vscode/
+.playwright-mcp/

@@ -1,0 +1,24 @@
+name: Check Ecosystem URLs
+
+on:
+  # Run on PRs that touch ecosystem data
+  pull_request:
+    paths:
+      - "data/ecosystem.json"
+      - "public/ecosystem/**"
+
+  # Weekly check — Mondays at 9am UTC
+  schedule:
+    - cron: "0 9 * * 1"
+
+  # Manual trigger
+  workflow_dispatch:
+
+jobs:
+  check-urls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check ecosystem URLs
+        run: node scripts/check-ecosystem-urls.mjs
