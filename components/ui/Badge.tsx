@@ -1,15 +1,23 @@
 import { ReactNode } from "react";
 
+const VARIANT_STYLES = {
+  default:
+    "rounded-full border-green/30 bg-green-subtle text-green-light px-3 py-1 text-xs",
+  tag: "rounded border-transparent bg-white/[0.06] text-white/30 px-2.5 py-0.5 text-[11px]",
+} as const;
+
 export default function Badge({
   children,
+  variant = "default",
   className = "",
 }: {
   children: ReactNode;
+  variant?: keyof typeof VARIANT_STYLES;
   className?: string;
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border border-green/30 bg-green-subtle px-3 py-1 text-xs font-medium text-green-light ${className}`}
+      className={`inline-flex items-center border font-mono font-medium ${VARIANT_STYLES[variant]} ${className}`}
     >
       {children}
     </span>
