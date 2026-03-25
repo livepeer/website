@@ -28,7 +28,7 @@ export default function BlogPostCard({
     >
       <Link
         href={`/blog/${post.slug}`}
-        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-border bg-dark-card transition-colors hover:border-white/10"
+        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-border bg-dark-card transition-colors hover:border-white/10 select-none"
       >
         {post.image && (
           <div className="aspect-[16/9] overflow-hidden border-b border-white/[0.06]">

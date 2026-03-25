@@ -17,7 +17,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
     return (
       <Link
         href={item.href}
-        className={`rounded-full px-3.5 py-1.5 text-sm transition-all ${
+        className={`select-none rounded-full px-3.5 py-1.5 text-sm transition-all ${
           active
             ? "bg-white/10 text-white font-medium"
             : "text-white/50 hover:text-white hover:bg-white/[0.06]"
@@ -44,7 +44,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
       onMouseLeave={handleLeave}
     >
       <button
-        className={`flex items-center gap-1 rounded-full px-3.5 py-1.5 text-sm transition-all ${
+        className={`cursor-pointer select-none flex items-center gap-1 rounded-full px-3.5 py-1.5 text-sm transition-all ${
           open
             ? "text-white bg-white/[0.06]"
             : "text-white/50 hover:text-white hover:bg-white/[0.06]"
@@ -79,7 +79,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   key={child.label}
                   href={child.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
+                  className="select-none flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
                   {...extraProps}
                 >
                   {child.label}
@@ -180,7 +180,7 @@ export default function Header() {
           <div className="hidden md:flex items-center ml-1">
             <Link
               href="/#early-access"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80"
+              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
             >
               Get Early Access
             </Link>
@@ -188,7 +188,7 @@ export default function Header() {
 
           {/* Mobile hamburger */}
           <button
-            className="relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5 md:hidden"
+            className="cursor-pointer select-none relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5 md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -231,7 +231,7 @@ export default function Header() {
                     onClick={() =>
                       setMobileExpanded(expanded ? null : item.label)
                     }
-                    className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-lg transition-colors ${
+                    className={`cursor-pointer select-none flex w-full items-center justify-between rounded-xl px-4 py-3 text-lg transition-colors ${
                       expanded
                         ? "bg-white/10 text-white font-medium"
                         : "text-white/50 hover:bg-white/5 hover:text-white"
@@ -269,7 +269,7 @@ export default function Header() {
                             key={child.label}
                             href={child.href}
                             onClick={() => setMobileOpen(false)}
-                            className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+                            className="select-none flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-white/50 transition-colors hover:bg-white/5 hover:text-white"
                             {...extraProps}
                           >
                             {child.label}
@@ -302,7 +302,7 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`rounded-xl px-4 py-3 text-lg transition-colors ${
+                className={`select-none rounded-xl px-4 py-3 text-lg transition-colors ${
                   active
                     ? "bg-white/10 text-white font-medium"
                     : "text-white/50 hover:bg-white/5 hover:text-white"
@@ -318,7 +318,7 @@ export default function Header() {
             <Link
               href="/#early-access"
               onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark"
+              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
             >
               Get Early Access
             </Link>

@@ -59,7 +59,7 @@ export default function EarlyAccessCTA() {
         <button
           type="submit"
           disabled={isSubmitting || isSuccess}
-          className="shrink-0 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 disabled:opacity-70 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
+          className="shrink-0 cursor-pointer select-none rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 disabled:opacity-70 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
           style={{
             background: "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
           }}
