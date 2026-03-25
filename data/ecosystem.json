@@ -20,7 +20,7 @@
     "name": "Embody",
     "url": "https://embody.zone",
     "description": "Embodied AI avatars for real-time tutoring, telepresence, and branded content powered by Livepeer infrastructure.",
-    "categories": ["AI Video"],
+    "categories": ["AI Video", "Agents"],
     "logo": "embody.svg"
   },
   {
