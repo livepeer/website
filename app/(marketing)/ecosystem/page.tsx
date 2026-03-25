@@ -31,9 +31,9 @@ export default function EcosystemPage() {
 
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Tile grid + green gradient — fades out after hero area */}
+      {/* Hero grid + green gradient — fades out after header area */}
       <div
-        className="tile-bg pointer-events-none absolute inset-x-0 top-0 h-[600px]"
+        className="hero-grid pointer-events-none absolute inset-x-0 top-0 h-[600px]"
         style={{
           maskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 100%)",
@@ -43,7 +43,7 @@ export default function EcosystemPage() {
         className="pointer-events-none absolute inset-x-0 top-0 h-[500px]"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(24,121,78,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(24,121,78,0.06) 0%, transparent 70%)",
         }}
       />
 

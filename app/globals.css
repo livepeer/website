@@ -45,6 +45,14 @@ body {
   background-size: 48px 48px;
 }
 
+/* Hero grid — matches homepage 9-column proportions */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: calc(100vw / 9) calc(100vw / 9);
+}
+
 /* Section divider — off-white gradient line */
 .divider-gradient {
   height: 1px;
