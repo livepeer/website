@@ -118,6 +118,13 @@ export default function Header() {
   const isPrimer = pathname === "/primer";
 
   useEffect(() => {
+    if (!isPrimer) {
+      setHeaderHidden(false);
+      lastScrollY.current = 0;
+    }
+  }, [isPrimer]);
+
+  useEffect(() => {
     const onScroll = () => {
       const currentY = window.scrollY;
       setScrolled(currentY > 20);
