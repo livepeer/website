@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
-import SectionHeader from "@/components/ui/SectionHeader";
+
 import FilterPills from "@/components/ui/FilterPills";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
@@ -41,22 +41,27 @@ export default function EcosystemPage() {
     <PageHero>
       <div className="min-h-screen">
         <Container>
-          <div className="flex items-start justify-between gap-4">
-            <SectionHeader
-              label="Ecosystem"
-              title="Built on Livepeer"
-              description="Explore what developers and teams are building with real-time video and AI inference on Livepeer."
-              align="left"
-            />
-            <Button
-              href="/ecosystem/submit"
-              variant="secondary"
-              size="sm"
-              className="mt-8 shrink-0 backdrop-blur-sm text-white/60 hover:text-white/80"
-            >
-              <Plus className="h-3 w-3" />
-              Submit App
-            </Button>
+          <div className="flex flex-col gap-4">
+            <p className="font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+              Ecosystem
+            </p>
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance">
+                Built on Livepeer
+              </h2>
+              <Button
+                href="/ecosystem/submit"
+                variant="secondary"
+                size="sm"
+                className="shrink-0 backdrop-blur-sm text-white/60 hover:text-white/80"
+              >
+                <Plus className="h-3 w-3" />
+                Submit App
+              </Button>
+            </div>
+            <p className="text-lg leading-relaxed text-white/50">
+              Explore what developers and teams are building with real-time video and AI inference on Livepeer.
+            </p>
           </div>
 
           {/* Filter bar */}
