@@ -1,34 +1,34 @@
 [
   {
     "id": "daydream",
-    "name": "Daydream / Scope",
+    "name": "Daydream",
     "url": "https://daydream.live",
-    "description": "APIs for building interactive AI experiences — from real-time video to AI-generated worlds and beyond. Scope enables creative technologists to use remote inference for real-time video manipulation.",
-    "categories": ["AI Video", "Developer Tools"],
+    "description": "Open-source engine for real-time generative video, audio, and live visuals.",
+    "categories": ["AI Video"],
     "logo": "daydream.svg"
+  },
+  {
+    "id": "frameworks",
+    "name": "Frameworks",
+    "url": "https://frameworks.network",
+    "description": "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
+    "categories": ["Streaming"],
+    "logo": "frameworks.svg"
   },
   {
     "id": "streamplace",
     "name": "Streamplace",
     "url": "https://stream.place",
-    "description": "The video layer for decentralized social networks. Open-source infrastructure for high-quality video on the AT Protocol.",
-    "categories": ["Streaming", "Developer Tools"],
+    "description": "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
+    "categories": ["Streaming"],
     "logo": "stream-place.png"
   },
   {
     "id": "embody",
     "name": "Embody",
     "url": "https://embody.zone",
-    "description": "Embodied AI avatars for real-time tutoring, telepresence, and branded content powered by Livepeer infrastructure.",
-    "categories": ["AI Video", "Agents"],
+    "description": "Embodied AI avatars for real-time tutoring and telepresence.",
+    "categories": ["AI Video"],
     "logo": "embody.svg"
-  },
-  {
-    "id": "frameworks",
-    "name": "Frameworks",
-    "url": "https://frameworks.network",
-    "description": "Stream without the cloud. A next-generation video platform delivering broadcast-quality streaming directly on Livepeer's open GPU network.",
-    "categories": ["AI Video", "Streaming", "Developer Tools"],
-    "logo": "frameworks.svg"
   }
 ]
