@@ -167,17 +167,15 @@ export default function Header() {
             {NAV_ITEMS.filter((item) => item.href !== "/").map((item) => (
               <NavLink key={item.label} item={item} pathname={pathname} />
             ))}
-          </nav>
-
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center ml-1">
-            <Link
-              href="/#early-access"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80"
+            <a
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full px-3 py-1.5 text-sm text-white/50 transition-colors hover:bg-white/5 hover:text-white"
             >
-              Get Early Access
-            </Link>
-          </div>
+              Build with Livepeer
+            </a>
+          </nav>
 
           {/* Mobile hamburger */}
           <button
@@ -306,16 +304,15 @@ export default function Header() {
             );
           })}
 
-          {/* Mobile CTA */}
-          <div className="mt-6 px-4">
-            <Link
-              href="/#early-access"
-              onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark"
-            >
-              Get Early Access
-            </Link>
-          </div>
+          <a
+            href="https://discord.gg/livepeer"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMobileOpen(false)}
+            className="rounded-xl px-4 py-3 text-lg text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+          >
+            Build with Livepeer
+          </a>
         </nav>
       </div>
     )}

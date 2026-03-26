@@ -421,7 +421,7 @@ const projects = [
     Visual: DaydreamVisual,
     Logo: DaydreamLogo,
     description:
-      "APIs for building interactive AI experiences — from video to games and beyond.",
+      "Open-source engine for real-time generative video, audio, and live visuals.",
     href: "https://daydream.live",
     linkLabel: "Visit Daydream",
   },
@@ -429,7 +429,7 @@ const projects = [
     Visual: StudioVisual,
     Logo: FrameworksLogo,
     description:
-      "Stream without the cloud. A next-generation video platform that delivers broadcast-quality streaming directly on Livepeer's open GPU network.",
+      "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
     href: "https://frameworks.network",
     linkLabel: "Visit Frameworks",
   },
@@ -437,7 +437,7 @@ const projects = [
     Visual: StreamplaceVisual,
     Logo: StreamplaceLogo,
     description:
-      "The video layer for decentralized social networks. Open-source infrastructure for high-quality video on the AT Protocol.",
+      "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
     href: "https://stream.place",
     linkLabel: "Visit Streamplace",
   },
@@ -445,7 +445,7 @@ const projects = [
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
     description:
-      "Embodied AI avatars for real-time tutoring, telepresence, and branded content powered by Livepeer infrastructure.",
+      "Embodied AI avatars for real-time tutoring and telepresence.",
     href: "https://embody.zone",
     linkLabel: "Visit Embody",
   },
@@ -468,8 +468,8 @@ export default function BuiltOnLivepeer() {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Ecosystem"
-              title="Powering the next wave of real-time AI video apps"
-              description="From AI-native creative tools to autonomous avatars and agents — a growing ecosystem of applications built on Livepeer's open infrastructure."
+              title="In Production on Livepeer"
+              description="Real-time AI video, live streaming, and embodied avatars — all running on network-operated GPU infrastructure."
               align="split"
             />
           </motion.div>

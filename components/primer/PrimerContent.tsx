@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { raleway } from "@/lib/fonts";
 import type { ProtocolStats } from "@/lib/subgraph";
-import InflationMeter from "@/components/primer/InflationMeter";
 import MintingDiagram from "@/components/primer/MintingDiagram";
 
 /**
@@ -27,8 +26,7 @@ const CHAPTERS = [
   { id: "orchestrators", label: "Orchestrators", bg: "#a6adeb" },
   { id: "token", label: "Livepeer Token", bg: "#d4b9e4" },
   { id: "delegators", label: "Delegators", bg: "#ffc37b" },
-  { id: "rewarding", label: "Rewarding Participation", bg: "#ffa3a3" },
-  { id: "rounds", label: "Rounds & Inflation", bg: "#97f2ef" },
+  { id: "rewarding", label: "Why It's Cheaper", bg: "#ffa3a3" },
   { id: "involved", label: "Get Involved", bg: "#95f58c" },
 ] as const;
 
@@ -327,8 +325,8 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
 
           <ContentBlock className="mb-40 !max-w-[580px]">
             <Text28 center>
-              What if there were an open network purpose-built for
-              this?
+              Livepeer is an open network where independent builders deploy AI
+              solutions on community-operated GPU infrastructure.
             </Text28>
           </ContentBlock>
         </div>
@@ -345,15 +343,15 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <FlexSection className="mb-40">
             <TextBlock>
               <Text18>
-                <strong>Livepeer is a specialized GPU network for real-time
-                video AI.</strong> It coordinates a global pool of GPU
-                providers to deliver low-latency AI inference on video streams
-                &mdash; frame-by-frame processing, not batch jobs.
+                <strong>Livepeer is the open network for GPU-powered
+                video.</strong> It coordinates a global pool of independent GPU
+                operators to power real-time video AI &mdash; style transfer,
+                object detection, generative video, live streaming, and more.
               </Text18>
               <Text18>
-                The network is open-source, built on Ethereum for coordination
-                and permissionless access, and 60&ndash;85% cheaper than
-                centralized cloud alternatives.
+                The network is community-operated, built on Ethereum for
+                coordination, and 60&ndash;85% cheaper than centralized cloud
+                alternatives like AWS, RunPod, and Fal.
               </Text18>
             </TextBlock>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -401,81 +399,59 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             </SectionHeading>
           </ContentBlock>
 
-          {/* Meet Alice — contained, image left, text right */}
-          <FlexSection reverse>
-            <TextBlock maxW="350px">
-              <Text28>Meet: Alice</Text28>
+          <ContentBlock className="mb-16">
+            <TextBlock maxW="700px">
               <Text18>
-                Alice is a developer building an interactive world model
-                &mdash; an AI-generated environment that responds to user
-                input in real-time, rendering 30&ndash;60 frames per second
-                of generated video, continuously.
+                The network organizes around three layers: <strong>supply</strong>,{" "}
+                <strong>protocol</strong>, and <strong>demand</strong>.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${IMG}/alice.svg`}
-              alt="Alice"
-              className="w-full max-w-[330px]"
-            />
-          </FlexSection>
+          </ContentBlock>
 
-          {/* Meet Bob — contained, text left, image right */}
-          <FlexSection>
-            <TextBlock maxW="350px">
-              <Text28>Meet: Bob</Text28>
+          <ContentBlock className="mb-12">
+            <TextBlock maxW="700px">
+              <Text28>Supply: GPU Operators</Text28>
               <Text18>
-                Bob is a gamer. He&rsquo;s exploring Alice&rsquo;s world model
-                &mdash; an AI-generated environment that reacts to his every
-                move in real-time.
+                Independent operators contribute GPU hardware by running Livepeer
+                software. They earn fees for performing AI inference, transcoding,
+                and other video workloads. Anyone with capable hardware can join.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${IMG}/bob.svg`}
-              alt="Bob"
-              className="w-full max-w-[420px]"
-            />
-          </FlexSection>
+          </ContentBlock>
 
-          {/* Devices — image flush left, text right */}
-          <FlexSection flush="left" reverse>
-            <TextBlock className="px-6 lg:pr-[max(2rem,calc((100vw-960px)/2))]">
+          <ContentBlock className="mb-12">
+            <TextBlock maxW="700px">
+              <Text28>Protocol: Routing &amp; Coordination</Text28>
               <Text18>
-                When Bob plays, every input he makes triggers a new frame of
-                AI-generated video. Alice&rsquo;s app sends these requests to
-                Livepeer, which routes the GPU-intensive work across the
-                network and returns generated frames in real-time &mdash;
-                inference, encoding, and delivery in one pipeline.
-              </Text18>
-              <Text18>
-                Bob&rsquo;s experience is seamless. But behind the scenes,
-                Alice needs massive GPU compute to keep up &mdash; and her
-                app is gaining users fast. How does Livepeer make this
-                affordable?
+                The protocol matches workloads to the best available GPU. It
+                handles orchestrator discovery, job routing, payment settlement,
+                and quality-of-service checks. Built on Ethereum for transparency
+                and permissionless participation.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${IMG}/devices.svg`}
-              alt="Multiple devices"
-              className="w-full max-w-[850px] flex-shrink-0"
-            />
-          </FlexSection>
+          </ContentBlock>
+
+          <ContentBlock className="mb-12">
+            <TextBlock maxW="700px">
+              <Text28>Demand: Solutions</Text28>
+              <Text18>
+                Solutions are the products and businesses built on the protocol
+                &mdash; Daydream for creative AI video, Frameworks for live
+                streaming, Embody for AI avatars, and more. They package network
+                capabilities into experiences their audiences use and pay for.
+              </Text18>
+            </TextBlock>
+          </ContentBlock>
 
           {/* Two key actors — text left, image right — contained */}
           <FlexSection className="mb-40">
             <TextBlock>
               <Text18>
-                There are two key roles in the Livepeer protocol that make
-                this work:{" "}
-                <strong>Orchestrators</strong> (GPU providers who run the
+                Two roles keep the network running:{" "}
+                <strong>Orchestrators</strong> (GPU providers who perform the
                 compute) and{" "}
                 <strong>Delegators</strong> (token holders who help secure
-                the network).
-              </Text18>
-              <Text18>
-                Let&rsquo;s start with Orchestrators.
+                the network by staking toward reliable operators).
               </Text18>
             </TextBlock>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -623,7 +599,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         <div data-chapter="rewarding" id="rewarding">
           <ContentBlock className="mb-16">
             <SectionHeading rotate={3}>
-              Rewarding Participation
+              Why It&rsquo;s Cheaper
             </SectionHeading>
           </ContentBlock>
 
@@ -672,91 +648,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           </div>
 
           <ContentBlock className="mb-40">
-            <TextBlock maxW="500px">
-              <Text18>
-                Neat right? Next, let&rsquo;s go over how often new tokens
-                are minted.
-              </Text18>
-            </TextBlock>
-          </ContentBlock>
-        </div>
-
-        {/* ════════════════════════════════════════════════
-            ROUNDS & INFLATION
-           ════════════════════════════════════════════════ */}
-        <div data-chapter="rounds" id="rounds">
-          {/* Text left, image flush right */}
-          <FlexSection flush="right">
-            <TextBlock className="px-6 lg:pl-[max(2rem,calc((100vw-960px)/2))]">
-              <SectionHeading rotate={-3}>
-                Rounds &amp; Inflation
-              </SectionHeading>
-              <Text28>Rounds</Text28>
-              <Text18>
-                In Livepeer, new tokens are minted every so-called{" "}
-                <strong>round</strong>. Rounds are measured in Ethereum
-                blocks, where one round is equal to <strong>5,760</strong>{" "}
-                Ethereum blocks. In Ethereum, one block is mined on average
-                every <strong>12.69</strong> seconds, which means one Livepeer
-                round lasts roughly <strong>20.31</strong> hours. Assuming the
-                Orchestrator you&rsquo;re staked to is doing its job, this is
-                how often you can expect to receive reward tokens.
-              </Text18>
-              <Text18>
-                Next, let&rsquo;s go over the Livepeer inflation rate, or in
-                other words, the way by which the Livepeer protocol determines
-                how many new tokens to mint each round.
-              </Text18>
-            </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${IMG}/rounds.svg`}
-              alt="Rounds illustration"
-              className="w-full max-w-[580px]"
-            />
-          </FlexSection>
-
-          {/* Image left, text right — contained */}
-          <FlexSection reverse>
-            <TextBlock>
-              <Text28>Inflation</Text28>
-              <Text18>
-                The current rate of inflation as of today&rsquo;s round is{" "}
-                <strong>{stats.inflationRate}</strong> and there are currently
-                a total of <strong>{stats.totalSupply}</strong> Livepeer tokens
-                in supply. So, if you do the math, a total of{" "}
-                <strong>{stats.mintableTokens}</strong> newly minted Livepeer
-                tokens will be rewarded to all participants during the next
-                round.
-              </Text18>
-              <Text18>
-                The cool thing about Livepeer is the inflation rate adjusts
-                automatically depending on how many tokens are staked out of
-                the total circulating supply. Currently, the total supply of
-                Livepeer tokens stands at <strong>{stats.totalSupply}</strong>{" "}
-                and of those, <strong>{stats.totalStaked}</strong> are staked.
-                Livepeer refers to this ratio (
-                <strong>{stats.participationRate}</strong>) as its
-                &lsquo;participation rate&rsquo;.
-              </Text18>
-            </TextBlock>
-            <InflationMeter
-              participationRate={stats.participationRate}
-              inflationRate={stats.inflationRate}
-            />
-          </FlexSection>
-
-          <ContentBlock className="mb-40">
             <TextBlock maxW="600px">
               <Text18 center>
-                Livepeer presupposes that a target rate of 50% is a healthy
-                trade-off between network security and token liquidity, so in
-                order to hit this target, the protocol incentivizes
-                participation by increasing the inflation rate by{" "}
-                <strong>{stats.inflationChange}</strong> for every round the
-                participation rate is below 50% and decreasing it{" "}
-                <strong>{stats.inflationChange}</strong> for every round the
-                participation rate is above 50%.
+                This structural cost advantage is why builders choose Livepeer
+                over centralized GPU clouds for workloads where cost makes the
+                difference between viable and impossible.
               </Text18>
             </TextBlock>
           </ContentBlock>
@@ -766,46 +662,22 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             GET INVOLVED
            ════════════════════════════════════════════════ */}
         <div data-chapter="involved" id="involved">
-          <ContentBlock className="relative mb-16">
-            <div
-              className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                backgroundColor: "#ffd184",
-                width: "215px",
-                height: "215px",
-                opacity: 0.5,
-              }}
-            />
-            <div className="relative z-10">
-              <SectionHeading rotate={3}>
-                LIVEPEER IS GROWING!
-              </SectionHeading>
-            </div>
+          <ContentBlock className="mb-16">
+            <SectionHeading rotate={3}>
+              Get Involved
+            </SectionHeading>
           </ContentBlock>
 
-          {/* Text left, image right — contained */}
-          <FlexSection>
-            <TextBlock>
+          <ContentBlock className="mb-20">
+            <TextBlock maxW="700px">
               <Text18>
-                Today, there are <strong>{stats.delegatorsCount}</strong> delegators securing
-                the network, with more and more participants joining every
-                day.
+                Four solutions are shipping on Livepeer today: Daydream for
+                creative AI video, Frameworks for live streaming, Embody for
+                AI avatars, and a growing set of emerging projects. The network
+                is open to builders, GPU operators, and anyone who wants to
+                participate.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`${IMG}/growing.svg`}
-              alt="Network growth"
-              className="w-full max-w-[360px]"
-            />
-          </FlexSection>
-
-          <ContentBlock className="mb-20">
-            <Text28 center>
-              Livepeer is open GPU infrastructure for real-time video AI
-              &mdash; specialized, affordable, and built to scale. Here&rsquo;s
-              how to get involved.
-            </Text28>
           </ContentBlock>
 
           {/* Three columns */}
@@ -816,13 +688,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 title="Want to build with Livepeer?"
               >
                 <Text18>
-                  Build real-time AI video applications with affordable GPU
-                  compute. Get an API key and start building with Livepeer.
+                  Join the builders and operators who run the network. Ask
+                  questions, share what you&rsquo;re working on, and find
+                  collaborators.
                 </Text18>
                 <InvolvedButton
-                  href="/#early-access"
-                  label="Get Early Access"
-                  external={false}
+                  href="https://discord.gg/livepeer"
+                  label="Let's build"
                 />
               </InvolvedCard>
               <InvolvedCard

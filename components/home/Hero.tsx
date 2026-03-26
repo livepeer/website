@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useMotionValueEvent, animate } from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
-import EarlyAccessCTA from "@/components/ui/EarlyAccessCTA";
 
 /*
   9×5 tile grid with square tiles.
@@ -274,9 +273,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
           >
-            Open infrastructure
+            The open network for
             <br />
-            <span className="text-gradient">for real-time AI video</span>
+            <span className="text-gradient">GPU-powered video</span>
           </motion.h1>
 
           <motion.p
@@ -285,18 +284,9 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Generate, transform, and interpret live video streams
-            with low-latency AI inference on an open and permissionless elastic GPU network.
+            For less than the centralized cloud — no platform lock-in, and a
+            direct line to builders powering the network.
           </motion.p>
-
-          <motion.div
-            className="mt-10 w-full max-w-lg mx-auto"
-            initial={{ y: 12 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <EarlyAccessCTA />
-          </motion.div>
 
         </motion.div>
       </Container>
