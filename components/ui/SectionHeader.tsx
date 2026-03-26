@@ -4,12 +4,14 @@ export default function SectionHeader({
   description,
   align = "center",
   size = "default",
+  action,
 }: {
   label?: string;
   title: string;
   description?: string;
   align?: "left" | "center" | "split";
   size?: "default" | "small";
+  action?: React.ReactNode;
 }) {
   const headingClass =
     size === "small"
@@ -48,9 +50,14 @@ export default function SectionHeader({
           {label}
         </p>
       )}
-      <h2 className={headingClass}>
-        {title}
-      </h2>
+      {action ? (
+        <div className="flex items-center justify-between gap-4">
+          <h2 className={headingClass}>{title}</h2>
+          {action}
+        </div>
+      ) : (
+        <h2 className={headingClass}>{title}</h2>
+      )}
       {description && (
         <p className={`mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty ${align === "center" ? "mx-auto" : ""}`}>
           {description}
