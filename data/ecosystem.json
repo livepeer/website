@@ -30,5 +30,173 @@
     "description": "Embodied AI avatars for real-time tutoring and telepresence.",
     "categories": ["AI Video"],
     "logo": "embody.svg"
+  },
+  {
+    "id": "beyondclub",
+    "name": "BeyondClub",
+    "url": "https://www.beyondclub.xyz/en",
+    "description": "No-code web3 loyalty and membership platform for brands and creators.",
+    "categories": ["Apps"]
+  },
+  {
+    "id": "ethglobal-tv",
+    "name": "EthGlobal.tv",
+    "url": "https://ethglobal.tv",
+    "description": "Watch EthGlobal hackathon events and demos live.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "hey",
+    "name": "Hey",
+    "url": "https://hey.xyz",
+    "description": "Decentralized and permissionless social media app built on Lens Protocol.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "huddle01",
+    "name": "Huddle01",
+    "url": "https://huddle01.com",
+    "description": "Bare metal cloud infrastructure with sub-100ms latency for VMs, Kubernetes, and GPU workloads.",
+    "categories": ["Infrastructure"]
+  },
+  {
+    "id": "hypeshot",
+    "name": "Hypeshot",
+    "url": "https://www.hypeshot.io",
+    "description": "Crypto-enabled livestreaming and trend trading platform.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "lensplay",
+    "name": "LensPlay",
+    "url": "https://lensplay.xyz",
+    "description": "Mobile-first decentralized video-sharing app built on Lens Protocol and Livepeer.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "lensport",
+    "name": "LensPort",
+    "url": "https://lensport.io",
+    "description": "Discover, collect, and sell Post NFTs on Lens. Invest in creators you support.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "longtake",
+    "name": "LongTake NFT Publisher",
+    "url": "https://www.longtake.xyz",
+    "description": "Create video NFTs from files up to 10GB and share on any NFT marketplace.",
+    "categories": ["Creator Tools"]
+  },
+  {
+    "id": "minds",
+    "name": "Minds",
+    "url": "https://www.minds.com",
+    "description": "Decentralized social network. Own your content, earn crypto, and connect freely.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "monaverse",
+    "name": "Monaverse",
+    "url": "https://monaverse.com",
+    "description": "Platform for discovering and creating interoperable 3D objects, avatars, and experiences.",
+    "categories": ["Apps"]
+  },
+  {
+    "id": "orb",
+    "name": "Orb",
+    "url": "https://orb.ac",
+    "description": "Web3 social app for artists, creators, and digital enthusiasts.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "picarto",
+    "name": "Picarto.tv",
+    "url": "https://picarto.tv",
+    "description": "Live streaming service for creative content — art, music, gaming, and more.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "sanko-tv",
+    "name": "SankoTV",
+    "url": "https://sanko.tv",
+    "description": "A clubhouse for creatives — streaming and social platform.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "soclly",
+    "name": "Soclly",
+    "url": "https://app.soclly.com",
+    "description": "Decentralized social app for connecting and collaborating in web3.",
+    "categories": ["Social"]
+  },
+  {
+    "id": "switchboard",
+    "name": "Switchboard",
+    "url": "https://switchboard.live",
+    "description": "Multistreaming platform — broadcast content to unlimited destinations simultaneously.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "the-lot-radio",
+    "name": "The Lot Radio",
+    "url": "https://www.thelotradio.com",
+    "description": "24/7 independent online radio station broadcasting live from a shipping container in NYC.",
+    "categories": ["Streaming"]
+  },
+  {
+    "id": "tribe-social",
+    "name": "Tribe Social",
+    "url": "https://www.tribesocial.io",
+    "description": "Build branded mobile apps for your community with courses, live calling, and payments.",
+    "categories": ["Apps"]
+  },
+  {
+    "id": "tsunameme",
+    "name": "Tsunameme",
+    "url": "https://www.tsunameme.ai",
+    "description": "Create GIF animations from text using generative AI.",
+    "categories": ["AI Video"]
+  },
+  {
+    "id": "livepeer-ai-generator",
+    "name": "Cloud AI Generator",
+    "url": "https://ai-generator.livepeer.cloud",
+    "description": "Livepeer-powered image and video generation testing tool.",
+    "categories": ["AI Video"]
+  },
+  {
+    "id": "letsgenerate",
+    "name": "Let's Generate",
+    "url": "https://letsgenerate.ai",
+    "description": "AI image generation from text prompts using various models, built on Livepeer.",
+    "categories": ["AI Video"]
+  },
+  {
+    "id": "inference-stronk",
+    "name": "Inference By Stronk",
+    "url": "https://inference.stronk.rocks",
+    "description": "Craft images and videos from text using Livepeer AI inference.",
+    "categories": ["AI Video"]
+  },
+  {
+    "id": "flipguard",
+    "name": "Flipguard",
+    "url": "https://www.flipguard.xyz",
+    "description": "Web3-to-Discord tools for community engagement, reward systems, games, and economy.",
+    "categories": ["Apps"]
+  },
+  {
+    "id": "refraction",
+    "name": "Refraction",
+    "url": "https://www.refractionfestival.com",
+    "description": "Artist-owned community leading the next wave of digital art, music, and culture.",
+    "categories": ["Creator Tools"]
+  },
+  {
+    "id": "newcoin",
+    "name": "New Coin",
+    "url": "https://www.newcoin.org",
+    "description": "Peer-to-peer protocol for AI agent coordination, reputation, and cryptoeconomic learning signals.",
+    "categories": ["Infrastructure"]
   }
 ]
