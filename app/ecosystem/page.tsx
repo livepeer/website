@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
-
+import SectionHeader from "@/components/ui/SectionHeader";
 import FilterPills from "@/components/ui/FilterPills";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
@@ -41,14 +41,12 @@ export default function EcosystemPage() {
     <PageHero>
       <div className="min-h-screen">
         <Container>
-          <div className="flex flex-col gap-4">
-            <p className="font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
-              Ecosystem
-            </p>
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance">
-                Built on Livepeer
-              </h2>
+          <SectionHeader
+            label="Ecosystem"
+            title="Built on Livepeer"
+            description="Explore what developers and teams are building with real-time video and AI inference on Livepeer."
+            align="left"
+            action={
               <Button
                 href="/ecosystem/submit"
                 variant="secondary"
@@ -58,11 +56,8 @@ export default function EcosystemPage() {
                 <Plus className="h-3 w-3" />
                 Submit App
               </Button>
-            </div>
-            <p className="text-lg leading-relaxed text-white/50">
-              Explore what developers and teams are building with real-time video and AI inference on Livepeer.
-            </p>
-          </div>
+            }
+          />
 
           {/* Filter bar */}
           <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
