@@ -6,6 +6,7 @@ export interface EcosystemApp {
   url: string;
   description: string;
   categories: string[];
+  tags?: string[];
   logo?: string;
 }
 

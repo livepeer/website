@@ -1,38 +1,226 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { Search, Plus, ArrowUpRight } from "lucide-react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { Search, Plus, ArrowUpRight, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
-import FilterPills from "@/components/ui/FilterPills";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 
 const BATCH_SIZE = 12;
 
+/* Collect tags grouped by category */
+const TAGS_BY_CATEGORY: Record<string, string[]> = {};
+for (const app of ECOSYSTEM_APPS) {
+  for (const cat of app.categories) {
+    if (!TAGS_BY_CATEGORY[cat]) TAGS_BY_CATEGORY[cat] = [];
+    for (const tag of app.tags ?? []) {
+      if (!TAGS_BY_CATEGORY[cat].includes(tag)) {
+        TAGS_BY_CATEGORY[cat].push(tag);
+      }
+    }
+  }
+}
+
+/* Categories that have tags get a dropdown chevron */
+const CATEGORIES_WITH_TAGS = ECOSYSTEM_CATEGORIES.filter(
+  (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0
+);
+
+function CategoryPill({
+  category,
+  isActive,
+  activeTags,
+  onToggle,
+  onTagToggle,
+}: {
+  category: string;
+  isActive: boolean;
+  activeTags: string[];
+  onToggle: () => void;
+  onTagToggle: (tag: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const tags = TAGS_BY_CATEGORY[category];
+  const hasTags = tags && tags.length > 0;
+  const activeCount = activeTags.filter((t) => tags?.includes(t)).length;
+
+  const closeDropdown = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        closeDropdown();
+      }
+    };
+    /* Delay adding the listener so the opening click doesn't immediately close it */
+    const frame = requestAnimationFrame(() => {
+      document.addEventListener("mousedown", handler);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("mousedown", handler);
+    };
+  }, [open, closeDropdown]);
+
+  /* "All" is a simple pill */
+  if (category === "All") {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        className={`cursor-pointer rounded-full px-4 py-1.5 font-mono text-xs font-medium transition-colors ${
+          isActive
+            ? "border border-green bg-green text-white"
+            : "border border-white/10 text-white/50 hover:text-white/80"
+        }`}
+      >
+        All
+      </button>
+    );
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={(e) => {
+          /* If the click is on the chevron area (right 28px), toggle dropdown instead */
+          if (hasTags) {
+            const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const chevronZone = rect.width - 28;
+            if (clickX > chevronZone) {
+              setOpen((prev) => !prev);
+              return;
+            }
+          }
+          onToggle();
+        }}
+        className={`cursor-pointer rounded-full py-1.5 pl-4 font-mono text-xs font-medium transition-colors flex items-center gap-1 ${
+          hasTags ? "pr-2.5" : "pr-4"
+        } ${
+          isActive
+            ? "border border-green bg-green text-white"
+            : "border border-white/10 text-white/50 hover:text-white/80"
+        }`}
+      >
+        <span>{category}</span>
+        {activeCount > 0 && (
+          <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
+            {activeCount}
+          </span>
+        )}
+        {hasTags && (
+          <ChevronDown
+            className={`ml-0.5 h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        )}
+      </button>
+
+      <AnimatePresence>
+        {open && hasTags && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-lg border border-dark-border bg-dark-card p-2 shadow-xl shadow-black/40"
+          >
+            {tags.map((tag) => {
+              const checked = activeTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => onTagToggle(tag)}
+                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs font-mono transition-colors hover:bg-white/[0.04]"
+                >
+                  <span
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                      checked
+                        ? "border-green bg-green"
+                        : "border-white/20 bg-white/[0.04]"
+                    }`}
+                  >
+                    {checked && (
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path
+                          d="M1 4L3.5 6.5L9 1"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className={checked ? "text-white/80" : "text-white/50"}>
+                    {tag}
+                  </span>
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function EcosystemPage() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const [activeTags, setActiveTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(BATCH_SIZE);
 
+  const isAllActive = activeCategories.length === 0;
+
   useEffect(() => {
     setVisible(BATCH_SIZE);
-  }, [activeCategory, search]);
+  }, [activeCategories, activeTags, search]);
+
+  const handleCategoryToggle = (cat: string) => {
+    if (cat === "All") {
+      setActiveCategories([]);
+      setActiveTags([]);
+      return;
+    }
+    setActiveCategories((prev) => {
+      const next = prev.includes(cat)
+        ? prev.filter((c) => c !== cat)
+        : [...prev, cat];
+      /* If all specific categories are deselected, clear tags too */
+      if (next.length === 0) setActiveTags([]);
+      return next;
+    });
+  };
+
+  const handleTagToggle = (tag: string) => {
+    setActiveTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   const filtered = useMemo(() => {
     return ECOSYSTEM_APPS.filter((app) => {
       const matchesCategory =
-        activeCategory === "All" || app.categories.includes(activeCategory);
+        isAllActive || activeCategories.some((c) => app.categories.includes(c));
+      const matchesTags =
+        activeTags.length === 0 ||
+        activeTags.some((t) => app.tags?.includes(t));
       const matchesSearch =
         !search ||
         app.name.toLowerCase().includes(search.toLowerCase()) ||
         app.description.toLowerCase().includes(search.toLowerCase());
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesTags && matchesSearch;
     });
-  }, [activeCategory, search]);
+  }, [activeCategories, activeTags, search, isAllActive]);
 
   const shown = filtered.slice(0, visible);
   const hasMore = visible < filtered.length;
@@ -61,11 +249,29 @@ export default function EcosystemPage() {
 
           {/* Filter bar */}
           <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <FilterPills
-              items={ECOSYSTEM_CATEGORIES}
-              active={activeCategory}
-              onChange={setActiveCategory}
-            />
+            <div
+              className="flex flex-wrap gap-2 select-none"
+              role="group"
+              aria-label="Filter by category"
+            >
+              <CategoryPill
+                category="All"
+                isActive={isAllActive}
+                activeTags={activeTags}
+                onToggle={() => handleCategoryToggle("All")}
+                onTagToggle={handleTagToggle}
+              />
+              {CATEGORIES_WITH_TAGS.map((cat) => (
+                <CategoryPill
+                  key={cat}
+                  category={cat}
+                  isActive={activeCategories.includes(cat)}
+                  activeTags={activeTags}
+                  onToggle={() => handleCategoryToggle(cat)}
+                  onTagToggle={handleTagToggle}
+                />
+              ))}
+            </div>
 
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-white/50" />
@@ -152,8 +358,13 @@ export default function EcosystemPage() {
                   </p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {app.categories.map((cat) => (
-                      <Badge key={cat} variant="tag">
+                      <Badge key={cat} variant="category">
                         {cat}
+                      </Badge>
+                    ))}
+                    {app.tags?.map((tag) => (
+                      <Badge key={tag} variant="tag">
+                        {tag}
                       </Badge>
                     ))}
                   </div>
@@ -170,7 +381,8 @@ export default function EcosystemPage() {
                 <button
                   onClick={() => {
                     setSearch("");
-                    setActiveCategory("All");
+                    setActiveCategories([]);
+                    setActiveTags([]);
                   }}
                   className="cursor-pointer rounded border border-white/10 px-3 py-1 text-xs font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80"
                 >

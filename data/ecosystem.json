@@ -5,6 +5,7 @@
     "url": "https://daydream.live",
     "description": "Open-source engine for real-time generative video, audio, and live visuals.",
     "categories": ["AI Video"],
+    "tags": ["Generative"],
     "logo": "daydream.svg"
   },
   {
@@ -13,6 +14,7 @@
     "url": "https://frameworks.network",
     "description": "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
     "categories": ["Streaming"],
+    "tags": ["Self-hosted", "API"],
     "logo": "frameworks.svg"
   },
   {
@@ -21,6 +23,7 @@
     "url": "https://stream.place",
     "description": "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
     "categories": ["Streaming"],
+    "tags": ["Decentralized"],
     "logo": "stream-place.png"
   },
   {
@@ -29,6 +32,43 @@
     "url": "https://embody.zone",
     "description": "Embodied AI avatars for real-time tutoring and telepresence.",
     "categories": ["AI Video"],
+    "tags": ["Agents"],
     "logo": "embody.svg"
+  },
+  {
+    "id": "blueclaw",
+    "name": "Blue Claw",
+    "url": "https://blueclaw.network",
+    "description": "Always-on AI inference for autonomous agents with an OpenAI-compatible API. No rate limits, no throttling.",
+    "categories": ["AI Video"],
+    "tags": ["Agents"],
+    "logo": "blueclaw.png"
+  },
+  {
+    "id": "thelotradio",
+    "name": "The Lot Radio",
+    "url": "https://www.thelotradio.com",
+    "description": "Independent 24/7 online radio station broadcasting live DJ sets and music programming from Brooklyn, New York.",
+    "categories": ["Streaming"],
+    "tags": ["Music"],
+    "logo": "thelotradio.png"
+  },
+  {
+    "id": "livepeer-studio",
+    "name": "Livepeer Studio",
+    "url": "https://livepeer.studio",
+    "description": "Developer APIs for live streaming, video-on-demand, and transcoding powered by the Livepeer network.",
+    "categories": ["Streaming"],
+    "tags": ["API"],
+    "logo": "livepeer-studio.png"
+  },
+  {
+    "id": "tribesocial",
+    "name": "Tribe Social",
+    "url": "https://www.tribesocial.io",
+    "description": "Branded community apps with live video calls, courses, and integrated payments. Launch in 30 days.",
+    "categories": ["Streaming"],
+    "tags": ["Community"],
+    "logo": "tribesocial.webp"
   }
 ]
