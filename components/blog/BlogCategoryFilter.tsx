@@ -1,6 +1,6 @@
 "use client";
 
-import FilterPills from "@/components/ui/FilterPills";
+import FilterPill from "@/components/ui/FilterPill";
 
 export default function BlogCategoryFilter({
   categories,
@@ -15,10 +15,19 @@ export default function BlogCategoryFilter({
   const active = activeCategory ?? "All";
 
   return (
-    <FilterPills
-      items={items}
-      active={active}
-      onChange={(value) => onCategoryChange(value === "All" ? null : value)}
-    />
+    <div
+      className="flex flex-wrap gap-2 select-none"
+      role="group"
+      aria-label="Filter by category"
+    >
+      {items.map((item) => (
+        <FilterPill
+          key={item}
+          label={item}
+          isActive={active === item}
+          onToggle={() => onCategoryChange(item === "All" ? null : item)}
+        />
+      ))}
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { Search, Plus, ArrowUpRight, ChevronDown } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Search, Plus, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
@@ -9,6 +9,7 @@ import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import FilterPill from "@/components/ui/FilterPill";
 
 const BATCH_SIZE = 12;
 
@@ -29,149 +30,6 @@ for (const app of ECOSYSTEM_APPS) {
 const CATEGORIES_WITH_TAGS = ECOSYSTEM_CATEGORIES.filter(
   (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0
 );
-
-function CategoryPill({
-  category,
-  isActive,
-  activeTags,
-  onToggle,
-  onTagToggle,
-}: {
-  category: string;
-  isActive: boolean;
-  activeTags: string[];
-  onToggle: () => void;
-  onTagToggle: (tag: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const tags = TAGS_BY_CATEGORY[category];
-  const hasTags = tags && tags.length > 0;
-  const activeCount = activeTags.filter((t) => tags?.includes(t)).length;
-
-  const closeDropdown = useCallback(() => setOpen(false), []);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        closeDropdown();
-      }
-    };
-    /* Delay adding the listener so the opening click doesn't immediately close it */
-    const frame = requestAnimationFrame(() => {
-      document.addEventListener("mousedown", handler);
-    });
-    return () => {
-      cancelAnimationFrame(frame);
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [open, closeDropdown]);
-
-  /* "All" is a simple pill */
-  if (category === "All") {
-    return (
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`cursor-pointer rounded-full px-4 py-1.5 font-mono text-xs font-medium transition-colors ${
-          isActive
-            ? "border border-green bg-green text-white"
-            : "border border-white/10 text-white/50 hover:text-white/80"
-        }`}
-      >
-        All
-      </button>
-    );
-  }
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={(e) => {
-          /* If the click is on the chevron area (right 28px), toggle dropdown instead */
-          if (hasTags) {
-            const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const chevronZone = rect.width - 28;
-            if (clickX > chevronZone) {
-              setOpen((prev) => !prev);
-              return;
-            }
-          }
-          onToggle();
-        }}
-        className={`cursor-pointer rounded-full py-1.5 pl-4 font-mono text-xs font-medium transition-colors flex items-center gap-1 ${
-          hasTags ? "pr-2.5" : "pr-4"
-        } ${
-          isActive
-            ? "border border-green bg-green text-white"
-            : "border border-white/10 text-white/50 hover:text-white/80"
-        }`}
-      >
-        <span>{category}</span>
-        {activeCount > 0 && (
-          <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
-            {activeCount}
-          </span>
-        )}
-        {hasTags && (
-          <ChevronDown
-            className={`ml-0.5 h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`}
-          />
-        )}
-      </button>
-
-      <AnimatePresence>
-        {open && hasTags && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-lg border border-dark-border bg-dark-card p-2 shadow-xl shadow-black/40"
-          >
-            {tags.map((tag) => {
-              const checked = activeTags.includes(tag);
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => onTagToggle(tag)}
-                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 text-xs font-mono transition-colors hover:bg-white/[0.04]"
-                >
-                  <span
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-                      checked
-                        ? "border-green bg-green"
-                        : "border-white/20 bg-white/[0.04]"
-                    }`}
-                  >
-                    {checked && (
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path
-                          d="M1 4L3.5 6.5L9 1"
-                          stroke="white"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </span>
-                  <span className={checked ? "text-white/80" : "text-white/50"}>
-                    {tag}
-                  </span>
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 export default function EcosystemPage() {
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
@@ -195,7 +53,6 @@ export default function EcosystemPage() {
       const next = prev.includes(cat)
         ? prev.filter((c) => c !== cat)
         : [...prev, cat];
-      /* If all specific categories are deselected, clear tags too */
       if (next.length === 0) setActiveTags([]);
       return next;
     });
@@ -254,21 +111,26 @@ export default function EcosystemPage() {
               role="group"
               aria-label="Filter by category"
             >
-              <CategoryPill
-                category="All"
+              <FilterPill
+                label="All"
                 isActive={isAllActive}
-                activeTags={activeTags}
                 onToggle={() => handleCategoryToggle("All")}
-                onTagToggle={handleTagToggle}
               />
               {CATEGORIES_WITH_TAGS.map((cat) => (
-                <CategoryPill
+                <FilterPill
                   key={cat}
-                  category={cat}
+                  label={cat}
                   isActive={activeCategories.includes(cat)}
-                  activeTags={activeTags}
                   onToggle={() => handleCategoryToggle(cat)}
-                  onTagToggle={handleTagToggle}
+                  dropdown={
+                    TAGS_BY_CATEGORY[cat]?.length > 0
+                      ? {
+                          items: TAGS_BY_CATEGORY[cat],
+                          activeItems: activeTags,
+                          onItemToggle: handleTagToggle,
+                        }
+                      : undefined
+                  }
                 />
               ))}
             </div>

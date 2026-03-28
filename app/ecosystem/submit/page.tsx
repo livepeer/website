@@ -6,7 +6,7 @@ import { ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import FilterPills from "@/components/ui/FilterPills";
+import FilterPill from "@/components/ui/FilterPill";
 
 const CATEGORIES = ECOSYSTEM_CATEGORIES.filter((c) => c !== "All");
 
@@ -105,12 +105,22 @@ export default function SubmitAppPage() {
             <label className="mb-2 block text-sm font-medium text-white/60">
               Categories
             </label>
-            <FilterPills
-              items={CATEGORIES}
-              active={categories}
-              onChange={setCategories}
-              multi
-            />
+            <div className="flex flex-wrap gap-2 select-none" role="group" aria-label="Select categories">
+              {CATEGORIES.map((cat) => (
+                <FilterPill
+                  key={cat}
+                  label={cat}
+                  isActive={categories.includes(cat)}
+                  onToggle={() =>
+                    setCategories((prev) =>
+                      prev.includes(cat)
+                        ? prev.filter((c) => c !== cat)
+                        : [...prev, cat]
+                    )
+                  }
+                />
+              ))}
+            </div>
           </div>
 
           <div>
