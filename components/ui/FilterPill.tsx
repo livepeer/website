@@ -34,6 +34,8 @@ export default function FilterPill({
         closeDropdown();
       }
     };
+
+    // Delay one frame so the opening click doesn't immediately close it.
     const frame = requestAnimationFrame(() => {
       document.addEventListener("mousedown", handler);
     });
