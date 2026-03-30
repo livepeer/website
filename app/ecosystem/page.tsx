@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Search, Plus, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
@@ -28,7 +28,7 @@ for (const app of ECOSYSTEM_APPS) {
 
 /* Categories that have tags get a dropdown chevron */
 const CATEGORIES_WITH_TAGS = ECOSYSTEM_CATEGORIES.filter(
-  (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0
+  (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0,
 );
 
 export default function EcosystemPage() {
@@ -36,8 +36,10 @@ export default function EcosystemPage() {
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   const isAllActive = activeCategories.length === 0;
+  const loadMore = useCallback(() => setVisible((v) => v + BATCH_SIZE), []);
 
   useEffect(() => {
     setVisible(BATCH_SIZE);
@@ -60,7 +62,7 @@ export default function EcosystemPage() {
 
   const handleTagToggle = (tag: string) => {
     setActiveTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
@@ -81,6 +83,21 @@ export default function EcosystemPage() {
 
   const shown = filtered.slice(0, visible);
   const hasMore = visible < filtered.length;
+
+  // Infinite scroll with IntersectionObserver on mobile, "View more" button on desktop.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) loadMore();
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
 
   return (
     <PageHero>
@@ -265,9 +282,16 @@ export default function EcosystemPage() {
 
           {hasMore && (
             <div className="mt-6 text-center">
+              {/* Infinite scroll on mobile, "View more" button on desktop */}
+              <div
+                ref={sentinelRef}
+                className="sm:hidden"
+                aria-hidden="true"
+                style={{ height: 1 }}
+              />
               <button
-                onClick={() => setVisible((v) => v + BATCH_SIZE)}
-                className="cursor-pointer rounded-sm border border-white/10 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80"
+                onClick={loadMore}
+                className="hidden cursor-pointer rounded-sm border border-white/10 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80 sm:inline-block"
               >
                 View more
               </button>
