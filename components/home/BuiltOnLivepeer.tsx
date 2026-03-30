@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
+import Button from "@/components/ui/Button";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -749,13 +750,10 @@ export default function BuiltOnLivepeer() {
           variants={fadeUp}
           className="mt-10 text-center"
         >
-          <a
-            href="/ecosystem"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/40 transition-colors hover:text-white/70"
-          >
-            View all apps built on Livepeer
+          <Button href="/ecosystem" variant="secondary" size="md">
+            Explore the ecosystem
             <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Button>
         </motion.div>
       </Container>
     </section>
