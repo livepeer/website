@@ -36,7 +36,7 @@ export default function EcosystemPage() {
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(BATCH_SIZE);
-  const [buttonBatch, setButtonBatch] = useState(-1);
+  const [buttonBatch, setButtonBatch] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const isAllActive = activeCategories.length === 0;
