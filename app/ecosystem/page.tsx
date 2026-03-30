@@ -36,10 +36,15 @@ export default function EcosystemPage() {
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [visible, setVisible] = useState(BATCH_SIZE);
+  const [buttonBatch, setButtonBatch] = useState(-1);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const isAllActive = activeCategories.length === 0;
   const loadMore = useCallback(() => setVisible((v) => v + BATCH_SIZE), []);
+  const handleButtonLoad = useCallback(() => {
+    setButtonBatch(visible);
+    loadMore();
+  }, [visible, loadMore]);
 
   useEffect(() => {
     setVisible(BATCH_SIZE);
@@ -195,18 +200,26 @@ export default function EcosystemPage() {
           {/* App grid */}
           {shown.length > 0 ? (
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {shown.map((app, index) => (
+              {shown.map((app, index) => {
+                const inButtonBatch =
+                  buttonBatch >= 0 && index >= buttonBatch && index < buttonBatch + BATCH_SIZE;
+                return (
                 <motion.a
                   key={app.id}
                   href={app.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={
+                    inButtonBatch
+                      ? { once: true, amount: 0, margin: "0px 0px 2000px 0px" }
+                      : { once: true, amount: 0.15 }
+                  }
                   transition={{
-                    duration: 0.5,
-                    delay: (index % BATCH_SIZE) * 0.1,
+                    duration: 1.25,
+                    ease: [0.25, 0.1, 0.25, 1],
+                    delay: inButtonBatch ? (index - buttonBatch) * 0.06 : 0,
                   }}
                   className="group flex flex-col rounded-2xl border border-dark-border bg-dark-card p-5 transition-colors hover:border-white/10 sm:p-6 select-none"
                 >
@@ -248,7 +261,8 @@ export default function EcosystemPage() {
                     ))}
                   </div>
                 </motion.a>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="mt-16">
@@ -290,7 +304,7 @@ export default function EcosystemPage() {
                 style={{ height: 1 }}
               />
               <button
-                onClick={loadMore}
+                onClick={handleButtonLoad}
                 className="hidden cursor-pointer rounded-sm border border-white/10 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80 sm:inline-block"
               >
                 View more
