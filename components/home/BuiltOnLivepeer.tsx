@@ -744,6 +744,19 @@ export default function BuiltOnLivepeer() {
             </a>
           </motion.div>
         </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          className="mt-10 text-center"
+        >
+          <a
+            href="/ecosystem"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/40 transition-colors hover:text-white/70"
+          >
+            View all apps built on Livepeer
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </motion.div>
       </Container>
     </section>
   );
