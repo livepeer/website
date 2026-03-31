@@ -72,15 +72,6 @@
     "logo": "tribesocial.webp"
   },
   {
-    "id": "nytv",
-    "name": "NYTV",
-    "url": "https://nytv.live",
-    "description": "Independent 24/7 live television station streaming culture and news programming from New York.",
-    "categories": ["Streaming"],
-    "tags": ["Community"],
-    "logo": "nytv-live.jpg"
-  },
-  {
     "id": "higher",
     "name": "Higher",
     "url": "https://higher.zip",
@@ -88,6 +79,15 @@
     "categories": ["Streaming"],
     "tags": ["Community", "Decentralized"],
     "logo": "higher-zip.svg"
+  },
+  {
+    "id": "nytv",
+    "name": "NYTV",
+    "url": "https://nytv.live",
+    "description": "Independent 24/7 live television station streaming culture and news programming from New York.",
+    "categories": ["Streaming"],
+    "tags": ["Community"],
+    "logo": "nytv-live.jpg"
   },
   {
     "id": "ufo",
