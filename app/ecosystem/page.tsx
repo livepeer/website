@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { Suspense, useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { Search, Plus, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { ECOSYSTEM_APPS, ECOSYSTEM_CATEGORIES } from "@/lib/ecosystem-data";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
@@ -31,10 +32,20 @@ const CATEGORIES_WITH_TAGS = ECOSYSTEM_CATEGORIES.filter(
   (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0,
 );
 
-export default function EcosystemPage() {
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
-  const [activeTags, setActiveTags] = useState<string[]>([]);
-  const [search, setSearch] = useState("");
+function EcosystemPageInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [activeCategories, setActiveCategories] = useState<string[]>(() => {
+    const param = searchParams.get("categories");
+    return param ? param.split(",").map(decodeURIComponent) : [];
+  });
+  const [activeTags, setActiveTags] = useState<string[]>(() => {
+    const param = searchParams.get("tags");
+    return param ? param.split(",").map(decodeURIComponent) : [];
+  });
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [visible, setVisible] = useState(BATCH_SIZE);
   const [buttonBatch, setButtonBatch] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -45,6 +56,19 @@ export default function EcosystemPage() {
     setButtonBatch(visible);
     loadMore();
   }, [visible, loadMore]);
+
+  /* Sync filter state → URL query params */
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (activeCategories.length > 0)
+      params.set("categories", activeCategories.join(","));
+    if (activeTags.length > 0) params.set("tags", activeTags.join(","));
+    if (search) params.set("q", search);
+
+    const qs = params.toString();
+    const url = qs ? `${pathname}?${qs}` : pathname;
+    router.replace(url, { scroll: false });
+  }, [activeCategories, activeTags, search, pathname, router]);
 
   useEffect(() => {
     setVisible(BATCH_SIZE);
@@ -314,5 +338,13 @@ export default function EcosystemPage() {
         </Container>
       </div>
     </PageHero>
+  );
+}
+
+export default function EcosystemPage() {
+  return (
+    <Suspense>
+      <EcosystemPageInner />
+    </Suspense>
   );
 }
