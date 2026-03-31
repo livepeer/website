@@ -1,16 +1,34 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LayoutGrid, Hammer, Globe, Plug, ChevronDown, ArrowUpRight } from "lucide-react";
 import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
 
-function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+function useHoverDropdown(delay = 150) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
+  const handleEnter = () => {
+    // Clear any existing timeout to prevent premature closing.
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleLeave = () => {
+    // Set a timeout to delay closing, allowing for smoother transitions.
+    timeoutRef.current = setTimeout(() => setOpen(false), delay);
+  };
+
+  return { open, setOpen, handleEnter, handleLeave };
+}
+
+function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
+  const { open, setOpen, handleEnter, handleLeave } = useHoverDropdown(150);
   const active = pathname === item.href;
 
   if (!item.children) {
@@ -28,15 +46,6 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
     );
   }
 
-  const handleEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setOpen(true);
-  };
-
-  const handleLeave = () => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 150);
-  };
-
   return (
     <div
       className="relative"
@@ -53,15 +62,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
         aria-expanded={open}
       >
         {item.label}
-        <svg
-          className={`h-3 w-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 12 12"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M3 5l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
@@ -83,27 +84,147 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   {...extraProps}
                 >
                   {child.label}
-                  {isExternal && (
-                    <svg
-                      className="ml-auto h-3 w-3 text-white/30"
-                      fill="none"
-                      viewBox="0 0 12 12"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    >
-                      <path
-                        d="M3.5 2H10v6.5M10 2L2 10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
+                  {isExternal && <ArrowUpRight className="ml-auto h-3 w-3 text-white/30" />}
                 </Tag>
               );
             })}
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+const appsButtonStyle = (open: boolean) =>
+  `outline-none transition-all duration-150 ${
+    open
+      ? "bg-white/90 text-dark scale-95"
+      : "bg-white text-dark hover:bg-white/90 active:scale-95 active:bg-white/80"
+  }`;
+
+function AppsButton() {
+  const { open, setOpen, handleEnter, handleLeave } = useHoverDropdown(200);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium ${appsButtonStyle(open)}`}
+      >
+        <LayoutGrid className="h-3.5 w-3.5" />
+        Apps
+      </button>
+
+      {open && (
+        <div className="absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2">
+          <AppsDropdownContent onClose={() => setOpen(false)} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileAppsButton() {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        buttonRef.current && !buttonRef.current.contains(target) &&
+        panelRef.current && !panelRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <>
+      <div className="relative ml-2" ref={buttonRef}>
+        <button
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-label="Apps"
+          className={`flex h-8 w-8 items-center justify-center rounded-full ${appsButtonStyle(open)}`}
+        >
+          <LayoutGrid className="h-4 w-4" />
+        </button>
+      </div>
+
+      {open && createPortal(
+        <div className="fixed left-4 right-4 top-[61px] z-50" ref={panelRef}>
+          <AppsDropdownContent onClose={() => setOpen(false)} mobile />
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
+function AppsDropdownContent({ onClose, mobile }: { onClose: () => void; mobile?: boolean }) {
+  const iconSize = mobile ? "h-6 w-6" : "h-5 w-5";
+  const iconBox = mobile ? "h-10 w-10" : "h-9 w-9";
+  const cardClass = `group flex cursor-pointer flex-col items-center transition-colors hover:bg-white/4 ${mobile ? "gap-2 py-5" : "gap-2 px-5 py-3.5"}`;
+
+  return (
+    <div className={`overflow-hidden rounded-2xl border border-white/8 bg-[#161616] shadow-2xl shadow-black/40 backdrop-blur-xl ${mobile ? "w-full" : "w-70"}`}>
+      <div className="grid grid-cols-2 divide-x divide-white/6">
+        {/* Explorer */}
+        <a href="https://explorer.livepeer.org" target="_blank" rel="noopener noreferrer" onClick={onClose} className={cardClass}>
+          <div className={`flex items-center justify-center rounded-lg bg-blue/15 text-blue-bright ${iconBox}`}>
+            <Globe className={iconSize} />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-white">Explorer</p>
+            <p className={`mt-0.5 text-white/30 ${mobile ? "text-xs" : "text-[11px]"}`}>Stake & Govern</p>
+          </div>
+        </a>
+
+        {/* Studio */}
+        <Link href="/studio" onClick={onClose} className={cardClass}>
+          <div className={`flex items-center justify-center rounded-lg bg-green/15 text-green-bright ${iconBox}`}>
+            <Hammer className={iconSize} />
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium text-white">Studio</p>
+            <p className={`mt-0.5 text-white/30 ${mobile ? "text-xs" : "text-[11px]"}`}>Build & Deploy</p>
+            <span className="mt-1 inline-block rounded-full bg-green/10 px-2 py-0.5 text-[10px] font-medium text-green-bright">
+              Early Access
+            </span>
+          </div>
+        </Link>
+      </div>
+
+      {/* Operator */}
+      <div className="border-t border-white/6">
+        <a href="https://operator.livepeer.org" target="_blank" rel="noopener noreferrer" onClick={onClose} className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-white/4">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-500/15 text-purple-400">
+            <Plug className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-white">Operator</span>
+            <span className="text-[11px] text-white/30">Extend & Control</span>
+          </div>
+          <span className="ml-auto rounded-full bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-medium leading-none text-purple-400">
+            Early Access
+          </span>
+        </a>
+      </div>
+
+      <div className="border-t border-white/6 py-2 text-center">
+        <span className="text-[11px] text-white/20">livepeer.org</span>
+      </div>
     </div>
   );
 }
@@ -148,16 +269,16 @@ export default function Header() {
   return (
     <>
     <header className={`fixed top-0 z-50 w-full transition-transform duration-300 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
-      {/* Floating pill nav — Raycast-inspired */}
+      {/* Floating pill nav */}
       <div className="mx-auto flex max-w-7xl items-center justify-center px-4 pt-4">
+        {/* Desktop: standard pill nav */}
         <div
-          className={`flex items-center gap-1.5 rounded-full border px-3 py-2 transition-all duration-300 ${
+          className={`hidden md:flex items-center gap-1.5 rounded-full border px-3 py-2 transition-all duration-300 ${
             scrolled
               ? "border-white/10 bg-dark/80 shadow-lg shadow-black/20 backdrop-blur-xl"
               : "border-white/[0.06] bg-dark/40 backdrop-blur-md"
           }`}
         >
-          {/* Logo */}
           <Link
             href="/"
             className="flex flex-shrink-0 items-center rounded-full px-2 py-1 transition-colors hover:bg-white/5"
@@ -166,29 +287,30 @@ export default function Header() {
             <LivepeerWordmark className="h-3.5 w-auto text-white" />
           </Link>
 
-          {/* Separator */}
           <div className="mx-1 h-5 w-px bg-white/10" />
 
-          {/* Desktop nav links */}
-          <nav className="hidden items-center gap-0.5 md:flex" aria-label="Main">
+          <nav className="flex items-center gap-0.5" aria-label="Main">
             {NAV_ITEMS.filter((item) => item.href !== "/").map((item) => (
               <NavLink key={item.label} item={item} pathname={pathname} />
             ))}
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center ml-1">
-            <Link
-              href="/#early-access"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
-            >
-              Get Early Access
-            </Link>
+          <div className="flex items-center ml-1">
+            <AppsButton />
           </div>
+        </div>
 
-          {/* Mobile hamburger */}
+        {/* Mobile: hamburger | logo | apps */}
+        <div
+          className={`flex md:hidden items-center justify-between rounded-full border px-2.5 py-1.5 transition-all duration-300 ${
+            scrolled
+              ? "border-white/10 bg-dark/80 shadow-lg shadow-black/20 backdrop-blur-xl"
+              : "border-white/[0.06] bg-dark/40 backdrop-blur-md"
+          }`}
+        >
+          {/* Hamburger */}
           <button
-            className="cursor-pointer select-none relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5 md:hidden"
+            className="cursor-pointer select-none relative flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-white/5"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -211,12 +333,26 @@ export default function Header() {
               />
             </div>
           </button>
+
+          <div className="mx-1.5 h-5 w-px bg-white/10" />
+
+          <Link
+            href="/"
+            className="flex flex-shrink-0 items-center rounded-full px-2 py-1 transition-colors hover:bg-white/5"
+            aria-label="Livepeer home"
+          >
+            <LivepeerWordmark className="h-3.5 w-auto text-white" />
+          </Link>
+
+          <div className="mx-1.5 h-5 w-px bg-white/10" />
+
+          <MobileAppsButton />
         </div>
       </div>
 
     </header>
 
-    {/* Mobile overlay — rendered outside header to avoid translate containing block */}
+    {/* Mobile overlay — nav only */}
     {mobileOpen && (
       <div className="fixed inset-0 z-[45] bg-dark/95 backdrop-blur-xl pt-20 md:hidden">
         <nav className="flex flex-col gap-1 px-6" aria-label="Mobile">
@@ -238,19 +374,7 @@ export default function Header() {
                     }`}
                   >
                     {item.label}
-                    <svg
-                      className={`h-4 w-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
-                      fill="none"
-                      viewBox="0 0 12 12"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path
-                        d="M3 5l3 3 3-3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
                   </button>
                   {expanded && (
                     <div className="ml-4 mt-1 flex flex-col gap-0.5">
@@ -273,21 +397,7 @@ export default function Header() {
                             {...extraProps}
                           >
                             {child.label}
-                            {isExternal && (
-                              <svg
-                                className="h-3 w-3 text-white/30"
-                                fill="none"
-                                viewBox="0 0 12 12"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                              >
-                                <path
-                                  d="M3.5 2H10v6.5M10 2L2 10"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            )}
+                            {isExternal && <ArrowUpRight className="h-3 w-3 text-white/30" />}
                           </Tag>
                         );
                       })}
@@ -312,17 +422,6 @@ export default function Header() {
               </Link>
             );
           })}
-
-          {/* Mobile CTA */}
-          <div className="mt-6 px-4">
-            <Link
-              href="/#early-access"
-              onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
-            >
-              Get Early Access
-            </Link>
-          </div>
         </nav>
       </div>
     )}
