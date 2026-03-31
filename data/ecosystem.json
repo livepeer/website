@@ -70,5 +70,32 @@
     "categories": ["Streaming"],
     "tags": ["Community"],
     "logo": "tribesocial.webp"
+  },
+  {
+    "id": "nytv",
+    "name": "NYTV",
+    "url": "https://nytv.live",
+    "description": "Independent 24/7 live television station streaming culture and news programming from New York.",
+    "categories": ["Streaming"],
+    "tags": ["Community"],
+    "logo": "nytv-live.jpg"
+  },
+  {
+    "id": "higher",
+    "name": "Higher",
+    "url": "https://higher.zip",
+    "description": "Onchain community collective on Base with live streaming, missions, and a shared creative treasury.",
+    "categories": ["Streaming"],
+    "tags": ["Community", "Decentralized"],
+    "logo": "higher-zip.svg"
+  },
+  {
+    "id": "ufo",
+    "name": "UFO",
+    "url": "https://ufo.fm",
+    "description": "Broadcast platform for independent culture — radio shows, mixes, and long-form conversations from contributors worldwide.",
+    "categories": ["Streaming"],
+    "tags": ["Music", "Community"],
+    "logo": "ufo-fm.svg"
   }
 ]

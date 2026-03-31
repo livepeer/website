@@ -229,7 +229,7 @@ export default function EcosystemPage() {
                         <img
                           src={`/ecosystem/${app.logo}`}
                           alt={`${app.name} logo`}
-                          className="h-10 w-10 object-contain"
+                          className="h-10 w-10 rounded-lg object-contain"
                         />
                       ) : (
                         <span className="text-2xl font-semibold text-white/30">
