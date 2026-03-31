@@ -5,7 +5,7 @@
     "url": "https://daydream.live",
     "description": "Open-source engine for real-time generative video, audio, and live visuals.",
     "categories": ["AI Video"],
-    "tags": ["Generative"],
+    "tags": ["Generative", "API"],
     "logo": "daydream.svg"
   },
   {
@@ -41,7 +41,7 @@
     "url": "https://blueclaw.network",
     "description": "Always-on AI inference for autonomous agents with an OpenAI-compatible API. No rate limits, no throttling.",
     "categories": ["AI Video"],
-    "tags": ["Agents"],
+    "tags": ["Agents", "API"],
     "logo": "blueclaw.png"
   },
   {
