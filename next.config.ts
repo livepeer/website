@@ -58,6 +58,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/ecosystem",
+        destination: "/",
+        permanent: false,
+      },
+      {
         source: "/jobs",
         destination: "/",
         permanent: false,
