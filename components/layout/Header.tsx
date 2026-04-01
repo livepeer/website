@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
+import Badge from "@/components/ui/Badge";
 
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false);
@@ -83,6 +84,11 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   {...extraProps}
                 >
                   {child.label}
+                  {child.badge && (
+                    <Badge variant="neutral" className="ml-auto">
+                      {child.badge}
+                    </Badge>
+                  )}
                   {isExternal && (
                     <svg
                       className="ml-auto h-3 w-3 text-white/30"
@@ -278,6 +284,11 @@ export default function Header() {
                             {...extraProps}
                           >
                             {child.label}
+                            {child.badge && (
+                              <Badge variant="neutral" className="ml-1">
+                                {child.badge}
+                              </Badge>
+                            )}
                             {isExternal && (
                               <svg
                                 className="h-3 w-3 text-white/30"
