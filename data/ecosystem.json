@@ -97,5 +97,14 @@
     "categories": ["Streaming"],
     "tags": ["Music", "Community"],
     "logo": "ufo-fm.svg"
+  },
+  {
+    "id": "spritz",
+    "name": "Spritz",
+    "url": "https://app.spritz.chat",
+    "description": "Decentralized social platform combining Web3 messaging, AI agents, livestreaming, and peer-to-peer communication.",
+    "categories": ["Streaming"],
+    "tags": ["Community", "Decentralized"],
+    "logo": "spritz.png"
   }
 ]
