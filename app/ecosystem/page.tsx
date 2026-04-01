@@ -254,6 +254,7 @@ function EcosystemPageInner() {
                           src={`/ecosystem/${app.logo}`}
                           alt={`${app.name} logo`}
                           className="h-10 w-10 rounded-lg object-contain"
+                          style={app.logoBg ? { backgroundColor: app.logoBg, padding: "4px" } : undefined}
                         />
                       ) : (
                         <span className="text-2xl font-semibold text-white/30">

@@ -8,6 +8,7 @@ export interface EcosystemApp {
   categories: string[];
   tags?: string[];
   logo?: string;
+  logoBg?: string;
 }
 
 export const ECOSYSTEM_CATEGORIES = [

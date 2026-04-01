@@ -51,7 +51,8 @@
     "description": "Independent 24/7 online radio station broadcasting live DJ sets and music programming from Brooklyn, New York.",
     "categories": ["Streaming"],
     "tags": ["Music"],
-    "logo": "thelotradio.svg"
+    "logo": "thelotradio.svg",
+    "logoBg": "#FFFFFF"
   },
   {
     "id": "livepeer-studio",
