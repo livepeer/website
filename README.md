@@ -12,7 +12,7 @@ The official website for [Livepeer](https://livepeer.org) — open infrastructur
 ## Prerequisites
 
 - **Node.js 22.x** — use `nvm install` to automatically switch (reads `.nvmrc`)
-- **pnpm** — install via `corepack enable` (recommended) or `npm install -g pnpm`
+- **pnpm** — run `corepack enable` to activate pnpm at the version pinned in `package.json`
 - **Docker** (optional) — required for the dev container
 
 > **Tip:** Use `nvm install` or `asdf install` to automatically switch to the correct Node version.
