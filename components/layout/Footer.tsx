@@ -9,8 +9,14 @@ const footerNav = [
     links: [
       { label: "Explorer", href: EXTERNAL_LINKS.explorer },
       { label: "Delegate", href: EXTERNAL_LINKS.staking },
-      { label: "Provide Compute", href: "https://docs.livepeer.org/v1/orchestrators/guides/get-started" },
-      { label: "Roadmap", href: "https://github.com/livepeer/catalyst/milestones" },
+      {
+        label: "Provide Compute",
+        href: "https://docs.livepeer.org/v1/orchestrators/guides/get-started",
+      },
+      {
+        label: "Roadmap",
+        href: "https://github.com/livepeer/catalyst/milestones",
+      },
     ],
   },
   {

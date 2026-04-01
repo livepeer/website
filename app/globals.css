@@ -67,9 +67,15 @@ body {
 }
 
 @keyframes imageMaskFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Animated scan line — moves down slowly like a CRT */
@@ -78,103 +84,190 @@ body {
 }
 
 @keyframes scanLine {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
 }
 
 /* Subtle opacity breathe for shape borders */
 @keyframes breathe {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Starburst node pulse — brightens every ~6s */
 @keyframes node-pulse {
-  0%, 82%, 100% { transform: scale(1); }
-  86% { transform: scale(1.3); }
-  92% { transform: scale(1); }
+  0%,
+  82%,
+  100% {
+    transform: scale(1);
+  }
+  86% {
+    transform: scale(1.3);
+  }
+  92% {
+    transform: scale(1);
+  }
 }
-
 
 /* Primer dropdown animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Primer scroll arrow bounce */
 @keyframes bounceDown {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
 }
 
 /* Star twinkle — gentle opacity pulse */
 @keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.9; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
 /* Terrain generation cursor — vertical line sweeps left to right */
 @keyframes generateSweep {
-  0% { left: -2%; }
-  100% { left: 102%; }
+  0% {
+    left: -2%;
+  }
+  100% {
+    left: 102%;
+  }
 }
 
 /* Terrain reveal — clip-path synced with cursor to paint terrain L→R */
 @keyframes revealTerrain {
-  0% { clip-path: inset(0 102% 0 0); }
-  100% { clip-path: inset(0 -2% 0 0); }
+  0% {
+    clip-path: inset(0 102% 0 0);
+  }
+  100% {
+    clip-path: inset(0 -2% 0 0);
+  }
 }
-
 
 /* Shimmer — sliding highlight via background-position */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Dash flow — stroke-dashoffset scroll for SVG lines */
 @keyframes dashFlow {
-  0% { stroke-dashoffset: 16; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 16;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Arrow flow — subtle rightward pulse */
 @keyframes arrowFlow {
-  0%, 100% { transform: translateX(0); opacity: 0.25; }
-  50% { transform: translateX(3px); opacity: 0.5; }
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateX(3px);
+    opacity: 0.5;
+  }
 }
 
 /* CTA glow pulse — soft breathing green halo */
 @keyframes ctaGlow {
-  0%, 100% { box-shadow: 0 0 16px 0 rgba(30, 153, 96, 0.10), 0 0 32px 0 rgba(24, 121, 78, 0.05); }
-  50% { box-shadow: 0 0 20px 2px rgba(30, 153, 96, 0.18), 0 0 40px 4px rgba(24, 121, 78, 0.08); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 16px 0 rgba(30, 153, 96, 0.1),
+      0 0 32px 0 rgba(24, 121, 78, 0.05);
+  }
+  50% {
+    box-shadow:
+      0 0 20px 2px rgba(30, 153, 96, 0.18),
+      0 0 40px 4px rgba(24, 121, 78, 0.08);
+  }
 }
 
 @keyframes glassSpecular {
-  0% { transform: translateX(-30%); }
-  50% { transform: translateX(30%); }
-  100% { transform: translateX(-30%); }
+  0% {
+    transform: translateX(-30%);
+  }
+  50% {
+    transform: translateX(30%);
+  }
+  100% {
+    transform: translateX(-30%);
+  }
 }
 
 @keyframes glassRefraction {
-  0% { transform: rotate(0deg) scale(1); }
-  100% { transform: rotate(360deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
 }
 
 @keyframes glassFloat {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(5%, -5%) scale(1.1); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(5%, -5%) scale(1.1);
+  }
 }
 
 /* Text wrap utilities */
-.text-balance { text-wrap: balance; }
-.text-pretty { text-wrap: pretty; }
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
 
 /* Blog prose — scoped typography for rendered markdown */
 .blog-prose {

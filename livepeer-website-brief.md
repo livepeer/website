@@ -10,7 +10,7 @@ Build a production-ready marketing website for Livepeer.org. This is a full rede
 
 **What Livepeer is:** Livepeer is the world's open video infrastructure. It is a decentralized network of GPU operators (orchestrators) that performs video transcoding, distribution, and AI video processing at scale, at dramatically lower cost than centralized alternatives.
 
-**The product is the network itself.** Livepeer is not Daydream, not Livepeer Studio, not Streamplace. Those are applications built *on top of* the Livepeer network. The website must make this distinction crystal clear. The network is the product.
+**The product is the network itself.** Livepeer is not Daydream, not Livepeer Studio, not Streamplace. Those are applications built _on top of_ the Livepeer network. The website must make this distinction crystal clear. The network is the product.
 
 **Core value proposition:** High-speed, ultra cost-efficient video transcoding and AI video processing, powered by a decentralized global network of GPU operators. Developers and platforms plug into Livepeer's network to power their video experiences without building expensive infrastructure from scratch.
 
@@ -47,17 +47,19 @@ The following sites should be referenced ONLY for structural and experiential de
 **[INSERT YOUR INSPIRATION SITES HERE]**
 
 For each site, note what specifically to reference:
+
 - Site A: [what you admire — e.g. "hero section energy," "navigation interaction," "how they pace content sections"]
 - Site B: [what you admire]
 - Site C: [what you admire]
 
-*(Adam: Replace this section with your actual inspiration sites and specific callouts before passing to Claude Code.)*
+_(Adam: Replace this section with your actual inspiration sites and specific callouts before passing to Claude Code.)_
 
 ---
 
 ## Site Structure
 
 ### Primary Navigation
+
 - **Home**
 - **Network** (the product)
 - **Developers** (dev hub, docs, SDKs, grants)
@@ -86,9 +88,11 @@ For each site, note what specifically to reference:
 9. **Footer:** Standard footer with nav links, social links (Discord, Twitter/X, GitHub, Forum), newsletter signup.
 
 ### Network Page
+
 Deep dive into how the network works. Visual diagram of the protocol architecture (apps → gateways → orchestrators → delegators). Explain the roles clearly. Link to the Network Explorer.
 
 ### Developer Hub Page
+
 - Getting started guide links
 - SDK documentation links
 - AI video pipeline documentation
@@ -96,6 +100,7 @@ Deep dive into how the network works. Visual diagram of the protocol architectur
 - Example use cases / integrations
 
 ### LPT Page
+
 - What LPT is and its role in the network
 - How staking/delegation works
 - Where to acquire LPT
@@ -103,6 +108,7 @@ Deep dive into how the network works. Visual diagram of the protocol architectur
 - Link to governance
 
 ### Community Page
+
 - Governance proposals and participation
 - Events calendar
 - Ecosystem projects
@@ -171,6 +177,7 @@ Deep dive into how the network works. Visual diagram of the protocol architectur
 ## What Success Looks Like
 
 A visitor landing on Livepeer.org for the first time should be able to:
+
 1. Understand what Livepeer is within 5 seconds
 2. Understand who it's for within 10 seconds
 3. Find their way to the right next step (build, stake, run a node, learn more) within 15 seconds

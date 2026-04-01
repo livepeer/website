@@ -12,10 +12,7 @@ export async function POST(request: Request) {
     const { email } = await request.json();
 
     if (!email || typeof email !== "string") {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     // Add member to audience (or update if already exists)
@@ -50,9 +47,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Early access signup failed:", error);
-    return NextResponse.json(
-      { error: "Failed to subscribe" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
   }
 }

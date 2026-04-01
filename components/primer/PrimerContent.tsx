@@ -81,13 +81,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
     }
   }, []);
 
-  const scrollTo = useCallback(
-    (id: string) => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      setTocOpen(false);
-    },
-    []
-  );
+  const scrollTo = useCallback((id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setTocOpen(false);
+  }, []);
 
   return (
     <div
@@ -106,9 +103,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         }}
       />
 
-
       {/* ─── Fixed Contents button — top right, aligned with nav bar ─── */}
-      <div className="fixed top-[19px] right-4 z-50 md:top-[18px] md:right-6" ref={tocRef}>
+      <div
+        className="fixed top-[19px] right-4 z-50 md:top-[18px] md:right-6"
+        ref={tocRef}
+      >
         <button
           onClick={() => setTocOpen(!tocOpen)}
           className={`cursor-pointer select-none flex items-center justify-center uppercase transition-all
@@ -218,7 +217,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           >
             A 10-MINUTE PRIMER
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`${IMG}/hero-illustration.svg`}
             alt="Livepeer Primer"
@@ -227,13 +225,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         </div>
 
         {/* Decorative side elements — flush with bottom, hidden on mobile */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${IMG}/hero-right.svg`}
           alt=""
           className="pointer-events-none absolute bottom-0 right-0 hidden w-[20%] lg:block lg:w-[30%]"
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`${IMG}/hero-left.svg`}
           alt=""
@@ -246,7 +242,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           className="cursor-pointer select-none absolute bottom-12 left-1/2 -translate-x-1/2"
           style={{ animation: "bounceDown 2s ease-in-out infinite" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`${IMG}/arrow-down.svg`}
             alt="Scroll down"
@@ -270,13 +265,12 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               </Text28>
               <Text18>
                 It&rsquo;s already the dominant share of all internet traffic
-                &mdash; and AI is making it even more dominant. A growing
-                wave of applications now use AI models to create, transform,
-                and interpret video in real-time, requiring continuous GPU
-                inference on every frame.
+                &mdash; and AI is making it even more dominant. A growing wave
+                of applications now use AI models to create, transform, and
+                interpret video in real-time, requiring continuous GPU inference
+                on every frame.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/pie-chart.svg`}
               alt="AI video is the fastest-growing GPU workload"
@@ -292,12 +286,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 expensive. Real-time video AI requires continuous{" "}
                 <strong>GPU inference</strong> &mdash; processing every frame
                 through AI models as it arrives, with no room for delay.
-                Centralized GPU clouds aren&rsquo;t built for this. They&rsquo;re
-                optimized for batch processing &mdash; not the continuous,
-                low-latency inference that real-time video demands.
+                Centralized GPU clouds aren&rsquo;t built for this.
+                They&rsquo;re optimized for batch processing &mdash; not the
+                continuous, low-latency inference that real-time video demands.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/transcoding-in.svg`}
               alt="Video AI processing"
@@ -309,15 +302,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <FlexSection reverse>
             <TextBlock className="max-w-[360px]">
               <Text18>
-                AI-generated worlds, real-time video analysis, AI-driven
-                avatars and agents &mdash; demand for these applications is
+                AI-generated worlds, real-time video analysis, AI-driven avatars
+                and agents &mdash; demand for these applications is
                 accelerating. The developers building them &mdash; creative
                 technologists, startups, independent builders &mdash; need GPU
-                providers that are fast, affordable, and always
-                available.
+                providers that are fast, affordable, and always available.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/bob_gpu.svg`}
               alt="GPU compute demand"
@@ -327,8 +318,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
 
           <ContentBlock className="mb-40 !max-w-[580px]">
             <Text28 center>
-              What if there were an open network purpose-built for
-              this?
+              What if there were an open network purpose-built for this?
             </Text28>
           </ContentBlock>
         </div>
@@ -345,10 +335,12 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <FlexSection className="mb-40">
             <TextBlock>
               <Text18>
-                <strong>Livepeer is a specialized GPU network for real-time
-                video AI.</strong> It coordinates a global pool of GPU
-                providers to deliver low-latency AI inference on video streams
-                &mdash; frame-by-frame processing, not batch jobs.
+                <strong>
+                  Livepeer is a specialized GPU network for real-time video AI.
+                </strong>{" "}
+                It coordinates a global pool of GPU providers to deliver
+                low-latency AI inference on video streams &mdash; frame-by-frame
+                processing, not batch jobs.
               </Text18>
               <Text18>
                 The network is open-source, built on Ethereum for coordination
@@ -356,7 +348,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 centralized cloud alternatives.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/livepeer-ethereum.svg`}
               alt="Livepeer and Ethereum"
@@ -370,9 +361,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
            ════════════════════════════════════════════════ */}
         <div data-chapter="who" id="who">
           <ContentBlock className="mb-16">
-            <SectionHeading rotate={3}>
-              Who is Livepeer for?
-            </SectionHeading>
+            <SectionHeading rotate={3}>Who is Livepeer for?</SectionHeading>
           </ContentBlock>
 
           <ContentBlock className="mb-40">
@@ -396,9 +385,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
            ════════════════════════════════════════════════ */}
         <div data-chapter="how" id="how">
           <ContentBlock className="mb-16">
-            <SectionHeading rotate={-3}>
-              How does Livepeer work?
-            </SectionHeading>
+            <SectionHeading rotate={-3}>How does Livepeer work?</SectionHeading>
           </ContentBlock>
 
           {/* Meet Alice — contained, image left, text right */}
@@ -406,13 +393,12 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             <TextBlock maxW="350px">
               <Text28>Meet: Alice</Text28>
               <Text18>
-                Alice is a developer building an interactive world model
-                &mdash; an AI-generated environment that responds to user
-                input in real-time, rendering 30&ndash;60 frames per second
-                of generated video, continuously.
+                Alice is a developer building an interactive world model &mdash;
+                an AI-generated environment that responds to user input in
+                real-time, rendering 30&ndash;60 frames per second of generated
+                video, continuously.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/alice.svg`}
               alt="Alice"
@@ -430,7 +416,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 move in real-time.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/bob.svg`}
               alt="Bob"
@@ -444,18 +429,16 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               <Text18>
                 When Bob plays, every input he makes triggers a new frame of
                 AI-generated video. Alice&rsquo;s app sends these requests to
-                Livepeer, which routes the GPU-intensive work across the
-                network and returns generated frames in real-time &mdash;
-                inference, encoding, and delivery in one pipeline.
+                Livepeer, which routes the GPU-intensive work across the network
+                and returns generated frames in real-time &mdash; inference,
+                encoding, and delivery in one pipeline.
               </Text18>
               <Text18>
-                Bob&rsquo;s experience is seamless. But behind the scenes,
-                Alice needs massive GPU compute to keep up &mdash; and her
-                app is gaining users fast. How does Livepeer make this
-                affordable?
+                Bob&rsquo;s experience is seamless. But behind the scenes, Alice
+                needs massive GPU compute to keep up &mdash; and her app is
+                gaining users fast. How does Livepeer make this affordable?
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/devices.svg`}
               alt="Multiple devices"
@@ -467,18 +450,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <FlexSection className="mb-40">
             <TextBlock>
               <Text18>
-                There are two key roles in the Livepeer protocol that make
-                this work:{" "}
-                <strong>Orchestrators</strong> (GPU providers who run the
-                compute) and{" "}
-                <strong>Delegators</strong> (token holders who help secure
-                the network).
+                There are two key roles in the Livepeer protocol that make this
+                work: <strong>Orchestrators</strong> (GPU providers who run the
+                compute) and <strong>Delegators</strong> (token holders who help
+                secure the network).
               </Text18>
-              <Text18>
-                Let&rsquo;s start with Orchestrators.
-              </Text18>
+              <Text18>Let&rsquo;s start with Orchestrators.</Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/actors.svg`}
               alt="Orchestrators and Delegators"
@@ -499,18 +477,17 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             <TextBlock maxW="700px">
               <Text18>
                 In the Livepeer protocol, GPU providers are called{" "}
-                <strong>orchestrators</strong>. They run the AI models
-                &mdash; image generation, video analysis, style transfer,
-                depth estimation &mdash; and earn fees in ETH or stablecoins
-                for the work they perform. Anyone with capable GPU hardware
-                can join the network and become an orchestrator.
+                <strong>orchestrators</strong>. They run the AI models &mdash;
+                image generation, video analysis, style transfer, depth
+                estimation &mdash; and earn fees in ETH or stablecoins for the
+                work they perform. Anyone with capable GPU hardware can join the
+                network and become an orchestrator.
               </Text18>
             </TextBlock>
           </ContentBlock>
 
           {/* Orchestration diagram — full bleed */}
           <ContentBlock className="mb-16">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/orchestration.svg`}
               alt="Orchestration diagram"
@@ -521,10 +498,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <ContentBlock className="mb-40">
             <TextBlock maxW="700px">
               <Text18>
-                Sounds good, right? But wait, there&rsquo;s a catch! In order
-                to earn the right to do this type of work on the network, you
-                must first earn or acquire <strong>Livepeer Token</strong>,
-                also known as <strong>LPT</strong>.
+                Sounds good, right? But wait, there&rsquo;s a catch! In order to
+                earn the right to do this type of work on the network, you must
+                first earn or acquire <strong>Livepeer Token</strong>, also
+                known as <strong>LPT</strong>.
               </Text18>
             </TextBlock>
           </ContentBlock>
@@ -536,13 +513,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         <div data-chapter="token" id="token" className="relative">
           <ContentBlock className="mb-8">
             {/* Decorative SVGs — hidden on mobile */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/token-decoration-1.svg`}
               alt=""
               className="pointer-events-none absolute -left-16 top-0 hidden lg:block"
             />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/token-decoration-2.svg`}
               alt=""
@@ -557,10 +532,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 The purpose of the Livepeer token (LPT) is to coordinate,
                 bootstrap, and incentivize participants to make sure the
                 Livepeer network is as cheap, effective, secure, reliable and
-                useful as possible. In the Livepeer protocol, LPT is required
-                to perform AI inference work on the network. The more LPT you
-                own, the more work you&rsquo;re able to perform on the network
-                in exchange for fees.
+                useful as possible. In the Livepeer protocol, LPT is required to
+                perform AI inference work on the network. The more LPT you own,
+                the more work you&rsquo;re able to perform on the network in
+                exchange for fees.
               </Text18>
               <Text18>
                 As the network&rsquo;s usage grows, so does the demand for
@@ -570,13 +545,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 Of course, not everyone has the expertise required to perform
                 the job of an Orchestrator. It requires serious technical
                 knowledge and can be a full-time job. What if you&rsquo;re a
-                Livepeer tokenholder but don&rsquo;t have the time or
-                expertise to run the necessary infrastructure 24x7?
+                Livepeer tokenholder but don&rsquo;t have the time or expertise
+                to run the necessary infrastructure 24x7?
               </Text18>
               <Text18>
-                There&rsquo;s another set of actors in the Livepeer protocol
-                who play a less active albeit equally important role within
-                the protocol &mdash; <strong>Livepeer Delegators</strong>.
+                There&rsquo;s another set of actors in the Livepeer protocol who
+                play a less active albeit equally important role within the
+                protocol &mdash; <strong>Livepeer Delegators</strong>.
               </Text18>
             </TextBlock>
           </ContentBlock>
@@ -595,20 +570,19 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 network by <strong>staking</strong> their tokens towards
                 orchestrators who they believe are doing good and honest work.
                 You can think about staking like putting a deposit down. When
-                you stake, your tokens become locked up for a period of time
-                and then you can take them back or stake them to a different
+                you stake, your tokens become locked up for a period of time and
+                then you can take them back or stake them to a different
                 orchestrator. By delegating stake to high-performing
-                orchestrators, delegators signal to the network which ones
-                are most reliable &mdash; the network uses this
-                signal to route video streams to the best orchestrators,
-                ensuring high-quality inference across the network.
+                orchestrators, delegators signal to the network which ones are
+                most reliable &mdash; the network uses this signal to route
+                video streams to the best orchestrators, ensuring high-quality
+                inference across the network.
               </Text18>
               <div className="text-[22px] leading-relaxed lg:text-[28px] lg:leading-relaxed">
                 You may be wondering, why would a Livepeer tokenholder choose
                 stake their tokens? What&rsquo;s in it for them?
               </div>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/staking.svg`}
               alt="Delegator illustration"
@@ -622,21 +596,18 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
            ════════════════════════════════════════════════ */}
         <div data-chapter="rewarding" id="rewarding">
           <ContentBlock className="mb-16">
-            <SectionHeading rotate={3}>
-              Rewarding Participation
-            </SectionHeading>
+            <SectionHeading rotate={3}>Rewarding Participation</SectionHeading>
           </ContentBlock>
 
           {/* Text left, image right — contained */}
           <FlexSection>
             <TextBlock>
               <Text18>
-                When a developer pays fees for AI inference on the network,
-                both orchestrators and delegators earn a portion of those fees
-                as a reward for ensuring a high-quality and secure network.
+                When a developer pays fees for AI inference on the network, both
+                orchestrators and delegators earn a portion of those fees as a
+                reward for ensuring a high-quality and secure network.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/fees.svg`}
               alt="Fee distribution"
@@ -648,10 +619,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <div className="mb-20 flex flex-col items-center gap-8 overflow-hidden lg:flex-row-reverse lg:items-center lg:gap-6">
             <TextBlock className="px-6 lg:min-w-[380px] lg:pr-[max(2rem,calc((100vw-960px)/2))]">
               <Text18>
-                In addition to earning fees, Livepeer mints new token over
-                time, much like Bitcoin and Ethereum block rewards, which are
-                split amongst delegators and orchestrators in proportion to
-                their total stake relative to others in the network.
+                In addition to earning fees, Livepeer mints new token over time,
+                much like Bitcoin and Ethereum block rewards, which are split
+                amongst delegators and orchestrators in proportion to their
+                total stake relative to others in the network.
               </Text18>
               <Text18>
                 This has the effect of growing network ownership amongst those
@@ -660,9 +631,9 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               <Text18>
                 It also gives orchestrators a powerful economic advantage over
                 centralized GPU cloud providers since the value of the token
-                offsets what they need to charge developers to break even.
-                This is a key reason Livepeer can offer GPU compute at
-                60&ndash;85% lower cost than centralized alternatives.
+                offsets what they need to charge developers to break even. This
+                is a key reason Livepeer can offer GPU compute at 60&ndash;85%
+                lower cost than centralized alternatives.
               </Text18>
             </TextBlock>
             <MintingDiagram
@@ -674,8 +645,8 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <ContentBlock className="mb-40">
             <TextBlock maxW="500px">
               <Text18>
-                Neat right? Next, let&rsquo;s go over how often new tokens
-                are minted.
+                Neat right? Next, let&rsquo;s go over how often new tokens are
+                minted.
               </Text18>
             </TextBlock>
           </ContentBlock>
@@ -694,11 +665,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               <Text28>Rounds</Text28>
               <Text18>
                 In Livepeer, new tokens are minted every so-called{" "}
-                <strong>round</strong>. Rounds are measured in Ethereum
-                blocks, where one round is equal to <strong>5,760</strong>{" "}
-                Ethereum blocks. In Ethereum, one block is mined on average
-                every <strong>12.69</strong> seconds, which means one Livepeer
-                round lasts roughly <strong>20.31</strong> hours. Assuming the
+                <strong>round</strong>. Rounds are measured in Ethereum blocks,
+                where one round is equal to <strong>5,760</strong> Ethereum
+                blocks. In Ethereum, one block is mined on average every{" "}
+                <strong>12.69</strong> seconds, which means one Livepeer round
+                lasts roughly <strong>20.31</strong> hours. Assuming the
                 Orchestrator you&rsquo;re staked to is doing its job, this is
                 how often you can expect to receive reward tokens.
               </Text18>
@@ -708,7 +679,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 how many new tokens to mint each round.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/rounds.svg`}
               alt="Rounds illustration"
@@ -722,17 +692,17 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               <Text28>Inflation</Text28>
               <Text18>
                 The current rate of inflation as of today&rsquo;s round is{" "}
-                <strong>{stats.inflationRate}</strong> and there are currently
-                a total of <strong>{stats.totalSupply}</strong> Livepeer tokens
-                in supply. So, if you do the math, a total of{" "}
+                <strong>{stats.inflationRate}</strong> and there are currently a
+                total of <strong>{stats.totalSupply}</strong> Livepeer tokens in
+                supply. So, if you do the math, a total of{" "}
                 <strong>{stats.mintableTokens}</strong> newly minted Livepeer
                 tokens will be rewarded to all participants during the next
                 round.
               </Text18>
               <Text18>
                 The cool thing about Livepeer is the inflation rate adjusts
-                automatically depending on how many tokens are staked out of
-                the total circulating supply. Currently, the total supply of
+                automatically depending on how many tokens are staked out of the
+                total circulating supply. Currently, the total supply of
                 Livepeer tokens stands at <strong>{stats.totalSupply}</strong>{" "}
                 and of those, <strong>{stats.totalStaked}</strong> are staked.
                 Livepeer refers to this ratio (
@@ -777,9 +747,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               }}
             />
             <div className="relative z-10">
-              <SectionHeading rotate={3}>
-                LIVEPEER IS GROWING!
-              </SectionHeading>
+              <SectionHeading rotate={3}>LIVEPEER IS GROWING!</SectionHeading>
             </div>
           </ContentBlock>
 
@@ -787,12 +755,11 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           <FlexSection>
             <TextBlock>
               <Text18>
-                Today, there are <strong>{stats.delegatorsCount}</strong> delegators securing
-                the network, with more and more participants joining every
-                day.
+                Today, there are <strong>{stats.delegatorsCount}</strong>{" "}
+                delegators securing the network, with more and more participants
+                joining every day.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`${IMG}/growing.svg`}
               alt="Network growth"
@@ -802,9 +769,9 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
 
           <ContentBlock className="mb-20">
             <Text28 center>
-              Livepeer is open GPU infrastructure for real-time video AI
-              &mdash; specialized, affordable, and built to scale. Here&rsquo;s
-              how to get involved.
+              Livepeer is open GPU infrastructure for real-time video AI &mdash;
+              specialized, affordable, and built to scale. Here&rsquo;s how to
+              get involved.
             </Text28>
           </ContentBlock>
 
@@ -869,7 +836,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           className="cursor-pointer select-none flex items-center gap-2 text-sm text-black/50 transition-colors hover:text-black"
         >
           Back to the top
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`${IMG}/arrow-down.svg`}
             alt=""
@@ -878,7 +844,6 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           />
         </button>
       </footer>
-
     </div>
   );
 }
@@ -1034,7 +999,6 @@ function PersonaCard({
   return (
     <div className="flex flex-col gap-5 rounded-xl bg-black/[0.04] p-6">
       <div className="flex items-center gap-3">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={icon} alt="" className="w-[50px] lg:w-[64px]" />
         <div className="text-[22px] font-bold lg:text-[26px]">{title}</div>
       </div>
@@ -1055,7 +1019,6 @@ function InvolvedCard({
   return (
     <div className="flex flex-col items-center gap-5 rounded-xl bg-black/[0.04] p-6 text-center">
       <div className="flex flex-col items-center gap-3">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={icon} alt="" className="w-[50px] lg:w-[64px]" />
         <div className="text-[22px] font-bold lg:text-[26px]">{title}</div>
       </div>

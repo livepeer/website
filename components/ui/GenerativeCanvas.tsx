@@ -214,7 +214,11 @@ export default function GenerativeCanvas({
     if (!gl) return;
 
     // Compile shaders
-    function createShader(gl: WebGLRenderingContext, type: number, source: string) {
+    function createShader(
+      gl: WebGLRenderingContext,
+      type: number,
+      source: string
+    ) {
       const shader = gl.createShader(type);
       if (!shader) return null;
       gl.shaderSource(shader, source);

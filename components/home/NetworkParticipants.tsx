@@ -12,8 +12,26 @@ const roles = [
       "GPU operators who perform video transcoding and AI processing work. They stake LPT to signal reliability and compete for jobs based on price, performance, and uptime.",
     icon: (
       <svg className="h-8 w-8" viewBox="0 0 32 32" fill="none">
-        <rect x="6" y="6" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="1.5" />
-        <rect x="11" y="11" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.15" />
+        <rect
+          x="6"
+          y="6"
+          width="20"
+          height="20"
+          rx="4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <rect
+          x="11"
+          y="11"
+          width="10"
+          height="10"
+          rx="2"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="currentColor"
+          fillOpacity="0.15"
+        />
       </svg>
     ),
   },
@@ -26,7 +44,12 @@ const roles = [
         <circle cx="16" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
         <circle cx="8" cy="24" r="4" stroke="currentColor" strokeWidth="1.5" />
         <circle cx="24" cy="24" r="4" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M16 12v4m-4 4l4-4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path
+          d="M16 12v4m-4 4l4-4 4 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
@@ -37,7 +60,12 @@ const roles = [
     icon: (
       <svg className="h-8 w-8" viewBox="0 0 32 32" fill="none">
         <circle cx="16" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path
+          d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
@@ -47,7 +75,13 @@ const roles = [
       "Builders who integrate the Livepeer network into their applications through gateways. They send video processing jobs and receive transcoded or AI-processed output.",
     icon: (
       <svg className="h-8 w-8" viewBox="0 0 32 32" fill="none">
-        <path d="M12 10l-6 6 6 6M20 10l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M12 10l-6 6 6 6M20 10l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
@@ -61,14 +95,15 @@ const fadeUp = {
 export default function NetworkParticipants() {
   return (
     <section className="relative py-20 lg:py-28 overflow-hidden">
-
       {/* B&W server rack photo behind tile mask */}
-      <div className="pointer-events-none absolute inset-0 opacity-10" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-10"
+        aria-hidden="true"
+      >
         <ImageMask
           video="/videos/ai-world.mp4"
           cols={5}
           rows={4}
-
           seed={77}
           className="h-full w-full"
         />

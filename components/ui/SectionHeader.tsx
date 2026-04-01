@@ -30,7 +30,9 @@ export default function SectionHeader({
           </p>
         )}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-          <h2 className={`${splitHeadingClass} lg:max-w-[26rem] lg:shrink-0`}>{title}</h2>
+          <h2 className={`${splitHeadingClass} lg:max-w-[26rem] lg:shrink-0`}>
+            {title}
+          </h2>
           {description && (
             <p className="max-w-md text-xl leading-relaxed text-white/50 text-pretty lg:max-w-[30rem]">
               {description}
@@ -48,11 +50,11 @@ export default function SectionHeader({
           {label}
         </p>
       )}
-      <h2 className={headingClass}>
-        {title}
-      </h2>
+      <h2 className={headingClass}>{title}</h2>
       {description && (
-        <p className={`mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty ${align === "center" ? "mx-auto" : ""}`}>
+        <p
+          className={`mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty ${align === "center" ? "mx-auto" : ""}`}
+        >
           {description}
         </p>
       )}

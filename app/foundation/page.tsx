@@ -56,35 +56,134 @@ const VALUES = [
 function IllustrationStrategy() {
   // Compass / convergence — multiple arrows pointing inward to a center target
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Outer ring */}
-      <circle cx="100" cy="70" r="55" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+      <circle
+        cx="100"
+        cy="70"
+        r="55"
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth="1"
+      />
       {/* Middle ring */}
-      <circle cx="100" cy="70" r="35" stroke="rgba(255,255,255,0.20)" strokeWidth="1" />
+      <circle
+        cx="100"
+        cy="70"
+        r="35"
+        stroke="rgba(255,255,255,0.20)"
+        strokeWidth="1"
+      />
       {/* Inner ring */}
-      <circle cx="100" cy="70" r="16" stroke="rgba(255,255,255,0.40)" strokeWidth="1.5" />
+      <circle
+        cx="100"
+        cy="70"
+        r="16"
+        stroke="rgba(255,255,255,0.40)"
+        strokeWidth="1.5"
+      />
       {/* Center dot */}
       <circle cx="100" cy="70" r="4" fill="rgba(255,255,255,0.80)" />
       {/* Converging lines from edges */}
-      <line x1="20" y1="20" x2="88" y2="58" stroke="rgba(255,255,255,0.30)" strokeWidth="1" />
-      <line x1="180" y1="20" x2="112" y2="58" stroke="rgba(255,255,255,0.30)" strokeWidth="1" />
-      <line x1="20" y1="120" x2="88" y2="82" stroke="rgba(255,255,255,0.30)" strokeWidth="1" />
-      <line x1="180" y1="120" x2="112" y2="82" stroke="rgba(255,255,255,0.30)" strokeWidth="1" />
+      <line
+        x1="20"
+        y1="20"
+        x2="88"
+        y2="58"
+        stroke="rgba(255,255,255,0.30)"
+        strokeWidth="1"
+      />
+      <line
+        x1="180"
+        y1="20"
+        x2="112"
+        y2="58"
+        stroke="rgba(255,255,255,0.30)"
+        strokeWidth="1"
+      />
+      <line
+        x1="20"
+        y1="120"
+        x2="88"
+        y2="82"
+        stroke="rgba(255,255,255,0.30)"
+        strokeWidth="1"
+      />
+      <line
+        x1="180"
+        y1="120"
+        x2="112"
+        y2="82"
+        stroke="rgba(255,255,255,0.30)"
+        strokeWidth="1"
+      />
       {/* Arrow tips — single shape rotated per line for perfect symmetry */}
-      <path d="M0,0 L-8,-4 L-8,4Z" fill="rgba(255,255,255,0.30)" transform="translate(88,58) rotate(29.2)" />
-      <path d="M0,0 L-8,-4 L-8,4Z" fill="rgba(255,255,255,0.30)" transform="translate(112,58) rotate(150.8)" />
-      <path d="M0,0 L-8,-4 L-8,4Z" fill="rgba(255,255,255,0.30)" transform="translate(88,82) rotate(-29.2)" />
-      <path d="M0,0 L-8,-4 L-8,4Z" fill="rgba(255,255,255,0.30)" transform="translate(112,82) rotate(-150.8)" />
+      <path
+        d="M0,0 L-8,-4 L-8,4Z"
+        fill="rgba(255,255,255,0.30)"
+        transform="translate(88,58) rotate(29.2)"
+      />
+      <path
+        d="M0,0 L-8,-4 L-8,4Z"
+        fill="rgba(255,255,255,0.30)"
+        transform="translate(112,58) rotate(150.8)"
+      />
+      <path
+        d="M0,0 L-8,-4 L-8,4Z"
+        fill="rgba(255,255,255,0.30)"
+        transform="translate(88,82) rotate(-29.2)"
+      />
+      <path
+        d="M0,0 L-8,-4 L-8,4Z"
+        fill="rgba(255,255,255,0.30)"
+        transform="translate(112,82) rotate(-150.8)"
+      />
       {/* Corner dots */}
       <circle cx="20" cy="20" r="3" fill="rgba(255,255,255,0.50)" />
       <circle cx="180" cy="20" r="3" fill="rgba(255,255,255,0.50)" />
       <circle cx="20" cy="120" r="3" fill="rgba(255,255,255,0.50)" />
       <circle cx="180" cy="120" r="3" fill="rgba(255,255,255,0.50)" />
       {/* Crosshair dashes */}
-      <line x1="100" y1="5" x2="100" y2="54" stroke="rgba(255,255,255,0.10)" strokeWidth="0.75" strokeDasharray="4 3" />
-      <line x1="100" y1="86" x2="100" y2="135" stroke="rgba(255,255,255,0.10)" strokeWidth="0.75" strokeDasharray="4 3" />
-      <line x1="35" y1="70" x2="84" y2="70" stroke="rgba(255,255,255,0.10)" strokeWidth="0.75" strokeDasharray="4 3" />
-      <line x1="116" y1="70" x2="165" y2="70" stroke="rgba(255,255,255,0.10)" strokeWidth="0.75" strokeDasharray="4 3" />
+      <line
+        x1="100"
+        y1="5"
+        x2="100"
+        y2="54"
+        stroke="rgba(255,255,255,0.10)"
+        strokeWidth="0.75"
+        strokeDasharray="4 3"
+      />
+      <line
+        x1="100"
+        y1="86"
+        x2="100"
+        y2="135"
+        stroke="rgba(255,255,255,0.10)"
+        strokeWidth="0.75"
+        strokeDasharray="4 3"
+      />
+      <line
+        x1="35"
+        y1="70"
+        x2="84"
+        y2="70"
+        stroke="rgba(255,255,255,0.10)"
+        strokeWidth="0.75"
+        strokeDasharray="4 3"
+      />
+      <line
+        x1="116"
+        y1="70"
+        x2="165"
+        y2="70"
+        stroke="rgba(255,255,255,0.10)"
+        strokeWidth="0.75"
+        strokeDasharray="4 3"
+      />
     </svg>
   );
 }
@@ -92,36 +191,143 @@ function IllustrationStrategy() {
 function IllustrationDevelopment() {
   // Layered blocks with code-like horizontal lines inside
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Bottom layer — widest */}
-      <rect x="20" y="95" width="160" height="35" rx="4" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+      <rect
+        x="20"
+        y="95"
+        width="160"
+        height="35"
+        rx="4"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="1"
+      />
       {[35, 55, 75, 95, 115, 135].map((x) => (
-        <line key={x} x1={x} y1="106" x2={x + 12} y2="106" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" />
+        <line
+          key={x}
+          x1={x}
+          y1="106"
+          x2={x + 12}
+          y2="106"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="1.5"
+        />
       ))}
       {[35, 55, 75, 95].map((x) => (
-        <line key={`b${x}`} x1={x} y1="116" x2={x + 18} y2="116" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
+        <line
+          key={`b${x}`}
+          x1={x}
+          y1="116"
+          x2={x + 18}
+          y2="116"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1.5"
+        />
       ))}
       {/* Middle layer */}
-      <rect x="35" y="55" width="130" height="32" rx="4" stroke="rgba(255,255,255,0.25)" strokeWidth="1" fill="rgba(255,255,255,0.02)" />
+      <rect
+        x="35"
+        y="55"
+        width="130"
+        height="32"
+        rx="4"
+        stroke="rgba(255,255,255,0.25)"
+        strokeWidth="1"
+        fill="rgba(255,255,255,0.02)"
+      />
       {[50, 70, 90, 110, 130].map((x) => (
-        <line key={x} x1={x} y1="66" x2={x + 14} y2="66" stroke="rgba(255,255,255,0.15)" strokeWidth="2" />
+        <line
+          key={x}
+          x1={x}
+          y1="66"
+          x2={x + 14}
+          y2="66"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="2"
+        />
       ))}
       {[50, 70, 90].map((x) => (
-        <line key={`m${x}`} x1={x} y1="76" x2={x + 20} y2="76" stroke="rgba(255,255,255,0.10)" strokeWidth="1.5" />
+        <line
+          key={`m${x}`}
+          x1={x}
+          y1="76"
+          x2={x + 20}
+          y2="76"
+          stroke="rgba(255,255,255,0.10)"
+          strokeWidth="1.5"
+        />
       ))}
       {/* Top layer — brightest */}
-      <rect x="50" y="12" width="100" height="35" rx="4" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" fill="rgba(255,255,255,0.04)" />
+      <rect
+        x="50"
+        y="12"
+        width="100"
+        height="35"
+        rx="4"
+        stroke="rgba(255,255,255,0.45)"
+        strokeWidth="1.5"
+        fill="rgba(255,255,255,0.04)"
+      />
       {[65, 85, 105, 125].map((x) => (
-        <line key={x} x1={x} y1="24" x2={x + 10} y2="24" stroke="rgba(255,255,255,0.40)" strokeWidth="2" />
+        <line
+          key={x}
+          x1={x}
+          y1="24"
+          x2={x + 10}
+          y2="24"
+          stroke="rgba(255,255,255,0.40)"
+          strokeWidth="2"
+        />
       ))}
       {[65, 85, 105].map((x) => (
-        <line key={`t${x}`} x1={x} y1="34" x2={x + 16} y2="34" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
+        <line
+          key={`t${x}`}
+          x1={x}
+          y1="34"
+          x2={x + 16}
+          y2="34"
+          stroke="rgba(255,255,255,0.25)"
+          strokeWidth="1.5"
+        />
       ))}
       {/* Connecting vertical lines between layers */}
-      <line x1="80" y1="47" x2="80" y2="55" stroke="rgba(255,255,255,0.20)" strokeWidth="1" />
-      <line x1="120" y1="47" x2="120" y2="55" stroke="rgba(255,255,255,0.20)" strokeWidth="1" />
-      <line x1="80" y1="87" x2="80" y2="95" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-      <line x1="120" y1="87" x2="120" y2="95" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+      <line
+        x1="80"
+        y1="47"
+        x2="80"
+        y2="55"
+        stroke="rgba(255,255,255,0.20)"
+        strokeWidth="1"
+      />
+      <line
+        x1="120"
+        y1="47"
+        x2="120"
+        y2="55"
+        stroke="rgba(255,255,255,0.20)"
+        strokeWidth="1"
+      />
+      <line
+        x1="80"
+        y1="87"
+        x2="80"
+        y2="95"
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth="1"
+      />
+      <line
+        x1="120"
+        y1="87"
+        x2="120"
+        y2="95"
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
@@ -129,50 +335,154 @@ function IllustrationDevelopment() {
 function IllustrationGrowth() {
   // Expanding network — central node with radiating connections and outer nodes
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Outer connections (dashed) */}
-      {([
-        [100, 70, 180, 25], [100, 70, 175, 115], [100, 70, 25, 25],
-        [100, 70, 25, 115], [100, 70, 100, 5], [100, 70, 100, 135],
-      ] as [number, number, number, number][]).map(([x1, y1, x2, y2], i) => (
-        <line key={`ol-${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.08)" strokeWidth="0.75" strokeDasharray="3 4" />
+      {(
+        [
+          [100, 70, 180, 25],
+          [100, 70, 175, 115],
+          [100, 70, 25, 25],
+          [100, 70, 25, 115],
+          [100, 70, 100, 5],
+          [100, 70, 100, 135],
+        ] as [number, number, number, number][]
+      ).map(([x1, y1, x2, y2], i) => (
+        <line
+          key={`ol-${i}`}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="0.75"
+          strokeDasharray="3 4"
+        />
       ))}
       {/* Inner connections (solid) */}
-      {([
-        [140, 45], [145, 95], [60, 45], [55, 95], [100, 25], [100, 115],
-      ] as [number, number][]).map(([x, y], i) => (
-        <line key={`il-${i}`} x1="100" y1="70" x2={x} y2={y} stroke="rgba(255,255,255,0.20)" strokeWidth="1" />
+      {(
+        [
+          [140, 45],
+          [145, 95],
+          [60, 45],
+          [55, 95],
+          [100, 25],
+          [100, 115],
+        ] as [number, number][]
+      ).map(([x, y], i) => (
+        <line
+          key={`il-${i}`}
+          x1="100"
+          y1="70"
+          x2={x}
+          y2={y}
+          stroke="rgba(255,255,255,0.20)"
+          strokeWidth="1"
+        />
       ))}
       {/* Outer ring nodes */}
-      {([
-        [180, 25], [175, 115], [25, 25], [25, 115], [100, 5], [100, 135],
-      ] as [number, number][]).map(([x, y], i) => (
+      {(
+        [
+          [180, 25],
+          [175, 115],
+          [25, 25],
+          [25, 115],
+          [100, 5],
+          [100, 135],
+        ] as [number, number][]
+      ).map(([x, y], i) => (
         <g key={`on-${i}`}>
           <circle cx={x} cy={y} r="4" fill="rgba(255,255,255,0.15)" />
         </g>
       ))}
       {/* Secondary outer nodes */}
-      {([
-        [155, 10], [185, 70], [45, 10], [15, 70], [60, 130], [140, 130],
-      ] as [number, number][]).map(([x, y], i) => (
-        <circle key={`sn-${i}`} cx={x} cy={y} r="2.5" fill="rgba(255,255,255,0.10)" />
+      {(
+        [
+          [155, 10],
+          [185, 70],
+          [45, 10],
+          [15, 70],
+          [60, 130],
+          [140, 130],
+        ] as [number, number][]
+      ).map(([x, y], i) => (
+        <circle
+          key={`sn-${i}`}
+          cx={x}
+          cy={y}
+          r="2.5"
+          fill="rgba(255,255,255,0.10)"
+        />
       ))}
       {/* Inner ring nodes */}
-      {([
-        [140, 45], [145, 95], [60, 45], [55, 95], [100, 25], [100, 115],
-      ] as [number, number][]).map(([x, y], i) => (
+      {(
+        [
+          [140, 45],
+          [145, 95],
+          [60, 45],
+          [55, 95],
+          [100, 25],
+          [100, 115],
+        ] as [number, number][]
+      ).map(([x, y], i) => (
         <g key={`in-${i}`}>
-          <circle cx={x} cy={y} r="6" stroke="rgba(255,255,255,0.30)" strokeWidth="1" fill="rgba(255,255,255,0.05)" />
+          <circle
+            cx={x}
+            cy={y}
+            r="6"
+            stroke="rgba(255,255,255,0.30)"
+            strokeWidth="1"
+            fill="rgba(255,255,255,0.05)"
+          />
           <circle cx={x} cy={y} r="2.5" fill="rgba(255,255,255,0.50)" />
         </g>
       ))}
       {/* Cross connections between inner nodes */}
-      <line x1="140" y1="45" x2="145" y2="95" stroke="rgba(255,255,255,0.08)" strokeWidth="0.75" />
-      <line x1="60" y1="45" x2="55" y2="95" stroke="rgba(255,255,255,0.08)" strokeWidth="0.75" />
-      <line x1="140" y1="45" x2="100" y2="25" stroke="rgba(255,255,255,0.08)" strokeWidth="0.75" />
-      <line x1="60" y1="45" x2="100" y2="25" stroke="rgba(255,255,255,0.08)" strokeWidth="0.75" />
+      <line
+        x1="140"
+        y1="45"
+        x2="145"
+        y2="95"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="0.75"
+      />
+      <line
+        x1="60"
+        y1="45"
+        x2="55"
+        y2="95"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="0.75"
+      />
+      <line
+        x1="140"
+        y1="45"
+        x2="100"
+        y2="25"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="0.75"
+      />
+      <line
+        x1="60"
+        y1="45"
+        x2="100"
+        y2="25"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="0.75"
+      />
       {/* Center hub */}
-      <circle cx="100" cy="70" r="10" stroke="rgba(255,255,255,0.50)" strokeWidth="1.5" fill="rgba(255,255,255,0.06)" />
+      <circle
+        cx="100"
+        cy="70"
+        r="10"
+        stroke="rgba(255,255,255,0.50)"
+        strokeWidth="1.5"
+        fill="rgba(255,255,255,0.06)"
+      />
       <circle cx="100" cy="70" r="4" fill="rgba(255,255,255,0.80)" />
     </svg>
   );
@@ -181,25 +491,88 @@ function IllustrationGrowth() {
 function IllustrationTransparency() {
   // Open window / magnifying lens with visible grid and data points
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Background grid (partially visible) */}
       {[30, 50, 70, 90, 110, 130, 150, 170].map((x) => (
-        <line key={`v${x}`} x1={x} y1="10" x2={x} y2="130" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        <line
+          key={`v${x}`}
+          x1={x}
+          y1="10"
+          x2={x}
+          y2="130"
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="0.5"
+        />
       ))}
       {[20, 40, 60, 80, 100, 120].map((y) => (
-        <line key={`h${y}`} x1="20" y1={y} x2="180" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        <line
+          key={`h${y}`}
+          x1="20"
+          y1={y}
+          x2="180"
+          y2={y}
+          stroke="rgba(255,255,255,0.04)"
+          strokeWidth="0.5"
+        />
       ))}
       {/* Lens circle */}
-      <circle cx="95" cy="65" r="45" stroke="rgba(255,255,255,0.40)" strokeWidth="1.5" />
-      <circle cx="95" cy="65" r="46" stroke="rgba(255,255,255,0.08)" strokeWidth="4" />
+      <circle
+        cx="95"
+        cy="65"
+        r="45"
+        stroke="rgba(255,255,255,0.40)"
+        strokeWidth="1.5"
+      />
+      <circle
+        cx="95"
+        cy="65"
+        r="46"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="4"
+      />
       {/* Handle */}
-      <line x1="127" y1="97" x2="165" y2="130" stroke="rgba(255,255,255,0.50)" strokeWidth="3" strokeLinecap="round" />
-      <line x1="127" y1="97" x2="165" y2="130" stroke="rgba(255,255,255,0.20)" strokeWidth="6" strokeLinecap="round" />
+      <line
+        x1="127"
+        y1="97"
+        x2="165"
+        y2="130"
+        stroke="rgba(255,255,255,0.50)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <line
+        x1="127"
+        y1="97"
+        x2="165"
+        y2="130"
+        stroke="rgba(255,255,255,0.20)"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
       {/* Magnified content inside lens — data rows */}
       {[40, 52, 64, 76, 88].map((y, i) => (
         <g key={y}>
-          <rect x="60" y={y} width={[45, 55, 35, 50, 40][i]} height="3" rx="1.5" fill={`rgba(255,255,255,${[0.35, 0.25, 0.45, 0.20, 0.30][i]})`} />
-          <rect x={60 + [48, 58, 38, 53, 43][i]} y={y} width={[16, 12, 20, 14, 18][i]} height="3" rx="1.5" fill={`rgba(255,255,255,${[0.15, 0.12, 0.18, 0.10, 0.14][i]})`} />
+          <rect
+            x="60"
+            y={y}
+            width={[45, 55, 35, 50, 40][i]}
+            height="3"
+            rx="1.5"
+            fill={`rgba(255,255,255,${[0.35, 0.25, 0.45, 0.2, 0.3][i]})`}
+          />
+          <rect
+            x={60 + [48, 58, 38, 53, 43][i]}
+            y={y}
+            width={[16, 12, 20, 14, 18][i]}
+            height="3"
+            rx="1.5"
+            fill={`rgba(255,255,255,${[0.15, 0.12, 0.18, 0.1, 0.14][i]})`}
+          />
         </g>
       ))}
     </svg>
@@ -209,25 +582,84 @@ function IllustrationTransparency() {
 function IllustrationEfficiency() {
   // Funnel / pipeline narrowing from many inputs to focused output
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Input dots on the left — scattered */}
-      {([
-        [15, 15], [30, 30], [10, 50], [25, 70], [18, 90], [35, 105], [12, 120],
-        [40, 18], [45, 55], [38, 85], [42, 40],
-      ] as [number, number][]).map(([x, y], i) => (
-        <circle key={`d-${i}`} cx={x} cy={y} r={[3, 2.5, 3, 2, 2.5, 3, 2, 2.5, 2, 3, 2.5][i]} fill={`rgba(255,255,255,${0.15 + i * 0.03})`} />
+      {(
+        [
+          [15, 15],
+          [30, 30],
+          [10, 50],
+          [25, 70],
+          [18, 90],
+          [35, 105],
+          [12, 120],
+          [40, 18],
+          [45, 55],
+          [38, 85],
+          [42, 40],
+        ] as [number, number][]
+      ).map(([x, y], i) => (
+        <circle
+          key={`d-${i}`}
+          cx={x}
+          cy={y}
+          r={[3, 2.5, 3, 2, 2.5, 3, 2, 2.5, 2, 3, 2.5][i]}
+          fill={`rgba(255,255,255,${0.15 + i * 0.03})`}
+        />
       ))}
       {/* Flow lines converging */}
-      <path d="M 50 15 C 80 15, 100 55, 140 65" stroke="rgba(255,255,255,0.12)" strokeWidth="0.75" />
-      <path d="M 50 35 C 80 35, 100 55, 140 67" stroke="rgba(255,255,255,0.15)" strokeWidth="0.75" />
-      <path d="M 50 55 C 80 55, 110 60, 140 69" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-      <path d="M 50 75 C 80 75, 110 72, 140 71" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-      <path d="M 50 95 C 80 95, 100 80, 140 73" stroke="rgba(255,255,255,0.15)" strokeWidth="0.75" />
-      <path d="M 50 115 C 80 115, 100 85, 140 75" stroke="rgba(255,255,255,0.12)" strokeWidth="0.75" />
+      <path
+        d="M 50 15 C 80 15, 100 55, 140 65"
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth="0.75"
+      />
+      <path
+        d="M 50 35 C 80 35, 100 55, 140 67"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="0.75"
+      />
+      <path
+        d="M 50 55 C 80 55, 110 60, 140 69"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+      />
+      <path
+        d="M 50 75 C 80 75, 110 72, 140 71"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+      />
+      <path
+        d="M 50 95 C 80 95, 100 80, 140 73"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="0.75"
+      />
+      <path
+        d="M 50 115 C 80 115, 100 85, 140 75"
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth="0.75"
+      />
       {/* Funnel shape */}
-      <path d="M 55 5 L 55 135 L 140 80 L 140 60 Z" stroke="rgba(255,255,255,0.15)" strokeWidth="1" fill="rgba(255,255,255,0.02)" />
+      <path
+        d="M 55 5 L 55 135 L 140 80 L 140 60 Z"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="1"
+        fill="rgba(255,255,255,0.02)"
+      />
       {/* Output — bold arrow */}
-      <line x1="140" y1="70" x2="185" y2="70" stroke="rgba(255,255,255,0.60)" strokeWidth="2.5" strokeLinecap="round" />
+      <line
+        x1="140"
+        y1="70"
+        x2="185"
+        y2="70"
+        stroke="rgba(255,255,255,0.60)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
       <polygon points="185,70 175,63 175,77" fill="rgba(255,255,255,0.60)" />
       {/* Output dot */}
       <circle cx="192" cy="70" r="4" fill="rgba(255,255,255,0.80)" />
@@ -238,11 +670,34 @@ function IllustrationEfficiency() {
 function IllustrationCocreation() {
   // Three overlapping circles with people-like dots forming a collaborative pattern
   return (
-    <svg viewBox="0 0 200 140" fill="none" className="h-full w-full" aria-hidden="true">
+    <svg
+      viewBox="0 0 200 140"
+      fill="none"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
       {/* Three overlapping circles */}
-      <circle cx="85" cy="55" r="42" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-      <circle cx="115" cy="55" r="42" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-      <circle cx="100" cy="85" r="42" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+      <circle
+        cx="85"
+        cy="55"
+        r="42"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+      />
+      <circle
+        cx="115"
+        cy="55"
+        r="42"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+      />
+      <circle
+        cx="100"
+        cy="85"
+        r="42"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+      />
       {/* Triple intersection fill */}
       <clipPath id="c1">
         <circle cx="85" cy="55" r="42" />
@@ -256,30 +711,80 @@ function IllustrationCocreation() {
         </g>
       </g>
       {/* Center — collaborative node */}
-      <circle cx="100" cy="65" r="7" stroke="rgba(255,255,255,0.50)" strokeWidth="1.5" fill="rgba(255,255,255,0.08)" />
+      <circle
+        cx="100"
+        cy="65"
+        r="7"
+        stroke="rgba(255,255,255,0.50)"
+        strokeWidth="1.5"
+        fill="rgba(255,255,255,0.08)"
+      />
       <circle cx="100" cy="65" r="3" fill="rgba(255,255,255,0.70)" />
       {/* Connection lines from people to center */}
-      <line x1="74" y1="55" x2="93" y2="63" stroke="rgba(255,255,255,0.15)" strokeWidth="0.75" strokeDasharray="3 2" />
-      <line x1="126" y1="55" x2="107" y2="63" stroke="rgba(255,255,255,0.15)" strokeWidth="0.75" strokeDasharray="3 2" />
-      <line x1="100" y1="92" x2="100" y2="72" stroke="rgba(255,255,255,0.15)" strokeWidth="0.75" strokeDasharray="3 2" />
+      <line
+        x1="74"
+        y1="55"
+        x2="93"
+        y2="63"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="0.75"
+        strokeDasharray="3 2"
+      />
+      <line
+        x1="126"
+        y1="55"
+        x2="107"
+        y2="63"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="0.75"
+        strokeDasharray="3 2"
+      />
+      <line
+        x1="100"
+        y1="92"
+        x2="100"
+        y2="72"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="0.75"
+        strokeDasharray="3 2"
+      />
     </svg>
   );
 }
 
-const PILLAR_ILLUSTRATIONS = [IllustrationStrategy, IllustrationDevelopment, IllustrationGrowth];
-const VALUE_ILLUSTRATIONS = [IllustrationTransparency, IllustrationEfficiency, IllustrationCocreation];
+const PILLAR_ILLUSTRATIONS = [
+  IllustrationStrategy,
+  IllustrationDevelopment,
+  IllustrationGrowth,
+];
+const VALUE_ILLUSTRATIONS = [
+  IllustrationTransparency,
+  IllustrationEfficiency,
+  IllustrationCocreation,
+];
 
 /* ------------------------------------------------------------------ */
 /*  Scroll-opacity mission text                                        */
 /* ------------------------------------------------------------------ */
 
-const MISSION_TEXT: { word: string; bold?: boolean; color?: string; num?: string }[] = [
-  { word: "Drive" }, { word: "the" },
+const MISSION_TEXT: {
+  word: string;
+  bold?: boolean;
+  color?: string;
+  num?: string;
+}[] = [
+  { word: "Drive" },
+  { word: "the" },
   { word: "strategy,", bold: true, color: "text-gradient", num: "01" },
-  { word: "core", bold: true, color: "text-gradient", num: "02" }, { word: "development", bold: true, color: "text-gradient" },
+  { word: "core", bold: true, color: "text-gradient", num: "02" },
+  { word: "development", bold: true, color: "text-gradient" },
   { word: "and" },
-  { word: "ecosystem", bold: true, color: "text-gradient", num: "03" }, { word: "growth", bold: true, color: "text-gradient" },
-  { word: "of" }, { word: "the" }, { word: "Livepeer" }, { word: "project." },
+  { word: "ecosystem", bold: true, color: "text-gradient", num: "03" },
+  { word: "growth", bold: true, color: "text-gradient" },
+  { word: "of" },
+  { word: "the" },
+  { word: "Livepeer" },
+  { word: "project." },
 ];
 
 function ScrollRevealMission() {
@@ -331,8 +836,16 @@ function ScrollWord({
   const opacity = useTransform(progress, [start, end], [0.15, 1]);
 
   return (
-    <motion.span style={{ opacity }} className={`${num ? "relative" : ""} transition-none ${bold ? "font-medium" : ""} ${color || ""}`}>
-      {num && <span className="text-gradient absolute top-[0.15em] -left-[0.6em] font-mono text-[0.2em] font-bold leading-none">{num}</span>}{word}{" "}
+    <motion.span
+      style={{ opacity }}
+      className={`${num ? "relative" : ""} transition-none ${bold ? "font-medium" : ""} ${color || ""}`}
+    >
+      {num && (
+        <span className="text-gradient absolute top-[0.15em] -left-[0.6em] font-mono text-[0.2em] font-bold leading-none">
+          {num}
+        </span>
+      )}
+      {word}{" "}
     </motion.span>
   );
 }
@@ -404,11 +917,7 @@ function GrainCanvas() {
 /*  Tile grid with cutout hole + corner crosshairs                     */
 /* ------------------------------------------------------------------ */
 
-function TileGrid({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+function TileGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
   const [tile, setTile] = useState(0);
   const [gridOffsetX, setGridOffsetX] = useState(0);
@@ -434,7 +943,17 @@ function TileGrid({
   }, [calculate]);
 
   return (
-    <div ref={gridRef} className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true" style={{ zIndex: 15, maskImage: "linear-gradient(to bottom, white 50%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, white 50%, transparent 100%)" }}>
+    <div
+      ref={gridRef}
+      className="pointer-events-none absolute inset-0 hidden md:block"
+      aria-hidden="true"
+      style={{
+        zIndex: 15,
+        maskImage: "linear-gradient(to bottom, white 50%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to bottom, white 50%, transparent 100%)",
+      }}
+    >
       {tile > 0 && (
         <div
           className="absolute inset-0"
@@ -563,7 +1082,9 @@ export default function FoundationPage() {
                   >
                     <p className="font-mono text-[11px] tracking-wider text-white/25">
                       {pillar.num}{" "}
-                      <span className="ml-1.5 text-white/40">{pillar.title}</span>
+                      <span className="ml-1.5 text-white/40">
+                        {pillar.title}
+                      </span>
                     </p>
                     <div className="my-6 h-44 w-full">
                       <Illus />
@@ -610,7 +1131,9 @@ export default function FoundationPage() {
                   >
                     <p className="font-mono text-[11px] tracking-wider text-white/25">
                       0{i + 1}{" "}
-                      <span className="ml-1.5 text-white/40">{value.title}</span>
+                      <span className="ml-1.5 text-white/40">
+                        {value.title}
+                      </span>
                     </p>
                     <div className="my-6 h-44 w-full">
                       <Illus />
