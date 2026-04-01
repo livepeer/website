@@ -19,15 +19,16 @@ export const NAV_ITEMS: NavItem[] = [
       { label: "Delegate LPT", href: "https://explorer.livepeer.org", external: true },
       { label: "Provide GPUs", href: "https://docs.livepeer.org", external: true },
       { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap", external: true },
+      { label: "Ecosystem (beta)", href: "/ecosystem" },
     ],
   },
   {
     label: "Resources",
     href: "/brand",
     children: [
-      { label: "Livepeer Primer", href: "/primer" },
-      { label: "Livepeer Blog", href: "/blog" },
-      { label: "Livepeer Brand", href: "/brand" },
+      { label: "Primer", href: "/primer" },
+      { label: "Blog", href: "/blog" },
+      { label: "Documentation", href: "https://docs.livepeer.org", external: true },
     ],
   },
 ];

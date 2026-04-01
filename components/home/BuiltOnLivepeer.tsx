@@ -422,32 +422,24 @@ const projects = [
     Logo: DaydreamLogo,
     description:
       "Open-source engine for real-time generative video, audio, and live visuals.",
-    href: "https://daydream.live",
-    linkLabel: "Visit Daydream",
   },
   {
     Visual: StudioVisual,
     Logo: FrameworksLogo,
     description:
       "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
-    href: "https://frameworks.network",
-    linkLabel: "Visit Frameworks",
   },
   {
     Visual: StreamplaceVisual,
     Logo: StreamplaceLogo,
     description:
       "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
-    href: "https://stream.place",
-    linkLabel: "Visit Streamplace",
   },
   {
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
     description:
       "Embodied AI avatars for real-time tutoring and telepresence.",
-    href: "https://embody.zone",
-    linkLabel: "Visit Embody",
   },
 ];
 
@@ -468,8 +460,8 @@ export default function BuiltOnLivepeer() {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Ecosystem"
-              title="In Production on Livepeer"
-              description="Real-time AI video, live streaming, and embodied avatars — all running on network-operated GPU infrastructure."
+              title="Live on Livepeer"
+              description="Solutions built on the network — shipping today, powering real workloads."
               align="split"
             />
           </motion.div>
@@ -482,11 +474,8 @@ export default function BuiltOnLivepeer() {
               transition={{ duration: 0.4 }}
               className="lg:row-span-3"
             >
-              <a
-                href={featured.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors duration-200 hover:border-white/[0.12]"
+              <div
+                className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]"
               >
                 <div className="relative flex-1 min-h-[220px]">
                   <div className="absolute inset-0">
@@ -497,12 +486,8 @@ export default function BuiltOnLivepeer() {
                   <p className="text-sm leading-relaxed text-white/50">
                     {featured.description}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-green-bright transition-colors group-hover:text-green-light">
-                    {featured.linkLabel}
-                    <span aria-hidden="true">&rarr;</span>
-                  </span>
                 </div>
-              </a>
+              </div>
             </motion.div>
 
             {/* 3 smaller cards stacked on the right */}
@@ -512,26 +497,36 @@ export default function BuiltOnLivepeer() {
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
               >
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors duration-200 hover:border-white/[0.12]"
+                <div
+                  className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]"
                 >
                   <div className="px-5 pt-5 pb-4">
                     <project.Logo />
                     <p className="mt-3 text-[13px] leading-relaxed text-white/50">
                       {project.description}
                     </p>
-                    <span className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-green-bright transition-colors group-hover:text-green-light">
-                      {project.linkLabel}
-                      <span aria-hidden="true">&rarr;</span>
-                    </span>
                   </div>
-                </a>
+                </div>
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="mt-12 text-center"
+          >
+            <a
+              href="/ecosystem"
+              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
+              style={{
+                background: "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+              }}
+            >
+              Explore the Ecosystem
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </motion.div>
         </motion.div>
       </Container>
     </section>

@@ -275,7 +275,7 @@ export default function Hero() {
           >
             The open network for
             <br />
-            <span className="text-gradient">GPU-powered video</span>
+            <span className="text-gradient">real-time AI video</span>
           </motion.h1>
 
           <motion.p
@@ -284,9 +284,26 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            For less than the centralized cloud — no platform lock-in, and a
-            direct line to builders powering the network.
+            Generate, transform, and interpret live video streams on a
+            permissionless GPU network — for less than the centralized cloud,
+            with no platform lock-in.
           </motion.p>
+
+          <motion.a
+            href="https://discord.gg/livepeer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
+            style={{
+              background:
+                "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            Build with Livepeer <span aria-hidden="true">→</span>
+          </motion.a>
 
         </motion.div>
       </Container>

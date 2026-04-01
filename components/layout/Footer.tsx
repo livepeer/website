@@ -10,14 +10,15 @@ const footerNav = [
       { label: "Delegate LPT", href: EXTERNAL_LINKS.explorer },
       { label: "Provide GPUs", href: "https://docs.livepeer.org" },
       { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap" },
+      { label: "Ecosystem (beta)", href: "/ecosystem" },
     ],
   },
   {
     title: "Resources",
     links: [
-      { label: "Livepeer Primer", href: "/primer" },
-      { label: "Livepeer Blog", href: "/blog" },
-      { label: "Livepeer Brand", href: "/brand" },
+      { label: "Primer", href: "/primer" },
+      { label: "Blog", href: "/blog" },
+      { label: "Documentation", href: "https://docs.livepeer.org" },
     ],
   },
   {
@@ -26,6 +27,7 @@ const footerNav = [
       { label: "Discord", href: EXTERNAL_LINKS.discord },
       { label: "X / Twitter", href: EXTERNAL_LINKS.twitter },
       { label: "Forum", href: EXTERNAL_LINKS.forum },
+      { label: "YouTube", href: "https://www.youtube.com/@LivepeerProject" },
     ],
   },
 ];
@@ -81,7 +83,7 @@ export default function Footer() {
               <LivepeerLockup className="h-5 w-auto text-white" />
             </Link>
             <p className="mt-4 text-sm text-white/50">
-              The open network for GPU-powered video.
+              The open network for real-time AI video.
             </p>
             <div className="mt-6 flex items-center gap-3">
               {socialLinks.map((social) => (
