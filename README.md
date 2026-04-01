@@ -70,7 +70,7 @@ This project includes a dev container to isolate your development environment fr
 
 The dev server runs on port 3000, which is forwarded to your host automatically.
 
-This project also enforces `frozen-lockfile`, `ignore-scripts`, and `only-built-dependencies=[]` via `.npmrc` to block malicious install hooks. If you need to work around these:
+This project also enforces `frozen-lockfile` and `ignore-scripts` via `.npmrc` to block malicious install hooks. If you need to work around these:
 
 **Adding a dependency:**
 
