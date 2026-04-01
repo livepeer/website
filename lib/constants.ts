@@ -2,7 +2,6 @@ export type NavChild = {
   label: string;
   href: string;
   external?: boolean;
-  badge?: string;
 };
 
 export type NavItem = {
@@ -34,7 +33,7 @@ export const NAV_ITEMS: NavItem[] = [
         href: "https://roadmap.livepeer.org/roadmap",
         external: true,
       },
-      { label: "Ecosystem", href: "/ecosystem", badge: "Preview" },
+      { label: "Ecosystem", href: "/ecosystem" },
     ],
   },
   {
