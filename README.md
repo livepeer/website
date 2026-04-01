@@ -11,11 +11,12 @@ The official website for [Livepeer](https://livepeer.org) — open infrastructur
 
 ## Prerequisites
 
-- **Node.js 22.x** — use `nvm install` to automatically switch (reads `.nvmrc`)
-- **pnpm** — run `corepack enable` to activate pnpm at the version pinned in `package.json`
-- **Docker** (optional) — required for the dev container
+- [Node.js 22.x](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (includes npm)
+- [pnpm v10.x](https://pnpm.io/installation) — install with `npm install -g pnpm` or `corepack enable`
+- [Docker](https://docs.docker.com/get-docker/) (optional) — required for the dev container
 
-> **Tip:** Use `nvm install` or `asdf install` to automatically switch to the correct Node version.
+> [!TIP]
+> Use `nvm install` or `asdf install` to automatically switch to the correct versions.
 
 ## Getting Started
 
@@ -59,18 +60,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Dev Container (Recommended)
 
-This project includes a dev container to isolate your development environment from your host machine, protecting against supply chain attacks by not exposing global credentials (`~/.ssh`, `~/.aws`, `~/.config`) to compromised packages.
-
-### Setup
+Develop inside a pre-configured container — consistent tooling, zero local setup, and isolation from your host machine.
 
 1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code
-2. Open this project in VS Code
-3. Press `Ctrl+Shift+P` → **"Dev Containers: Reopen in Container"**
-4. The container will automatically install dependencies via `pnpm install`
-
-The dev server runs on port 3000, which is forwarded to your host automatically.
-
-pnpm 10 blocks dependency install scripts by default. If a package needs to run a build script (e.g., native bindings), approve it with `pnpm approve-builds && pnpm rebuild`.
+2. `Ctrl+Shift+P` → **"Dev Containers: Reopen in Container"**
 
 ## Project Structure
 
