@@ -1,0 +1,19 @@
+{
+  "name": "livepeer-website",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "remoteUser": "node",
+  "containerUser": "node",
+  "postCreateCommand": "corepack enable && pnpm config set ignore-scripts true --global && pnpm config set frozen-lockfile true --global && pnpm install",
+  "forwardPorts": [3000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}

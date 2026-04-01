@@ -42,4 +42,9 @@ brand_guidelines/
 !public/fonts/
 img/
 *.pdf
+
+# IDE
 .claude/
+.codex
+.vscode/
+*.code-workspace
