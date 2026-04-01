@@ -37,9 +37,19 @@ export default function EarlyAccessCTA() {
       >
         {/* Mail icon */}
         <div className="flex shrink-0 items-center pl-3 text-white/30">
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.5">
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 20 20"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
             <rect x="2" y="4" width="16" height="12" rx="2" />
-            <path d="M2 6l8 5 8-5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M2 6l8 5 8-5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
 
@@ -61,7 +71,8 @@ export default function EarlyAccessCTA() {
           disabled={isSubmitting || isSuccess}
           className="shrink-0 cursor-pointer select-none rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 disabled:opacity-70 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
           style={{
-            background: "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+            background:
+              "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
           }}
         >
           <span className="flex items-center justify-center gap-1.5">
@@ -72,8 +83,18 @@ export default function EarlyAccessCTA() {
               </>
             ) : isSuccess ? (
               <>
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 8.5l3.5 3.5 6.5-7" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 16 16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    d="M3 8.5l3.5 3.5 6.5-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 <span>You&apos;re on the list!</span>
               </>

@@ -21,13 +21,11 @@ Constraints:
 ## 1. Discovery Phase
 
 1. Inspect repo structure:
-
    - Identify framework (Next.js, Astro, etc.)
    - Locate how existing Use Case pages are structured
    - Identify shared components: Hero, Section, Grid, CTA, Layout
 
 2. Review 1–2 existing use case pages:
-
    - Match section structure
    - Match typography and spacing
    - Mirror CTA patterns

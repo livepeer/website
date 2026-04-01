@@ -34,12 +34,12 @@ Copy the example env file and fill in the values:
 cp .env.example .env.local
 ```
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MAILCHIMP_API_KEY` | Yes | Mailchimp API key for early access signups |
-| `MAILCHIMP_AUDIENCE_ID` | Yes | Mailchimp audience/list ID |
-| `MAILCHIMP_TAG` | No | Tag applied to new subscribers (default: "v2 Website Signups") |
-| `THEGRAPH_API_KEY` | No | Authenticated subgraph requests for live protocol stats (falls back to hardcoded values) |
+| Variable                | Required | Description                                                                              |
+| ----------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `MAILCHIMP_API_KEY`     | Yes      | Mailchimp API key for early access signups                                               |
+| `MAILCHIMP_AUDIENCE_ID` | Yes      | Mailchimp audience/list ID                                                               |
+| `MAILCHIMP_TAG`         | No       | Tag applied to new subscribers (default: "v2 Website Signups")                           |
+| `THEGRAPH_API_KEY`      | No       | Authenticated subgraph requests for live protocol stats (falls back to hardcoded values) |
 
 ### Run Development Server
 
@@ -51,12 +51,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start development server |
-| `pnpm build` | Create production build |
-| `pnpm start` | Serve production build |
-| `pnpm lint` | Run ESLint |
+| Command      | Description              |
+| ------------ | ------------------------ |
+| `pnpm dev`   | Start development server |
+| `pnpm build` | Create production build  |
+| `pnpm start` | Serve production build   |
+| `pnpm lint`  | Run ESLint               |
 
 ## Dev Container (Recommended)
 

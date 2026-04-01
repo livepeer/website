@@ -233,7 +233,8 @@ export default function WhyLivepeer() {
               </div>
               <h3 className="mt-2 text-base font-medium">Cost Reduction</h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
-                Usage-based GPU pricing with no reserved instances or idle capacity.
+                Usage-based GPU pricing with no reserved instances or idle
+                capacity.
               </p>
               <div className="mt-5">
                 <CostVis />
@@ -244,9 +245,7 @@ export default function WhyLivepeer() {
               <div className="font-mono text-5xl font-bold tracking-tight text-gradient lg:text-6xl">
                 &lt;1s
               </div>
-              <h3 className="mt-2 text-base font-medium">
-                Real-Time Latency
-              </h3>
+              <h3 className="mt-2 text-base font-medium">Real-Time Latency</h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
                 Purpose-built for continuous, frame-by-frame AI inference on
                 live video.

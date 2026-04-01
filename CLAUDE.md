@@ -3,6 +3,7 @@
 **Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: npm. No test framework.
 
 **Environment variables** (set in Vercel / `.env.local`):
+
 - `MAILCHIMP_API_KEY` — Mailchimp API key (early access signups)
 - `MAILCHIMP_AUDIENCE_ID` — Mailchimp audience/list ID
 - `MAILCHIMP_TAG` — Mailchimp tag applied to new subscribers (default: "v2 Website Signups")
@@ -80,6 +81,7 @@
 The site's signature visual is a layered grid system that combines B&W video/imagery, geometric shapes, animated particle trails, and liquid glass effects. This creates an "outer space control room" aesthetic — technical, cinematic, and distinctly Livepeer.
 
 **Layer stack (bottom to top):**
+
 1. **Media layer** — B&W video or image with green tint, darkened (`ImageMask`)
 2. **Tile grid** — 9-column square grid with 1px white borders, overlaid on the media
 3. **Geometric shapes** — circles, crosshairs, and a starburst node positioned at grid intersections
@@ -101,6 +103,7 @@ The site's signature visual is a layered grid system that combines B&W video/ima
 Full spec in `brand-tokens.md` — colors, typography, logo rules, greyscale ramp, gradients, graphic elements.
 
 **Theme tokens** (`globals.css` `@theme`):
+
 - Colors: `green`, `green-light`, `green-dark`, `green-bright`, `green-subtle`, `blue`, `blue-light`, `blue-bright`, `blue-dark`, `blue-subtle`, `dark`, `dark-lighter`, `dark-card`, `dark-border`
 - Fonts: `--font-sans` (Favorit Pro — Light/Book/Regular/Medium/Bold), `--font-mono` (Favorit Mono — Regular/Medium/Bold)
 
@@ -133,17 +136,17 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 
 ### Terminology
 
-| Use | Don't use |
-|-----|-----------|
-| "the network" | "the platform," "the service" |
-| "open infrastructure" | "decentralized infrastructure" (too web3-coded) |
-| "GPU providers" (dev-facing) | "nodes" (too generic) |
-| "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model) |
-| "gateway" | "API endpoint" (gateway is the product concept) |
-| "delegators" | "stakers" (delegators is the protocol term) |
-| "frames," "streams" | "requests," "calls" (video-native language) |
-| "inference" | "processing" (when referring to AI specifically) |
-| "Livepeer Gateway" | "NaaP" (internal-only project name), "Livepeer platform" (too generic) |
+| Use                                        | Don't use                                                              |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| "the network"                              | "the platform," "the service"                                          |
+| "open infrastructure"                      | "decentralized infrastructure" (too web3-coded)                        |
+| "GPU providers" (dev-facing)               | "nodes" (too generic)                                                  |
+| "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model)                            |
+| "gateway"                                  | "API endpoint" (gateway is the product concept)                        |
+| "delegators"                               | "stakers" (delegators is the protocol term)                            |
+| "frames," "streams"                        | "requests," "calls" (video-native language)                            |
+| "inference"                                | "processing" (when referring to AI specifically)                       |
+| "Livepeer Gateway"                         | "NaaP" (internal-only project name), "Livepeer platform" (too generic) |
 
 ## Strategic Context
 
@@ -158,6 +161,7 @@ The 2026 focus is preparing the network for scalable demand. This platform is th
 **Product principles:** Observable (transparent network data, LLM/agent-readable), Performant (production-grade real-time execution), User-Centric (developers who drive demand).
 
 **Priority personas:**
+
 1. **App Developers** — build demand-generating apps. "Get an API key and go."
 2. **Service Providers** — build plugins for app devs: billing, analytics, CDN.
 3. **Orchestrators** — provide GPU compute by meeting SLAs.
@@ -165,6 +169,7 @@ The 2026 focus is preparing the network for scalable demand. This platform is th
 ### Daydream
 
 Flagship product and design partner. Translates the real-time AI video thesis into developer workflows and generates early production demand.
+
 - **Scope**: open-source local tool for designing real-time AI video workflows (integrates with TouchDesigner, Unity, Unreal)
 - **Daydream API**: remote inference on Livepeer GPU backends
 - **Community Hub**: workflow discovery and collaboration

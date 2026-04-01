@@ -18,7 +18,8 @@ function DaydreamLogo({ className }: { className?: string }) {
       <div
         className="h-5 w-5 rounded-md"
         style={{
-          background: "linear-gradient(135deg, #F73B41, #FF982E, #2FBEC5, #36619D)",
+          background:
+            "linear-gradient(135deg, #F73B41, #FF982E, #2FBEC5, #36619D)",
         }}
       />
       <span className="text-[17px] font-bold tracking-tight text-white">
@@ -33,9 +34,29 @@ function FrameworksLogo({ className }: { className?: string }) {
     <div className={`flex items-center gap-2 ${className ?? ""}`}>
       {/* Interlocking brackets mark */}
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M3 4L7 10L3 16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M17 4L13 10L17 16" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="8" y1="14" x2="12" y2="6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+        <path
+          d="M3 4L7 10L3 16"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M17 4L13 10L17 16"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <line
+          x1="8"
+          y1="14"
+          x2="12"
+          y2="6"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </svg>
       <span className="text-[17px] font-bold tracking-tight text-white">
         Frameworks
@@ -49,9 +70,18 @@ function StreamplaceLogo({ className }: { className?: string }) {
     <div className={`flex items-center gap-2 ${className ?? ""}`}>
       {/* Crystal gem mark from actual logo */}
       <svg width="20" height="20" viewBox="0 0 493.29 481.09" fill="none">
-        <path d="m253.76 445.69-208.02-93.734-45.742-290.22 243.33-61.739 249.95 58.678-9.9427 310.8z" fill="#f8baca" />
-        <path d="m253.59 481.09-241.31-105.15-12.277-314.2 253.59 70.875 239.69-73.936-85.842 261.91z" fill="#de91a6" />
-        <path d="m493.29 58.678-239.7 73.933-0.59253 348.48 230.34-111.61z" fill="#ac6e81" />
+        <path
+          d="m253.76 445.69-208.02-93.734-45.742-290.22 243.33-61.739 249.95 58.678-9.9427 310.8z"
+          fill="#f8baca"
+        />
+        <path
+          d="m253.59 481.09-241.31-105.15-12.277-314.2 253.59 70.875 239.69-73.936-85.842 261.91z"
+          fill="#de91a6"
+        />
+        <path
+          d="m493.29 58.678-239.7 73.933-0.59253 348.48 230.34-111.61z"
+          fill="#ac6e81"
+        />
       </svg>
       <span className="text-[17px] font-bold tracking-tight text-white">
         Streamplace
@@ -100,15 +130,25 @@ function DaydreamVisual() {
         {/* Toolbar */}
         <div className="flex items-center justify-between rounded-t-md border border-b-0 border-white/[0.08] bg-black/30 px-3 py-2">
           <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "#ff982e" }} />
-            <span className="font-mono text-[9px] uppercase" style={{ color: "rgba(255,152,46,0.6)" }}>
+            <span
+              className="h-1.5 w-1.5 rounded-full animate-pulse"
+              style={{ background: "#ff982e" }}
+            />
+            <span
+              className="font-mono text-[9px] uppercase"
+              style={{ color: "rgba(255,152,46,0.6)" }}
+            >
               Generating
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[8px] text-white/20">1920×1080</span>
+            <span className="font-mono text-[8px] text-white/20">
+              1920×1080
+            </span>
             <span className="font-mono text-[8px] text-white/20">30fps</span>
-            <span className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[8px] text-cyan-400/50">GPU×4</span>
+            <span className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[8px] text-cyan-400/50">
+              GPU×4
+            </span>
           </div>
         </div>
 
@@ -131,23 +171,53 @@ function DaydreamVisual() {
               fill="rgba(31,244,255,0.04)"
             />
             {/* Flowing energy lines */}
-            <path d="M0 140 C80 90, 180 180, 280 120 S420 150, 500 100" stroke="rgba(255,152,46,0.2)" strokeWidth="1.5" />
-            <path d="M0 170 C100 130, 200 200, 320 150 S460 180, 500 140" stroke="rgba(31,244,255,0.12)" strokeWidth="1" />
-            <path d="M0 110 C120 60, 220 130, 340 80 S480 110, 500 70" stroke="rgba(255,255,255,0.04)" strokeWidth="0.8" />
+            <path
+              d="M0 140 C80 90, 180 180, 280 120 S420 150, 500 100"
+              stroke="rgba(255,152,46,0.2)"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M0 170 C100 130, 200 200, 320 150 S460 180, 500 140"
+              stroke="rgba(31,244,255,0.12)"
+              strokeWidth="1"
+            />
+            <path
+              d="M0 110 C120 60, 220 130, 340 80 S480 110, 500 70"
+              stroke="rgba(255,255,255,0.04)"
+              strokeWidth="0.8"
+            />
             {/* Scattered particles */}
             {[
-              [60, 120, "#ff982e", 3], [140, 95, "#1ff4ff", 2],
-              [230, 140, "#ff982e", 2.5], [310, 110, "#1ff4ff", 2],
-              [380, 130, "#ff982e", 1.8], [440, 100, "#1ff4ff", 3],
-              [100, 160, "#ff982e", 1.5], [270, 170, "#1ff4ff", 2],
-              [190, 115, "#ff982e", 2], [350, 155, "#1ff4ff", 1.5],
+              [60, 120, "#ff982e", 3],
+              [140, 95, "#1ff4ff", 2],
+              [230, 140, "#ff982e", 2.5],
+              [310, 110, "#1ff4ff", 2],
+              [380, 130, "#ff982e", 1.8],
+              [440, 100, "#1ff4ff", 3],
+              [100, 160, "#ff982e", 1.5],
+              [270, 170, "#1ff4ff", 2],
+              [190, 115, "#ff982e", 2],
+              [350, 155, "#1ff4ff", 1.5],
             ].map(([x, y, c, r], i) => (
-              <circle key={i} cx={x as number} cy={y as number} r={r as number} fill={`${c}44`} />
+              <circle
+                key={i}
+                cx={x as number}
+                cy={y as number}
+                r={r as number}
+                fill={`${c}44`}
+              />
             ))}
             {/* Central bright node */}
             <circle cx="250" cy="135" r="6" fill="rgba(255,152,46,0.15)" />
             <circle cx="250" cy="135" r="3" fill="rgba(255,152,46,0.3)" />
-            <circle cx="250" cy="135" r="18" fill="none" stroke="rgba(255,152,46,0.08)" strokeWidth="0.5" />
+            <circle
+              cx="250"
+              cy="135"
+              r="18"
+              fill="none"
+              stroke="rgba(255,152,46,0.08)"
+              strokeWidth="0.5"
+            />
           </svg>
 
           {/* Pipeline frame strip at bottom */}
@@ -155,40 +225,105 @@ function DaydreamVisual() {
             <div className="flex gap-2">
               {frames.map((f, i) => (
                 <div key={i} className="flex-1">
-                  <div className={`aspect-video rounded border border-white/[0.08] bg-gradient-to-br ${f.gradient}`}>
+                  <div
+                    className={`aspect-video rounded border border-white/[0.08] bg-gradient-to-br ${f.gradient}`}
+                  >
                     {/* Mini abstract content per frame */}
-                    <svg className="h-full w-full" viewBox="0 0 80 45" fill="none">
+                    <svg
+                      className="h-full w-full"
+                      viewBox="0 0 80 45"
+                      fill="none"
+                    >
                       {i === 0 && (
                         <>
-                          <rect x="20" y="10" width="40" height="25" rx="2" fill="rgba(255,255,255,0.06)" />
-                          <circle cx="40" cy="22" r="8" fill="rgba(255,152,46,0.15)" />
+                          <rect
+                            x="20"
+                            y="10"
+                            width="40"
+                            height="25"
+                            rx="2"
+                            fill="rgba(255,255,255,0.06)"
+                          />
+                          <circle
+                            cx="40"
+                            cy="22"
+                            r="8"
+                            fill="rgba(255,152,46,0.15)"
+                          />
                         </>
                       )}
                       {i === 1 && (
                         <>
-                          <path d="M0 35 Q20 15, 40 25 T80 18" stroke="rgba(31,244,255,0.3)" strokeWidth="1" fill="none" />
-                          <path d="M0 40 Q30 20, 50 30 T80 25" stroke="rgba(31,244,255,0.15)" strokeWidth="0.8" fill="none" />
+                          <path
+                            d="M0 35 Q20 15, 40 25 T80 18"
+                            stroke="rgba(31,244,255,0.3)"
+                            strokeWidth="1"
+                            fill="none"
+                          />
+                          <path
+                            d="M0 40 Q30 20, 50 30 T80 25"
+                            stroke="rgba(31,244,255,0.15)"
+                            strokeWidth="0.8"
+                            fill="none"
+                          />
                         </>
                       )}
                       {i === 2 && (
                         <>
-                          <rect x="15" y="8" width="50" height="30" rx="2" fill="rgba(255,152,46,0.08)" />
-                          <path d="M20 30 Q40 12, 60 28" stroke="rgba(255,152,46,0.25)" strokeWidth="1" fill="none" />
+                          <rect
+                            x="15"
+                            y="8"
+                            width="50"
+                            height="30"
+                            rx="2"
+                            fill="rgba(255,152,46,0.08)"
+                          />
+                          <path
+                            d="M20 30 Q40 12, 60 28"
+                            stroke="rgba(255,152,46,0.25)"
+                            strokeWidth="1"
+                            fill="none"
+                          />
                         </>
                       )}
                       {i === 3 && (
                         <>
-                          <rect x="10" y="5" width="60" height="35" rx="2" fill="rgba(31,244,255,0.06)" />
-                          <circle cx="40" cy="22" r="10" fill="rgba(255,152,46,0.1)" />
-                          <circle cx="40" cy="22" r="5" fill="rgba(31,244,255,0.15)" />
+                          <rect
+                            x="10"
+                            y="5"
+                            width="60"
+                            height="35"
+                            rx="2"
+                            fill="rgba(31,244,255,0.06)"
+                          />
+                          <circle
+                            cx="40"
+                            cy="22"
+                            r="10"
+                            fill="rgba(255,152,46,0.1)"
+                          />
+                          <circle
+                            cx="40"
+                            cy="22"
+                            r="5"
+                            fill="rgba(31,244,255,0.15)"
+                          />
                         </>
                       )}
                     </svg>
                   </div>
                   <div className="mt-1 flex items-center justify-between">
-                    <span className="font-mono text-[7px] text-white/25">{f.label}</span>
-                    {i < 3 && <span className="font-mono text-[7px] text-white/15">&rarr;</span>}
-                    {i === 3 && <span className="h-1 w-1 rounded-full bg-emerald-400/50" />}
+                    <span className="font-mono text-[7px] text-white/25">
+                      {f.label}
+                    </span>
+                    {i < 3 && (
+                      <span className="font-mono text-[7px] text-white/15">
+                        &rarr;
+                      </span>
+                    )}
+                    {i === 3 && (
+                      <span className="h-1 w-1 rounded-full bg-emerald-400/50" />
+                    )}
                   </div>
                 </div>
               ))}
@@ -215,7 +350,12 @@ function StudioVisual() {
       {/* Subtle brand gradient accent */}
       <div
         className="absolute h-[120px] w-[200px] rounded-full opacity-10 blur-[60px]"
-        style={{ left: "30%", top: "20%", background: "linear-gradient(135deg, #DC3D42, #F0C000, #299764, #3A5CCC)" }}
+        style={{
+          left: "30%",
+          top: "20%",
+          background:
+            "linear-gradient(135deg, #DC3D42, #F0C000, #299764, #3A5CCC)",
+        }}
       />
 
       {/* Mini API dashboard */}
@@ -232,20 +372,53 @@ function StudioVisual() {
         <div className="p-3">
           <div className="space-y-2">
             {[
-              { method: "POST", color: "#299764", path: "/api/stream", status: "200" },
-              { method: "GET", color: "#3A5CCC", path: "/api/asset/:id", status: "200" },
-              { method: "POST", color: "#299764", path: "/api/ai/generate", status: "..." },
-              { method: "GET", color: "#3A5CCC", path: "/api/pipeline/:id", status: "200" },
+              {
+                method: "POST",
+                color: "#299764",
+                path: "/api/stream",
+                status: "200",
+              },
+              {
+                method: "GET",
+                color: "#3A5CCC",
+                path: "/api/asset/:id",
+                status: "200",
+              },
+              {
+                method: "POST",
+                color: "#299764",
+                path: "/api/ai/generate",
+                status: "...",
+              },
+              {
+                method: "GET",
+                color: "#3A5CCC",
+                path: "/api/pipeline/:id",
+                status: "200",
+              },
             ].map((row, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span
                   className="rounded px-1.5 py-0.5 font-mono text-[7px] font-medium"
-                  style={{ background: `${row.color}22`, color: `${row.color}cc` }}
+                  style={{
+                    background: `${row.color}22`,
+                    color: `${row.color}cc`,
+                  }}
                 >
                   {row.method}
                 </span>
-                <span className="font-mono text-[8px] text-white/30">{row.path}</span>
-                <span className="ml-auto font-mono text-[8px]" style={{ color: row.status === "200" ? "rgba(41,151,100,0.6)" : "rgba(255,255,255,0.2)" }}>
+                <span className="font-mono text-[8px] text-white/30">
+                  {row.path}
+                </span>
+                <span
+                  className="ml-auto font-mono text-[8px]"
+                  style={{
+                    color:
+                      row.status === "200"
+                        ? "rgba(41,151,100,0.6)"
+                        : "rgba(255,255,255,0.2)",
+                  }}
+                >
                   {row.status}
                 </span>
               </div>
@@ -258,9 +431,16 @@ function StudioVisual() {
               { label: "Latency", value: "23ms" },
               { label: "Uptime", value: "99.9%" },
             ].map((s) => (
-              <div key={s.label} className="rounded border border-white/[0.06] bg-white/[0.02] px-2 py-1.5">
-                <div className="font-mono text-[7px] text-white/20">{s.label}</div>
-                <div className="font-mono text-[12px] font-semibold text-white/60">{s.value}</div>
+              <div
+                key={s.label}
+                className="rounded border border-white/[0.06] bg-white/[0.02] px-2 py-1.5"
+              >
+                <div className="font-mono text-[7px] text-white/20">
+                  {s.label}
+                </div>
+                <div className="font-mono text-[12px] font-semibold text-white/60">
+                  {s.value}
+                </div>
               </div>
             ))}
           </div>
@@ -303,29 +483,39 @@ function StreamplaceVisual() {
           {/* LIVE badge */}
           <div className="absolute left-2 top-2 flex items-center gap-1.5 rounded bg-red-500/20 px-2 py-0.5">
             <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
-            <span className="font-mono text-[8px] font-medium text-red-400/80">LIVE</span>
+            <span className="font-mono text-[8px] font-medium text-red-400/80">
+              LIVE
+            </span>
           </div>
 
           {/* Viewer count */}
           <div className="absolute right-2 top-2 rounded bg-black/40 px-2 py-0.5">
-            <span className="font-mono text-[8px] text-white/30">847 watching</span>
+            <span className="font-mono text-[8px] text-white/30">
+              847 watching
+            </span>
           </div>
 
           {/* Streamer handle */}
           <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
             <div className="h-4 w-4 rounded-full bg-[#de91a6]/30" />
-            <span className="font-mono text-[8px] text-white/40">@alice.bsky.social</span>
+            <span className="font-mono text-[8px] text-white/40">
+              @alice.bsky.social
+            </span>
           </div>
 
           {/* AT Protocol badge */}
           <div className="absolute bottom-2 right-2 rounded bg-white/[0.04] px-1.5 py-0.5">
-            <span className="font-mono text-[7px] text-white/20">AT Protocol</span>
+            <span className="font-mono text-[7px] text-white/20">
+              AT Protocol
+            </span>
           </div>
         </div>
 
         {/* Chat / social sidebar */}
         <div className="flex w-[100px] flex-col gap-1.5 overflow-hidden rounded-md border border-white/[0.06] bg-[#0c0c0c] p-2">
-          <div className="font-mono text-[7px] text-white/25 uppercase">Chat</div>
+          <div className="font-mono text-[7px] text-white/25 uppercase">
+            Chat
+          </div>
           {[
             { handle: "bob", msg: "this is amazing" },
             { handle: "cara", msg: "how is this decentralized?" },
@@ -334,13 +524,17 @@ function StreamplaceVisual() {
             { handle: "frank", msg: "open source too" },
           ].map((c, i) => (
             <div key={i} className="text-[7px] leading-tight">
-              <span style={{ color: "rgba(222,145,166,0.6)" }}>@{c.handle}</span>
+              <span style={{ color: "rgba(222,145,166,0.6)" }}>
+                @{c.handle}
+              </span>
               <span className="text-white/25"> {c.msg}</span>
             </div>
           ))}
           {/* Chat input */}
           <div className="mt-auto rounded border border-white/[0.06] bg-white/[0.02] px-1.5 py-1">
-            <span className="font-mono text-[7px] text-white/15">Say something...</span>
+            <span className="font-mono text-[7px] text-white/15">
+              Say something...
+            </span>
           </div>
         </div>
       </div>
@@ -363,7 +557,11 @@ function EmbodyVisual() {
       {/* Subtle glow */}
       <div
         className="absolute h-[140px] w-[140px] rounded-full opacity-15 blur-[60px]"
-        style={{ left: "35%", top: "25%", background: "linear-gradient(135deg, #a78bfa, #34d399)" }}
+        style={{
+          left: "35%",
+          top: "25%",
+          background: "linear-gradient(135deg, #a78bfa, #34d399)",
+        }}
       />
 
       {/* Agent avatar interface */}
@@ -389,19 +587,31 @@ function EmbodyVisual() {
           {/* Agent info panel */}
           <div className="flex flex-col gap-2">
             <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-              <div className="font-mono text-[7px] text-purple-400/50 uppercase">Agent Status</div>
+              <div className="font-mono text-[7px] text-purple-400/50 uppercase">
+                Agent Status
+              </div>
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-                <span className="font-mono text-[10px] text-white/50">Active</span>
+                <span className="font-mono text-[10px] text-white/50">
+                  Active
+                </span>
               </div>
             </div>
             <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-              <div className="font-mono text-[7px] text-purple-400/50 uppercase">Mode</div>
-              <div className="mt-0.5 font-mono text-[10px] text-white/50">Voice + Avatar</div>
+              <div className="font-mono text-[7px] text-purple-400/50 uppercase">
+                Mode
+              </div>
+              <div className="mt-0.5 font-mono text-[10px] text-white/50">
+                Voice + Avatar
+              </div>
             </div>
             <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
-              <div className="font-mono text-[7px] text-purple-400/50 uppercase">Latency</div>
-              <div className="mt-0.5 font-mono text-[10px] text-white/50">18ms</div>
+              <div className="font-mono text-[7px] text-purple-400/50 uppercase">
+                Latency
+              </div>
+              <div className="mt-0.5 font-mono text-[10px] text-white/50">
+                18ms
+              </div>
             </div>
           </div>
         </div>
