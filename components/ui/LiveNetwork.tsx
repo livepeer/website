@@ -11,10 +11,7 @@ import { useEffect, useRef } from "react";
  */
 
 // --- Catmull-Rom spline evaluation ---
-function evalSpline(
-  points: number[][],
-  t: number
-): [number, number] {
+function evalSpline(points: number[][], t: number): [number, number] {
   const n = points.length - 1;
   if (n < 1) return [points[0][0], points[0][1]];
   const st = Math.min(t, 0.9999) * n;
@@ -45,44 +42,142 @@ function evalSpline(
 // Plus diagonals and cross-connections for network density
 const PATHS: number[][][] = [
   // Upper band — trunk + branches
-  [[-0.05,0.25],[0.15,0.22],[0.35,0.28],[0.55,0.24],[0.75,0.27],[1.05,0.25]],
-  [[-0.05,0.25],[0.15,0.22],[0.30,0.14],[0.45,0.10],[0.60,0.14],[0.75,0.27],[1.05,0.25]],
-  [[-0.05,0.25],[0.15,0.22],[0.30,0.33],[0.45,0.37],[0.60,0.34],[0.75,0.27],[1.05,0.25]],
+  [
+    [-0.05, 0.25],
+    [0.15, 0.22],
+    [0.35, 0.28],
+    [0.55, 0.24],
+    [0.75, 0.27],
+    [1.05, 0.25],
+  ],
+  [
+    [-0.05, 0.25],
+    [0.15, 0.22],
+    [0.3, 0.14],
+    [0.45, 0.1],
+    [0.6, 0.14],
+    [0.75, 0.27],
+    [1.05, 0.25],
+  ],
+  [
+    [-0.05, 0.25],
+    [0.15, 0.22],
+    [0.3, 0.33],
+    [0.45, 0.37],
+    [0.6, 0.34],
+    [0.75, 0.27],
+    [1.05, 0.25],
+  ],
 
   // Middle band — trunk + branches
-  [[-0.05,0.50],[0.12,0.48],[0.32,0.52],[0.52,0.47],[0.72,0.51],[1.05,0.50]],
-  [[-0.05,0.50],[0.12,0.48],[0.28,0.41],[0.44,0.37],[0.58,0.40],[0.72,0.51],[1.05,0.50]],
-  [[-0.05,0.50],[0.12,0.48],[0.28,0.57],[0.44,0.61],[0.58,0.58],[0.72,0.51],[1.05,0.50]],
+  [
+    [-0.05, 0.5],
+    [0.12, 0.48],
+    [0.32, 0.52],
+    [0.52, 0.47],
+    [0.72, 0.51],
+    [1.05, 0.5],
+  ],
+  [
+    [-0.05, 0.5],
+    [0.12, 0.48],
+    [0.28, 0.41],
+    [0.44, 0.37],
+    [0.58, 0.4],
+    [0.72, 0.51],
+    [1.05, 0.5],
+  ],
+  [
+    [-0.05, 0.5],
+    [0.12, 0.48],
+    [0.28, 0.57],
+    [0.44, 0.61],
+    [0.58, 0.58],
+    [0.72, 0.51],
+    [1.05, 0.5],
+  ],
 
   // Lower band — trunk + branches
-  [[-0.05,0.75],[0.18,0.73],[0.38,0.77],[0.58,0.74],[0.78,0.76],[1.05,0.75]],
-  [[-0.05,0.75],[0.18,0.73],[0.32,0.66],[0.46,0.62],[0.60,0.65],[0.78,0.76],[1.05,0.75]],
-  [[-0.05,0.75],[0.18,0.73],[0.32,0.83],[0.46,0.87],[0.60,0.84],[0.78,0.76],[1.05,0.75]],
+  [
+    [-0.05, 0.75],
+    [0.18, 0.73],
+    [0.38, 0.77],
+    [0.58, 0.74],
+    [0.78, 0.76],
+    [1.05, 0.75],
+  ],
+  [
+    [-0.05, 0.75],
+    [0.18, 0.73],
+    [0.32, 0.66],
+    [0.46, 0.62],
+    [0.6, 0.65],
+    [0.78, 0.76],
+    [1.05, 0.75],
+  ],
+  [
+    [-0.05, 0.75],
+    [0.18, 0.73],
+    [0.32, 0.83],
+    [0.46, 0.87],
+    [0.6, 0.84],
+    [0.78, 0.76],
+    [1.05, 0.75],
+  ],
 
   // Diagonal flows — connecting bands
-  [[-0.06,0.08],[0.18,0.20],[0.38,0.36],[0.58,0.48],[0.78,0.62],[1.06,0.78]],
-  [[-0.06,0.92],[0.18,0.80],[0.38,0.64],[0.58,0.52],[0.78,0.39],[1.06,0.22]],
+  [
+    [-0.06, 0.08],
+    [0.18, 0.2],
+    [0.38, 0.36],
+    [0.58, 0.48],
+    [0.78, 0.62],
+    [1.06, 0.78],
+  ],
+  [
+    [-0.06, 0.92],
+    [0.18, 0.8],
+    [0.38, 0.64],
+    [0.58, 0.52],
+    [0.78, 0.39],
+    [1.06, 0.22],
+  ],
 
   // Cross-connections — short bridges between bands
-  [[0.22,0.27],[0.28,0.36],[0.34,0.44]],
-  [[0.52,0.52],[0.58,0.61],[0.64,0.68]],
-  [[0.68,0.27],[0.72,0.38],[0.76,0.48]],
+  [
+    [0.22, 0.27],
+    [0.28, 0.36],
+    [0.34, 0.44],
+  ],
+  [
+    [0.52, 0.52],
+    [0.58, 0.61],
+    [0.64, 0.68],
+  ],
+  [
+    [0.68, 0.27],
+    [0.72, 0.38],
+    [0.76, 0.48],
+  ],
 ];
 
 // Junction nodes — where streams branch or merge
 const JUNCTIONS: number[][] = [
-  [0.15, 0.22], [0.75, 0.27], // Upper
-  [0.12, 0.48], [0.72, 0.51], // Middle
-  [0.18, 0.73], [0.78, 0.76], // Lower
+  [0.15, 0.22],
+  [0.75, 0.27], // Upper
+  [0.12, 0.48],
+  [0.72, 0.51], // Middle
+  [0.18, 0.73],
+  [0.78, 0.76], // Lower
 ];
 
 // Brand greens with slight variation
 const COLORS: number[][] = [
-  [64, 191, 134],  // bright
-  [30, 153, 96],   // mid
-  [64, 191, 134],  // light
-  [24, 121, 78],   // brand
-  [40, 160, 110],  // warm
+  [64, 191, 134], // bright
+  [30, 153, 96], // mid
+  [64, 191, 134], // light
+  [24, 121, 78], // brand
+  [40, 160, 110], // warm
 ];
 
 interface Particle {
@@ -176,8 +271,12 @@ export default function LiveNetwork({
       // Background depth — very subtle green nebula
       ctx.globalCompositeOperation = "lighter";
       const bg1 = ctx.createRadialGradient(
-        w * 0.3, h * 0.35, 0,
-        w * 0.3, h * 0.35, w * 0.35
+        w * 0.3,
+        h * 0.35,
+        0,
+        w * 0.3,
+        h * 0.35,
+        w * 0.35
       );
       bg1.addColorStop(0, "rgba(10, 35, 24, 0.12)");
       bg1.addColorStop(1, "transparent");
@@ -185,8 +284,12 @@ export default function LiveNetwork({
       ctx.fillRect(0, 0, w, h);
 
       const bg2 = ctx.createRadialGradient(
-        w * 0.72, h * 0.65, 0,
-        w * 0.72, h * 0.65, w * 0.3
+        w * 0.72,
+        h * 0.65,
+        0,
+        w * 0.72,
+        h * 0.65,
+        w * 0.3
       );
       bg2.addColorStop(0, "rgba(8, 28, 20, 0.10)");
       bg2.addColorStop(1, "transparent");
@@ -202,7 +305,7 @@ export default function LiveNetwork({
           const [nx, ny] = evalSpline(path, i / 80);
           const sx = nx * w,
             sy = ny * h;
-          i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+          if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
         }
         ctx.strokeStyle = `rgba(24, 121, 78, ${0.035 * brightMult})`;
         ctx.lineWidth = 0.8;
@@ -269,10 +372,7 @@ export default function LiveNetwork({
         if (p.isPulse) {
           const bloomR = p.size * 6;
           const bloom = ctx.createRadialGradient(sx, sy, 0, sx, sy, bloomR);
-          bloom.addColorStop(
-            0,
-            `rgba(${cr},${cg},${cb},${0.08 * brightMult})`
-          );
+          bloom.addColorStop(0, `rgba(${cr},${cg},${cb},${0.08 * brightMult})`);
           bloom.addColorStop(1, "transparent");
           ctx.fillStyle = bloom;
           ctx.fillRect(sx - bloomR, sy - bloomR, bloomR * 2, bloomR * 2);
@@ -293,8 +393,12 @@ export default function LiveNetwork({
 
       // --- Vignette ---
       const vig = ctx.createRadialGradient(
-        w / 2, h / 2, w * 0.22,
-        w / 2, h / 2, w * 0.65
+        w / 2,
+        h / 2,
+        w * 0.22,
+        w / 2,
+        h / 2,
+        w * 0.65
       );
       vig.addColorStop(0, "transparent");
       vig.addColorStop(1, "rgba(6, 8, 6, 0.5)");

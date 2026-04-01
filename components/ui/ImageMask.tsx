@@ -19,7 +19,6 @@ export default function ImageMask({
   children,
   cols = 9,
   rows = 5,
-  seed = 0,
   scanLine = true,
   className = "",
 }: {
@@ -29,25 +28,22 @@ export default function ImageMask({
   children?: React.ReactNode;
   cols?: number;
   rows?: number;
+  /** @deprecated No longer used — kept for API compatibility */
   seed?: number;
   scanLine?: boolean;
   className?: string;
 }) {
   const tiles = useMemo(() => {
-    return Array.from({ length: cols * rows }).map((_, i) => {
-      const h =
-        Math.abs(Math.sin((i + seed) * 127.1 + 311.7 + 43758.5453)) % 1;
-
-      // All tiles: no blur, no tint — just grid lines
-      const blur = 0;
-      const tint = 0;
-
-      return { blur, tint };
+    return Array.from({ length: cols * rows }).map(() => {
+      return { blur: 0, tint: 0 };
     });
-  }, [cols, rows, seed]);
+  }, [cols, rows]);
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ containerType: "inline-size" }}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={{ containerType: "inline-size" }}
+    >
       {/* Layer 0: Dark green base */}
       <div
         className="absolute inset-0"
@@ -74,7 +70,7 @@ export default function ImageMask({
             }}
           />
         ) : src ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
+
           <img
             src={src}
             alt={alt || ""}
@@ -116,13 +112,9 @@ export default function ImageMask({
                   ? `rgba(24, 121, 78, ${tile.tint})`
                   : "transparent",
               backdropFilter:
-                tile.blur > 0
-                  ? `blur(${tile.blur}px) saturate(1.4)`
-                  : "none",
+                tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
               WebkitBackdropFilter:
-                tile.blur > 0
-                  ? `blur(${tile.blur}px) saturate(1.4)`
-                  : "none",
+                tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
               borderRight: "1px solid rgba(255,255,255,0.18)",
               borderBottom: "1px solid rgba(255,255,255,0.18)",
             }}
