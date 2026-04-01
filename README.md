@@ -70,22 +70,7 @@ This project includes a dev container to isolate your development environment fr
 
 The dev server runs on port 3000, which is forwarded to your host automatically.
 
-This project also enforces `frozen-lockfile` and `ignore-scripts` via `.npmrc` to block malicious install hooks. If you need to work around these:
-
-**Adding a dependency:**
-
-```bash
-pnpm add <package> --no-frozen-lockfile
-```
-
-Then commit the updated `pnpm-lock.yaml`.
-
-**Approving a package's build script** (e.g., native bindings):
-
-```bash
-pnpm approve-builds
-pnpm rebuild
-```
+pnpm 10 blocks dependency install scripts by default. If a package needs to run a build script (e.g., native bindings), approve it with `pnpm approve-builds && pnpm rebuild`.
 
 ## Project Structure
 
