@@ -16,20 +16,37 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Network",
     href: "https://explorer.livepeer.org",
     children: [
-      { label: "Explorer", href: "https://explorer.livepeer.org", external: true },
-      { label: "Delegate", href: "https://explorer.livepeer.org/", external: true },
-      { label: "Provide Compute", href: "https://docs.livepeer.org/orchestrators/guides/get-started", external: true },
-      { label: "Roadmap", href: "https://github.com/livepeer/catalyst/milestones", external: true },
+      { label: "Ecosystem", href: "/ecosystem" },
+      { label: "Livepeer Token", href: "/token" },
+      {
+        label: "Delegate LPT",
+        href: "https://explorer.livepeer.org",
+        external: true,
+      },
+      {
+        label: "Provide GPUs",
+        href: "https://docs.livepeer.org",
+        external: true,
+      },
+      {
+        label: "Roadmap",
+        href: "https://roadmap.livepeer.org/roadmap",
+        external: true,
+      },
     ],
   },
   {
     label: "Resources",
     href: "/brand",
     children: [
-      { label: "10-Minute Primer", href: "/primer" },
+      { label: "Primer", href: "/primer" },
       { label: "Blog", href: "/blog" },
+      {
+        label: "Documentation",
+        href: "https://docs.livepeer.org",
+        external: true,
+      },
       { label: "Brand", href: "/brand" },
-      { label: "Foundation", href: "/foundation" },
     ],
   },
 ];

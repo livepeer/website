@@ -1,0 +1,70 @@
+name: Ecosystem Submission
+description: Submit your app to the Livepeer ecosystem directory
+title: "Add "
+labels: ["ecosystem"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Ecosystem App Submission
+        Thanks for building on Livepeer! Please fill in the details below so we can review and add your app to the ecosystem directory.
+
+  - type: input
+    id: app-name
+    attributes:
+      label: App Name
+      placeholder: "e.g., My Livepeer App"
+    validations:
+      required: true
+
+  - type: input
+    id: website
+    attributes:
+      label: Website URL
+      placeholder: "https://myapp.com"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A short description of what your app does and how it uses Livepeer.
+      placeholder: "Our app uses Livepeer for..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: categories
+    attributes:
+      label: Categories
+      description: "Select all that apply: AI Video, Streaming, Developer Tools"
+      placeholder: "AI Video, Streaming"
+    validations:
+      required: true
+
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Email
+      description: We'll only use this to follow up on your submission.
+      placeholder: "you@example.com"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logo
+    attributes:
+      label: Logo
+      description: Please drag and drop your app logo here (SVG or PNG, square, min 128x128px).
+      placeholder: "Drag and drop your logo image here..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Optional — anything we should know about your app or a category you think is missing.
+    validations:
+      required: false

@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
       {
         source: "/orchestrate",
         destination:
-          "https://docs.livepeer.org/orchestrators/guides/get-started",
+          "https://docs.livepeer.org/v1/orchestrators/guides/get-started",
         permanent: false,
       },
       {
@@ -55,11 +55,6 @@ const nextConfig: NextConfig = {
       {
         source: "/community-hub",
         destination: "https://discord.gg/livepeer",
-        permanent: false,
-      },
-      {
-        source: "/ecosystem",
-        destination: "/",
         permanent: false,
       },
       {

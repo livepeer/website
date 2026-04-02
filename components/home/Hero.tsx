@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useMotionValueEvent, animate } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  animate,
+} from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
-import EarlyAccessCTA from "@/components/ui/EarlyAccessCTA";
 
 /*
   9×5 tile grid with square tiles.
@@ -33,14 +37,14 @@ const RAYS = [0, 22, 45, 68, 90, 135, 170, -15, -40, -70];
    Uses SVG getPointAtLength() for uniform-speed traversal with no re-renders. */
 
 const PULSE_PATH = [
-  "M 100 100",                  // starburst at (1,1)
-  "L 100 0",                    // up col 1 to row 0
-  "L 750 0",                    // right along row 0 to large circle top tangent
-  "A 150 150 0 0 1 750 300",    // CW 180° arc to bottom tangent (7.5,3)
-  "L 100 300",                  // left along row 3 to small circle top tangent
-  "A 100 100 0 1 0 200 400",    // CCW 270° arc to right tangent (2,4)
-  "L 200 100",                  // up col 2 to row 1
-  "L 100 100",                  // left along row 1 back to starburst
+  "M 100 100", // starburst at (1,1)
+  "L 100 0", // up col 1 to row 0
+  "L 750 0", // right along row 0 to large circle top tangent
+  "A 150 150 0 0 1 750 300", // CW 180° arc to bottom tangent (7.5,3)
+  "L 100 300", // left along row 3 to small circle top tangent
+  "A 100 100 0 1 0 200 400", // CCW 270° arc to right tangent (2,4)
+  "L 200 100", // up col 2 to row 1
+  "L 100 100", // left along row 1 back to starburst
 ].join(" ");
 
 function PulseTrail() {
@@ -121,10 +125,7 @@ export default function Hero() {
       </div>
 
       {/* Geometric shapes + pulse trail */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {/* Large circle — cols 6–8, rows 0–2 */}
         <div
           className="absolute rounded-full animate-[breathe_8s_ease-in-out_infinite]"
@@ -274,9 +275,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
           >
-            Open infrastructure
+            The open network for
             <br />
-            <span className="text-gradient">for real-time AI video</span>
+            <span className="text-gradient">real-time AI video</span>
           </motion.h1>
 
           <motion.p
@@ -285,19 +286,23 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Generate, transform, and interpret live video streams
-            with low-latency AI inference on an open and permissionless elastic GPU network.
+            Generate, transform, and interpret live video streams on a
+            permissionless GPU network built for real-time video inference.
           </motion.p>
 
-          <motion.div
-            className="mt-10 w-full max-w-lg mx-auto"
-            initial={{ y: 12 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+          <motion.a
+            href="/ecosystem"
+            className="mt-8 inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
+            style={{
+              background:
+                "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <EarlyAccessCTA />
-          </motion.div>
-
+            Build with Livepeer <span aria-hidden="true">→</span>
+          </motion.a>
         </motion.div>
       </Container>
 

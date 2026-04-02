@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="12.800218mm"
+   height="11.223084mm"
+   viewBox="0 0 12.800218 11.223084"
+   version="1.1"
+   id="svg377"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs374">
+    <mask
+       id="mask0_6309_356"
+       maskUnits="userSpaceOnUse"
+       x="0"
+       y="0"
+       width="26"
+       height="43">
+      <path
+         d="M 1.22249e-4,42.6426 H 25.9824 V 0.00136256 L 1.25977e-4,0.00136029 Z"
+         fill="#ffffff"
+         id="path4" />
+    </mask>
+    <linearGradient
+       id="paint1_linear_6309_356"
+       x1="20.123199"
+       y1="0.22464401"
+       x2="20.0588"
+       y2="40.235901"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0.00113772"
+         stop-color="#36619D"
+         id="stop36" />
+      <stop
+         offset="0.210396"
+         stop-color="#2FBEC5"
+         id="stop38" />
+      <stop
+         offset="0.722843"
+         stop-color="#FF982E"
+         id="stop40" />
+      <stop
+         offset="0.988296"
+         stop-color="#F73B41"
+         id="stop42" />
+    </linearGradient>
+    <linearGradient
+       id="paint0_linear_6309_356"
+       x1="37.0718"
+       y1="9.9099503"
+       x2="37.038601"
+       y2="30.4335"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,300.66766,-157.94641)">
+      <stop
+         offset="0.00113772"
+         stop-color="#36619D"
+         id="stop27" />
+      <stop
+         offset="0.210396"
+         stop-color="#2FBEC5"
+         id="stop29" />
+      <stop
+         offset="0.722843"
+         stop-color="#FF982E"
+         id="stop31" />
+      <stop
+         offset="0.988296"
+         stop-color="#F73B41"
+         id="stop33" />
+    </linearGradient>
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-300.66769,157.88697)">
+    <path
+       d="m 310.60009,-155.3244 c -1.58388,0 -2.86785,1.28867 -2.86785,2.87842 0,1.58972 1.28397,2.8784 2.86785,2.8784 1.58385,0 2.86782,-1.28868 2.86782,-2.8784 0,-1.58975 -1.28397,-2.87842 -2.86782,-2.87842 z"
+       fill="url(#paint0_linear_6309_356)"
+       id="path2"
+       style="fill:url(#paint0_linear_6309_356);stroke-width:0.264583" />
+    <g
+       mask="url(#mask0_6309_356)"
+       id="g9"
+       transform="matrix(0.26458333,0,0,0.26458333,300.66766,-157.94641)">
+      <path
+         d="M 21.0391,0.224643 C 9.32577,0.224642 -0.169884,9.7203 -0.169885,21.4336 c -1e-6,11.7133 9.495655,21.209 21.208985,21.209 11.7134,0 21.2089,-9.4957 21.2089,-21.209 0,-11.7133 -9.4955,-21.208956 -21.2089,-21.208957 z"
+         fill="url(#paint1_linear_6309_356)"
+         id="path7"
+         style="fill:url(#paint1_linear_6309_356)" />
+    </g>
+  </g>
+</svg>

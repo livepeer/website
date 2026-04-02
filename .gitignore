@@ -43,3 +43,7 @@ brand_guidelines/
 img/
 *.pdf
 .claude/
+.codex
+.vscode/
+*.code-workspace
+.playwright-mcp/

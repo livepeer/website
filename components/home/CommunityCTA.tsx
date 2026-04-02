@@ -7,10 +7,11 @@ import ImageMask from "@/components/ui/ImageMask";
 import GlowOverlay from "@/components/ui/GlowOverlay";
 import { EXTERNAL_LINKS } from "@/lib/constants";
 
-const channels = [
+const resources = [
   {
     name: "Discord",
-    description: "Join the conversation with developers and the core team.",
+    description:
+      "Join the operators, developers, and stakeholders building Livepeer.",
     href: EXTERNAL_LINKS.discord,
     icon: (
       <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -19,33 +20,34 @@ const channels = [
     ),
   },
   {
-    name: "Governance",
-    description: "Participate in proposals that shape the network's future.",
-    href: "https://explorer.livepeer.org/voting",
-    icon: (
-      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    name: "Treasury",
-    description: "Submit proposals for grants and funding from the Livepeer Treasury.",
-    href: "/blog/using-the-livepeer-community-treasury",
-    icon: (
-      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path d="M2 7h20M2 7v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7M2 7l2-4h16l2 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
-    ),
-  },
-  {
     name: "Forum",
-    description: "Long-form discussion on protocol development and ideas.",
+    description: "Explore protocol design, upgrades, and long-range ideas.",
     href: EXTERNAL_LINKS.forum,
     icon: (
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    name: "Roadmap",
+    description: "See where the network is today, and where it's headed.",
+    href: "https://roadmap.livepeer.org/roadmap",
+    icon: (
+      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
@@ -64,7 +66,8 @@ export default function CommunityCTA() {
         className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-64"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, #121212 0%, #121212 20%, transparent 100%)",
+          background:
+            "linear-gradient(to bottom, #121212 0%, #121212 20%, transparent 100%)",
         }}
       />
 
@@ -72,12 +75,14 @@ export default function CommunityCTA() {
       <GlowOverlay x={50} y={30} radius={70} opacity={0.2} duration={10} />
 
       {/* B&W Muybridge plate photo behind tile mask — bold background */}
-      <div className="pointer-events-none absolute inset-0 opacity-15" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-15"
+        aria-hidden="true"
+      >
         <ImageMask
           video="/videos/ai-face.mp4"
           cols={5}
           rows={4}
-
           seed={55}
           className="h-full w-full"
         />
@@ -96,45 +101,41 @@ export default function CommunityCTA() {
             className="mx-auto max-w-3xl text-center"
           >
             <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
-              Community
+              The Network
             </p>
             <h2 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Join the network
+              Powered by independent GPU providers
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty">
-              Livepeer is built by a global community of developers, operators,
-              and token holders working together to create open video
-              infrastructure.
+              Livepeer is a global network of independent GPU providers,
+              builders, and engineers who run the network and shape its
+              direction. Open-source. Permissionless.
             </p>
             <div className="mt-8">
-              <Button href={EXTERNAL_LINKS.discord} variant="primary">
-                Join Discord <span aria-hidden="true">&rarr;</span>
+              <Button href="/primer" variant="primary">
+                About the Network <span aria-hidden="true">&rarr;</span>
               </Button>
             </div>
           </motion.div>
 
-          <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {channels.map((channel) => (
+          <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {resources.map((resource) => (
               <motion.a
-                key={channel.name}
-                href={channel.href}
-                target={channel.href.startsWith("http") ? "_blank" : undefined}
-                rel={
-                  channel.href.startsWith("http")
-                    ? "noopener noreferrer"
-                    : undefined
-                }
+                key={resource.name}
+                href={resource.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
                 className="group flex items-start gap-4 rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-6 transition-colors duration-200 hover:border-white/[0.12]"
               >
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-green transition-colors duration-200 group-hover:border-white/[0.10]">
-                  {channel.icon}
+                  {resource.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium">{channel.name}</h3>
+                  <h3 className="text-sm font-medium">{resource.name}</h3>
                   <p className="mt-1 text-sm text-white/50">
-                    {channel.description}
+                    {resource.description}
                   </p>
                 </div>
               </motion.a>

@@ -7,6 +7,7 @@ import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
 
+
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -83,6 +84,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   {...extraProps}
                 >
                   {child.label}
+
                   {isExternal && (
                     <svg
                       className="ml-auto h-3 w-3 text-white/30"
@@ -178,12 +180,17 @@ export default function Header() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center ml-1">
-            <Link
-              href="/#early-access"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
+            <a
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
             >
-              Get Early Access
-            </Link>
+              Join Discord
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3.5 2H10v6.5M10 2L2 10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </div>
 
           {/* Mobile hamburger */}
@@ -273,6 +280,7 @@ export default function Header() {
                             {...extraProps}
                           >
                             {child.label}
+
                             {isExternal && (
                               <svg
                                 className="h-3 w-3 text-white/30"
@@ -315,13 +323,18 @@ export default function Header() {
 
           {/* Mobile CTA */}
           <div className="mt-6 px-4">
-            <Link
-              href="/#early-access"
+            <a
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
             >
-              Get Early Access
-            </Link>
+              Join Discord
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3.5 2H10v6.5M10 2L2 10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
           </div>
         </nav>
       </div>
