@@ -638,21 +638,21 @@ const projects = [
     Visual: StudioVisual,
     Logo: FrameworksLogo,
     description:
-      "Stream without the cloud. A next-generation video platform that delivers broadcast-quality streaming directly on Livepeer's open GPU network.",
+      "Stream to any device, any format, any scale, from a single source.",
     domain: "frameworks.network",
   },
   {
     Visual: StreamplaceVisual,
     Logo: StreamplaceLogo,
     description:
-      "The video layer for decentralized social networks. Open-source infrastructure for high-quality video on the AT Protocol.",
+      "Open-source video infrastructure powering AT Protocol social apps.",
     domain: "stream.place",
   },
   {
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
     description:
-      "Embodied AI avatars for real-time tutoring, telepresence, and branded content powered by Livepeer infrastructure.",
+      "Deploy AI avatars that see, speak, and respond in real time.",
     domain: "embody.zone",
   },
 ];
