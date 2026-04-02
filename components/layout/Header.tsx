@@ -7,6 +7,7 @@ import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
 import { NAV_ITEMS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
 
+
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -83,6 +84,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   {...extraProps}
                 >
                   {child.label}
+
                   {isExternal && (
                     <svg
                       className="ml-auto h-3 w-3 text-white/30"
@@ -278,6 +280,7 @@ export default function Header() {
                             {...extraProps}
                           >
                             {child.label}
+
                             {isExternal && (
                               <svg
                                 className="h-3 w-3 text-white/30"

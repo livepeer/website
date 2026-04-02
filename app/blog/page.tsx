@@ -1,6 +1,7 @@
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
 import BlogListingClient from "@/components/blog/BlogListingClient";
+import PageHero from "@/components/ui/PageHero";
 import { getAllPosts, getCategories } from "@/lib/blog";
 
 export default function BlogPage() {
@@ -8,7 +9,7 @@ export default function BlogPage() {
   const categories = getCategories();
 
   return (
-    <section className="pt-24 pb-16 lg:pt-32 lg:pb-24">
+    <PageHero>
       <Container>
         <SectionHeader
           label="Blog"
@@ -21,6 +22,6 @@ export default function BlogPage() {
           <BlogListingClient posts={posts} categories={categories} />
         </div>
       </Container>
-    </section>
+    </PageHero>
   );
 }
