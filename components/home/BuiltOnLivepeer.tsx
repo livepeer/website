@@ -675,7 +675,7 @@ export default function BuiltOnLivepeer() {
             <SectionHeader
               label="Ecosystem"
               title="Built with Livepeer"
-              description="Applications and emerging capabilities on Livepeer, from transcoding and streaming to real-time AI."
+              description="Explore applications and emerging capabilities on Livepeer, from real-time AI video and AI avatars to transcoding and streaming."
               align="split"
             />
           </motion.div>

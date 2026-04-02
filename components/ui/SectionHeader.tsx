@@ -32,7 +32,7 @@ export default function SectionHeader({
           </p>
         )}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-          <h2 className={`${splitHeadingClass} lg:max-w-[26rem] lg:shrink-0`}>
+          <h2 className={`${splitHeadingClass} lg:max-w-[30rem] lg:shrink-0`}>
             {title}
           </h2>
           {description && (
