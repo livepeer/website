@@ -290,19 +290,31 @@ export default function Hero() {
             permissionless GPU network built for real-time video inference.
           </motion.p>
 
-          <motion.a
-            href="/ecosystem"
-            className="mt-8 inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
-            style={{
-              background:
-                "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-            }}
+          <motion.div
+            className="mt-8 flex items-center justify-center gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            Build with Livepeer <span aria-hidden="true">→</span>
-          </motion.a>
+            <a
+              href="/ecosystem"
+              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
+              style={{
+                background:
+                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+              }}
+            >
+              Explore the ecosystem <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition-all duration-200 hover:bg-white/20 hover:border-white/25 active:bg-white/25"
+            >
+              Join Discord <span aria-hidden="true">↗</span>
+            </a>
+          </motion.div>
         </motion.div>
       </Container>
 

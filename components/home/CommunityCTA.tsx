@@ -112,9 +112,16 @@ export default function CommunityCTA() {
               direction. Open-source. Permissionless.
             </p>
             <div className="mt-8">
-              <Button href="/primer" variant="primary">
-                About the Network <span aria-hidden="true">&rarr;</span>
-              </Button>
+              <a
+                href="/primer"
+                className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+                }}
+              >
+                About the network <span aria-hidden="true">→</span>
+              </a>
             </div>
           </motion.div>
 
