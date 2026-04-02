@@ -666,7 +666,7 @@ export default function TokenPage() {
               transition={{ duration: 0.5 }}
               className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty"
             >
-              Livepeer Token (LPT) is the coordination mechanism behind the
+              Livepeer Token (LPT) is part of the coordination mechanism behind the
               Livepeer network. It aligns incentives between the GPU providers
               who do the work, the applications that need video processing, and
               the stakeholders who help secure the network.
