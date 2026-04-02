@@ -35,12 +35,12 @@ function CostVis() {
           <motion.div
             className="h-full rounded-full bg-emerald-500/40"
             initial={{ width: 0 }}
-            whileInView={{ width: "10%" }}
+            whileInView={{ width: "17%" }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
           />
         </div>
-        <span className="font-mono text-[10px] text-emerald-400/50">$0.10</span>
+        <span className="font-mono text-[10px] text-emerald-400/50">$0.17</span>
       </div>
     </div>
   );
@@ -229,7 +229,7 @@ export default function WhyLivepeer() {
           <div className="mt-20 grid gap-4 sm:grid-cols-2">
             <AdvantageCard>
               <div className="font-mono text-5xl font-bold tracking-tight text-gradient lg:text-6xl">
-                10x
+                6x
               </div>
               <h3 className="mt-2 text-base font-medium">Cost Reduction</h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">

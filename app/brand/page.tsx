@@ -296,7 +296,7 @@ function CopyableHex({ value }: { value: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="group flex items-center gap-1.5 font-mono text-xs text-white/40 transition-colors hover:text-white/60"
+      className="cursor-pointer select-none group flex items-center gap-1.5 font-mono text-xs text-white/40 transition-colors hover:text-white/60"
     >
       {value}
       <span className="text-[10px] text-white/0 transition-colors group-hover:text-white/30">
@@ -361,7 +361,7 @@ function DownloadButton({
   return (
     <button
       onClick={() => downloadSVG(svgRef.current, filename)}
-      className="mt-2 rounded-md bg-white/[0.06] px-3 py-1.5 font-mono text-[11px] text-white/50 transition-colors hover:bg-white/10 hover:text-white/70"
+      className="cursor-pointer select-none mt-2 rounded-md bg-white/[0.06] px-3 py-1.5 font-mono text-[11px] text-white/50 transition-colors hover:bg-white/10 hover:text-white/70"
     >
       {label}
     </button>

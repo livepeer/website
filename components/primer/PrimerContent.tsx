@@ -108,7 +108,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
       >
         <button
           onClick={() => setTocOpen(!tocOpen)}
-          className={`flex items-center justify-center uppercase transition-all
+          className={`cursor-pointer select-none flex items-center justify-center uppercase transition-all
             h-12 w-12 rounded-full border border-white/40 bg-white/20 backdrop-blur-2xl shadow-[0_2px_16px_rgba(0,0,0,0.1)]
             md:h-[44px] md:w-auto md:gap-3 md:px-5 md:border-[1.5px] md:border-black md:bg-[#a6adeb]/80 md:backdrop-blur-xl ${tocOpen ? "md:shadow-[0_0_#000]" : "md:shadow-[3px_3px_#000]"} md:hover:shadow-none`}
           style={{
@@ -240,7 +240,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         {/* Scroll arrow — above the fold with bounce animation */}
         <button
           onClick={() => scrollTo("intro-content")}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2"
+          className="cursor-pointer select-none absolute bottom-12 left-1/2 -translate-x-1/2"
           style={{ animation: "bounceDown 2s ease-in-out infinite" }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -731,7 +731,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         </span>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2 text-sm text-black/50 transition-colors hover:text-black"
+          className="cursor-pointer select-none flex items-center gap-2 text-sm text-black/50 transition-colors hover:text-black"
         >
           Back to the top
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -941,7 +941,7 @@ function InvolvedButton({
     <Link
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="inline-block self-center rounded-md border-2 border-black px-6 py-2.5 text-sm font-bold uppercase text-black no-underline transition-all hover:bg-black hover:text-white"
+      className="select-none inline-block self-center rounded-md border-2 border-black px-6 py-2.5 text-sm font-bold uppercase text-black no-underline transition-all hover:bg-black hover:text-white"
       style={{ backgroundColor: "#ffd184" }}
     >
       {label}
