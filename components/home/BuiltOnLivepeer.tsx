@@ -732,7 +732,7 @@ export default function BuiltOnLivepeer() {
             transition={{ duration: 0.4 }}
             className="mt-12 text-center"
           >
-            <Button href="/ecosystem" variant="secondary" size="md">
+            <Button href="/ecosystem" variant="primary" size="md">
               Explore the Ecosystem <span aria-hidden="true">→</span>
             </Button>
           </motion.div>
