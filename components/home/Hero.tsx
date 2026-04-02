@@ -285,14 +285,11 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             Generate, transform, and interpret live video streams on a
-            permissionless GPU network — for less than the centralized cloud,
-            with no platform lock-in.
+            permissionless GPU network built for real-time video inference.
           </motion.p>
 
           <motion.a
-            href="https://discord.gg/livepeer"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/ecosystem"
             className="mt-8 inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
             style={{
               background:

@@ -168,10 +168,8 @@ export default function Header() {
               <NavLink key={item.label} item={item} pathname={pathname} />
             ))}
             <a
-              href="https://discord.gg/livepeer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full px-3 py-1.5 text-sm text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+              href="/ecosystem"
+              className="rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90"
             >
               Build with Livepeer
             </a>
@@ -305,11 +303,9 @@ export default function Header() {
           })}
 
           <a
-            href="https://discord.gg/livepeer"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/ecosystem"
             onClick={() => setMobileOpen(false)}
-            className="rounded-xl px-4 py-3 text-lg text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+            className="rounded-xl bg-white px-4 py-3 text-center text-lg font-medium text-dark transition-colors hover:bg-white/90"
           >
             Build with Livepeer
           </a>

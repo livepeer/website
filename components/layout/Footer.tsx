@@ -7,10 +7,11 @@ const footerNav = [
   {
     title: "Network",
     links: [
+      { label: "Ecosystem (coming soon)", href: "/ecosystem" },
+      { label: "Livepeer Token", href: "/token" },
       { label: "Delegate LPT", href: EXTERNAL_LINKS.explorer },
       { label: "Provide GPUs", href: "https://docs.livepeer.org" },
       { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap" },
-      { label: "Ecosystem (beta)", href: "/ecosystem" },
     ],
   },
   {
@@ -19,6 +20,7 @@ const footerNav = [
       { label: "Primer", href: "/primer" },
       { label: "Blog", href: "/blog" },
       { label: "Documentation", href: "https://docs.livepeer.org" },
+      { label: "Brand", href: "/brand" },
     ],
   },
   {
@@ -27,7 +29,6 @@ const footerNav = [
       { label: "Discord", href: EXTERNAL_LINKS.discord },
       { label: "X / Twitter", href: EXTERNAL_LINKS.twitter },
       { label: "Forum", href: EXTERNAL_LINKS.forum },
-      { label: "YouTube", href: "https://www.youtube.com/@LivepeerProject" },
     ],
   },
 ];
