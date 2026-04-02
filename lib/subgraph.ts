@@ -1,5 +1,4 @@
-const SUBGRAPH_ID =
-  "FE63YgkzcpVocxdCEyEYbvjYqEf2kb1A6daMYRxmejYC";
+const SUBGRAPH_ID = "FE63YgkzcpVocxdCEyEYbvjYqEf2kb1A6daMYRxmejYC";
 
 /** Shape of the formatted protocol data used by the Primer page */
 export type ProtocolStats = {
@@ -129,9 +128,7 @@ export async function fetchProtocolStats(): Promise<ProtocolStats> {
       totalSupply: formatLPT(protocol.totalSupply),
       totalStaked: formatLPT(protocol.totalActiveStake),
       participationRate: formatParticipation(protocol.participationRate),
-      mintableTokens: formatLPT(
-        protocol.currentRound.mintableTokens
-      ),
+      mintableTokens: formatLPT(protocol.currentRound.mintableTokens),
       delegatorsCount: parseInt(
         protocol.currentRound.delegatorsCount,
         10

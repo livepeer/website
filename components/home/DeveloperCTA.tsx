@@ -42,7 +42,8 @@ export default function DeveloperCTA() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
                 style={{
-                  background: "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+                  background:
+                    "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
                 }}
               >
                 Let&apos;s build <span aria-hidden="true">&rarr;</span>

@@ -17,7 +17,11 @@ function StatCell({
   label: string;
   description: string;
 }) {
-  const { ref, display } = useCountUp(target, { prefix, suffix, duration: 2500 });
+  const { ref, display } = useCountUp(target, {
+    prefix,
+    suffix,
+    duration: 2500,
+  });
 
   return (
     <div ref={ref} className="px-6 py-8 text-center lg:px-8">
@@ -43,7 +47,10 @@ export default function NetworkStats() {
           transition={{ staggerChildren: 0.06 }}
         >
           <motion.div
-            variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
+            variants={{
+              hidden: { opacity: 0, y: 12 },
+              visible: { opacity: 1, y: 0 },
+            }}
             transition={{ duration: 0.4 }}
             className="text-center"
           >
@@ -54,13 +61,17 @@ export default function NetworkStats() {
               Proven at scale
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty">
-              The Livepeer network is live, battle-tested, and growing every day.
+              The Livepeer network is live, battle-tested, and growing every
+              day.
             </p>
           </motion.div>
 
           <motion.div
             className="mt-16 overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]"
-            variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}
+            variants={{
+              hidden: { opacity: 0, y: 12 },
+              visible: { opacity: 1, y: 0 },
+            }}
             transition={{ duration: 0.4 }}
           >
             <div className="grid grid-cols-2 divide-x divide-white/[0.04] lg:grid-cols-4">

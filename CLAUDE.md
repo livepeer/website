@@ -3,6 +3,7 @@
 **Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: npm. No test framework.
 
 **Environment variables** (set in Vercel / `.env.local`):
+
 - `MAILCHIMP_API_KEY` — Mailchimp API key (early access signups)
 - `MAILCHIMP_AUDIENCE_ID` — Mailchimp audience/list ID
 - `MAILCHIMP_TAG` — Mailchimp tag applied to new subscribers (default: "v2 Website Signups")
@@ -80,6 +81,7 @@
 The site's signature visual is a layered grid system that combines B&W video/imagery, geometric shapes, animated particle trails, and liquid glass effects. This creates an "outer space control room" aesthetic — technical, cinematic, and distinctly Livepeer.
 
 **Layer stack (bottom to top):**
+
 1. **Media layer** — B&W video or image with green tint, darkened (`ImageMask`)
 2. **Tile grid** — 9-column square grid with 1px white borders, overlaid on the media
 3. **Geometric shapes** — circles, crosshairs, and a starburst node positioned at grid intersections
@@ -101,6 +103,7 @@ The site's signature visual is a layered grid system that combines B&W video/ima
 Full spec in `brand-tokens.md` — colors, typography, logo rules, greyscale ramp, gradients, graphic elements.
 
 **Theme tokens** (`globals.css` `@theme`):
+
 - Colors: `green`, `green-light`, `green-dark`, `green-bright`, `green-subtle`, `blue`, `blue-light`, `blue-bright`, `blue-dark`, `blue-subtle`, `dark`, `dark-lighter`, `dark-card`, `dark-border`
 - Fonts: `--font-sans` (Favorit Pro — Light/Book/Regular/Medium/Bold), `--font-mono` (Favorit Mono — Regular/Medium/Bold)
 
@@ -143,15 +146,15 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 
 ### Terminology
 
-| Use | Don't use |
-|-----|-----------|
-| "the network" | "the platform," "the service" |
-| "open network" | "decentralized infrastructure" (too web3-coded) |
-| "solutions" | "builds" (internal only), "gateways," "tools," "DGEs" |
-| "GPU providers" (dev-facing) | "nodes" (too generic) |
-| "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model) |
-| "inference" | "processing" (when referring to AI specifically) |
-| "GPU-powered video" | "real-time AI video" (previous headline, now retired) |
+| Use                                        | Don't use                                             |
+| ------------------------------------------ | ----------------------------------------------------- |
+| "the network"                              | "the platform," "the service"                         |
+| "open network"                             | "decentralized infrastructure" (too web3-coded)       |
+| "solutions"                                | "builds" (internal only), "gateways," "tools," "DGEs" |
+| "GPU providers" (dev-facing)               | "nodes" (too generic)                                 |
+| "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model)           |
+| "inference"                                | "processing" (when referring to AI specifically)      |
+| "GPU-powered video"                        | "real-time AI video" (previous headline, now retired) |
 
 ### What the v2 thesis kills (do not use this framing)
 

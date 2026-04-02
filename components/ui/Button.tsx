@@ -3,8 +3,7 @@ import { ReactNode, AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 type Variant = "primary" | "secondary" | "ghost";
 
 const variantStyles: Record<Variant, string> = {
-  primary:
-    "bg-green text-white hover:bg-green-light active:bg-green-dark",
+  primary: "bg-green text-white hover:bg-green-light active:bg-green-dark",
   secondary:
     "border border-white/20 text-white hover:bg-white/10 active:bg-white/5",
   ghost: "text-white/70 hover:text-white hover:bg-white/5",
@@ -26,14 +25,20 @@ export default function Button(props: AsLink | AsButton) {
 
   if ("href" in rest) {
     return (
-      <a className={base} {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}>
+      <a
+        className={base}
+        {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
         {children}
       </a>
     );
   }
 
   return (
-    <button className={base} {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}>
+    <button
+      className={base}
+      {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
+    >
       {children}
     </button>
   );

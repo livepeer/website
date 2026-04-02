@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useMotionValue, useMotionValueEvent, animate } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  animate,
+} from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 
@@ -32,14 +37,14 @@ const RAYS = [0, 22, 45, 68, 90, 135, 170, -15, -40, -70];
    Uses SVG getPointAtLength() for uniform-speed traversal with no re-renders. */
 
 const PULSE_PATH = [
-  "M 100 100",                  // starburst at (1,1)
-  "L 100 0",                    // up col 1 to row 0
-  "L 750 0",                    // right along row 0 to large circle top tangent
-  "A 150 150 0 0 1 750 300",    // CW 180° arc to bottom tangent (7.5,3)
-  "L 100 300",                  // left along row 3 to small circle top tangent
-  "A 100 100 0 1 0 200 400",    // CCW 270° arc to right tangent (2,4)
-  "L 200 100",                  // up col 2 to row 1
-  "L 100 100",                  // left along row 1 back to starburst
+  "M 100 100", // starburst at (1,1)
+  "L 100 0", // up col 1 to row 0
+  "L 750 0", // right along row 0 to large circle top tangent
+  "A 150 150 0 0 1 750 300", // CW 180° arc to bottom tangent (7.5,3)
+  "L 100 300", // left along row 3 to small circle top tangent
+  "A 100 100 0 1 0 200 400", // CCW 270° arc to right tangent (2,4)
+  "L 200 100", // up col 2 to row 1
+  "L 100 100", // left along row 1 back to starburst
 ].join(" ");
 
 function PulseTrail() {
@@ -120,10 +125,7 @@ export default function Hero() {
       </div>
 
       {/* Geometric shapes + pulse trail */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {/* Large circle — cols 6–8, rows 0–2 */}
         <div
           className="absolute rounded-full animate-[breathe_8s_ease-in-out_infinite]"
@@ -301,7 +303,6 @@ export default function Hero() {
           >
             Build with Livepeer <span aria-hidden="true">→</span>
           </motion.a>
-
         </motion.div>
       </Container>
 

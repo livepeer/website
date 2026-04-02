@@ -95,15 +95,32 @@ interface Box {
 const INITIAL_BOXES: Box[] = [
   { id: "a", label: "face_mesh", x: 33, y: 22, w: 28, h: 34, confidence: 0.97 },
   { id: "b", label: "pose_est", x: 20, y: 15, w: 52, h: 65, confidence: 0.94 },
-  { id: "c", label: "segment_roi", x: 58, y: 42, w: 22, h: 28, confidence: 0.91 },
+  {
+    id: "c",
+    label: "segment_roi",
+    x: 58,
+    y: 42,
+    w: 22,
+    h: 28,
+    confidence: 0.91,
+  },
 ];
 
-export default function AiVideoHero({ className = "" }: { className?: string }) {
+export default function AiVideoHero({
+  className = "",
+}: {
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const rafRef = useRef(0);
   const [boxes, setBoxes] = useState(INITIAL_BOXES);
-  const [stats, setStats] = useState({ fps: 30, latency: 42, objects: 3, frames: 0 });
+  const [stats, setStats] = useState({
+    fps: 30,
+    latency: 42,
+    objects: 3,
+    frames: 0,
+  });
   const [ready, setReady] = useState(false);
 
   // Tile grid
@@ -122,9 +139,12 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       setBoxes((prev) =>
         prev.map((box) => ({
           ...box,
-          x: box.x + (Math.sin(frame * 0.3 + box.x) * 0.8),
-          y: box.y + (Math.cos(frame * 0.25 + box.y) * 0.6),
-          confidence: Math.min(0.99, Math.max(0.88, box.confidence + (Math.random() - 0.5) * 0.03)),
+          x: box.x + Math.sin(frame * 0.3 + box.x) * 0.8,
+          y: box.y + Math.cos(frame * 0.25 + box.y) * 0.6,
+          confidence: Math.min(
+            0.99,
+            Math.max(0.88, box.confidence + (Math.random() - 0.5) * 0.03)
+          ),
         }))
       );
       setStats((prev) => ({
@@ -161,7 +181,11 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
 
     const buf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW
+    );
     const aPos = gl.getAttribLocation(prog, "a_pos");
     gl.enableVertexAttribArray(aPos);
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
@@ -178,7 +202,17 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     // Init with 1px black
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,255]));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array([0, 0, 0, 255])
+    );
 
     function resize() {
       if (!canvas) return;
@@ -198,7 +232,14 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       // Upload video frame
       if (video.readyState >= 2) {
         gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          video
+        );
       }
 
       gl.uniform1f(uTime, (performance.now() - t0) / 1000);
@@ -249,7 +290,11 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       />
 
       {/* WebGL canvas — edge detection output */}
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" style={{ display: "block" }} />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 h-full w-full"
+        style={{ display: "block" }}
+      />
 
       {/* Frosted glass tiles */}
       <div
@@ -285,14 +330,32 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       />
 
       {/* TV grain */}
-      <svg className="pointer-events-none absolute inset-0 h-full w-full tv-static" aria-hidden="true" style={{ willChange: "transform" }}>
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full tv-static"
+        aria-hidden="true"
+        style={{ willChange: "transform" }}
+      >
         <defs>
           <filter id="heroGrain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="4" stitchTiles="stitch" seed={42} />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.7"
+              numOctaves="4"
+              stitchTiles="stitch"
+              seed={42}
+            />
             <feColorMatrix type="saturate" values="0" />
           </filter>
         </defs>
-        <rect width="120%" height="120%" x="-10%" y="-10%" filter="url(#heroGrain)" opacity="0.18" style={{ mixBlendMode: "overlay" }} />
+        <rect
+          width="120%"
+          height="120%"
+          x="-10%"
+          y="-10%"
+          filter="url(#heroGrain)"
+          opacity="0.18"
+          style={{ mixBlendMode: "overlay" }}
+        />
       </svg>
 
       {/* === AI OVERLAYS — bounding boxes === */}
@@ -332,14 +395,23 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       </div>
 
       {/* === STATS HUD — bottom left === */}
-      <div className="pointer-events-none absolute bottom-5 left-5 flex flex-col gap-0.5 font-mono text-[10px] tracking-wider text-green-bright/40" aria-hidden="true">
-        <span>STREAM_01 &nbsp;|&nbsp; {stats.fps} FPS &nbsp;|&nbsp; {stats.latency}ms</span>
+      <div
+        className="pointer-events-none absolute bottom-5 left-5 flex flex-col gap-0.5 font-mono text-[10px] tracking-wider text-green-bright/40"
+        aria-hidden="true"
+      >
+        <span>
+          STREAM_01 &nbsp;|&nbsp; {stats.fps} FPS &nbsp;|&nbsp; {stats.latency}
+          ms
+        </span>
         <span>OBJECTS: {stats.objects} &nbsp;|&nbsp; MODEL: cascade-rt-v2</span>
         <span>FRAME: {String(stats.frames).padStart(6, "0")}</span>
       </div>
 
       {/* === PROCESSING INDICATOR — top left === */}
-      <div className="pointer-events-none absolute top-5 left-5 flex items-center gap-2" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute top-5 left-5 flex items-center gap-2"
+        aria-hidden="true"
+      >
         <div className="h-2 w-2 rounded-full bg-green-bright/80 animate-pulse" />
         <span className="font-mono text-[10px] tracking-widest text-green-bright/50">
           PROCESSING
@@ -347,7 +419,10 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
       </div>
 
       {/* === MODEL LABELS — top right === */}
-      <div className="pointer-events-none absolute top-5 right-5 flex flex-col items-end gap-0.5 font-mono text-[10px] tracking-wider text-green/30" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute top-5 right-5 flex flex-col items-end gap-0.5 font-mono text-[10px] tracking-wider text-green/30"
+        aria-hidden="true"
+      >
         <span>EDGE_DETECT ✓</span>
         <span>POSE_EST ✓</span>
         <span>SEGMENT ✓</span>
@@ -358,7 +433,8 @@ export default function AiVideoHero({ className = "" }: { className?: string }) 
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
         style={{
-          background: "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 35%, rgba(8,8,8,0.5) 100%)",
+          background:
+            "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 35%, rgba(8,8,8,0.5) 100%)",
         }}
       />
     </div>

@@ -35,8 +35,7 @@ export default function ImageMask({
 }) {
   const tiles = useMemo(() => {
     return Array.from({ length: cols * rows }).map((_, i) => {
-      const h =
-        Math.abs(Math.sin((i + seed) * 127.1 + 311.7 + 43758.5453)) % 1;
+      const h = Math.abs(Math.sin((i + seed) * 127.1 + 311.7 + 43758.5453)) % 1;
 
       // All tiles: no blur, no tint — just grid lines
       const blur = 0;
@@ -47,7 +46,10 @@ export default function ImageMask({
   }, [cols, rows, seed]);
 
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ containerType: "inline-size" }}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      style={{ containerType: "inline-size" }}
+    >
       {/* Layer 0: Dark green base */}
       <div
         className="absolute inset-0"
@@ -116,13 +118,9 @@ export default function ImageMask({
                   ? `rgba(24, 121, 78, ${tile.tint})`
                   : "transparent",
               backdropFilter:
-                tile.blur > 0
-                  ? `blur(${tile.blur}px) saturate(1.4)`
-                  : "none",
+                tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
               WebkitBackdropFilter:
-                tile.blur > 0
-                  ? `blur(${tile.blur}px) saturate(1.4)`
-                  : "none",
+                tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
               borderRight: "1px solid rgba(255,255,255,0.18)",
               borderBottom: "1px solid rgba(255,255,255,0.18)",
             }}

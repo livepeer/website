@@ -37,7 +37,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${favoritPro.variable} ${favoritMono.variable}`}>
+    <html
+      lang="en"
+      className={`${favoritPro.variable} ${favoritMono.variable}`}
+    >
       <head>
         {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (
           <>

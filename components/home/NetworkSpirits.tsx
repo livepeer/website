@@ -89,14 +89,26 @@ function buildNetwork() {
   const hubs: NetworkNode[] = [];
 
   const hubPositions: [number, number][] = [
-    [120, 150], [300, 75], [500, 170], [720, 85], [940, 145],
-    [1080, 75], [200, 300], [650, 310], [860, 270], [420, 330], [1040, 310],
-    [380, 180], [780, 200], [160, 220],
+    [120, 150],
+    [300, 75],
+    [500, 170],
+    [720, 85],
+    [940, 145],
+    [1080, 75],
+    [200, 300],
+    [650, 310],
+    [860, 270],
+    [420, 330],
+    [1040, 310],
+    [380, 180],
+    [780, 200],
+    [160, 220],
   ];
 
   hubPositions.forEach(([x, y]) => {
     const node: NetworkNode = {
-      x, y,
+      x,
+      y,
       size: 3.5 + rand() * 3,
       energy: 0.7 + rand() * 0.3,
       speed: 1.5 + rand() * 2,
@@ -136,7 +148,8 @@ function buildNetwork() {
       const d = Math.hypot(hubs[i].x - hubs[j].x, hubs[i].y - hubs[j].y);
       if (d < 350) {
         connections.push({
-          a: hubs[i], b: hubs[j],
+          a: hubs[i],
+          b: hubs[j],
           strength: 1 - d / 350,
           speed: 0.2 + rand() * 0.4,
           offset: rand() * 100,
@@ -145,13 +158,14 @@ function buildNetwork() {
     }
   }
 
-  const secs = nodes.filter(n => n.type === "secondary");
-  hubs.forEach(hub => {
-    secs.forEach(sec => {
+  const secs = nodes.filter((n) => n.type === "secondary");
+  hubs.forEach((hub) => {
+    secs.forEach((sec) => {
       const d = Math.hypot(hub.x - sec.x, hub.y - sec.y);
       if (d < 200) {
         connections.push({
-          a: hub, b: sec,
+          a: hub,
+          b: sec,
           strength: (1 - d / 200) * 0.5,
           speed: 0.3 + rand() * 0.3,
           offset: rand() * 100,
@@ -165,11 +179,14 @@ function buildNetwork() {
 
 // ─── SPIRIT CREATURES ────────────────────────
 
-function createSpirits(connections: Connection[], hubs: NetworkNode[]): Spirit[] {
+function createSpirits(
+  connections: Connection[],
+  hubs: NetworkNode[]
+): Spirit[] {
   const rand = seeded(123);
   const spirits: Spirit[] = [];
 
-  const goodConns = connections.filter(c => c.strength > 0.3);
+  const goodConns = connections.filter((c) => c.strength > 0.3);
   for (let i = 0; i < 12; i++) {
     const conn = goodConns[Math.floor(rand() * goodConns.length)];
     spirits.push({
@@ -236,24 +253,40 @@ export default function NetworkSpirits() {
     ctx.clearRect(0, 0, w, h);
 
     // ─── ATMOSPHERE ───
-    const g1 = ctx.createRadialGradient(w * 0.3, h * 0.35, 0, w * 0.3, h * 0.35, w * 0.4);
+    const g1 = ctx.createRadialGradient(
+      w * 0.3,
+      h * 0.35,
+      0,
+      w * 0.3,
+      h * 0.35,
+      w * 0.4
+    );
     g1.addColorStop(0, "rgba(0, 235, 136, 0.035)");
     g1.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = g1;
     ctx.fillRect(0, 0, w, h);
 
-    const g2 = ctx.createRadialGradient(w * 0.75, h * 0.6, 0, w * 0.75, h * 0.6, w * 0.35);
+    const g2 = ctx.createRadialGradient(
+      w * 0.75,
+      h * 0.6,
+      0,
+      w * 0.75,
+      h * 0.6,
+      w * 0.35
+    );
     g2.addColorStop(0, "rgba(0, 235, 136, 0.02)");
     g2.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, w, h);
 
     // ─── CONNECTIONS ───
-    NET.connections.forEach(conn => {
+    NET.connections.forEach((conn) => {
       const wave = Math.sin(t * conn.speed * 2 + conn.offset) * 0.5 + 0.5;
       const alpha = conn.strength * (0.03 + wave * 0.05);
-      const mx = (conn.a.x + conn.b.x) / 2 + Math.sin(t * 0.7 + conn.offset) * 10;
-      const my = (conn.a.y + conn.b.y) / 2 + Math.cos(t * 0.5 + conn.offset) * 7;
+      const mx =
+        (conn.a.x + conn.b.x) / 2 + Math.sin(t * 0.7 + conn.offset) * 10;
+      const my =
+        (conn.a.y + conn.b.y) / 2 + Math.cos(t * 0.5 + conn.offset) * 7;
 
       ctx.beginPath();
       ctx.moveTo(conn.a.x, conn.a.y);
@@ -262,12 +295,18 @@ export default function NetworkSpirits() {
       ctx.lineWidth = conn.strength > 0.5 ? 0.8 : 0.5;
       ctx.stroke();
 
-      const pT = ((t * conn.speed * 0.6 + conn.offset * 0.1) % 1);
+      const pT = (t * conn.speed * 0.6 + conn.offset * 0.1) % 1;
       const pAlpha = Math.sin(pT * Math.PI) * conn.strength * 0.4;
       if (pAlpha > 0.03) {
         const u = pT;
-        const px = (1 - u) * (1 - u) * conn.a.x + 2 * (1 - u) * u * mx + u * u * conn.b.x;
-        const py = (1 - u) * (1 - u) * conn.a.y + 2 * (1 - u) * u * my + u * u * conn.b.y;
+        const px =
+          (1 - u) * (1 - u) * conn.a.x +
+          2 * (1 - u) * u * mx +
+          u * u * conn.b.x;
+        const py =
+          (1 - u) * (1 - u) * conn.a.y +
+          2 * (1 - u) * u * my +
+          u * u * conn.b.y;
         ctx.beginPath();
         ctx.arc(px, py, 1.2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${GREEN[0]}, ${GREEN[1]}, ${GREEN[2]}, ${pAlpha})`;
@@ -276,12 +315,19 @@ export default function NetworkSpirits() {
     });
 
     // ─── NODES ───
-    NET.nodes.forEach(node => {
-      const pulse = Math.sin(t * (Math.PI * 2) / node.speed + node.phase) * 0.5 + 0.5;
+    NET.nodes.forEach((node) => {
+      const pulse =
+        Math.sin((t * (Math.PI * 2)) / node.speed + node.phase) * 0.5 + 0.5;
 
       if (node.type === "hub") {
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.size * 3.5 + pulse * node.size * 2, 0, Math.PI * 2);
+        ctx.arc(
+          node.x,
+          node.y,
+          node.size * 3.5 + pulse * node.size * 2,
+          0,
+          Math.PI * 2
+        );
         ctx.fillStyle = `rgba(${GREEN[0]}, ${GREEN[1]}, ${GREEN[2]}, ${0.012 + pulse * 0.012})`;
         ctx.fill();
 
@@ -314,11 +360,14 @@ export default function NetworkSpirits() {
     });
 
     // ─── SPIRIT CREATURES ───
-    SPIRITS.forEach(spirit => {
+    SPIRITS.forEach((spirit) => {
       if (spirit.type === "traveler") {
         const conn = spirit.conn;
 
-        if (spirit.pauseAt > 0 && Math.abs(spirit.progress - spirit.pauseAt) < 0.02) {
+        if (
+          spirit.pauseAt > 0 &&
+          Math.abs(spirit.progress - spirit.pauseAt) < 0.02
+        ) {
           spirit.pauseTimer += dt;
           if (spirit.pauseTimer >= 1.5) {
             spirit.pauseTimer = 0;
@@ -328,19 +377,41 @@ export default function NetworkSpirits() {
           spirit.progress += spirit.speed * dt * spirit.direction;
         }
 
-        if (spirit.progress > 1) { spirit.progress = 1; spirit.direction = -1; }
-        if (spirit.progress < 0) { spirit.progress = 0; spirit.direction = 1; }
+        if (spirit.progress > 1) {
+          spirit.progress = 1;
+          spirit.direction = -1;
+        }
+        if (spirit.progress < 0) {
+          spirit.progress = 0;
+          spirit.direction = 1;
+        }
 
-        const mx = (conn.a.x + conn.b.x) / 2 + Math.sin(t * 0.7 + conn.offset) * 10;
-        const my = (conn.a.y + conn.b.y) / 2 + Math.cos(t * 0.5 + conn.offset) * 7;
+        const mx =
+          (conn.a.x + conn.b.x) / 2 + Math.sin(t * 0.7 + conn.offset) * 10;
+        const my =
+          (conn.a.y + conn.b.y) / 2 + Math.cos(t * 0.5 + conn.offset) * 7;
         const u = spirit.progress;
-        const baseX = (1 - u) * (1 - u) * conn.a.x + 2 * (1 - u) * u * mx + u * u * conn.b.x;
-        const baseY = (1 - u) * (1 - u) * conn.a.y + 2 * (1 - u) * u * my + u * u * conn.b.y;
+        const baseX =
+          (1 - u) * (1 - u) * conn.a.x +
+          2 * (1 - u) * u * mx +
+          u * u * conn.b.x;
+        const baseY =
+          (1 - u) * (1 - u) * conn.a.y +
+          2 * (1 - u) * u * my +
+          u * u * conn.b.y;
 
-        const wobble = Math.sin(t * spirit.wobbleSpeed + spirit.bodyPhase) * spirit.wobbleAmp;
+        const wobble =
+          Math.sin(t * spirit.wobbleSpeed + spirit.bodyPhase) *
+          spirit.wobbleAmp;
         const nextU = Math.min(1, u + 0.01);
-        const nx = (1 - nextU) * (1 - nextU) * conn.a.x + 2 * (1 - nextU) * nextU * mx + nextU * nextU * conn.b.x;
-        const ny = (1 - nextU) * (1 - nextU) * conn.a.y + 2 * (1 - nextU) * nextU * my + nextU * nextU * conn.b.y;
+        const nx =
+          (1 - nextU) * (1 - nextU) * conn.a.x +
+          2 * (1 - nextU) * nextU * mx +
+          nextU * nextU * conn.b.x;
+        const ny =
+          (1 - nextU) * (1 - nextU) * conn.a.y +
+          2 * (1 - nextU) * nextU * my +
+          nextU * nextU * conn.b.y;
         const ddx = nx - baseX;
         const ddy = ny - baseY;
         const len = Math.hypot(ddx, ddy) || 1;
@@ -441,11 +512,23 @@ export default function NetworkSpirits() {
         const legOffsetL = legCycle * 2;
         const legOffsetR = -legCycle * 2;
         ctx.beginPath();
-        ctx.arc(x - s * 0.3 + legOffsetL, y + s * 0.9, s * 0.12, 0, Math.PI * 2);
+        ctx.arc(
+          x - s * 0.3 + legOffsetL,
+          y + s * 0.9,
+          s * 0.12,
+          0,
+          Math.PI * 2
+        );
         ctx.fillStyle = `rgba(${GREEN[0]}, ${GREEN[1]}, ${GREEN[2]}, ${0.35 * spirit.brightness})`;
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + s * 0.3 + legOffsetR, y + s * 0.9, s * 0.12, 0, Math.PI * 2);
+        ctx.arc(
+          x + s * 0.3 + legOffsetR,
+          y + s * 0.9,
+          s * 0.12,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
 
         if (spirit.hasTail) {
@@ -453,8 +536,10 @@ export default function NetworkSpirits() {
           ctx.beginPath();
           ctx.moveTo(x + tailDir * s * 0.6, y);
           ctx.quadraticCurveTo(
-            x + tailDir * s * 1.5, y + Math.sin(t * 4 + spirit.bodyPhase) * 4,
-            x + tailDir * s * 2, y + Math.sin(t * 3 + spirit.bodyPhase) * 3
+            x + tailDir * s * 1.5,
+            y + Math.sin(t * 4 + spirit.bodyPhase) * 4,
+            x + tailDir * s * 2,
+            y + Math.sin(t * 3 + spirit.bodyPhase) * 3
           );
           ctx.strokeStyle = `rgba(${GREEN[0]}, ${GREEN[1]}, ${GREEN[2]}, ${0.15 * spirit.brightness})`;
           ctx.lineWidth = 1.2;
@@ -471,8 +556,12 @@ export default function NetworkSpirits() {
         for (let p = 0; p < 3; p++) {
           const sparkleAge = (t * 2 + p * 1.3 + spirit.bodyPhase) % 2;
           if (sparkleAge < 1) {
-            const sparkleX = x + Math.cos(t * 3 + p * 2.1) * s * (1 + sparkleAge);
-            const sparkleY = y + Math.sin(t * 2.5 + p * 1.7) * s * (1 + sparkleAge) - sparkleAge * 8;
+            const sparkleX =
+              x + Math.cos(t * 3 + p * 2.1) * s * (1 + sparkleAge);
+            const sparkleY =
+              y +
+              Math.sin(t * 2.5 + p * 1.7) * s * (1 + sparkleAge) -
+              sparkleAge * 8;
             const sparkleAlpha = (1 - sparkleAge) * 0.35 * spirit.brightness;
             ctx.beginPath();
             ctx.arc(sparkleX, sparkleY, 0.8, 0, Math.PI * 2);
@@ -480,12 +569,14 @@ export default function NetworkSpirits() {
             ctx.fill();
           }
         }
-
       } else if (spirit.type === "floater") {
         spirit.angle += spirit.orbitSpeed * dt;
         const bob = Math.sin(t * 1.5 + spirit.bobPhase) * spirit.bobAmp;
         const x = spirit.hub.x + Math.cos(spirit.angle) * spirit.orbitRadius;
-        const y = spirit.hub.y + Math.sin(spirit.angle) * spirit.orbitRadius * 0.6 + bob;
+        const y =
+          spirit.hub.y +
+          Math.sin(spirit.angle) * spirit.orbitRadius * 0.6 +
+          bob;
 
         spirit.trail.unshift({ x, y });
         if (spirit.trail.length > spirit.trailLength) spirit.trail.pop();
@@ -516,11 +607,23 @@ export default function NetworkSpirits() {
 
         const blink = Math.sin(t * 0.4 + spirit.bobPhase * 2) > -0.85 ? 1 : 0.1;
         ctx.beginPath();
-        ctx.arc(x - 1.5, y - spirit.size * 0.2, spirit.size * 0.1 * blink, 0, Math.PI * 2);
+        ctx.arc(
+          x - 1.5,
+          y - spirit.size * 0.2,
+          spirit.size * 0.1 * blink,
+          0,
+          Math.PI * 2
+        );
         ctx.fillStyle = `rgba(255, 255, 255, ${0.7 * spirit.brightness})`;
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + 1.5, y - spirit.size * 0.2, spirit.size * 0.1 * blink, 0, Math.PI * 2);
+        ctx.arc(
+          x + 1.5,
+          y - spirit.size * 0.2,
+          spirit.size * 0.1 * blink,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
       }
     });

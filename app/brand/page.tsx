@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, animate, useMotionValue, useMotionValueEvent } from "framer-motion";
+import {
+  motion,
+  animate,
+  useMotionValue,
+  useMotionValueEvent,
+} from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 import {
@@ -324,9 +329,7 @@ function ColorSwatch({
         {name}
       </p>
       <CopyableHex value={hex} />
-      {token && (
-        <p className="font-mono text-xs text-white/30">{token}</p>
-      )}
+      {token && <p className="font-mono text-xs text-white/30">{token}</p>}
     </div>
   );
 }
@@ -586,8 +589,8 @@ export default function BrandPage() {
               Brand Guidelines
             </h1>
             <p className="mt-6 text-lg text-white/60">
-              Resources for presenting the Livepeer brand consistently
-              and professionally.
+              Resources for presenting the Livepeer brand consistently and
+              professionally.
             </p>
           </motion.div>
         </Container>
@@ -600,7 +603,6 @@ export default function BrandPage() {
             background: "linear-gradient(to bottom, transparent, #121212)",
           }}
         />
-
       </section>
 
       {/* Section 2: Logo */}
@@ -641,7 +643,6 @@ export default function BrandPage() {
               <div className="grid gap-6 sm:grid-cols-3">
                 <LogoCard
                   variant="Symbol"
-
                   bgClass="bg-dark-card"
                   textColor="text-white/40"
                   svgRef={symbolDarkRef}
@@ -654,7 +655,6 @@ export default function BrandPage() {
                 </LogoCard>
                 <LogoCard
                   variant="Wordmark"
-
                   bgClass="bg-dark-card"
                   textColor="text-white/40"
                   svgRef={wordmarkDarkRef}
@@ -667,7 +667,6 @@ export default function BrandPage() {
                 </LogoCard>
                 <LogoCard
                   variant="Lockup"
-
                   bgClass="bg-dark-card"
                   textColor="text-white/40"
                   svgRef={lockupDarkRef}
@@ -693,7 +692,6 @@ export default function BrandPage() {
               <div className="grid gap-6 sm:grid-cols-3">
                 <LogoCard
                   variant="Symbol"
-
                   bgClass="bg-white"
                   textColor="text-[#181818]/40"
                   svgRef={symbolLightRef}
@@ -706,7 +704,6 @@ export default function BrandPage() {
                 </LogoCard>
                 <LogoCard
                   variant="Wordmark"
-
                   bgClass="bg-white"
                   textColor="text-[#181818]/40"
                   svgRef={wordmarkLightRef}
@@ -719,7 +716,6 @@ export default function BrandPage() {
                 </LogoCard>
                 <LogoCard
                   variant="Lockup"
-
                   bgClass="bg-white"
                   textColor="text-[#181818]/40"
                   svgRef={lockupLightRef}
@@ -786,21 +782,29 @@ export default function BrandPage() {
               <div className="rounded-xl border border-dark-border bg-dark-card p-6">
                 <ul className="space-y-3 text-sm text-white/60">
                   <li>
-                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">Clear Space</span>
-                    {" "}— Minimum clear space equals the width of the symbol on all sides.
+                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">
+                      Clear Space
+                    </span>{" "}
+                    — Minimum clear space equals the width of the symbol on all
+                    sides.
                   </li>
                   <li>
-                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">Placement</span>
-                    {" "}— Primary: top-left or bottom-left. Secondary: top-right, bottom-right, or center.
+                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">
+                      Placement
+                    </span>{" "}
+                    — Primary: top-left or bottom-left. Secondary: top-right,
+                    bottom-right, or center.
                   </li>
                   <li>
-                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">Avatars</span>
-                    {" "}— Green gradient bg + white symbol, black bg + white symbol, or white bg + black symbol.
+                    <span className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">
+                      Avatars
+                    </span>{" "}
+                    — Green gradient bg + white symbol, black bg + white symbol,
+                    or white bg + black symbol.
                   </li>
                 </ul>
               </div>
             </motion.div>
-
           </motion.div>
         </Container>
       </section>
@@ -905,10 +909,7 @@ export default function BrandPage() {
               <div className="hidden overflow-hidden rounded-lg border border-dark-border sm:flex">
                 {greyscale.map((c) => (
                   <div key={c.hex} className="flex-1">
-                    <div
-                      className="h-16"
-                      style={{ backgroundColor: c.hex }}
-                    />
+                    <div className="h-16" style={{ backgroundColor: c.hex }} />
                     <div className="bg-dark-card px-1 py-2 text-center">
                       <p className="font-mono text-[10px] text-white/40">
                         {c.hex}
@@ -1135,8 +1136,8 @@ export default function BrandPage() {
                     </p>
                   </div>
                   <p className="text-lg text-white/60">
-                    The Livepeer network is open infrastructure for real-time
-                    AI video. Build applications powered by decentralized
+                    The Livepeer network is open infrastructure for real-time AI
+                    video. Build applications powered by decentralized
                     transcoding, streaming, and AI processing.
                   </p>
                 </div>
@@ -1150,8 +1151,8 @@ export default function BrandPage() {
                     </p>
                   </div>
                   <p className="text-sm text-white/50">
-                    Supporting text, descriptions, and secondary content use
-                    the smaller body size with reduced opacity.
+                    Supporting text, descriptions, and secondary content use the
+                    smaller body size with reduced opacity.
                   </p>
                 </div>
                 <div>
@@ -1183,9 +1184,7 @@ export default function BrandPage() {
                 <p className="mt-2 font-mono text-3xl font-bold text-green">
                   93%
                 </p>
-                <p className="mt-1 text-sm text-white/50">
-                  Favorit Pro Bold
-                </p>
+                <p className="mt-1 text-sm text-white/50">Favorit Pro Bold</p>
               </div>
               <div className="rounded-xl border border-dark-border bg-dark-card p-6">
                 <p className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">
@@ -1194,9 +1193,7 @@ export default function BrandPage() {
                 <p className="mt-2 font-mono text-3xl font-bold text-green">
                   120%
                 </p>
-                <p className="mt-1 text-sm text-white/50">
-                  Favorit Mono Bold
-                </p>
+                <p className="mt-1 text-sm text-white/50">Favorit Mono Bold</p>
               </div>
               <div className="rounded-xl border border-dark-border bg-dark-card p-6">
                 <p className="font-mono text-xs font-medium tracking-wider text-white/40 uppercase">
@@ -1205,9 +1202,7 @@ export default function BrandPage() {
                 <p className="mt-2 font-mono text-3xl font-bold text-green">
                   100%
                 </p>
-                <p className="mt-1 text-sm text-white/50">
-                  Favorit Pro Medium
-                </p>
+                <p className="mt-1 text-sm text-white/50">Favorit Pro Medium</p>
               </div>
             </motion.div>
           </motion.div>
@@ -1232,12 +1227,19 @@ export default function BrandPage() {
                 Holographik Grid System
               </h2>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/60">
-                The site&apos;s signature visual combines B&W video/imagery, a 9-column square tile grid, geometric shapes, animated particle trails, and liquid glass effects into a layered &ldquo;control room&rdquo; aesthetic.
+                The site&apos;s signature visual combines B&W video/imagery, a
+                9-column square tile grid, geometric shapes, animated particle
+                trails, and liquid glass effects into a layered &ldquo;control
+                room&rdquo; aesthetic.
               </p>
             </motion.div>
 
             {/* Layer stack — visual demo */}
-            <motion.div variants={fadeUp} transition={{ duration: 0.5 }} className="mt-16">
+            <motion.div
+              variants={fadeUp}
+              transition={{ duration: 0.5 }}
+              className="mt-16"
+            >
               <p className="mb-6 font-mono text-xs tracking-wider text-white/40 uppercase">
                 Layer Stack (bottom to top)
               </p>
@@ -1277,7 +1279,7 @@ export default function BrandPage() {
                     />
                   </div>
                   <p className="mt-2 font-mono text-xs text-white/40">
-                    <span className="text-green/60">1</span>{" "}Media
+                    <span className="text-green/60">1</span> Media
                   </p>
                 </div>
 
@@ -1297,7 +1299,7 @@ export default function BrandPage() {
                     />
                   </div>
                   <p className="mt-2 font-mono text-xs text-white/40">
-                    <span className="text-green/60">2</span>{" "}Tile Grid
+                    <span className="text-green/60">2</span> Tile Grid
                   </p>
                 </div>
 
@@ -1359,7 +1361,7 @@ export default function BrandPage() {
                     ))}
                   </div>
                   <p className="mt-2 font-mono text-xs text-white/40">
-                    <span className="text-green/60">3</span>{" "}Shapes
+                    <span className="text-green/60">3</span> Shapes
                   </p>
                 </div>
 
@@ -1465,7 +1467,7 @@ export default function BrandPage() {
                     />
                   </div>
                   <p className="mt-2 font-mono text-xs text-white/40">
-                    <span className="text-green/60">=</span>{" "}Combined
+                    <span className="text-green/60">=</span> Combined
                   </p>
                 </div>
               </div>
@@ -1560,7 +1562,6 @@ export default function BrandPage() {
           </motion.div>
         </Container>
       </section>
-
     </>
   );
 }
