@@ -1054,7 +1054,7 @@ export default function BrandPage() {
                   <p className="mb-1 font-mono text-xs text-white/30">
                     Regular (400)
                   </p>
-                  <p className="font-mono text-2xl">
+                  <p className="break-all font-mono text-2xl">
                     ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
                   </p>
                 </div>
@@ -1062,7 +1062,7 @@ export default function BrandPage() {
                   <p className="mb-1 font-mono text-xs text-white/30">
                     Medium (500)
                   </p>
-                  <p className="font-mono text-2xl font-medium">
+                  <p className="break-all font-mono text-2xl font-medium">
                     ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
                   </p>
                 </div>
@@ -1070,7 +1070,7 @@ export default function BrandPage() {
                   <p className="mb-1 font-mono text-xs text-white/30">
                     Bold (700)
                   </p>
-                  <p className="font-mono text-2xl font-bold">
+                  <p className="break-all font-mono text-2xl font-bold">
                     ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
                   </p>
                 </div>
