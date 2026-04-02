@@ -69,7 +69,7 @@ export default function EarlyAccessCTA() {
         <button
           type="submit"
           disabled={isSubmitting || isSuccess}
-          className="shrink-0 cursor-pointer select-none rounded-full bg-green px-5 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-70 hover:bg-green-light active:bg-green-dark"
+          className="shrink-0 cursor-pointer select-none rounded-lg bg-green px-5 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-70 hover:bg-green-light active:bg-green-dark"
         >
           <span className="flex items-center justify-center gap-1.5">
             {isSubmitting ? (
