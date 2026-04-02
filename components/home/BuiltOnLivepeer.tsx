@@ -674,7 +674,7 @@ export default function BuiltOnLivepeer() {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Ecosystem"
-              title="Live on Livepeer"
+              title="Built with Livepeer"
               description="Applications and emerging capabilities on Livepeer, from transcoding and streaming to real-time AI."
               align="split"
             />
@@ -732,9 +732,16 @@ export default function BuiltOnLivepeer() {
             transition={{ duration: 0.4 }}
             className="mt-12 text-center"
           >
-            <Button href="/ecosystem" variant="primary" size="md">
-              Explore the Ecosystem <span aria-hidden="true">→</span>
-            </Button>
+            <a
+              href="/ecosystem"
+              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
+              style={{
+                background:
+                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
+              }}
+            >
+              Explore the ecosystem <span aria-hidden="true">→</span>
+            </a>
           </motion.div>
         </motion.div>
       </Container>
