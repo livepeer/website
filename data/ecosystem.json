@@ -4,8 +4,7 @@
     "name": "Daydream",
     "url": "https://daydream.live",
     "description": "Open-source engine for real-time generative video, audio, and live visuals.",
-    "categories": ["AI Video"],
-    "tags": ["Generative", "API"],
+    "categories": ["AI Video", "Generative", "API"],
     "logo": "daydream.svg"
   },
   {
@@ -13,8 +12,7 @@
     "name": "Frameworks",
     "url": "https://frameworks.network",
     "description": "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
-    "categories": ["Streaming"],
-    "tags": ["Self-hosted", "API"],
+    "categories": ["Streaming", "Self-hosted", "API"],
     "logo": "frameworks.svg"
   },
   {
@@ -22,8 +20,7 @@
     "name": "Streamplace",
     "url": "https://stream.place",
     "description": "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
-    "categories": ["Streaming"],
-    "tags": ["Decentralized"],
+    "categories": ["Streaming", "Decentralized"],
     "logo": "stream-place.png"
   },
   {
@@ -31,8 +28,7 @@
     "name": "Embody",
     "url": "https://embody.zone",
     "description": "Embodied AI avatars for real-time tutoring and telepresence.",
-    "categories": ["AI Video"],
-    "tags": ["Agents"],
+    "categories": ["AI Video", "Agents"],
     "logo": "embody.svg"
   },
   {
@@ -40,8 +36,7 @@
     "name": "Blue Claw",
     "url": "https://blueclaw.network",
     "description": "Always-on AI inference for autonomous agents with an OpenAI-compatible API. No rate limits, no throttling.",
-    "categories": ["AI Video"],
-    "tags": ["Agents", "API"],
+    "categories": ["AI Video", "Agents", "API"],
     "logo": "blueclaw.png"
   },
   {
@@ -49,8 +44,7 @@
     "name": "The Lot Radio",
     "url": "https://www.thelotradio.com",
     "description": "Independent 24/7 online radio station broadcasting live DJ sets and music programming from Brooklyn, New York.",
-    "categories": ["Streaming"],
-    "tags": ["Music"],
+    "categories": ["Streaming", "Music"],
     "logo": "thelotradio.svg",
     "logoBg": "#FFFFFF"
   },
@@ -59,8 +53,7 @@
     "name": "Livepeer Studio",
     "url": "https://livepeer.studio",
     "description": "Developer APIs for live streaming, video-on-demand, and transcoding powered by the Livepeer network.",
-    "categories": ["Streaming"],
-    "tags": ["API"],
+    "categories": ["Streaming", "API"],
     "logo": "livepeer-studio.png"
   },
   {
@@ -68,8 +61,7 @@
     "name": "Tribe Social",
     "url": "https://www.tribesocial.io",
     "description": "Branded community apps with live video calls, courses, and integrated payments. Launch in 30 days.",
-    "categories": ["Streaming"],
-    "tags": ["Community"],
+    "categories": ["Streaming", "Community"],
     "logo": "tribesocial.webp"
   },
   {
@@ -77,8 +69,7 @@
     "name": "Higher",
     "url": "https://higher.zip",
     "description": "Onchain community collective on Base with live streaming, missions, and a shared creative treasury.",
-    "categories": ["Streaming"],
-    "tags": ["Community", "Decentralized"],
+    "categories": ["Streaming", "Community", "Decentralized"],
     "logo": "higher-zip.svg"
   },
   {
@@ -86,8 +77,7 @@
     "name": "NYTV",
     "url": "https://nytv.live",
     "description": "Independent 24/7 live television station streaming culture and news programming from New York.",
-    "categories": ["Streaming"],
-    "tags": ["Community"],
+    "categories": ["Streaming", "Community"],
     "logo": "nytv-live.jpg"
   },
   {
@@ -95,8 +85,7 @@
     "name": "UFO",
     "url": "https://ufo.fm",
     "description": "Broadcast platform for independent culture — radio shows, mixes, and long-form conversations from contributors worldwide.",
-    "categories": ["Streaming"],
-    "tags": ["Music", "Community"],
+    "categories": ["Streaming", "Music", "Community"],
     "logo": "ufo-fm.svg"
   },
   {
@@ -104,8 +93,7 @@
     "name": "Spritz",
     "url": "https://app.spritz.chat",
     "description": "Decentralized social platform combining Web3 messaging, AI agents, livestreaming, and peer-to-peer communication.",
-    "categories": ["Streaming"],
-    "tags": ["Community", "Decentralized"],
+    "categories": ["Streaming", "Community", "Decentralized"],
     "logo": "spritz.svg"
   }
 ]

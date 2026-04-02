@@ -69,40 +69,26 @@ export default function FilterPill({
     );
   }
 
-  /* Split-button pill with dropdown */
+  /* Single button pill with dropdown */
   return (
     <div ref={ref} className="relative">
-      <div className={`${pillColors} flex items-center rounded-full`}>
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-pressed={isActive}
-          className={`${pillBase} flex items-center gap-1 rounded-l-full py-1.5 pl-4 pr-2`}
-        >
-          <span>{label}</span>
-          {activeCount > 0 && (
-            <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
-              {activeCount}
-            </span>
-          )}
-        </button>
-        <span
-          className={`h-3 w-px ${isActive ? "bg-white/25" : "bg-white/10"}`}
-          aria-hidden="true"
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className={`${pillBase} ${pillColors} flex items-center gap-1.5 rounded-full py-1.5 pl-4 pr-3`}
+      >
+        <span>{label}</span>
+        {activeCount > 0 && (
+          <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
+            {activeCount}
+          </span>
+        )}
+        <ChevronDown
+          className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`}
         />
-        <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-expanded={open}
-          aria-haspopup="true"
-          aria-label={`${label} tags`}
-          className={`${pillBase} rounded-r-full py-1.5 pl-1.5 pr-2.5`}
-        >
-          <ChevronDown
-            className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`}
-          />
-        </button>
-      </div>
+      </button>
 
       <AnimatePresence>
         {open && (

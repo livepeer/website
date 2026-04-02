@@ -14,23 +14,6 @@ import FilterPill from "@/components/ui/FilterPill";
 
 const BATCH_SIZE = 12;
 
-/* Collect tags grouped by category */
-const TAGS_BY_CATEGORY: Record<string, string[]> = {};
-for (const app of ECOSYSTEM_APPS) {
-  for (const cat of app.categories) {
-    if (!TAGS_BY_CATEGORY[cat]) TAGS_BY_CATEGORY[cat] = [];
-    for (const tag of app.tags ?? []) {
-      if (!TAGS_BY_CATEGORY[cat].includes(tag)) {
-        TAGS_BY_CATEGORY[cat].push(tag);
-      }
-    }
-  }
-}
-
-/* Categories that have tags get a dropdown chevron */
-const CATEGORIES_WITH_TAGS = ECOSYSTEM_CATEGORIES.filter(
-  (cat) => cat !== "All" && TAGS_BY_CATEGORY[cat]?.length > 0,
-);
 
 function EcosystemPageInner() {
   const searchParams = useSearchParams();
@@ -39,10 +22,6 @@ function EcosystemPageInner() {
 
   const [activeCategories, setActiveCategories] = useState<string[]>(() => {
     const param = searchParams.get("categories");
-    return param ? param.split(",").map(decodeURIComponent) : [];
-  });
-  const [activeTags, setActiveTags] = useState<string[]>(() => {
-    const param = searchParams.get("tags");
     return param ? param.split(",").map(decodeURIComponent) : [];
   });
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
@@ -62,36 +41,26 @@ function EcosystemPageInner() {
     const params = new URLSearchParams();
     if (activeCategories.length > 0)
       params.set("categories", activeCategories.join(","));
-    if (activeTags.length > 0) params.set("tags", activeTags.join(","));
     if (search) params.set("q", search);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [activeCategories, activeTags, search, pathname, router]);
+  }, [activeCategories, search, pathname, router]);
 
   useEffect(() => {
     setVisible(BATCH_SIZE);
-  }, [activeCategories, activeTags, search]);
+  }, [activeCategories, search]);
 
   const handleCategoryToggle = (cat: string) => {
     if (cat === "All") {
       setActiveCategories([]);
-      setActiveTags([]);
       return;
     }
-    setActiveCategories((prev) => {
-      const next = prev.includes(cat)
+    setActiveCategories((prev) =>
+      prev.includes(cat)
         ? prev.filter((c) => c !== cat)
-        : [...prev, cat];
-      if (next.length === 0) setActiveTags([]);
-      return next;
-    });
-  };
-
-  const handleTagToggle = (tag: string) => {
-    setActiveTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+        : [...prev, cat],
     );
   };
 
@@ -99,16 +68,13 @@ function EcosystemPageInner() {
     return ECOSYSTEM_APPS.filter((app) => {
       const matchesCategory =
         isAllActive || activeCategories.some((c) => app.categories.includes(c));
-      const matchesTags =
-        activeTags.length === 0 ||
-        activeTags.some((t) => app.tags?.includes(t));
       const matchesSearch =
         !search ||
         app.name.toLowerCase().includes(search.toLowerCase()) ||
         app.description.toLowerCase().includes(search.toLowerCase());
-      return matchesCategory && matchesTags && matchesSearch;
+      return matchesCategory && matchesSearch;
     });
-  }, [activeCategories, activeTags, search, isAllActive]);
+  }, [activeCategories, search, isAllActive]);
 
   const shown = filtered.slice(0, visible);
   const hasMore = visible < filtered.length;
@@ -162,23 +128,16 @@ function EcosystemPageInner() {
                 isActive={isAllActive}
                 onToggle={() => handleCategoryToggle("All")}
               />
-              {CATEGORIES_WITH_TAGS.map((cat) => (
-                <FilterPill
-                  key={cat}
-                  label={cat}
-                  isActive={activeCategories.includes(cat)}
-                  onToggle={() => handleCategoryToggle(cat)}
-                  dropdown={
-                    TAGS_BY_CATEGORY[cat]?.length > 0
-                      ? {
-                          items: TAGS_BY_CATEGORY[cat],
-                          activeItems: activeTags,
-                          onItemToggle: handleTagToggle,
-                        }
-                      : undefined
-                  }
-                />
-              ))}
+              <FilterPill
+                label="Categories"
+                isActive={activeCategories.length > 0}
+                onToggle={() => handleCategoryToggle("All")}
+                dropdown={{
+                  items: ECOSYSTEM_CATEGORIES.filter((c) => c !== "All"),
+                  activeItems: activeCategories,
+                  onItemToggle: handleCategoryToggle,
+                }}
+              />
             </div>
 
             <div className="relative">
@@ -277,11 +236,6 @@ function EcosystemPageInner() {
                     {app.categories.map((cat) => (
                       <Badge key={cat} variant="category">
                         {cat}
-                      </Badge>
-                    ))}
-                    {app.tags?.map((tag) => (
-                      <Badge key={tag} variant="tag">
-                        {tag}
                       </Badge>
                     ))}
                   </div>
