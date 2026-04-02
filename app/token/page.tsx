@@ -1,11 +1,81 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
+import ImageMask from "@/components/ui/ImageMask";
 import Button from "@/components/ui/Button";
 import { EXTERNAL_LINKS } from "@/lib/constants";
+
+/* ── Grid units matching brand page hero (9×5) ── */
+const COLS = 9;
+const TILE = 100 / COLS;
+const RAYS = [0, 22, 45, 68, 90, 135, 170, -15, -40, -70];
+
+const PULSE_PATH = [
+  "M 100 100",
+  "L 100 0",
+  "L 750 0",
+  "A 150 150 0 0 1 750 300",
+  "L 100 300",
+  "A 100 100 0 1 0 200 400",
+  "L 200 100",
+  "L 100 100",
+].join(" ");
+
+function HeroPulseTrail() {
+  const dotRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+  const progress = useMotionValue(0);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (dotRef.current) dotRef.current.style.opacity = "0.8";
+      animate(progress, 1, {
+        duration: 20,
+        ease: "linear",
+        repeat: Infinity,
+        repeatType: "loop",
+      });
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [progress]);
+
+  useMotionValueEvent(progress, "change", (v) => {
+    const path = pathRef.current;
+    const dot = dotRef.current;
+    if (!path || !dot) return;
+    const totalLength = path.getTotalLength();
+    const point = path.getPointAtLength(v * totalLength);
+    dot.style.left = `${(point.x / 100) * TILE}vw`;
+    dot.style.top = `${(point.y / 100) * TILE}vw`;
+  });
+
+  return (
+    <>
+      <svg
+        width="0"
+        height="0"
+        viewBox="0 0 900 500"
+        style={{ position: "absolute", pointerEvents: "none" }}
+        aria-hidden="true"
+      >
+        <path ref={pathRef} d={PULSE_PATH} />
+      </svg>
+      <div
+        ref={dotRef}
+        className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          opacity: 0,
+          background:
+            "radial-gradient(circle, rgba(64,191,134,0.9), rgba(64,191,134,0.3) 60%, transparent 100%)",
+          boxShadow: "0 0 6px 2px rgba(64,191,134,0.25)",
+        }}
+      />
+    </>
+  );
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -225,14 +295,6 @@ function FlowPath({ d, dashed = false }: { d: string; dashed?: boolean }) {
 }
 
 function TokenFlowVisualization() {
-  const [activeNode, setActiveNode] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (isPaused) return;
-    const id = setInterval(() => setActiveNode((n) => (n + 1) % 5), 3000);
-    return () => clearInterval(id);
-  }, [isPaused]);
 
   const flowNodes = [
     {
@@ -241,7 +303,7 @@ function TokenFlowVisualization() {
       sublabel: "Request video compute jobs",
       number: "01",
       x: 130,
-      y: 85,
+      y: 130,
     },
     {
       id: 1,
@@ -249,7 +311,7 @@ function TokenFlowVisualization() {
       sublabel: "Route jobs to orchestrators",
       number: "02",
       x: 400,
-      y: 85,
+      y: 130,
     },
     {
       id: 2,
@@ -257,38 +319,22 @@ function TokenFlowVisualization() {
       sublabel: "GPU clusters process work",
       number: "03",
       x: 670,
-      y: 85,
+      y: 130,
+      width: 170,
     },
     {
       id: 3,
       label: "Delegators",
-      sublabel: "Stake LPT for network security",
+      sublabel: "Stake LPT and earn fees",
       number: "04",
       x: 670,
-      y: 275,
+      y: 290,
     },
-    {
-      id: 4,
-      label: "Micropayments",
-      sublabel: "Ticket-based payment settlement",
-      number: "05",
-      x: 400,
-      y: 275,
-    },
-  ];
-
-  const descriptions = [
-    "Apps send video compute requests through Livepeer network endpoints.",
-    "Gateways receive jobs from apps and route them to available orchestrators.",
-    "Orchestrators perform transcoding and AI processing on GPU clusters.",
-    "Delegators stake LPT to orchestrators, earning fees and rewards.",
-    "Gateways pay orchestrators via probabilistic micropayment tickets.",
   ];
 
   return (
     <div>
-      {/* SVG visualization */}
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.04]">
+      <div className="overflow-hidden">
         <svg viewBox="0 0 800 370" className="block w-full">
           <defs>
             <filter id="soft-glow">
@@ -308,82 +354,64 @@ function TokenFlowVisualization() {
                 opacity="0.35"
               />
             </marker>
-            <radialGradient id="center-glow" cx="50%" cy="50%" r="35%">
-              <stop offset="0%" stopColor={FC.green} stopOpacity="0.03" />
-              <stop offset="100%" stopColor={FC.green} stopOpacity="0" />
-            </radialGradient>
           </defs>
 
-          <ellipse
-            cx="400"
-            cy="180"
-            rx="250"
-            ry="140"
-            fill="url(#center-glow)"
-          />
-
-          {/* Paths */}
-          <FlowPath d="M205,85 L325,85" />
+          {/* Applications → Gateways */}
+          <FlowPath d="M205,130 L325,130" />
           <line
             x1="205"
-            y1="85"
+            y1="130"
             x2="320"
-            y2="85"
+            y2="130"
             stroke={FC.green}
             strokeWidth="1"
             opacity="0.2"
             markerEnd="url(#arrow)"
           />
-          <FlowPath d="M475,85 L595,85" />
+
+          {/* Gateways → Orchestrators */}
+          <FlowPath d="M475,130 L585,130" />
           <line
             x1="475"
-            y1="85"
-            x2="590"
-            y2="85"
+            y1="130"
+            x2="580"
+            y2="130"
             stroke={FC.green}
             strokeWidth="1"
             opacity="0.2"
             markerEnd="url(#arrow)"
           />
-          <FlowPath d="M670,117 L670,243" />
+
+          {/* Orchestrators → Delegators (fees down) */}
+          <FlowPath d="M690,162 L690,258" />
           <line
-            x1="670"
-            y1="117"
-            x2="670"
-            y2="238"
+            x1="690"
+            y1="162"
+            x2="690"
+            y2="253"
             stroke={FC.green}
             strokeWidth="1"
             opacity="0.2"
             markerEnd="url(#arrow)"
           />
-          <FlowPath d="M650,243 L650,117" dashed={true} />
-          <FlowPath d="M400,117 L400,243" />
+
+          {/* Delegators → Orchestrators (stake up, dashed) */}
+          <FlowPath d="M650,258 L650,162" dashed={true} />
           <line
-            x1="400"
-            y1="117"
-            x2="400"
-            y2="238"
+            x1="650"
+            y1="258"
+            x2="650"
+            y2="167"
             stroke={FC.green}
             strokeWidth="1"
-            opacity="0.2"
-            markerEnd="url(#arrow)"
-          />
-          <FlowPath d="M475,275 L595,275" />
-          <line
-            x1="475"
-            y1="275"
-            x2="590"
-            y2="275"
-            stroke={FC.green}
-            strokeWidth="1"
-            opacity="0.2"
+            opacity="0.15"
             markerEnd="url(#arrow)"
           />
 
           {/* Path labels */}
           <text
             x="265"
-            y="76"
+            y="121"
             fill={FC.green}
             fontSize="8"
             fontFamily="-apple-system, sans-serif"
@@ -394,8 +422,8 @@ function TokenFlowVisualization() {
             REQUESTS
           </text>
           <text
-            x="535"
-            y="76"
+            x="530"
+            y="121"
             fill={FC.green}
             fontSize="8"
             fontFamily="-apple-system, sans-serif"
@@ -403,140 +431,72 @@ function TokenFlowVisualization() {
             textAnchor="middle"
             opacity="0.35"
           >
-            JOBS
+            JOBS + PAYMENTS
           </text>
           <text
-            x="685"
-            y="183"
+            x="705"
+            y="212"
             fill={FC.green}
             fontSize="8"
             fontFamily="-apple-system, sans-serif"
             fontWeight="500"
             opacity="0.35"
-            transform="rotate(90, 685, 183)"
+            transform="rotate(90, 705, 212)"
           >
-            REWARDS
+            FEES
           </text>
           <text
             x="635"
-            y="183"
+            y="212"
             fill={FC.green}
             fontSize="8"
             fontFamily="-apple-system, sans-serif"
             fontWeight="500"
             opacity="0.25"
-            transform="rotate(-90, 635, 183)"
+            transform="rotate(-90, 635, 212)"
           >
             STAKE
-          </text>
-          <text
-            x="415"
-            y="183"
-            fill={FC.green}
-            fontSize="8"
-            fontFamily="-apple-system, sans-serif"
-            fontWeight="500"
-            opacity="0.35"
-            transform="rotate(90, 415, 183)"
-          >
-            TICKETS
-          </text>
-          <text
-            x="535"
-            y="266"
-            fill={FC.green}
-            fontSize="8"
-            fontFamily="-apple-system, sans-serif"
-            fontWeight="500"
-            textAnchor="middle"
-            opacity="0.35"
-          >
-            SETTLEMENT
-          </text>
-
-          {/* Center label */}
-          <text
-            x="400"
-            y="178"
-            fill={FC.green}
-            fontSize="10"
-            fontFamily="-apple-system, sans-serif"
-            fontWeight="600"
-            textAnchor="middle"
-            opacity="0.25"
-            letterSpacing="0.08em"
-          >
-            LPT COORDINATION
-          </text>
-          <text
-            x="400"
-            y="194"
-            fill={FC.textTertiary}
-            fontSize="8"
-            fontFamily="-apple-system, sans-serif"
-            textAnchor="middle"
-            opacity="0.5"
-          >
-            Token secures every layer
           </text>
 
           {/* Animated packets */}
           <TokenPacket
-            path="M205,85 L325,85"
+            path="M205,130 L325,130"
             dur="2.2s"
             delay="0s"
             label="REQ"
           />
           <TokenPacket
-            path="M205,85 L325,85"
+            path="M205,130 L325,130"
             dur="2.2s"
             delay="1.1s"
             size={2.5}
           />
           <TokenPacket
-            path="M475,85 L595,85"
+            path="M475,130 L585,130"
             dur="2.2s"
             delay="0.4s"
             label="JOB"
           />
           <TokenPacket
-            path="M475,85 L595,85"
+            path="M475,130 L585,130"
             dur="2.2s"
             delay="1.5s"
             size={2.5}
           />
           <TokenPacket
-            path="M670,117 L670,243"
+            path="M690,162 L690,258"
             dur="3s"
             delay="0.2s"
-            label="LPT"
+            label="ETH"
             size={4}
           />
           <TokenPacket
-            path="M650,243 L650,117"
+            path="M650,258 L650,162"
             dur="3.5s"
             delay="1.2s"
-            label="STAKE"
+            label="LPT"
             size={3}
             color="rgba(0, 235, 136, 0.5)"
-          />
-          <TokenPacket
-            path="M400,117 L400,243"
-            dur="2.8s"
-            delay="0.3s"
-            label="ETH"
-          />
-          <TokenPacket
-            path="M400,117 L400,243"
-            dur="2.8s"
-            delay="1.6s"
-            size={2.5}
-          />
-          <TokenPacket
-            path="M475,275 L595,275"
-            dur="2.5s"
-            delay="0.7s"
-            label="PAY"
           />
 
           {/* Nodes */}
@@ -548,8 +508,8 @@ function TokenFlowVisualization() {
               label={n.label}
               sublabel={n.sublabel}
               number={n.number}
-              isActive={activeNode === n.id}
-              width={n.id === 2 || n.id === 4 ? 170 : 150}
+              isActive={false}
+              width={(n as { width?: number }).width || 150}
             />
           ))}
 
@@ -573,23 +533,6 @@ function TokenFlowVisualization() {
             </circle>
           ))}
         </svg>
-      </div>
-
-      {/* Active description bar */}
-      <div className="mt-3 flex items-center gap-3.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-5 py-3.5">
-        <div
-          className="h-2 w-2 flex-shrink-0 rounded-full bg-[#00EB88]"
-          style={{ boxShadow: `0 0 8px ${FC.greenGlow}` }}
-        />
-        <div className="flex-1 text-[13px] leading-relaxed text-white/90">
-          {descriptions[activeNode]}
-        </div>
-        <button
-          onClick={() => setIsPaused(!isPaused)}
-          className="flex-shrink-0 rounded-lg border border-white/[0.08] px-3.5 py-1.5 text-[11px] font-medium text-white/55 transition-colors hover:border-white/[0.15]"
-        >
-          {isPaused ? "Play" : "Pause"}
-        </button>
       </div>
     </div>
   );
@@ -682,55 +625,187 @@ const exchanges = [
 export default function TokenPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative pt-32 pb-20 lg:pt-44 lg:pb-28">
-        <Container>
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            transition={{ staggerChildren: 0.08 }}
-            className="mx-auto max-w-3xl text-center"
+      {/* Hero — brand page treatment */}
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden">
+        {/* Full-bleed ImageMask */}
+        <div className="absolute inset-0">
+          <ImageMask
+            className="h-full w-full"
+            cols={COLS}
+            rows={20}
+            seed={13}
+            scanLine={false}
           >
-            <motion.p
-              variants={fadeUp}
-              transition={{ duration: 0.4 }}
-              className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase"
-            >
+            <div
+              className="h-full w-full"
+              style={{
+                background:
+                  "linear-gradient(160deg, #030d09 0%, #0a2818 40%, #18794e 100%)",
+              }}
+            />
+          </ImageMask>
+        </div>
+
+        {/* Geometric shapes + pulse trail */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+        >
+          {/* Large circle — cols 6–8, rows 0–2 */}
+          <div
+            className="absolute rounded-full animate-[breathe_8s_ease-in-out_infinite]"
+            style={{
+              left: `${6 * TILE}vw`,
+              top: "0vw",
+              width: `${3 * TILE}vw`,
+              aspectRatio: "1 / 1",
+              border: "1px solid rgba(255,255,255,0.15)",
+            }}
+          />
+
+          {/* Small circle — cols 0–1, rows 3–4 */}
+          <div
+            className="absolute rounded-full animate-[breathe_8s_ease-in-out_infinite_3s]"
+            style={{
+              left: "0vw",
+              top: `${3 * TILE}vw`,
+              width: `${2 * TILE}vw`,
+              aspectRatio: "1 / 1",
+              border: "1px solid rgba(255,255,255,0.10)",
+            }}
+          />
+
+          {/* Starburst — (col 1, row 1) */}
+          <div
+            className="absolute rounded-full animate-[node-pulse_6s_ease-in-out_infinite]"
+            style={{
+              left: `calc(${1 * TILE}vw - 20px)`,
+              top: `calc(${1 * TILE}vw - 20px)`,
+              width: "40px",
+              height: "40px",
+              background:
+                "radial-gradient(circle, rgba(64,191,134,0.25) 0%, rgba(64,191,134,0.08) 40%, transparent 70%)",
+            }}
+          />
+          {RAYS.map((angle, i) => (
+            <div
+              key={`hero-ray-${i}`}
+              className="absolute"
+              style={{
+                left: `${1 * TILE}vw`,
+                top: `${1 * TILE}vw`,
+                width: "40%",
+                height: "1px",
+                background:
+                  "linear-gradient(to right, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 35%, transparent 70%)",
+                transformOrigin: "0% 50%",
+                transform: `rotate(${angle}deg)`,
+              }}
+            />
+          ))}
+
+          {/* V-line — col 7 seam, rows 3–5 */}
+          <div
+            className="absolute"
+            style={{
+              left: `${7 * TILE}vw`,
+              top: `${3 * TILE}vw`,
+              width: "1px",
+              height: `${2 * TILE}vw`,
+              background:
+                "linear-gradient(to bottom, rgba(255,255,255,0.10), transparent 100%)",
+            }}
+          />
+
+          {/* Crosshair — (col 6, row 4) */}
+          <div
+            className="absolute"
+            style={{
+              left: `${6 * TILE}vw`,
+              top: `${4 * TILE}vw`,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: "-6px",
+                top: "-0.5px",
+                width: "13px",
+                height: "1px",
+                background: "rgba(255,255,255,0.12)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: "-0.5px",
+                top: "-6px",
+                width: "1px",
+                height: "13px",
+                background: "rgba(255,255,255,0.12)",
+              }}
+            />
+          </div>
+
+          {/* Pulse trail */}
+          <HeroPulseTrail />
+        </div>
+
+        {/* Center darken for text readability */}
+        <div
+          className="pointer-events-none absolute inset-0 lg:hidden"
+          style={{
+            background:
+              "radial-gradient(ellipse 90% 60% at 50% 48%, rgba(4,6,5,0.88) 0%, rgba(4,6,5,0.5) 70%, transparent 100%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 hidden lg:block"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 48%, rgba(4,6,5,0.78) 0%, rgba(4,6,5,0.35) 70%, transparent 100%)",
+          }}
+        />
+
+        <Container className="relative z-10 py-24 lg:py-32">
+          <motion.div
+            className="mx-auto max-w-3xl text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
               Livepeer Token
-            </motion.p>
-            <motion.h1
-              variants={fadeUp}
-              transition={{ duration: 0.5 }}
-              className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl"
-            >
+            </p>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl lg:leading-[1.1]">
               The token that powers the network
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              transition={{ duration: 0.5 }}
-              className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty"
-            >
-              Livepeer Token (LPT) is part of the coordination mechanism behind the
-              Livepeer network. It aligns incentives between the GPU providers
-              who do the work, the applications that need video processing, and
-              the stakeholders who help secure the network.
-            </motion.p>
-            <motion.div
-              variants={fadeUp}
-              transition={{ duration: 0.4 }}
-              className="mt-8 flex flex-wrap items-center justify-center gap-3"
-            >
+            </h1>
+            <p className="mt-6 text-lg text-white/60">
+              Livepeer Token (LPT) is part of the coordination mechanism behind
+              the Livepeer network. It aligns incentives between the GPU
+              providers who do the work, the applications that need video
+              processing, and the stakeholders who help secure the network.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button href="#exchanges" variant="primary">
                 Find an Exchange
               </Button>
-            </motion.div>
+            </div>
           </motion.div>
         </Container>
+
+        {/* Bottom fade to page bg */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-48"
+          aria-hidden="true"
+          style={{
+            background: "linear-gradient(to bottom, transparent, #121212)",
+          }}
+        />
       </section>
 
       {/* What is LPT */}
       <section className="relative py-24 lg:py-32">
-        <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <motion.div
             initial="hidden"
@@ -765,7 +840,7 @@ export default function TokenPage() {
                 label="Network Architecture"
                 title="How LPT flows through the network"
                 align="split"
-                description="The Livepeer protocol coordinates work between applications, gateways, orchestrators, and delegators, with LPT as the coordination mechanism at every layer."
+                description="The Livepeer protocol coordinates video compute work across applications, gateways, and orchestrators — with LPT staking determining which orchestrators get selected, and ETH fees flowing as payment for work performed."
               />
             </motion.div>
 
@@ -773,7 +848,7 @@ export default function TokenPage() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.4 }}
-              className="mt-20"
+              className="mt-10"
             >
               <TokenFlowVisualization />
             </motion.div>
@@ -853,7 +928,7 @@ export default function TokenPage() {
               <SectionHeader
                 label="Delegate"
                 title="Earn rewards by staking LPT"
-                description="Back GPU providers you trust with your LPT and earn a share of the fees and inflation rewards they generate. No minimum stake, no lockup period."
+                description="Back GPU providers you trust with your LPT and earn a share of the fees and inflation rewards they generate."
                 align="center"
               />
             </motion.div>
@@ -866,6 +941,9 @@ export default function TokenPage() {
             >
               <Button href={EXTERNAL_LINKS.explorer} variant="primary">
                 Open Explorer
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M3.5 2H10v6.5M10 2L2 10" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </Button>
             </motion.div>
           </motion.div>
