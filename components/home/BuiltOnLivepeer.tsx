@@ -652,8 +652,7 @@ const projects = [
   {
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
-    description:
-      "Deploy AI avatars that see, speak, and respond in real time.",
+    description: "Deploy AI avatars that see, speak, and respond in real time.",
     domain: "embody.zone",
   },
 ];
@@ -733,27 +732,10 @@ export default function BuiltOnLivepeer() {
             transition={{ duration: 0.4 }}
             className="mt-12 text-center"
           >
-            <a
-              href="/ecosystem"
-              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-              }}
-            >
+            <Button href="/ecosystem" variant="secondary" size="md">
               Explore the Ecosystem <span aria-hidden="true">→</span>
-            </a>
+            </Button>
           </motion.div>
-        </motion.div>
-
-        <motion.div
-          variants={fadeUp}
-          className="mt-10 text-center"
-        >
-          <Button href="/ecosystem" variant="secondary" size="md">
-            Explore the ecosystem
-            <span aria-hidden="true">&rarr;</span>
-          </Button>
         </motion.div>
       </Container>
     </section>

@@ -33,7 +33,6 @@ export const NAV_ITEMS: NavItem[] = [
         href: "https://roadmap.livepeer.org/roadmap",
         external: true,
       },
-      { label: "Ecosystem", href: "/ecosystem" },
     ],
   },
   {
