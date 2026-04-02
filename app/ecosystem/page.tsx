@@ -134,7 +134,7 @@ function EcosystemPageInner() {
         <Container>
           <SectionHeader
             label="Ecosystem"
-            title="Built on Livepeer"
+            title="Built with Livepeer"
             description="Explore what developers and teams are building with real-time video and AI inference on Livepeer."
             align="left"
             action={
