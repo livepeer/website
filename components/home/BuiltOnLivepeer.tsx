@@ -631,24 +631,29 @@ const projects = [
     Visual: DaydreamVisual,
     Logo: DaydreamLogo,
     description:
-      "Open-source engine for real-time generative video, audio, and live visuals.",
+      "Turn a live camera feed into AI-generated video, in real time.",
+    domain: "daydream.live",
   },
   {
     Visual: StudioVisual,
     Logo: FrameworksLogo,
     description:
-      "Sovereign live streaming platform with SaaS, hybrid, and fully self-hosted modes. No cloud lock-in.",
+      "Stream without the cloud. A next-generation video platform that delivers broadcast-quality streaming directly on Livepeer's open GPU network.",
+    domain: "frameworks.network",
   },
   {
     Visual: StreamplaceVisual,
     Logo: StreamplaceLogo,
     description:
-      "Streaming video infrastructure for decentralized social networks. Built on the AT Protocol powering Bluesky.",
+      "The video layer for decentralized social networks. Open-source infrastructure for high-quality video on the AT Protocol.",
+    domain: "stream.place",
   },
   {
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
-    description: "Embodied AI avatars for real-time tutoring and telepresence.",
+    description:
+      "Embodied AI avatars for real-time tutoring, telepresence, and branded content powered by Livepeer infrastructure.",
+    domain: "embody.zone",
   },
 ];
 
@@ -670,7 +675,7 @@ export default function BuiltOnLivepeer() {
             <SectionHeader
               label="Ecosystem"
               title="Live on Livepeer"
-              description="Solutions built on the network — shipping today, powering real workloads."
+              description="Applications and emerging capabilities on Livepeer, from transcoding and streaming to real-time AI."
               align="split"
             />
           </motion.div>
@@ -693,6 +698,9 @@ export default function BuiltOnLivepeer() {
                   <p className="text-sm leading-relaxed text-white/50">
                     {featured.description}
                   </p>
+                  <span className="mt-3 inline-block text-[13px] text-white/25">
+                    {featured.domain}
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -710,29 +718,16 @@ export default function BuiltOnLivepeer() {
                     <p className="mt-3 text-[13px] leading-relaxed text-white/50">
                       {project.description}
                     </p>
+                    <span className="mt-3 inline-block text-[13px] text-white/25">
+                      {project.domain}
+                    </span>
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          <motion.div
-            variants={fadeUp}
-            transition={{ duration: 0.4 }}
-            className="mt-12 text-center"
-          >
-            <a
-              href="/ecosystem"
-              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-              }}
-            >
-              Explore the Ecosystem
-              <span aria-hidden="true">&rarr;</span>
-            </a>
-          </motion.div>
+
         </motion.div>
       </Container>
     </section>

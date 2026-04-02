@@ -7,8 +7,7 @@ const footerNav = [
   {
     title: "Network",
     links: [
-      { label: "Ecosystem (coming soon)", href: "/ecosystem" },
-      { label: "Livepeer Token", href: "/token" },
+{ label: "Livepeer Token", href: "/token" },
       { label: "Delegate LPT", href: EXTERNAL_LINKS.explorer },
       { label: "Provide GPUs", href: "https://docs.livepeer.org" },
       { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap" },

@@ -179,10 +179,15 @@ export default function Header() {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center ml-1">
             <a
-              href="/ecosystem"
-              className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
             >
-              Build with Livepeer
+              Join Discord
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3.5 2H10v6.5M10 2L2 10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </a>
           </div>
 
@@ -316,11 +321,16 @@ export default function Header() {
           {/* Mobile CTA */}
           <div className="mt-6 px-4">
             <a
-              href="/ecosystem"
+              href="https://discord.gg/livepeer"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
             >
-              Build with Livepeer
+              Join Discord
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3.5 2H10v6.5M10 2L2 10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </a>
           </div>
         </nav>

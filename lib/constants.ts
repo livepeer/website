@@ -16,8 +16,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Network",
     href: "https://explorer.livepeer.org",
     children: [
-      { label: "Ecosystem (coming soon)", href: "/ecosystem" },
-      { label: "Livepeer Token", href: "/token" },
+{ label: "Livepeer Token", href: "/token" },
       {
         label: "Delegate LPT",
         href: "https://explorer.livepeer.org",
