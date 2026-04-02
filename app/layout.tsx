@@ -13,21 +13,21 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : "https://livepeer.org"
   ),
-  title: "Livepeer — Open Infrastructure for Real-Time AI Video",
+  title: "Livepeer — The open network for real-time AI video",
   description:
-    "Generate, transform, and interpret live video streams with low-latency AI inference on an open and permissionless elastic GPU network.",
+    "Generate, transform, and interpret live video streams on a permissionless GPU network built for real-time video inference.",
   openGraph: {
-    title: "Livepeer — Open Infrastructure for Real-Time AI Video",
+    title: "Livepeer — The open network for real-time AI video",
     description:
-      "Generate, transform, and interpret live video streams with low-latency AI inference on an open and permissionless elastic GPU network.",
+      "Generate, transform, and interpret live video streams on a permissionless GPU network built for real-time video inference.",
     siteName: "Livepeer",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Livepeer — Open Infrastructure for Real-Time AI Video",
+    title: "Livepeer — The open network for real-time AI video",
     description:
-      "Generate, transform, and interpret live video streams with low-latency AI inference on an open and permissionless elastic GPU network.",
+      "Generate, transform, and interpret live video streams on a permissionless GPU network built for real-time video inference.",
   },
 };
 
