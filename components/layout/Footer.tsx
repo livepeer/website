@@ -21,7 +21,6 @@ const footerNav = [
       { label: "Blog", href: "/blog" },
       { label: "Documentation", href: "https://docs.livepeer.org" },
       { label: "Brand", href: "/brand" },
-      { label: "Foundation", href: "/foundation" },
     ],
   },
   {

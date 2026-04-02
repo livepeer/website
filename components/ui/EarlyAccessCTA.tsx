@@ -100,7 +100,7 @@ export default function EarlyAccessCTA() {
               </>
             ) : (
               <>
-                Get Early Access
+                Get Early Access <span aria-hidden="true">&rarr;</span>
               </>
             )}
           </span>
