@@ -254,7 +254,6 @@ function EcosystemPageInner() {
                   onClick={() => {
                     setSearch("");
                     setActiveCategories([]);
-                    setActiveTags([]);
                   }}
                   className="cursor-pointer rounded border border-white/10 px-3 py-1 text-xs font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80"
                 >
