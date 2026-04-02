@@ -240,13 +240,6 @@ const exchanges = [
   { name: "OKX", href: "https://www.okx.com/trade-spot/lpt-usdt" },
 ];
 
-
-const tokenFacts = [
-  "An ERC-20 token on Ethereum, available on major exchanges like Coinbase, Binance, and Kraken.",
-  "The protocol mints new LPT each round and distributes it to active participants, incentivizing ongoing network participation.",
-  "Inactive token holdings dilute over time, encouraging active delegation to keep the network secure.",
-];
-
 export default function TokenPage() {
   return (
     <>

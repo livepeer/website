@@ -955,7 +955,7 @@ const useCases: {
   description: string;
   attribution: string;
   Visual: React.ComponentType;
-  colSpan: 2 | 4;
+  colSpan: 2 | 4 | 6;
 }[] = [
   {
     title: "AI-Generated Worlds",
