@@ -1607,9 +1607,6 @@ export default function UseCases() {
                     <p className="mt-1.5 text-[13px] leading-relaxed text-white/40">
                       {useCase.description}
                     </p>
-                    <p className="mt-3 text-[12px] text-white/25">
-                      {useCase.attribution}
-                    </p>
                   </div>
                 </div>
               </motion.div>
