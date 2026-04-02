@@ -795,7 +795,7 @@ export default function TokenPage() {
               <SectionHeader
                 label="Exchanges"
                 title="Get Livepeer Token"
-                align="split"
+                align="center"
               />
             </motion.div>
 
@@ -835,22 +835,36 @@ export default function TokenPage() {
               ))}
             </div>
 
-            {/* Delegate LPT */}
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* Delegate LPT */}
+      <section className="relative py-24 lg:py-32">
+        <div className="divider-gradient absolute top-0 left-0 right-0" />
+        <Container>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ staggerChildren: 0.06 }}
+          >
+            <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
+              <SectionHeader
+                label="Delegate"
+                title="Earn rewards by staking LPT"
+                description="Back GPU providers you trust with your LPT and earn a share of the fees and inflation rewards they generate. No minimum stake, no lockup period."
+                align="center"
+              />
+            </motion.div>
+
+            {/* CTA */}
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.4 }}
-              className="mt-16 flex flex-col items-start gap-4 rounded-xl border border-white/[0.07] bg-[#1a1a1a] px-6 py-6 sm:flex-row sm:items-center sm:justify-between"
+              className="mt-10 flex justify-center"
             >
-              <div>
-                <h3 className="text-[15px] font-medium text-white/90">
-                  Delegate LPT
-                </h3>
-                <p className="mt-1 text-[13px] leading-relaxed text-white/40">
-                  Delegators back GPU providers with LPT and earn a share of the
-                  fees those providers generate.
-                </p>
-              </div>
-              <Button href={EXTERNAL_LINKS.explorer} variant="secondary">
+              <Button href={EXTERNAL_LINKS.explorer} variant="primary">
                 Open Explorer
               </Button>
             </motion.div>
