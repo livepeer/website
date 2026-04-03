@@ -1261,7 +1261,7 @@ export default function BrandPage() {
                     {/* B&W image, darkened */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/images/brand/galaxy.webp"
+                      src="/images/brand/galaxy.jpg"
                       alt="NGC 4414 spiral galaxy — NASA/Hubble"
                       className="absolute inset-0 h-full w-full object-cover"
                       style={{
@@ -1381,7 +1381,7 @@ export default function BrandPage() {
                     />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/images/brand/galaxy.webp"
+                      src="/images/brand/galaxy.jpg"
                       alt=""
                       className="absolute inset-0 h-full w-full object-cover"
                       style={{
