@@ -983,7 +983,7 @@ export default function FoundationPage() {
         <section className="relative flex min-h-screen items-center">
           {/* Dark B&W background photograph */}
           <img
-            src="/images/foundation-hero.png"
+            src="/images/foundation-hero.webp"
             alt=""
             className="pointer-events-none absolute inset-0 h-full w-full object-cover"
             style={{
