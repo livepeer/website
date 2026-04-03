@@ -261,7 +261,7 @@ function EcosystemPageInner() {
                 </button>
               </p>
               <motion.img
-                src="/ecosystem/no-results.png"
+                src="/ecosystem/no-results.webp"
                 alt=""
                 loading="eager"
                 initial={{ opacity: 0 }}

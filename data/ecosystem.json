@@ -37,7 +37,7 @@
     "url": "https://blueclaw.network",
     "description": "Always-on AI inference for autonomous agents with an OpenAI-compatible API. No rate limits, no throttling.",
     "categories": ["AI Video", "Agents", "API"],
-    "logo": "blueclaw.png"
+    "logo": "blueclaw.webp"
   },
   {
     "id": "thelotradio",
