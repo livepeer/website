@@ -295,7 +295,6 @@ function FlowPath({ d, dashed = false }: { d: string; dashed?: boolean }) {
 }
 
 function TokenFlowVisualization() {
-
   const flowNodes = [
     {
       id: 0,
@@ -332,9 +331,209 @@ function TokenFlowVisualization() {
     },
   ];
 
+  /* ── Vertical (mobile) layout constants ── */
+  const vCx = 160; // center x for vertical nodes
+  const vNodeW = 200;
+  const vNodeH = 72;
+  const vGap = 110; // vertical spacing between node centers
+  const vY = [60, 60 + vGap, 60 + vGap * 2, 60 + vGap * 3]; // y centers
+  const vSvgH = vY[3] + vNodeH / 2 + 30; // total svg height
+
   return (
     <div>
-      <div className="overflow-hidden">
+      {/* ── Mobile: vertical stacked layout ── */}
+      <div className="overflow-hidden md:hidden">
+        <svg viewBox={`0 0 320 ${vSvgH}`} className="block w-full">
+          <defs>
+            <filter id="soft-glow-m">
+              <feGaussianBlur stdDeviation="5" />
+            </filter>
+            <marker
+              id="arrow-m"
+              markerWidth="8"
+              markerHeight="6"
+              refX="8"
+              refY="3"
+              orient="auto"
+            >
+              <polygon
+                points="0 0, 8 3, 0 6"
+                fill={FC.green}
+                opacity="0.35"
+              />
+            </marker>
+          </defs>
+
+          {/* Applications → Gateways */}
+          <FlowPath d={`M${vCx},${vY[0] + vNodeH / 2} L${vCx},${vY[1] - vNodeH / 2}`} />
+          <line
+            x1={vCx}
+            y1={vY[0] + vNodeH / 2}
+            x2={vCx}
+            y2={vY[1] - vNodeH / 2 - 5}
+            stroke={FC.green}
+            strokeWidth="1"
+            opacity="0.2"
+            markerEnd="url(#arrow-m)"
+          />
+          <text
+            x={vCx + 14}
+            y={(vY[0] + vY[1]) / 2 + 4}
+            fill={FC.green}
+            fontSize="10"
+            fontFamily="-apple-system, sans-serif"
+            fontWeight="500"
+            opacity="0.35"
+          >
+            REQUESTS
+          </text>
+
+          {/* Gateways → Orchestrators */}
+          <FlowPath d={`M${vCx},${vY[1] + vNodeH / 2} L${vCx},${vY[2] - vNodeH / 2}`} />
+          <line
+            x1={vCx}
+            y1={vY[1] + vNodeH / 2}
+            x2={vCx}
+            y2={vY[2] - vNodeH / 2 - 5}
+            stroke={FC.green}
+            strokeWidth="1"
+            opacity="0.2"
+            markerEnd="url(#arrow-m)"
+          />
+          <text
+            x={vCx + 14}
+            y={(vY[1] + vY[2]) / 2 + 4}
+            fill={FC.green}
+            fontSize="10"
+            fontFamily="-apple-system, sans-serif"
+            fontWeight="500"
+            opacity="0.35"
+          >
+            JOBS + PAYMENTS
+          </text>
+
+          {/* Orchestrators → Delegators (fees) */}
+          <FlowPath d={`M${vCx + 20},${vY[2] + vNodeH / 2} L${vCx + 20},${vY[3] - vNodeH / 2}`} />
+          <line
+            x1={vCx + 20}
+            y1={vY[2] + vNodeH / 2}
+            x2={vCx + 20}
+            y2={vY[3] - vNodeH / 2 - 5}
+            stroke={FC.green}
+            strokeWidth="1"
+            opacity="0.2"
+            markerEnd="url(#arrow-m)"
+          />
+          <text
+            x={vCx + 38}
+            y={(vY[2] + vY[3]) / 2 + 4}
+            fill={FC.green}
+            fontSize="10"
+            fontFamily="-apple-system, sans-serif"
+            fontWeight="500"
+            opacity="0.35"
+          >
+            FEES
+          </text>
+
+          {/* Delegators → Orchestrators (stake, dashed) */}
+          <FlowPath d={`M${vCx - 20},${vY[3] - vNodeH / 2} L${vCx - 20},${vY[2] + vNodeH / 2}`} dashed />
+          <line
+            x1={vCx - 20}
+            y1={vY[3] - vNodeH / 2}
+            x2={vCx - 20}
+            y2={vY[2] + vNodeH / 2 + 5}
+            stroke={FC.green}
+            strokeWidth="1"
+            opacity="0.15"
+            markerEnd="url(#arrow-m)"
+          />
+          <text
+            x={vCx - 38}
+            y={(vY[2] + vY[3]) / 2 + 4}
+            fill={FC.green}
+            fontSize="10"
+            fontFamily="-apple-system, sans-serif"
+            fontWeight="500"
+            textAnchor="end"
+            opacity="0.25"
+          >
+            STAKE
+          </text>
+
+          {/* Animated packets */}
+          <TokenPacket
+            path={`M${vCx},${vY[0] + vNodeH / 2} L${vCx},${vY[1] - vNodeH / 2}`}
+            dur="2.2s"
+            delay="0s"
+            label="REQ"
+          />
+          <TokenPacket
+            path={`M${vCx},${vY[1] + vNodeH / 2} L${vCx},${vY[2] - vNodeH / 2}`}
+            dur="2.2s"
+            delay="0.4s"
+            label="JOB"
+          />
+          <TokenPacket
+            path={`M${vCx + 20},${vY[2] + vNodeH / 2} L${vCx + 20},${vY[3] - vNodeH / 2}`}
+            dur="3s"
+            delay="0.2s"
+            label="ETH"
+            size={4}
+          />
+          <TokenPacket
+            path={`M${vCx - 20},${vY[3] - vNodeH / 2} L${vCx - 20},${vY[2] + vNodeH / 2}`}
+            dur="3.5s"
+            delay="1.2s"
+            label="LPT"
+            size={3}
+            color="rgba(0, 235, 136, 0.5)"
+          />
+
+          {/* Nodes */}
+          {[
+            { label: "Applications", sublabel: "Request video compute jobs", number: "01" },
+            { label: "Gateway Nodes", sublabel: "Route jobs to orchestrators", number: "02" },
+            { label: "Orchestrator Nodes", sublabel: "GPU clusters process work", number: "03" },
+            { label: "Delegators", sublabel: "Stake LPT and earn fees", number: "04" },
+          ].map((n, i) => (
+            <FlowNode
+              key={n.number}
+              x={vCx}
+              y={vY[i]}
+              label={n.label}
+              sublabel={n.sublabel}
+              number={n.number}
+              isActive={false}
+              width={vNodeW}
+              height={vNodeH}
+            />
+          ))}
+
+          {/* Ambient particles */}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <circle
+              key={`pm-${i}`}
+              cx={30 + ((i * 53) % 260)}
+              cy={30 + ((i * 97) % (vSvgH - 60))}
+              r="1"
+              fill={FC.green}
+              opacity="0"
+            >
+              <animate
+                attributeName="opacity"
+                values="0;0.2;0"
+                dur={`${4 + (i % 4)}s`}
+                begin={`${(i * 0.6) % 6}s`}
+                repeatCount="indefinite"
+              />
+            </circle>
+          ))}
+        </svg>
+      </div>
+
+      {/* ── Desktop: horizontal layout ── */}
+      <div className="hidden overflow-hidden md:block">
         <svg viewBox="0 0 800 370" className="block w-full">
           <defs>
             <filter id="soft-glow">
