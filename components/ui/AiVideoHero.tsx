@@ -121,7 +121,7 @@ export default function AiVideoHero({
     objects: 3,
     frames: 0,
   });
-  const [ready, setReady] = useState(false);
+
 
   // Tile grid
   const tiles = useMemo(() => {
@@ -251,7 +251,6 @@ export default function AiVideoHero({
     }
 
     rafRef.current = requestAnimationFrame(render);
-    setReady(true);
 
     return () => {
       cancelAnimationFrame(rafRef.current);

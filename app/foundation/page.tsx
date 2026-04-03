@@ -917,7 +917,7 @@ function GrainCanvas() {
 /*  Tile grid with cutout hole + corner crosshairs                     */
 /* ------------------------------------------------------------------ */
 
-function TileGrid({ children }: { children?: React.ReactNode }) {
+function TileGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
   const [tile, setTile] = useState(0);
   const [gridOffsetX, setGridOffsetX] = useState(0);

@@ -305,7 +305,7 @@ export default function LiveNetwork({
           const [nx, ny] = evalSpline(path, i / 80);
           const sx = nx * w,
             sy = ny * h;
-          i === 0 ? ctx.moveTo(sx, sy) : ctx.lineTo(sx, sy);
+          if (i === 0) { ctx.moveTo(sx, sy); } else { ctx.lineTo(sx, sy); }
         }
         ctx.strokeStyle = `rgba(24, 121, 78, ${0.035 * brightMult})`;
         ctx.lineWidth = 0.8;

@@ -1259,7 +1259,7 @@ export default function BrandPage() {
                       }}
                     />
                     {/* B&W image, darkened */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+
                     <img
                       src="/images/brand/galaxy.jpg"
                       alt="NGC 4414 spiral galaxy — NASA/Hubble"
@@ -1379,7 +1379,7 @@ export default function BrandPage() {
                           "linear-gradient(160deg, #030d09 0%, #051a10 40%, #071e14 100%)",
                       }}
                     />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+
                     <img
                       src="/images/brand/galaxy.jpg"
                       alt=""

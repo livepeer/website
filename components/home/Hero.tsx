@@ -24,7 +24,6 @@ import ImageMask from "@/components/ui/ImageMask";
 */
 
 const COLS = 9;
-const ROWS = 5;
 const TILE = 100 / COLS; // tile size in vw — used for both axes
 
 const RAYS = [0, 22, 45, 68, 90, 135, 170, -15, -40, -70];

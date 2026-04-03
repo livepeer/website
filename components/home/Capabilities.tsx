@@ -209,12 +209,10 @@ interface Detection {
 
 function TrackingBox({
   d,
-  i,
   active,
   entered,
 }: {
   d: Detection;
-  i: number;
   active: boolean;
   entered: boolean;
 }) {
@@ -400,7 +398,6 @@ function AnalysisVisual() {
         <TrackingBox
           key={i}
           d={d}
-          i={i}
           active={active[i]}
           entered={entered[i]}
         />

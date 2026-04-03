@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
-import Button from "@/components/ui/Button";
 import ImageMask from "@/components/ui/ImageMask";
 import GlowOverlay from "@/components/ui/GlowOverlay";
 import { EXTERNAL_LINKS } from "@/lib/constants";

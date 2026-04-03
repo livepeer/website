@@ -121,6 +121,7 @@ export default async function OGImage() {
 
       {/* Devices illustration — full view with long arm, slight laptop crop on right edge */}
       <img
+        alt=""
         src={illustrationUri}
         width={900}
         height={640}

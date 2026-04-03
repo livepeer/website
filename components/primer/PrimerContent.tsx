@@ -215,7 +215,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           >
             A 10-MINUTE PRIMER
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+
           <img
             src={`${IMG}/hero-illustration.svg`}
             alt="Livepeer Primer"
@@ -224,13 +224,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         </div>
 
         {/* Decorative side elements — flush with bottom, hidden on mobile */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+
         <img
           src={`${IMG}/hero-right.svg`}
           alt=""
           className="pointer-events-none absolute bottom-0 right-0 hidden w-[20%] lg:block lg:w-[30%]"
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+
         <img
           src={`${IMG}/hero-left.svg`}
           alt=""
@@ -243,7 +243,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           className="cursor-pointer select-none absolute bottom-12 left-1/2 -translate-x-1/2"
           style={{ animation: "bounceDown 2s ease-in-out infinite" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+
           <img
             src={`${IMG}/arrow-down.svg`}
             alt="Scroll down"
@@ -273,7 +273,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 on every frame.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/pie-chart.svg`}
               alt="AI video is the fastest-growing GPU workload"
@@ -294,7 +294,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 continuous, low-latency inference that real-time video demands.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/transcoding-in.svg`}
               alt="Video AI processing"
@@ -313,7 +313,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 providers that are fast, affordable, and always available.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/bob_gpu.svg`}
               alt="GPU compute demand"
@@ -354,7 +354,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 alternatives like AWS, RunPod, and Fal.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/livepeer-ethereum.svg`}
               alt="Livepeer and Ethereum"
@@ -451,7 +451,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 secure the network by staking toward reliable operators).
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/actors.svg`}
               alt="Orchestrators and Delegators"
@@ -483,7 +483,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
 
           {/* Orchestration diagram — full bleed */}
           <ContentBlock className="mb-16">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/orchestration.svg`}
               alt="Orchestration diagram"
@@ -509,13 +509,13 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         <div data-chapter="token" id="token" className="relative">
           <ContentBlock className="mb-8">
             {/* Decorative SVGs — hidden on mobile */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/token-decoration-1.svg`}
               alt=""
               className="pointer-events-none absolute -left-16 top-0 hidden lg:block"
             />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/token-decoration-2.svg`}
               alt=""
@@ -581,7 +581,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 stake their tokens? What&rsquo;s in it for them?
               </div>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/staking.svg`}
               alt="Delegator illustration"
@@ -607,7 +607,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                 reward for ensuring a high-quality and secure network.
               </Text18>
             </TextBlock>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+  
             <img
               src={`${IMG}/fees.svg`}
               alt="Fee distribution"
@@ -734,7 +734,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           className="cursor-pointer select-none flex items-center gap-2 text-sm text-black/50 transition-colors hover:text-black"
         >
           Back to the top
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+
           <img
             src={`${IMG}/arrow-down.svg`}
             alt=""
@@ -898,7 +898,7 @@ function PersonaCard({
   return (
     <div className="flex flex-col gap-5 rounded-xl bg-black/[0.04] p-6">
       <div className="flex items-center gap-3">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+
         <img src={icon} alt="" className="w-[50px] lg:w-[64px]" />
         <div className="text-[22px] font-bold lg:text-[26px]">{title}</div>
       </div>
@@ -919,7 +919,7 @@ function InvolvedCard({
   return (
     <div className="flex flex-col items-center gap-5 rounded-xl bg-black/[0.04] p-6 text-center">
       <div className="flex flex-col items-center gap-3">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+
         <img src={icon} alt="" className="w-[50px] lg:w-[64px]" />
         <div className="text-[22px] font-bold lg:text-[26px]">{title}</div>
       </div>

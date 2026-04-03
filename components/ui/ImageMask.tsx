@@ -19,7 +19,7 @@ export default function ImageMask({
   children,
   cols = 9,
   rows = 5,
-  seed = 0,
+  seed: _seed = 0,
   scanLine = true,
   className = "",
 }: {
@@ -34,16 +34,10 @@ export default function ImageMask({
   className?: string;
 }) {
   const tiles = useMemo(() => {
-    return Array.from({ length: cols * rows }).map((_, i) => {
-      const h = Math.abs(Math.sin((i + seed) * 127.1 + 311.7 + 43758.5453)) % 1;
-
-      // All tiles: no blur, no tint — just grid lines
-      const blur = 0;
-      const tint = 0;
-
-      return { blur, tint };
+    return Array.from({ length: cols * rows }).map(() => {
+      return { blur: 0, tint: 0 };
     });
-  }, [cols, rows, seed]);
+  }, [cols, rows]);
 
   return (
     <div
@@ -76,7 +70,7 @@ export default function ImageMask({
             }}
           />
         ) : src ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
+
           <img
             src={src}
             alt={alt || ""}
