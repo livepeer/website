@@ -10,7 +10,10 @@ export default function NotFound() {
         Sorry, but the page you were looking for could not be found.
       </p>
       <p className="mt-2 text-lg text-white/60">
-        <Link href="/" className="text-green underline underline-offset-4 hover:text-green-light">
+        <Link
+          href="/"
+          className="text-green underline underline-offset-4 hover:text-green-light"
+        >
           Return to our front page
         </Link>{" "}
         if you can&apos;t find what you&apos;re looking for.

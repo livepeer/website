@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useState, useMemo, useEffect, useRef, useCallback } from "react";
+import {
+  Suspense,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { Search, Plus, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -13,7 +20,6 @@ import Button from "@/components/ui/Button";
 import FilterPill from "@/components/ui/FilterPill";
 
 const BATCH_SIZE = 12;
-
 
 function EcosystemPageInner() {
   const searchParams = useSearchParams();
@@ -58,9 +64,7 @@ function EcosystemPageInner() {
       return;
     }
     setActiveCategories((prev) =>
-      prev.includes(cat)
-        ? prev.filter((c) => c !== cat)
-        : [...prev, cat],
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
     );
   };
 
@@ -88,7 +92,7 @@ function EcosystemPageInner() {
       ([entry]) => {
         if (entry.isIntersecting) loadMore();
       },
-      { rootMargin: "200px" },
+      { rootMargin: "200px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -185,61 +189,74 @@ function EcosystemPageInner() {
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((app, index) => {
                 const inButtonBatch =
-                  buttonBatch >= 0 && index >= buttonBatch && index < buttonBatch + BATCH_SIZE;
+                  buttonBatch >= 0 &&
+                  index >= buttonBatch &&
+                  index < buttonBatch + BATCH_SIZE;
                 return (
-                <motion.a
-                  key={app.id}
-                  href={app.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={
-                    inButtonBatch
-                      ? { once: true, amount: 0, margin: "0px 0px 2000px 0px" }
-                      : { once: true, amount: 0.15 }
-                  }
-                  transition={{
-                    duration: 1.25,
-                    ease: [0.25, 0.1, 0.25, 1],
-                    delay: inButtonBatch ? (index - buttonBatch) * 0.06 : 0,
-                  }}
-                  className="group flex flex-col rounded-2xl border border-dark-border bg-dark-card p-5 transition-colors hover:border-white/10 sm:p-6 select-none"
-                >
-                  <div className="mb-4 flex items-start justify-between">
-                    <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06]">
-                      {app.logo ? (
-                        <img
-                          src={`/ecosystem/${app.logo}`}
-                          alt={`${app.name} logo`}
-                          className="h-10 w-10 rounded-lg object-contain"
-                          style={app.logoBg ? { backgroundColor: app.logoBg, padding: "4px" } : undefined}
-                        />
-                      ) : (
-                        <span className="text-2xl font-semibold text-white/30">
-                          {app.name.charAt(0)}
-                        </span>
-                      )}
+                  <motion.a
+                    key={app.id}
+                    href={app.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={
+                      inButtonBatch
+                        ? {
+                            once: true,
+                            amount: 0,
+                            margin: "0px 0px 2000px 0px",
+                          }
+                        : { once: true, amount: 0.15 }
+                    }
+                    transition={{
+                      duration: 1.25,
+                      ease: [0.25, 0.1, 0.25, 1],
+                      delay: inButtonBatch ? (index - buttonBatch) * 0.06 : 0,
+                    }}
+                    className="group flex flex-col rounded-2xl border border-dark-border bg-dark-card p-5 transition-colors hover:border-white/10 sm:p-6 select-none"
+                  >
+                    <div className="mb-4 flex items-start justify-between">
+                      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06]">
+                        {app.logo ? (
+                          <img
+                            src={`/ecosystem/${app.logo}`}
+                            alt={`${app.name} logo`}
+                            className="h-10 w-10 rounded-lg object-contain"
+                            style={
+                              app.logoBg
+                                ? {
+                                    backgroundColor: app.logoBg,
+                                    padding: "4px",
+                                  }
+                                : undefined
+                            }
+                          />
+                        ) : (
+                          <span className="text-2xl font-semibold text-white/30">
+                            {app.name.charAt(0)}
+                          </span>
+                        )}
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 text-white/0 transition-colors group-hover:text-white/40" />
                     </div>
-                    <ArrowUpRight className="h-4 w-4 text-white/0 transition-colors group-hover:text-white/40" />
-                  </div>
-                  <h3 className="text-base font-semibold text-white transition-colors group-hover:text-green-light">
-                    {app.name}
-                  </h3>
-                  <p className="mt-0.5 font-mono text-xs text-white/25">
-                    {app.hostname}
-                  </p>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-white/40">
-                    {app.description}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {app.categories.map((cat) => (
-                      <Badge key={cat} variant="category">
-                        {cat}
-                      </Badge>
-                    ))}
-                  </div>
-                </motion.a>
+                    <h3 className="text-base font-semibold text-white transition-colors group-hover:text-green-light">
+                      {app.name}
+                    </h3>
+                    <p className="mt-0.5 font-mono text-xs text-white/25">
+                      {app.hostname}
+                    </p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-white/40">
+                      {app.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {app.categories.map((cat) => (
+                        <Badge key={cat} variant="category">
+                          {cat}
+                        </Badge>
+                      ))}
+                    </div>
+                  </motion.a>
                 );
               })}
             </div>

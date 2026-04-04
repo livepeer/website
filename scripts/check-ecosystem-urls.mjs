@@ -50,7 +50,7 @@ async function checkUrl(url, retries = 0) {
 }
 
 const results = await Promise.allSettled(
-  apps.map((app) => checkUrl(app.url).then((r) => ({ ...r, name: app.name }))),
+  apps.map((app) => checkUrl(app.url).then((r) => ({ ...r, name: app.name })))
 );
 
 const failures = [];
@@ -65,7 +65,7 @@ for (const result of results) {
     console.log(`  ✓ ${r.name} — ${r.url} (${r.status})`);
   } else {
     console.log(
-      `  ✗ ${r.name} — ${r.url} (${r.status}${r.error ? `, ${r.error}` : ""})`,
+      `  ✗ ${r.name} — ${r.url} (${r.status}${r.error ? `, ${r.error}` : ""})`
     );
     failures.push(r);
   }

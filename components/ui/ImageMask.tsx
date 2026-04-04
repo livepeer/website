@@ -70,7 +70,6 @@ export default function ImageMask({
             }}
           />
         ) : src ? (
-
           <img
             src={src}
             alt={alt || ""}

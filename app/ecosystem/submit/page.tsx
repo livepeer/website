@@ -57,7 +57,10 @@ export default function SubmitAppPage() {
 
         <form onSubmit={handleSubmit} className="mt-10 space-y-6">
           <div>
-            <label htmlFor="app-name" className="mb-2 block text-sm font-medium text-white/60">
+            <label
+              htmlFor="app-name"
+              className="mb-2 block text-sm font-medium text-white/60"
+            >
               App name
             </label>
             <input
@@ -72,7 +75,10 @@ export default function SubmitAppPage() {
           </div>
 
           <div>
-            <label htmlFor="website-url" className="mb-2 block text-sm font-medium text-white/60">
+            <label
+              htmlFor="website-url"
+              className="mb-2 block text-sm font-medium text-white/60"
+            >
               Website URL
             </label>
             <input
@@ -87,7 +93,10 @@ export default function SubmitAppPage() {
           </div>
 
           <div>
-            <label htmlFor="app-description" className="mb-2 block text-sm font-medium text-white/60">
+            <label
+              htmlFor="app-description"
+              className="mb-2 block text-sm font-medium text-white/60"
+            >
               Description
             </label>
             <textarea
@@ -105,7 +114,11 @@ export default function SubmitAppPage() {
             <label className="mb-2 block text-sm font-medium text-white/60">
               Categories
             </label>
-            <div className="flex flex-wrap gap-2 select-none" role="group" aria-label="Select categories">
+            <div
+              className="flex flex-wrap gap-2 select-none"
+              role="group"
+              aria-label="Select categories"
+            >
               {CATEGORIES.map((cat) => (
                 <FilterPill
                   key={cat}
@@ -124,7 +137,10 @@ export default function SubmitAppPage() {
           </div>
 
           <div>
-            <label htmlFor="contact-email" className="mb-2 block text-sm font-medium text-white/60">
+            <label
+              htmlFor="contact-email"
+              className="mb-2 block text-sm font-medium text-white/60"
+            >
               Contact email
             </label>
             <input

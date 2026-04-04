@@ -457,12 +457,7 @@ function AnalysisVisual() {
     <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
       <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#0a0a0a] to-[#0d1117]" />
       {analysisDetections.map((d, i) => (
-        <TrackingBox
-          key={i}
-          d={d}
-          active={active[i]}
-          entered={entered[i]}
-        />
+        <TrackingBox key={i} d={d} active={active[i]} entered={entered[i]} />
       ))}
       <div className="absolute left-3 top-2.5 flex items-center gap-1.5">
         <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
@@ -785,7 +780,6 @@ export default function UseCases() {
               </motion.div>
             ))}
           </div>
-
         </motion.div>
       </Container>
     </section>

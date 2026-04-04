@@ -122,7 +122,6 @@ export default function AiVideoHero({
     frames: 0,
   });
 
-
   // Tile grid
   const tiles = useMemo(() => {
     return Array.from({ length: 24 }).map((_, i) => {

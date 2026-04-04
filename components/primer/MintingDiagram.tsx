@@ -61,7 +61,6 @@ export default function MintingDiagram({
       ref={containerRef}
       className="relative w-full max-w-[1100px] flex-shrink-0 lg:max-w-none lg:w-[58vw]"
     >
-
       <img
         src={`${IMG}/minting.svg`}
         alt="Token minting — blockchain machine"
