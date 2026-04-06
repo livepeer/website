@@ -69,6 +69,10 @@ export default function StartBuilding() {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
+  // Last known viewport cursor position. Used by the render loop to
+  // recompute section-relative coords every frame, so the effect keeps
+  // tracking the cursor during scroll (when mousemove doesn't fire).
+  const viewportMouseRef = useRef({ x: -1, y: -1, seen: false });
   const mouseRef = useRef({ x: -1, y: -1, active: false });
   const [hasPointer, setHasPointer] = useState(false);
 
@@ -76,17 +80,10 @@ export default function StartBuilding() {
     setHasPointer(window.matchMedia("(pointer: fine)").matches);
   }, []);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const rect = section.getBoundingClientRect();
-    mouseRef.current.x = e.clientX - rect.left;
-    mouseRef.current.y = e.clientY - rect.top;
-    mouseRef.current.active = true;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    mouseRef.current.active = false;
+  const handleWindowMouseMove = useCallback((e: MouseEvent) => {
+    viewportMouseRef.current.x = e.clientX;
+    viewportMouseRef.current.y = e.clientY;
+    viewportMouseRef.current.seen = true;
   }, []);
 
   useEffect(() => {
@@ -168,11 +165,32 @@ export default function StartBuilding() {
     resize();
     window.addEventListener("resize", resize);
 
-    section.addEventListener("mousemove", handleMouseMove);
-    section.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("mousemove", handleWindowMouseMove);
 
     // Animation loop
     function render() {
+      // Recompute section-relative cursor coords every frame from the last
+      // known viewport cursor position. This makes the effect update during
+      // scroll (when mousemove doesn't fire) without needing a scroll listener.
+      const vm = viewportMouseRef.current;
+      if (vm.seen) {
+        const rect = section!.getBoundingClientRect();
+        const relX = vm.x - rect.left;
+        const relY = vm.y - rect.top;
+        // Only active when cursor is strictly over the section bounds.
+        // This prevents painting outside the visible area, which caused
+        // cutoff artifacts in the hero and section below.
+        const over =
+          relX >= 0 && relX < rect.width && relY >= 0 && relY < rect.height;
+        if (over) {
+          mouseRef.current.x = relX;
+          mouseRef.current.y = relY;
+          mouseRef.current.active = true;
+        } else {
+          mouseRef.current.active = false;
+        }
+      }
+
       // Decay — slow fade so trails linger
       paintCtx.fillStyle = "rgba(0, 0, 0, 0.02)";
       paintCtx.fillRect(0, 0, MAP_SIZE, MAP_SIZE);
@@ -222,15 +240,14 @@ export default function StartBuilding() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
-      section.removeEventListener("mousemove", handleMouseMove);
-      section.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("mousemove", handleWindowMouseMove);
       gl.deleteProgram(prog);
       gl.deleteShader(vert);
       gl.deleteShader(frag);
       gl.deleteBuffer(buf);
       gl.deleteTexture(tex);
     };
-  }, [handleMouseMove, handleMouseLeave, hasPointer]);
+  }, [handleWindowMouseMove, hasPointer]);
 
   return (
     <section
