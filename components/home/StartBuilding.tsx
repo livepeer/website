@@ -69,9 +69,6 @@ export default function StartBuilding() {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  // Track the last known viewport cursor position so we can recompute
-  // section-relative coords during scroll (when mousemove doesn't fire).
-  const viewportMouseRef = useRef({ x: -1, y: -1, hasMoved: false });
   const mouseRef = useRef({ x: -1, y: -1, active: false });
   const [hasPointer, setHasPointer] = useState(false);
 
@@ -79,33 +76,18 @@ export default function StartBuilding() {
     setHasPointer(window.matchMedia("(pointer: fine)").matches);
   }, []);
 
-  const updateMouseFromViewport = useCallback(() => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     const section = sectionRef.current;
-    if (!section || !viewportMouseRef.current.hasMoved) return;
+    if (!section) return;
     const rect = section.getBoundingClientRect();
-    const relX = viewportMouseRef.current.x - rect.left;
-    const relY = viewportMouseRef.current.y - rect.top;
-    mouseRef.current.x = relX;
-    mouseRef.current.y = relY;
-    // Only active when cursor is actually near/over the section
-    const nearSection =
-      relY > -200 && relY < rect.height + 200 && relX > 0 && relX < rect.width;
-    mouseRef.current.active = nearSection;
+    mouseRef.current.x = e.clientX - rect.left;
+    mouseRef.current.y = e.clientY - rect.top;
+    mouseRef.current.active = true;
   }, []);
 
-  const handleWindowMouseMove = useCallback(
-    (e: MouseEvent) => {
-      viewportMouseRef.current.x = e.clientX;
-      viewportMouseRef.current.y = e.clientY;
-      viewportMouseRef.current.hasMoved = true;
-      updateMouseFromViewport();
-    },
-    [updateMouseFromViewport],
-  );
-
-  const handleScroll = useCallback(() => {
-    updateMouseFromViewport();
-  }, [updateMouseFromViewport]);
+  const handleMouseLeave = useCallback(() => {
+    mouseRef.current.active = false;
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -186,8 +168,8 @@ export default function StartBuilding() {
     resize();
     window.addEventListener("resize", resize);
 
-    window.addEventListener("mousemove", handleWindowMouseMove);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    section.addEventListener("mousemove", handleMouseMove);
+    section.addEventListener("mouseleave", handleMouseLeave);
 
     // Animation loop
     function render() {
@@ -240,15 +222,15 @@ export default function StartBuilding() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", handleWindowMouseMove);
-      window.removeEventListener("scroll", handleScroll);
+      section.removeEventListener("mousemove", handleMouseMove);
+      section.removeEventListener("mouseleave", handleMouseLeave);
       gl.deleteProgram(prog);
       gl.deleteShader(vert);
       gl.deleteShader(frag);
       gl.deleteBuffer(buf);
       gl.deleteTexture(tex);
     };
-  }, [handleWindowMouseMove, handleScroll, hasPointer]);
+  }, [handleMouseMove, handleMouseLeave, hasPointer]);
 
   return (
     <section
