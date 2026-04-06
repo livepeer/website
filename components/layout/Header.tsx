@@ -188,7 +188,7 @@ export default function Header() {
                 href="https://discord.gg/livepeer"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
+                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/80 active:bg-white/70 select-none"
               >
                 Join Discord
                 <svg
