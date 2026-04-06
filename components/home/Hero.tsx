@@ -296,20 +296,20 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             <a
-              href="/ecosystem"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
+              href="#start-building"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-125 active:brightness-95"
               style={{
                 background:
                   "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
               }}
             >
-              Explore the ecosystem <span aria-hidden="true">→</span>
+              Start building <span aria-hidden="true">↓</span>
             </a>
             <a
               href="https://discord.gg/livepeer"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition-all duration-200 hover:bg-white/20 hover:border-white/25 active:bg-white/25"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition-all duration-200 hover:bg-white/25 hover:border-white/30 active:bg-white/30"
             >
               Join Discord <span aria-hidden="true">↗</span>
             </a>

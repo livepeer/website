@@ -673,7 +673,7 @@ export default function BuiltOnLivepeer() {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Ecosystem"
-              title="Built with Livepeer"
+              title="Discover applications built on Livepeer"
               description="Explore applications and emerging capabilities on Livepeer, from real-time AI video and AI avatars to transcoding and streaming."
               align="split"
             />
