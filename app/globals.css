@@ -13,6 +13,12 @@
   --color-blue-dark: #145571;
   --color-blue-subtle: rgba(20, 106, 143, 0.15);
 
+  --color-purple: #7c3aed;
+  --color-purple-light: #8b5cf6;
+  --color-purple-bright: #a78bfa;
+  --color-purple-dark: #5b21b6;
+  --color-purple-subtle: rgba(124, 58, 237, 0.15);
+
   --color-dark: #121212;
   --color-dark-lighter: #181818;
   --color-dark-card: #1e1e1e;
