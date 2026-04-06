@@ -39,6 +39,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+button,
+[role="button"],
+a[href],
+input[type="range"],
+select,
+summary {
+  cursor: pointer;
+}
+
 /* Tile grid background — subtle, structural */
 .tile-bg {
   background-image:
@@ -267,6 +276,42 @@ body {
   }
 }
 
+/* Price range slider — vertical-line thumbs */
+.price-range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 4px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.price-range-thumb::-webkit-slider-thumb:hover {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(64, 191, 134, 0.5);
+}
+.price-range-thumb::-moz-range-thumb {
+  width: 4px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.price-range-thumb::-moz-range-thumb:hover {
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(64, 191, 134, 0.5);
+}
+.price-range-thumb::-webkit-slider-runnable-track {
+  background: transparent;
+}
+.price-range-thumb::-moz-range-track {
+  background: transparent;
+}
+
 /* Text wrap utilities */
 .text-balance {
   text-wrap: balance;
@@ -420,6 +465,11 @@ body {
 }
 
 /* Accessibility */
+:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.25);
+  outline-offset: 1px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
