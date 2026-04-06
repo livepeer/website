@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { EXTERNAL_LINKS } from "@/lib/constants";
@@ -70,6 +70,11 @@ export default function StartBuilding() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const mouseRef = useRef({ x: -1, y: -1, active: false });
+  const [hasPointer, setHasPointer] = useState(false);
+
+  useEffect(() => {
+    setHasPointer(window.matchMedia("(pointer: fine)").matches);
+  }, []);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const section = sectionRef.current;
@@ -87,7 +92,7 @@ export default function StartBuilding() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const section = sectionRef.current;
-    if (!canvas || !section) return;
+    if (!canvas || !section || !hasPointer) return;
 
     const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: false });
     if (!gl) return;
@@ -225,7 +230,7 @@ export default function StartBuilding() {
       gl.deleteBuffer(buf);
       gl.deleteTexture(tex);
     };
-  }, [handleMouseMove, handleMouseLeave]);
+  }, [handleMouseMove, handleMouseLeave, hasPointer]);
 
   return (
     <section
@@ -233,13 +238,15 @@ export default function StartBuilding() {
       id="start-building"
       className="relative scroll-mt-24 py-24 lg:py-32"
     >
-      {/* WebGL rainbow gradient with mouse reveal — extends above to bleed into hero */}
-      <canvas
-        ref={canvasRef}
-        className="pointer-events-none absolute left-0 right-0"
-        style={{ top: "-12rem", bottom: "-12rem" }}
-        aria-hidden="true"
-      />
+      {/* WebGL rainbow gradient with mouse reveal — desktop only */}
+      {hasPointer && (
+        <canvas
+          ref={canvasRef}
+          className="pointer-events-none absolute left-0 right-0"
+          style={{ top: "-12rem", bottom: "-12rem" }}
+          aria-hidden="true"
+        />
+      )}
 
       <Container className="relative z-10">
         <motion.div
