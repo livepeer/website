@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       // Old livepeer.org routes → new site equivalents
       {
         source: "/lpt",
-        destination: "/",
+        destination: "/token",
         permanent: false,
       },
       {
@@ -72,6 +72,40 @@ const nextConfig: NextConfig = {
         destination: "/primer",
         permanent: false,
       },
+      // Legal pages — not yet implemented, redirect to home for now
+      {
+        source: "/terms-of-service",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/privacy-policy",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/terms-of-service-p",
+        destination: "/",
+        permanent: false,
+      },
+      {
+        source: "/privacy-policy-p",
+        destination: "/",
+        permanent: false,
+      },
+      // Deprecated pages — old marketing/campaign routes, redirect to home
+      // to avoid 404s from existing links and search engine indexes
+      ...[
+        "/pipelines-demo-email",
+        "/comfyui-live-video-hacker-program",
+        "/learn-about-pipelines",
+        "/learn-about-pipelines---dev",
+        "/daydream-waitlist",
+      ].map((source) => ({
+        source,
+        destination: "/",
+        permanent: false,
+      })),
     ];
   },
 };
