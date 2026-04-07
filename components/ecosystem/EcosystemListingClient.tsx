@@ -121,7 +121,7 @@ function EcosystemListingInner({ apps, categories }: Props) {
           <SectionHeader
             label="Ecosystem"
             title="Built on Livepeer"
-            description="Explore what developers and teams are building with real-time video and AI inference on Livepeer."
+            description="Explore what developers and teams are building with real-time AI video AI inference on Livepeer."
             align="left"
             action={
               <Button
