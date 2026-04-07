@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -628,6 +629,7 @@ function EmbodyVisual() {
 
 const projects = [
   {
+    slug: "daydream",
     Visual: DaydreamVisual,
     Logo: DaydreamLogo,
     description:
@@ -635,6 +637,7 @@ const projects = [
     domain: "daydream.live",
   },
   {
+    slug: "frameworks",
     Visual: StudioVisual,
     Logo: FrameworksLogo,
     description:
@@ -642,6 +645,7 @@ const projects = [
     domain: "frameworks.network",
   },
   {
+    slug: "streamplace",
     Visual: StreamplaceVisual,
     Logo: StreamplaceLogo,
     description:
@@ -649,6 +653,7 @@ const projects = [
     domain: "stream.place",
   },
   {
+    slug: "embody",
     Visual: EmbodyVisual,
     Logo: EmbodyLogo,
     description: "Deploy AI avatars that see, speak, and respond in real time.",
@@ -687,41 +692,47 @@ export default function BuiltOnLivepeer() {
               transition={{ duration: 0.4 }}
               className="lg:row-span-3"
             >
-              <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]">
+              <Link
+                href={`/ecosystem/${featured.slug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+              >
                 <div className="relative flex-1 min-h-[220px]">
                   <div className="absolute inset-0">
                     <featured.Visual />
                   </div>
                 </div>
                 <div className="px-6 py-5">
-                  <p className="text-sm leading-relaxed text-white/50">
+                  <p className="text-sm leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
                     {featured.description}
                   </p>
                   <span className="mt-3 inline-block text-[13px] text-white/25">
                     {featured.domain}
                   </span>
                 </div>
-              </div>
+              </Link>
             </motion.div>
 
             {/* 3 smaller cards stacked on the right */}
-            {rest.map((project, i) => (
+            {rest.map((project) => (
               <motion.div
-                key={i}
+                key={project.slug}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
               >
-                <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]">
+                <Link
+                  href={`/ecosystem/${project.slug}`}
+                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+                >
                   <div className="px-5 pt-5 pb-4">
                     <project.Logo />
-                    <p className="mt-3 text-[13px] leading-relaxed text-white/50">
+                    <p className="mt-3 text-[13px] leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
                       {project.description}
                     </p>
                     <span className="mt-3 inline-block text-[13px] text-white/25">
                       {project.domain}
                     </span>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>
