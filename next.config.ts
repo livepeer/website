@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
       {
         source: "/lpt",
         destination: "/token",
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/learn",
@@ -65,7 +65,7 @@ const nextConfig: NextConfig = {
       {
         source: "/media-kit",
         destination: "/brand",
-        permanent: true,
+        permanent: false,
       },
       {
         source: "/primer-new-design",
