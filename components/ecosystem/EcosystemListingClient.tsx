@@ -9,7 +9,7 @@ import {
   useCallback,
 } from "react";
 import Link from "next/link";
-import { Search, Plus, ArrowUpRight } from "lucide-react";
+import { Search, Plus, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import PageHero from "@/components/ui/PageHero";
@@ -254,7 +254,7 @@ function EcosystemListingInner({ apps, categories }: Props) {
                             </span>
                           )}
                         </div>
-                        <ArrowUpRight className="h-4 w-4 text-white/0 transition-colors group-hover:text-white/40" />
+                        <ArrowRight className="h-4 w-4 text-white/0 transition-colors group-hover:text-white/40" />
                       </div>
                       <h3 className="text-base font-semibold text-white transition-colors group-hover:text-green-light">
                         {app.name}
