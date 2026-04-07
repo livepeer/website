@@ -8,7 +8,7 @@ categories:
 logo: thelotradio.svg
 logoBg: "#FFFFFF"
 order: 6
-madeBy:
+madeBy: The Lot Radio
 twitter:
 github:
 contact:

@@ -7,7 +7,7 @@ categories:
   - Decentralized
 logo: stream-place.png
 order: 3
-madeBy: Streamplace
+madeBy: Aquareum Inc
 twitter:
 github: https://github.com/streamplace/streamplace
 contact: eli@stream.place

@@ -8,7 +8,7 @@ categories:
   - API
 logo: frameworks.svg
 order: 2
-madeBy: DDVTech / MistServer team
+madeBy: DDVTech
 twitter: https://x.com/GetFrames
 github: https://github.com/Livepeer-FrameWorks
 contact: developers@mistserver.org
