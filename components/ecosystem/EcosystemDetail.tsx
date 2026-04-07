@@ -338,12 +338,6 @@ export default function EcosystemDetail({ app, html }: Props) {
                 <MetaRow label="Support">
                   <LinkOrDash value={app.support} />
                 </MetaRow>
-                <MetaRow label="Terms">
-                  <LinkOrDash value={app.terms} />
-                </MetaRow>
-                <MetaRow label="Privacy">
-                  <LinkOrDash value={app.privacy} />
-                </MetaRow>
               </MetaGroup>
             </div>
           </aside>
