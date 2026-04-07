@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
       {
         source: "/lpt",
         destination: "/token",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/learn",
@@ -65,12 +65,12 @@ const nextConfig: NextConfig = {
       {
         source: "/media-kit",
         destination: "/brand",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/primer-new-design",
         destination: "/primer",
-        permanent: false,
+        permanent: true,
       },
       // Legal pages — not yet implemented, redirect to home for now
       {
@@ -104,7 +104,7 @@ const nextConfig: NextConfig = {
       ].map((source) => ({
         source,
         destination: "/",
-        permanent: false,
+        permanent: true,
       })),
     ];
   },
