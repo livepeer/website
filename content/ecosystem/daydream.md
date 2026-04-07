@@ -13,7 +13,7 @@ twitter: https://x.com/DaydreamLiveAI
 github: https://github.com/daydreamlive/scope
 contact: hello@daydream.live
 docs: https://docs.daydream.live/
-support:
+support: https://discord.com/invite/mnfGR4Fjhp
 terms: https://daydream.live/terms
 privacy: https://daydream.live/privacy-policy
 ---

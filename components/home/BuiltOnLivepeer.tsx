@@ -633,7 +633,7 @@ const projects = [
     Visual: DaydreamVisual,
     Logo: DaydreamLogo,
     description:
-      "Turn a live camera feed into AI-generated video, in real time.",
+      "Transform any video into AI-generated visuals in real-time — from a live camera, a clip, or a text prompt.",
     domain: "daydream.live",
   },
   {
