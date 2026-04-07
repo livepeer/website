@@ -742,7 +742,7 @@ export default function BuiltOnLivepeer() {
             transition={{ duration: 0.4 }}
             className="mt-12 text-center"
           >
-            <a
+            <Link
               href="/ecosystem"
               className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
               style={{
@@ -751,7 +751,7 @@ export default function BuiltOnLivepeer() {
               }}
             >
               Explore the ecosystem <span aria-hidden="true">→</span>
-            </a>
+            </Link>
           </motion.div>
         </motion.div>
       </Container>
