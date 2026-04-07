@@ -3,13 +3,35 @@
  * Exits with code 1 if any URL is broken.
  */
 
-import { readFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { readFileSync, readdirSync } from "node:fs";
+import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const dataPath = resolve(__dirname, "../data/ecosystem.json");
-const apps = JSON.parse(readFileSync(dataPath, "utf-8"));
+const ecosystemDir = resolve(__dirname, "../content/ecosystem");
+
+/**
+ * Minimal frontmatter parser — extracts `name` and `url` from each markdown
+ * file. Avoids pulling in gray-matter for a one-file CI script.
+ */
+function parseFrontmatter(source) {
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return {};
+  const data = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const m = line.match(/^([A-Za-z0-9_]+):\s*(.*)$/);
+    if (!m) continue;
+    const value = m[2].trim();
+    if (value === "") continue;
+    data[m[1]] = value.replace(/^["']|["']$/g, "");
+  }
+  return data;
+}
+
+const apps = readdirSync(ecosystemDir)
+  .filter((f) => f.endsWith(".md"))
+  .map((f) => parseFrontmatter(readFileSync(join(ecosystemDir, f), "utf-8")))
+  .filter((app) => app.url);
 
 const TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 2;

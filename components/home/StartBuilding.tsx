@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { EXTERNAL_LINKS } from "@/lib/constants";
@@ -290,10 +291,8 @@ export default function StartBuilding() {
               generative video, style transfer, and more.
             </p>
             <div className="mt-8">
-              <a
-                href="https://daydream.live"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/ecosystem/daydream"
                 className="inline-flex items-center justify-center gap-1.5 rounded-lg px-6 py-3 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-125 active:brightness-95"
                 style={{
                   background:
@@ -301,8 +300,8 @@ export default function StartBuilding() {
                 }}
               >
                 Start building with Daydream{" "}
-                <span aria-hidden="true">↗</span>
-              </a>
+                <span aria-hidden="true">→</span>
+              </Link>
             </div>
             <p className="mt-4 text-xs text-white/25">
               Direct API access to the Livepeer network is coming.{" "}
