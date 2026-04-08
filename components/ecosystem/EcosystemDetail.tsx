@@ -88,10 +88,10 @@ function ExternalLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex items-center gap-1 text-sm text-white/80 transition-colors hover:text-green-light"
+      className="group inline-flex items-center gap-1 text-xs text-white/85 transition-colors hover:text-green-light"
     >
       <span className="truncate">{children}</span>
-      <ArrowUpRight className="h-3 w-3 shrink-0 text-white/30 transition-colors group-hover:text-green-light" />
+      <ArrowUpRight className="h-2.5 w-2.5 shrink-0 text-white/30 transition-colors group-hover:text-green-light" />
     </a>
   );
 }
@@ -104,11 +104,9 @@ function MetaRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-2">
-      <span className="font-mono text-[11px] uppercase tracking-wider text-white/35">
-        {label}
-      </span>
-      <div className="min-w-0 flex-1 break-all text-right text-sm text-white/80">
+    <div className="grid grid-cols-[72px_1fr] items-start gap-3 py-1.5">
+      <span className="pt-px text-xs text-white/40">{label}</span>
+      <div className="min-w-0 break-words text-xs text-white/85">
         {children}
       </div>
     </div>
@@ -125,17 +123,11 @@ function MetaGroup({
   isFirst?: boolean;
 }) {
   return (
-    <div
-      className={
-        isFirst
-          ? "pb-4"
-          : "border-t border-white/[0.08] pt-4 pb-4 last:pb-0"
-      }
-    >
-      <h3 className="mb-2 font-mono text-[10px] uppercase tracking-[0.12em] text-white/40">
+    <div className={isFirst ? "" : "mt-5 border-t border-white/[0.06] pt-5"}>
+      <h3 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-white/50">
         {title}
       </h3>
-      <div className="divide-y divide-white/[0.04]">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }
@@ -154,7 +146,7 @@ function LinkOrDash({
     return (
       <a
         href={`mailto:${value}`}
-        className="text-sm text-white/80 transition-colors hover:text-green-light"
+        className="text-xs text-white/85 transition-colors hover:text-green-light"
       >
         {display ?? value}
       </a>
@@ -282,7 +274,7 @@ export default function EcosystemDetail({ app, html }: Props) {
 
           {/* Sidebar */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-5">
               <MetaGroup title="Details" isFirst>
                 <MetaRow label="Made by">
                   {app.madeBy ? (
@@ -293,7 +285,7 @@ export default function EcosystemDetail({ app, html }: Props) {
                 </MetaRow>
                 <MetaRow label="Categories">
                   {app.categories.length > 0 ? (
-                    <div className="flex flex-wrap justify-end gap-1.5">
+                    <div className="flex flex-wrap gap-1">
                       {app.categories.map((cat) => (
                         <Badge key={cat} variant="category">
                           {cat}
