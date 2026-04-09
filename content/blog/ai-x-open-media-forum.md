@@ -33,7 +33,7 @@ The creative discussions opened a clear window into how AI is reshaping cultural
 
 One of the most important contributions came a Venezuelan 3D artist artist who articulated how personal history and cultural memory form a kind of creative signature. They described this as their "code": a composite of experience, environment and emotional texture that cannot be reduced to visual style alone.
 
-![](/images/blog/ai-x-open-media-forum/franco.png)
+![](/images/blog/ai-x-open-media-forum/franco.jpg)
 
 _Argentine Daydream ambassador Franco presents his work_
 
@@ -63,7 +63,7 @@ Friends With Benefits CEO Greg Breznitz articulated the broader implication: "Cu
 
 ### 4. How AI is reshaping the creative process from the inside
 
-![](/images/blog/ai-x-open-media-forum/malcolm-alice.png)
+![](/images/blog/ai-x-open-media-forum/malcolm-alice.jpg)
 
 _Refraction founder Malcolm Levy and Serpentine Gallery curator Alice Scope_
 
@@ -81,7 +81,7 @@ Across this discussion, an essential truth emerged: AI does not eliminate creati
 
 ## III. Technical track: Shaping the infrastructure for trust, agency and scale
 
-![](/images/blog/ai-x-open-media-forum/technical-track.png)
+![](/images/blog/ai-x-open-media-forum/technical-track.jpg)
 
 While the Creative Track articulated what must be protected and what must remain possible, the Technical Track explored how to design systems that support those needs.
 

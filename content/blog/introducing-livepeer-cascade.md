@@ -68,11 +68,11 @@ As mentioned, Livepeer's stack is already very well suited to perform real-time 
 
 In cutting-edge areas of niche AI experimentation, **the early momentum is typically far more community-oriented**. Before knowing exactly how all of these technologies will be used at scale within applications, the most vibrant activity is within communities of enthusiasts - tinkerers, hackers, creatives, and engineers who are playing with new models and pipelines, sharing and showing off their outputs, discussing techniques for optimization and performance all evening in chat rooms, and building clout and reputation through sharing the latest innovations. The momentum often follows things that may look on the surface like fun toys to play with. We see this through examples like Civitai and Huggingface spaces, where the browsable galleries of potential outputs are just as inspiring to the communities and users as the underlying technical innovations are.
 
-![CivitAI Gallery](/images/blog/introducing-livepeer-cascade/civitai-gallery.png)
+![CivitAI Gallery](/images/blog/introducing-livepeer-cascade/civitai-gallery.jpg)
 
 _CivitAI Gallery_
 
-![Hugging Face Spaces Gallery](/images/blog/introducing-livepeer-cascade/huggingface-spaces.png)
+![Hugging Face Spaces Gallery](/images/blog/introducing-livepeer-cascade/huggingface-spaces.jpg)
 
 _Hugging Face Spaces Gallery_
 
