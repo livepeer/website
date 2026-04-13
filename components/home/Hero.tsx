@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   motion,
   useMotionValue,
@@ -295,7 +296,7 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <a
+            <Link
               href="/ecosystem"
               className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
               style={{
@@ -304,7 +305,7 @@ export default function Hero() {
               }}
             >
               Explore the ecosystem <span aria-hidden="true">→</span>
-            </a>
+            </Link>
             <a
               href="https://discord.gg/livepeer"
               target="_blank"
