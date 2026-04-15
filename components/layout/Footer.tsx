@@ -10,7 +10,7 @@ const footerNav = [
       { label: "Ecosystem", href: "/ecosystem" },
       { label: "Livepeer Token", href: "/token" },
       { label: "Delegate LPT", href: EXTERNAL_LINKS.explorer },
-      { label: "Provide GPUs", href: "https://docs.livepeer.org" },
+      { label: "Provide GPUs", href: "https://docs.livepeer.org/v1/orchestrators/guides/get-started" },
       { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap" },
     ],
   },

@@ -25,7 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
       },
       {
         label: "Provide GPUs",
-        href: "https://docs.livepeer.org",
+        href: "https://docs.livepeer.org/v1/orchestrators/guides/get-started",
         external: true,
       },
       {
