@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowLeft } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -236,7 +236,7 @@ export default function EcosystemDetail({ app, html }: Props) {
           break sticky positioning for any descendant. */}
       <Container>
         <div className="divider-gradient mb-16" />
-        <div className="grid grid-cols-1 gap-12 pb-24 lg:min-h-[150vh] lg:grid-cols-[1fr_300px] lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 pb-24 lg:grid-cols-[1fr_300px] lg:gap-16">
           {/* Main column */}
           <div className="min-w-0">
             <div
@@ -313,9 +313,10 @@ export default function EcosystemDetail({ app, html }: Props) {
         <div className="flex justify-center pb-16">
           <Link
             href="/ecosystem"
-            className="inline-flex items-center gap-2 font-mono text-sm text-white/30 transition-colors hover:text-white/60"
+            className="group inline-flex items-center gap-2 font-mono text-sm text-white/30 transition-colors hover:text-white/60"
           >
-            ← Back to ecosystem
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            Back to ecosystem
           </Link>
         </div>
       </Container>
