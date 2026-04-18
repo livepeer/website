@@ -12,7 +12,7 @@ madeBy: DDVTech
 twitter: https://x.com/GetFrames
 github: https://github.com/Livepeer-FrameWorks
 contact: developers@mistserver.org
-docs:
+docs: https://logbook.frameworks.network/
 support:
 terms:
 privacy:
@@ -42,4 +42,4 @@ It's built for teams that want production-grade live video infrastructure withou
 
 ## Powered by Livepeer
 
-Frameworks uses Livepeer's decentralized network for transcoding and AI inference, wrapping it in the operational layer that production video applications need. The result is a path to running real, sovereign video infrastructure on top of community-operated GPUs — without rebuilding the pipeline yourself.
+Frameworks uses Livepeer's open network for transcoding and AI inference, wrapping it in the operational layer that production video applications need. The result is a path to running real, sovereign video infrastructure on top of community-operated GPUs — without rebuilding the pipeline yourself.
