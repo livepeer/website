@@ -6,16 +6,16 @@ import { useAuth } from "@/components/studio/AuthContext";
 import LoginPage from "@/components/studio/LoginPage";
 
 export default function LoginRoute() {
-  const { isConnected } = useAuth();
+  const { isConnected, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isConnected) {
+    if (!isLoading && isConnected) {
       router.replace("/studio");
     }
-  }, [isConnected, router]);
+  }, [isConnected, isLoading, router]);
 
-  if (isConnected) return null;
+  if (isLoading || isConnected) return null;
 
   return <LoginPage />;
 }

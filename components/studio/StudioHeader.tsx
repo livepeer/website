@@ -180,7 +180,10 @@ function AvatarMenu({ user, disconnect, compact = false, mobileMinimal = false }
               <button
                 type="button"
                 role="menuitem"
-                onClick={() => { disconnect(); setOpen(false); }}
+                onClick={() => {
+                  void disconnect();
+                  setOpen(false);
+                }}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-white/50 hover:bg-red-500/10 hover:text-red-400 transition-colors"
               >
                 <LogOut className="h-4 w-4" />
@@ -590,7 +593,10 @@ export default function StudioHeader() {
           <div className="border-t border-white/[0.06] px-3 py-2">
             <button
               type="button"
-              onClick={() => { disconnect(); setAccountDrawerOpen(false); }}
+              onClick={() => {
+                void disconnect();
+                setAccountDrawerOpen(false);
+              }}
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[15px] text-white/60 transition-colors hover:bg-red-500/10 hover:text-red-400 active:bg-red-500/15"
             >
               <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />

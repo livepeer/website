@@ -128,24 +128,88 @@ export default function UsageTab() {
   const [period, setPeriod] = useState<Period>("30d");
   const [signerFilter, setSignerFilter] = useState<SignerFilter>("all");
   const [tokenFilter, setTokenFilter] = useState<string>("all");
+  const [usageLoading, setUsageLoading] = useState(false);
+  const [usageError, setUsageError] = useState<string | null>(null);
+  const [usageData, setUsageData] = useState<{
+    summary: typeof ACCOUNT_USAGE_SUMMARY;
+    bySigner: typeof ACCOUNT_USAGE_BY_SIGNER;
+    byToken: typeof ACCOUNT_USAGE_BY_TOKEN;
+    daily: typeof ACCOUNT_USAGE_DAILY;
+  } | null>(null);
   const [highlightedRequestId, setHighlightedRequestId] = useState<
     string | null
   >(null);
   const searchParams = useSearchParams();
   const targetRequestId = searchParams.get("request");
 
+  useEffect(() => {
+    let cancelled = false;
+    const fetchUsage = async () => {
+      setUsageLoading(true);
+      setUsageError(null);
+      try {
+        const response = await fetch(`/api/usage?period=${period}`, {
+          method: "GET",
+          cache: "no-store",
+        });
+        const payload = (await response.json().catch(() => ({}))) as {
+          summary?: typeof ACCOUNT_USAGE_SUMMARY;
+          bySigner?: typeof ACCOUNT_USAGE_BY_SIGNER;
+          byToken?: typeof ACCOUNT_USAGE_BY_TOKEN;
+          daily?: typeof ACCOUNT_USAGE_DAILY;
+          error_description?: string;
+        };
+        if (!response.ok) {
+          throw new Error(payload.error_description || "Failed to load usage data.");
+        }
+        if (!cancelled) {
+          setUsageData({
+            summary: payload.summary ?? ACCOUNT_USAGE_SUMMARY,
+            bySigner: payload.bySigner ?? ACCOUNT_USAGE_BY_SIGNER,
+            byToken: payload.byToken ?? ACCOUNT_USAGE_BY_TOKEN,
+            daily: payload.daily ?? ACCOUNT_USAGE_DAILY,
+          });
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setUsageError(
+            error instanceof Error ? error.message : "Failed to load usage data.",
+          );
+          setUsageData(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setUsageLoading(false);
+        }
+      }
+    };
+
+    void fetchUsage();
+    return () => {
+      cancelled = true;
+    };
+  }, [period]);
+
+  const summary = usageData?.summary ?? ACCOUNT_USAGE_SUMMARY;
+  const signerRows = usageData?.bySigner ?? ACCOUNT_USAGE_BY_SIGNER;
+  const tokenRows = usageData?.byToken ?? ACCOUNT_USAGE_BY_TOKEN;
+  const dailyRows = usageData?.daily ?? ACCOUNT_USAGE_DAILY;
+
   const chartData = useMemo(
-    () => filterByPeriod(ACCOUNT_USAGE_DAILY, period),
-    [period],
+    () => filterByPeriod(dailyRows, period),
+    [dailyRows, period],
   );
 
   const totalRequests = useMemo(() => {
+    if (usageData?.summary.requests != null) {
+      return usageData.summary.requests;
+    }
     return chartData.reduce(
       (sum, d) =>
         sum + d.freeTier + d.paymthouse + d.livepeerCloud + d.ethWallet,
       0,
     );
-  }, [chartData]);
+  }, [chartData, usageData]);
 
   const visibleSigners: SignerKey[] = useMemo(
     () => (signerFilter === "all" ? SIGNER_KEYS : [signerFilter]),
@@ -154,18 +218,18 @@ export default function UsageTab() {
 
   const filteredSignerRows = useMemo(
     () =>
-      ACCOUNT_USAGE_BY_SIGNER.filter(
+      signerRows.filter(
         (row) => signerFilter === "all" || row.signer === signerFilter,
       ),
-    [signerFilter],
+    [signerFilter, signerRows],
   );
 
   const filteredTokenRows = useMemo(
     () =>
-      ACCOUNT_USAGE_BY_TOKEN.filter(
+      tokenRows.filter(
         (row) => tokenFilter === "all" || row.tokenId === tokenFilter,
       ),
-    [tokenFilter],
+    [tokenFilter, tokenRows],
   );
 
   const periodCutoffMs = useMemo(() => {
@@ -224,31 +288,31 @@ export default function UsageTab() {
 
   const headerStats: NetworkStat[] = useMemo(() => {
     const freePct = Math.round(
-      (ACCOUNT_USAGE_SUMMARY.freeTierUsed /
-        ACCOUNT_USAGE_SUMMARY.freeTierLimit) *
+      (summary.freeTierUsed /
+        summary.freeTierLimit) *
         100,
     );
     return [
       {
         label: "Requests this period",
-        value: ACCOUNT_USAGE_SUMMARY.requests.toLocaleString(),
+        value: summary.requests.toLocaleString(),
         delta: "+12.4% vs last period",
         trend: "up",
       },
       {
         label: "Spend this period",
-        value: ACCOUNT_USAGE_SUMMARY.spendDisplay,
+        value: summary.spendDisplay,
         delta: "+8.1% vs last period",
         trend: "up",
       },
       {
         label: `Free tier (${freePct}% used)`,
-        value: `${ACCOUNT_USAGE_SUMMARY.freeTierUsed.toLocaleString()} / ${ACCOUNT_USAGE_SUMMARY.freeTierLimit.toLocaleString()}`,
-        delta: `Resets in ${ACCOUNT_USAGE_SUMMARY.freeTierResetIn}`,
+        value: `${summary.freeTierUsed.toLocaleString()} / ${summary.freeTierLimit.toLocaleString()}`,
+        delta: `Resets ${summary.freeTierResetIn}`,
         trend: "flat",
       },
     ];
-  }, []);
+  }, [summary]);
 
   const signerSelectOptions = useMemo<{ key: SignerFilter; label: string }[]>(
     () => [
@@ -261,16 +325,28 @@ export default function UsageTab() {
   const tokenSelectOptions = useMemo(
     () => [
       { key: "all", label: "All tokens" },
-      ...ACCOUNT_USAGE_BY_TOKEN.map((t) => ({
+      ...tokenRows.map((t) => ({
         key: t.tokenId,
         label: t.tokenName,
       })),
     ],
-    [],
+    [tokenRows],
   );
 
   return (
     <div className="px-6 pt-6 pb-10">
+      {usageError && (
+        <div className="mb-4 rounded-lg border border-red-400/25 bg-red-500/10 px-4 py-3 text-xs text-red-300/90">
+          {usageError}
+        </div>
+      )}
+
+      {usageLoading && (
+        <div className="mb-4 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-xs text-white/50">
+          Syncing usage from pymthouse...
+        </div>
+      )}
+
       {/* KPI cards */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {headerStats.map((stat) => (

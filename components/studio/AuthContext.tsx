@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
   type ReactNode,
 } from "react";
 
@@ -22,18 +23,22 @@ interface AuthContextValue {
   isConnected: boolean;
   isLoading: boolean;
   user: MockUser | null;
+  browserJwt: string | null;
   connect: (user: MockUser) => void;
   updateUser: (patch: Partial<MockUser>) => void;
-  disconnect: () => void;
+  disconnect: () => Promise<void>;
+  refresh: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
   isConnected: false,
   isLoading: true,
   user: null,
+  browserJwt: null,
   connect: () => {},
   updateUser: () => {},
-  disconnect: () => {},
+  disconnect: async () => {},
+  refresh: async () => {},
 });
 
 export function useAuth() {
@@ -44,56 +49,86 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<MockUser | null>(null);
+  const [browserJwt, setBrowserJwt] = useState<string | null>(null);
 
-  // Restore from localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("studio-user");
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored) as Partial<MockUser>;
-          // Backfill provider for any pre-existing localStorage entries
-          const hydrated: MockUser = {
-            name: parsed.name ?? "Demo User",
-            email: parsed.email ?? "demo@livepeer.org",
-            initials: parsed.initials ?? "DU",
-            provider: (parsed.provider as AuthProvider) ?? "email",
-            avatarUrl: parsed.avatarUrl,
-          };
-          setUser(hydrated);
-          setIsConnected(true);
-        } catch {
-          // ignore
-        }
+  const refresh = useCallback(async () => {
+    try {
+      const response = await fetch("/api/auth/me", {
+        method: "GET",
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        setIsConnected(false);
+        setUser(null);
+        setBrowserJwt(null);
+        return;
       }
+
+      const payload = (await response.json()) as {
+        authenticated: boolean;
+        user?: MockUser;
+        browserJwt?: string | null;
+      };
+      if (!payload.authenticated || !payload.user) {
+        setIsConnected(false);
+        setUser(null);
+        setBrowserJwt(null);
+        return;
+      }
+
+      setUser(payload.user);
+      setIsConnected(true);
+      setBrowserJwt(payload.browserJwt ?? null);
+    } catch {
+      setIsConnected(false);
+      setUser(null);
+      setBrowserJwt(null);
+    } finally {
       setIsLoading(false);
     }
   }, []);
 
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
   const connect = (u: MockUser) => {
     setUser(u);
     setIsConnected(true);
-    localStorage.setItem("studio-user", JSON.stringify(u));
   };
 
   const updateUser = (patch: Partial<MockUser>) => {
     setUser((prev) => {
       if (!prev) return prev;
-      const next = { ...prev, ...patch };
-      localStorage.setItem("studio-user", JSON.stringify(next));
-      return next;
+      return { ...prev, ...patch };
     });
   };
 
-  const disconnect = () => {
+  const disconnect = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+    } catch {
+      // Ignore network errors and still clear client state.
+    }
     setUser(null);
+    setBrowserJwt(null);
     setIsConnected(false);
-    localStorage.removeItem("studio-user");
   };
 
   return (
     <AuthContext.Provider
-      value={{ isConnected, isLoading, user, connect, updateUser, disconnect }}
+      value={{
+        isConnected,
+        isLoading,
+        user,
+        browserJwt,
+        connect,
+        updateUser,
+        disconnect,
+        refresh,
+      }}
     >
       {children}
     </AuthContext.Provider>

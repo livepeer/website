@@ -1,19 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, type AuthProvider } from "@/components/studio/AuthContext";
 import { LivepeerSymbol } from "@/components/icons/LivepeerLogo";
-
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -61,35 +52,66 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { connect } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { connect, refresh } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const deviceFlow = searchParams.get("flow") === "device";
+  const loginError = searchParams.get("error");
+
+  async function submitLogin(payload: {
+    provider: AuthProvider;
+    email?: string;
+    name?: string;
+  }) {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = (await response.json().catch(() => ({}))) as {
+        success?: boolean;
+        error_description?: string;
+        redirectTo?: string;
+        user?: {
+          name: string;
+          email: string;
+          initials: string;
+          provider: AuthProvider;
+        };
+      };
+
+      if (!response.ok || !json.success || !json.user) {
+        setSubmitError(json.error_description || "Could not sign in.");
+        return;
+      }
+
+      connect(json.user);
+      await refresh();
+      router.push(json.redirectTo || "/studio");
+    } catch {
+      setSubmitError("Could not sign in. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   function handleEmailSubmit(e?: React.FormEvent) {
     e?.preventDefault();
-    const displayName = name || email.split("@")[0] || "Demo User";
-    connect({
-      name: displayName,
-      email: email || "demo@livepeer.org",
-      initials: getInitials(displayName),
+    const displayName = name || email.split("@")[0] || "Studio User";
+    void submitLogin({
       provider: "email",
+      email: email || "studio.user@example.com",
+      name: displayName,
     });
-    router.push("/studio");
   }
 
   function handleOAuthSubmit(provider: AuthProvider) {
-    // Mock OAuth — pretend the provider returned a profile.
-    const mockProfiles: Record<"github" | "google", { name: string; email: string }> = {
-      github: { name: "Rick Staa", email: "rick.staa@github.com" },
-      google: { name: "Rick Staa", email: "rick.staa@gmail.com" },
-    };
-    const profile = mockProfiles[provider as "github" | "google"];
-    connect({
-      name: profile.name,
-      email: profile.email,
-      initials: getInitials(profile.name),
-      provider,
-    });
-    router.push("/studio");
+    void submitLogin({ provider });
   }
 
   return (
@@ -159,6 +181,17 @@ export default function LoginPage() {
                 ? "Welcome back"
                 : "Get started with the open GPU network"}
             </p>
+            {deviceFlow && (
+              <p className="mt-3 text-xs text-green-bright/90">
+                Complete sign-in to approve your pending device login.
+              </p>
+            )}
+            {loginError && (
+              <p className="mt-3 text-xs text-red-300/90">
+                We could not continue the device authorization flow. Please sign
+                in and try again.
+              </p>
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -167,6 +200,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => handleOAuthSubmit("github")}
+            disabled={isSubmitting}
             className="flex w-full items-center justify-center gap-3 rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-medium text-white shadow-sm shadow-black/20 backdrop-blur-sm transition-colors hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green/30 focus-visible:ring-offset-1 focus-visible:ring-offset-dark"
           >
             <GitHubIcon className="h-5 w-5" />
@@ -176,6 +210,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => handleOAuthSubmit("google")}
+            disabled={isSubmitting}
             className="flex w-full items-center justify-center gap-3 rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-medium text-white shadow-sm shadow-black/20 backdrop-blur-sm transition-colors hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green/30 focus-visible:ring-offset-1 focus-visible:ring-offset-dark"
           >
             <GoogleIcon className="h-5 w-5" />
@@ -211,6 +246,7 @@ export default function LoginPage() {
                   placeholder="Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  disabled={isSubmitting}
                   className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/30 transition-[border-color,box-shadow] focus:border-green/50 focus:outline-none focus:ring-1 focus:ring-green/20"
                 />
               </motion.div>
@@ -227,6 +263,7 @@ export default function LoginPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
               className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/30 transition-[border-color,box-shadow] focus:border-green/50 focus:outline-none focus:ring-1 focus:ring-green/20"
             />
           </div>
@@ -241,15 +278,25 @@ export default function LoginPage() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isSubmitting}
               className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/30 transition-[border-color,box-shadow] focus:border-green/50 focus:outline-none focus:ring-1 focus:ring-green/20"
             />
           </div>
 
+          {submitError && (
+            <p className="text-xs text-red-300/90">{submitError}</p>
+          )}
+
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full rounded-lg bg-green py-3 text-sm font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-green-bright/50 focus-visible:ring-offset-1 focus-visible:ring-offset-dark"
           >
-            {mode === "signin" ? "Sign in" : "Create account"}
+            {isSubmitting
+              ? "Please wait..."
+              : mode === "signin"
+                ? "Sign in"
+                : "Create account"}
           </button>
         </form>
 

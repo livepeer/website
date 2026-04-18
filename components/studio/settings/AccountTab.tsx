@@ -133,7 +133,7 @@ export default function AccountTab() {
 
   const handleDeleteAccount = () => {
     setShowDeleteDialog(false);
-    disconnect();
+    void disconnect();
     router.replace("/studio/login");
   };
 

@@ -34,7 +34,7 @@ export default function HeaderQaPage() {
             ))}
             <button
               type="button"
-              onClick={() => disconnect()}
+              onClick={() => void disconnect()}
               disabled={!isConnected}
               className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
