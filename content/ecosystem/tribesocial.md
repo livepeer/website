@@ -23,7 +23,7 @@ Tribe Social lets creators and operators launch a custom-branded mobile communit
 
 It's built for community builders who have outgrown generic social platforms and want a branded home for their audience without paying platform fees on every transaction.
 
-## What you can build
+## What you can do
 
 - **Branded community apps** — your own iOS and Android apps with your name, logo, and rules
 - **Courses and learning experiences** — exclusive learning modules with audio learning optimized for mobile
@@ -40,6 +40,6 @@ It's built for community builders who have outgrown generic social platforms and
 - **Audio learning** — mobile-optimized content
 - **Push notifications** — keep members engaged
 
-## Integrations
+## Integrates with
 
 Zoom, ActiveCampaign, Keap / InfusionSoft, Kajabi, Salesforce, and AddEvent.

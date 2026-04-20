@@ -19,6 +19,7 @@ export type EcosystemApp = {
   logoBg?: string;
   madeBy?: string;
   twitter?: string;
+  bluesky?: string;
   github?: string;
   contact?: string;
   docs?: string;
@@ -66,6 +67,7 @@ export function getAppBySlug(slug: string): EcosystemApp {
     logoBg: normalize(data.logoBg),
     madeBy: normalize(data.madeBy),
     twitter: normalize(data.twitter),
+    bluesky: normalize(data.bluesky),
     github: normalize(data.github),
     contact: normalize(data.contact),
     docs: normalize(data.docs),

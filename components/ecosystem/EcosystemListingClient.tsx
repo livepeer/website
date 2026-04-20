@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Suspense,
   useState,
   useMemo,
   useEffect,
@@ -11,7 +10,7 @@ import {
 import Link from "next/link";
 import { Search, Plus, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import PageHero from "@/components/ui/PageHero";
 import Container from "@/components/ui/Container";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -35,18 +34,22 @@ export type EcosystemListingApp = {
 type Props = {
   apps: EcosystemListingApp[];
   categories: string[];
+  initialCategories: string[];
+  initialSearch: string;
 };
 
-function EcosystemListingInner({ apps, categories }: Props) {
-  const searchParams = useSearchParams();
+export default function EcosystemListingClient({
+  apps,
+  categories,
+  initialCategories,
+  initialSearch,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [activeCategories, setActiveCategories] = useState<string[]>(() => {
-    const param = searchParams.get("categories");
-    return param ? param.split(",").map(decodeURIComponent) : [];
-  });
-  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [activeCategories, setActiveCategories] =
+    useState<string[]>(initialCategories);
+  const [search, setSearch] = useState(initialSearch);
   const [visible, setVisible] = useState(BATCH_SIZE);
   const [buttonBatch, setButtonBatch] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -116,7 +119,7 @@ function EcosystemListingInner({ apps, categories }: Props) {
 
   return (
     <PageHero>
-      <div className="min-h-screen">
+      <div>
         <Container>
           <SectionHeader
             label="Ecosystem"
@@ -326,13 +329,5 @@ function EcosystemListingInner({ apps, categories }: Props) {
         </Container>
       </div>
     </PageHero>
-  );
-}
-
-export default function EcosystemListingClient(props: Props) {
-  return (
-    <Suspense>
-      <EcosystemListingInner {...props} />
-    </Suspense>
   );
 }
