@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, type AuthProvider } from "@/components/studio/AuthContext";
 import { LivepeerSymbol } from "@/components/icons/LivepeerLogo";
+import DeviceFlowLoadingScreen from "@/components/studio/DeviceFlowLoadingScreen";
 
 function GitHubIcon({ className }: { className?: string }) {
   return (
@@ -135,6 +136,10 @@ export default function LoginPage() {
 
   function handleOAuthSubmit(provider: AuthProvider) {
     void submitLogin({ provider });
+  }
+
+  if (deviceFlow && isSubmitting) {
+    return <DeviceFlowLoadingScreen />;
   }
 
   return (
