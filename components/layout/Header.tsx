@@ -163,7 +163,7 @@ export default function Header() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex flex-shrink-0 items-center rounded-full px-2 py-1 transition-colors hover:bg-white/5"
+              className="flex flex-shrink-0 items-center rounded-full px-2 py-1"
               aria-label="Livepeer home"
             >
               <LivepeerWordmark className="h-3.5 w-auto text-white" />
