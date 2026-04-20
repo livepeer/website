@@ -1,5 +1,5 @@
-import { getPmtHouseClient } from "@/lib/pymthouse/server";
-import { PmtHouseError } from "@/lib/pymthouse/errors";
+import { PmtHouseError } from "@pymthouse/builder-api";
+import { createPmtHouseClientFromEnv } from "@pymthouse/builder-api/env";
 import type { SessionPayload } from "@/lib/session";
 
 /**
@@ -22,7 +22,7 @@ export async function completeStudioDeviceApprovalWithPymthouse(params: {
     );
   }
 
-  const client = getPmtHouseClient();
+  const client = createPmtHouseClientFromEnv();
 
   await client.upsertAppUser({
     externalUserId: params.session.externalUserId,

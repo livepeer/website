@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PmtHouseError } from "@/lib/pymthouse";
-import { completeStudioDeviceApprovalWithPymthouse } from "@/lib/pymthouse/complete-studio-device-approval";
+import { PmtHouseError } from "@pymthouse/builder-api";
+import { completeStudioDeviceApprovalWithPymthouse } from "@/lib/pmth-studio-device-approval";
 import {
   applySessionCookies,
   clearDeviceFlowCookie,

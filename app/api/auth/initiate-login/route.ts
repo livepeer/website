@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPmtHouseClient } from "@/lib/pymthouse";
-import { completeStudioDeviceApprovalWithPymthouse } from "@/lib/pymthouse/complete-studio-device-approval";
+import { createPmtHouseClientFromEnv } from "@pymthouse/builder-api/env";
+import { completeStudioDeviceApprovalWithPymthouse } from "@/lib/pmth-studio-device-approval";
 import {
   applySessionCookies,
   clearDeviceFlowCookie,
@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   try {
-    const client = getPmtHouseClient();
+    const client = createPmtHouseClientFromEnv();
     const parsed = client.parseDeviceApprovalRedirect(request.nextUrl.searchParams);
     const session = await readSessionFromRequest(request);
 

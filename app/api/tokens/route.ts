@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
-import { getPmtHouseClient, PmtHouseError } from "@/lib/pymthouse";
+import { PmtHouseError } from "@pymthouse/builder-api";
+import { createPmtHouseClientFromEnv } from "@pymthouse/builder-api/env";
 import {
   applySessionCookies,
   readSessionFromRequest,
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         ? body.name.trim()
         : "Token";
 
-    const client = getPmtHouseClient();
+    const client = createPmtHouseClientFromEnv();
     const tokenResponse = await client.createSignerSessionToken({
       userJwt: session.pmthUserJwt,
     });

@@ -50,3 +50,5 @@ img/
 .vscode/
 *.code-workspace
 .playwright-mcp/
+
+certificates

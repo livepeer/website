@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { formatWeiToUsd } from "@/lib/pymthouse/format";
-import { getPmtHouseClient, PmtHouseError } from "@/lib/pymthouse";
+import { PmtHouseError } from "@pymthouse/builder-api";
+import { createPmtHouseClientFromEnv } from "@pymthouse/builder-api/env";
+import { formatWeiToUsd } from "@pymthouse/builder-api/format";
 import { readSessionFromRequest } from "@/lib/session";
 
 export const runtime = "nodejs";
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
   const { days, startDate, endDate } = getPeriodWindow(period);
 
   try {
-    const client = getPmtHouseClient();
+    const client = createPmtHouseClientFromEnv();
     const usage = await client.getUsage({
       startDate,
       endDate,
