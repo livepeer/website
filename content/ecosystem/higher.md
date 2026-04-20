@@ -9,7 +9,7 @@ categories:
 logo: higher-zip.svg
 order: 9
 madeBy:
-twitter:
+twitter: https://x.com/higheronchain
 github:
 contact:
 docs:
