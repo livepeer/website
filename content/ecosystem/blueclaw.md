@@ -39,6 +39,6 @@ If your agents need to think continuously without metering you out, Blue Claw is
 - **Drop-in SDK support** — works with existing Python, JavaScript, and `curl` integrations
 - **Distributed GPU backend** — global redundancy across the inference network
 
-## Pricing
+## Powered by Livepeer
 
-Free during beta. Post-launch: flat-rate $10–$15 per month, no per-token charges.
+Blue Claw's inference runs on Livepeer's GPU network, routing agent workloads across the same open network of independent orchestrators that powers other builds in the ecosystem.

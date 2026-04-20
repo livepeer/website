@@ -628,41 +628,24 @@ function EmbodyVisual() {
 }
 
 const projects = [
-  {
-    slug: "daydream",
-    Visual: DaydreamVisual,
-    Logo: DaydreamLogo,
-    description:
-      "Transform any video into AI-generated visuals in real-time — from a live camera, a clip, or a text prompt.",
-    domain: "daydream.live",
-  },
-  {
-    slug: "frameworks",
-    Visual: StudioVisual,
-    Logo: FrameworksLogo,
-    description:
-      "Stream to any device, any format, any scale, from a single source.",
-    domain: "frameworks.network",
-  },
-  {
-    slug: "streamplace",
-    Visual: StreamplaceVisual,
-    Logo: StreamplaceLogo,
-    description:
-      "Open-source video infrastructure powering AT Protocol social apps.",
-    domain: "stream.place",
-  },
-  {
-    slug: "embody",
-    Visual: EmbodyVisual,
-    Logo: EmbodyLogo,
-    description: "Deploy AI avatars that see, speak, and respond in real time.",
-    domain: "embody.zone",
-  },
+  { slug: "daydream", Visual: DaydreamVisual, Logo: DaydreamLogo },
+  { slug: "frameworks", Visual: StudioVisual, Logo: FrameworksLogo },
+  { slug: "streamplace", Visual: StreamplaceVisual, Logo: StreamplaceLogo },
+  { slug: "embody", Visual: EmbodyVisual, Logo: EmbodyLogo },
 ];
 
-export default function BuiltOnLivepeer() {
+export type BuiltOnLivepeerMeta = Record<
+  string,
+  { description: string; domain: string }
+>;
+
+export default function BuiltOnLivepeer({
+  meta,
+}: {
+  meta: BuiltOnLivepeerMeta;
+}) {
   const [featured, ...rest] = projects;
+  const featuredMeta = meta[featured.slug];
 
   return (
     <section className="relative py-24 lg:py-32">
@@ -703,38 +686,41 @@ export default function BuiltOnLivepeer() {
                 </div>
                 <div className="px-6 py-5">
                   <p className="text-sm leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
-                    {featured.description}
+                    {featuredMeta.description}
                   </p>
                   <span className="mt-3 inline-block text-[13px] text-white/25">
-                    {featured.domain}
+                    {featuredMeta.domain}
                   </span>
                 </div>
               </Link>
             </motion.div>
 
             {/* 3 smaller cards stacked on the right */}
-            {rest.map((project) => (
-              <motion.div
-                key={project.slug}
-                variants={fadeUp}
-                transition={{ duration: 0.4 }}
-              >
-                <Link
-                  href={`/ecosystem/${project.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+            {rest.map((project) => {
+              const projectMeta = meta[project.slug];
+              return (
+                <motion.div
+                  key={project.slug}
+                  variants={fadeUp}
+                  transition={{ duration: 0.4 }}
                 >
-                  <div className="px-5 pt-5 pb-4">
-                    <project.Logo />
-                    <p className="mt-3 text-[13px] leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
-                      {project.description}
-                    </p>
-                    <span className="mt-3 inline-block text-[13px] text-white/25">
-                      {project.domain}
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  <Link
+                    href={`/ecosystem/${project.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+                  >
+                    <div className="px-5 pt-5 pb-4">
+                      <project.Logo />
+                      <p className="mt-3 text-[13px] leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
+                        {projectMeta.description}
+                      </p>
+                      <span className="mt-3 inline-block text-[13px] text-white/25">
+                        {projectMeta.domain}
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
 
           <motion.div
