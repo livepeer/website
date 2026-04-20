@@ -4,7 +4,12 @@ import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import PageHero from "@/components/ui/PageHero";
-import { XIcon, GitHubIcon, MailIcon } from "@/components/icons/SocialIcons";
+import {
+  XIcon,
+  BlueskyIcon,
+  GitHubIcon,
+  MailIcon,
+} from "@/components/icons/SocialIcons";
 import type { EcosystemApp } from "@/lib/ecosystem";
 
 function ConnectButton({
@@ -42,7 +47,11 @@ function isEmail(value: string): boolean {
 
 function handleFromUrl(url: string): string {
   try {
-    const segments = new URL(url).pathname.split("/").filter(Boolean);
+    const parsed = new URL(url);
+    const segments = parsed.pathname.split("/").filter(Boolean);
+    if (parsed.hostname.endsWith("bsky.app") && segments[0] === "profile") {
+      return segments[1] ?? url;
+    }
     return segments[0] ?? url;
   } catch {
     return url;
@@ -207,6 +216,11 @@ export default function EcosystemDetail({ app, html }: Props) {
                     <XIcon className="h-4 w-4" />
                   </ConnectButton>
                 )}
+                {app.bluesky && (
+                  <ConnectButton href={app.bluesky} label="Bluesky">
+                    <BlueskyIcon className="h-4 w-4" />
+                  </ConnectButton>
+                )}
                 {app.github && (
                   <ConnectButton href={app.github} label="GitHub">
                     <GitHubIcon className="h-4 w-4" />
@@ -280,6 +294,14 @@ export default function EcosystemDetail({ app, html }: Props) {
                     value={app.twitter}
                     display={
                       app.twitter ? `@${handleFromUrl(app.twitter)}` : undefined
+                    }
+                  />
+                </MetaRow>
+                <MetaRow label="Bluesky">
+                  <LinkOrDash
+                    value={app.bluesky}
+                    display={
+                      app.bluesky ? `@${handleFromUrl(app.bluesky)}` : undefined
                     }
                   />
                 </MetaRow>

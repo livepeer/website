@@ -9,9 +9,10 @@ logo: stream-place.png
 order: 3
 madeBy: Aquareum Inc
 twitter:
+bluesky: https://bsky.app/profile/stream.place
 github: https://github.com/streamplace/streamplace
 contact: eli@stream.place
-docs:
+docs: https://stream.place/docs
 support:
 terms:
 privacy:

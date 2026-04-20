@@ -9,13 +9,13 @@ logo: thelotradio.svg
 logoBg: "#FFFFFF"
 order: 6
 madeBy: The Lot Radio
-twitter:
+twitter: https://x.com/TheLotRadio
 github:
-contact:
+contact: info@thelotradio.com
 docs:
 support:
-terms:
-privacy:
+terms: https://www.thelotradio.com/terms-of-use
+privacy: https://www.thelotradio.com/privacy-policy
 ---
 
 ## Overview

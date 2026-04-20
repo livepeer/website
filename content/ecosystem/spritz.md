@@ -9,13 +9,13 @@ categories:
 logo: spritz.svg
 order: 12
 madeBy: Spritz
-twitter:
-github:
-contact:
-docs:
+twitter: https://x.com/spritzchat
+github: https://github.com/Spritz-Labs/spritz
+contact: connect@spritz.chat
+docs: https://docs.spritz.chat/
 support:
-terms:
-privacy:
+terms: https://app.spritz.chat/tos
+privacy: https://app.spritz.chat/privacy
 ---
 
 ## Overview
@@ -32,6 +32,6 @@ It's built for communities that want identity, conversations, and live video wit
 - **AI agents** — create and deploy agents inside your conversations
 - **Sign in your way** — passkeys or any supported wallet
 
-## Multi-chain
+## Built on open infrastructure
 
-Spritz works across **Ethereum**, **Base**, and **Solana**, with native apps on web, iOS, and Android. Free to use.
+Spritz combines an open stack: **Ethereum** and **ENS** (identity and login, with Solana wallet support), **Waku** via the **Logos Network** (peer-to-peer messaging), **Huddle01** (peer-to-peer video calls), **Livepeer** (broadcast livestreaming), and end-to-end encryption. Native apps on web, iOS, and Android. Free to use.
