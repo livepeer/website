@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPmtHouseClient, PmtHouseError } from "@/lib/pymthouse";
-import {
-  applySessionCookies,
-  clearDeviceFlowCookie,
-  readDeviceFlowFromRequest,
-} from "@/lib/session";
+import { applySessionCookies } from "@/lib/session";
 import {
   deriveExternalUserId,
   resolveLoginProfile,
@@ -20,6 +15,11 @@ function toProvider(value: unknown): StudioAuthProvider {
   return "email";
 }
 
+/**
+ * Studio sign-in: website-only stub session. No Pymthouse.
+ * Device approval uses Pymthouse only from `/api/auth/device/complete` or
+ * `GET /api/auth/initiate-login` when a session already exists.
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
@@ -30,43 +30,20 @@ export async function POST(request: NextRequest) {
       name: typeof body.name === "string" ? body.name : undefined,
     });
 
-    const client = getPmtHouseClient();
     const externalUserId = deriveExternalUserId(profile.email);
 
-    await client.upsertAppUser({
-      externalUserId,
+    const userPayload = {
+      name: profile.name,
       email: profile.email,
-      status: "active",
-    });
-
-    const userToken = await client.mintUserAccessToken({
-      externalUserId,
-      scope: "sign:job",
-    });
-
-    const deviceFlow = await readDeviceFlowFromRequest(request);
-    let redirectTo = "/studio";
-    let deviceApproved = false;
-
-    if (deviceFlow) {
-      await client.completeDeviceApproval({
-        userJwt: userToken.access_token,
-        userCode: deviceFlow.userCode,
-      });
-      redirectTo = "/studio/device-approved";
-      deviceApproved = true;
-    }
+      initials: profile.initials,
+      provider: profile.provider,
+    };
 
     const response = NextResponse.json({
       success: true,
-      redirectTo,
-      deviceApproved,
-      user: {
-        name: profile.name,
-        email: profile.email,
-        initials: profile.initials,
-        provider: profile.provider,
-      },
+      redirectTo: "/studio",
+      deviceApproved: false,
+      user: userPayload,
     });
 
     await applySessionCookies(response, {
@@ -75,26 +52,12 @@ export async function POST(request: NextRequest) {
       name: profile.name,
       initials: profile.initials,
       provider: profile.provider,
-      pmthUserJwt: userToken.access_token,
+      pmthUserJwt: "",
     });
-
-    if (deviceFlow) {
-      clearDeviceFlowCookie(response);
-    }
 
     return response;
   } catch (error) {
     console.error("Studio login failed", error);
-    if (error instanceof PmtHouseError) {
-      return NextResponse.json(
-        {
-          error: error.code,
-          error_description: error.message,
-        },
-        { status: error.status },
-      );
-    }
-
     return NextResponse.json(
       {
         error: "login_failed",

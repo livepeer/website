@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getPmtHouseClient, PmtHouseError } from "@/lib/pymthouse";
+import { PmtHouseError } from "@/lib/pymthouse";
+import { completeStudioDeviceApprovalWithPymthouse } from "@/lib/pymthouse/complete-studio-device-approval";
 import {
+  applySessionCookies,
   clearDeviceFlowCookie,
   readDeviceFlowFromRequest,
   readSessionFromRequest,
@@ -30,9 +32,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const client = getPmtHouseClient();
-    await client.completeDeviceApproval({
-      userJwt: session.pmthUserJwt,
+    const pmthUserJwt = await completeStudioDeviceApprovalWithPymthouse({
+      session,
       userCode: deviceFlow.userCode,
     });
 
@@ -40,6 +41,17 @@ export async function POST(request: NextRequest) {
       success: true,
       redirectTo: "/studio/device-approved",
     });
+
+    await applySessionCookies(response, {
+      externalUserId: session.externalUserId,
+      email: session.email,
+      name: session.name,
+      initials: session.initials,
+      provider: session.provider,
+      pmthUserJwt,
+      apiTokens: session.apiTokens,
+    });
+
     clearDeviceFlowCookie(response);
     return response;
   } catch (error) {

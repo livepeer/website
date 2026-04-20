@@ -92,7 +92,30 @@ export default function LoginPage() {
 
       connect(json.user);
       await refresh();
-      router.push(json.redirectTo || "/studio");
+
+      let nextPath = json.redirectTo || "/studio";
+      if (deviceFlow) {
+        const deviceRes = await fetch("/api/auth/device/complete", {
+          method: "POST",
+          credentials: "include",
+        });
+        const deviceJson = (await deviceRes.json().catch(() => ({}))) as {
+          success?: boolean;
+          error_description?: string;
+          redirectTo?: string;
+        };
+        if (!deviceRes.ok || !deviceJson.success) {
+          setSubmitError(
+            deviceJson.error_description ||
+              "Could not complete device approval with Pymthouse.",
+          );
+          return;
+        }
+        await refresh();
+        nextPath = deviceJson.redirectTo || "/studio/device-approved";
+      }
+
+      router.push(nextPath);
     } catch {
       setSubmitError("Could not sign in. Please try again.");
     } finally {
