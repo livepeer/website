@@ -14,20 +14,42 @@ import { ChevronDown } from "lucide-react";
 import StatCard from "@/components/studio/statistics/StatCard";
 import PeriodToggle from "@/components/studio/statistics/PeriodToggle";
 import { StackedChartTooltip } from "@/components/studio/statistics/ChartTooltip";
-import {
-  ACCOUNT_USAGE_SUMMARY,
-  ACCOUNT_USAGE_BY_SIGNER,
-  ACCOUNT_USAGE_BY_TOKEN,
-  ACCOUNT_USAGE_DAILY,
-  MOCK_RECENT_REQUESTS,
-  SIGNER_COLORS,
-} from "@/lib/studio/mock-data";
+import { SIGNER_COLORS } from "@/lib/studio/mock-data";
 import type {
   NetworkStat,
   AccountActivityRow,
+  AccountUsageBySigner,
+  AccountUsageByToken,
   AccountUsageDailyPoint,
+  AccountUsageSummary,
   SignerKey,
 } from "@/lib/studio/types";
+
+type UsagePayload = {
+  summary: AccountUsageSummary;
+  bySigner: AccountUsageBySigner[];
+  byToken: AccountUsageByToken[];
+  daily: AccountUsageDailyPoint[];
+  recentRequests: AccountActivityRow[];
+};
+
+function normalizeUsagePayload(
+  payload: Partial<UsagePayload> & { recentRequests?: AccountActivityRow[] },
+): UsagePayload {
+  return {
+    summary: payload.summary ?? {
+      requests: 0,
+      spendDisplay: "$0.00",
+      freeTierUsed: 0,
+      freeTierLimit: 10_000,
+      freeTierResetIn: "—",
+    },
+    bySigner: payload.bySigner ?? [],
+    byToken: payload.byToken ?? [],
+    daily: payload.daily ?? [],
+    recentRequests: payload.recentRequests ?? [],
+  };
+}
 
 // ─── Period filter ───
 
@@ -128,14 +150,9 @@ export default function UsageTab() {
   const [period, setPeriod] = useState<Period>("30d");
   const [signerFilter, setSignerFilter] = useState<SignerFilter>("all");
   const [tokenFilter, setTokenFilter] = useState<string>("all");
-  const [usageLoading, setUsageLoading] = useState(false);
+  const [usageLoading, setUsageLoading] = useState(true);
   const [usageError, setUsageError] = useState<string | null>(null);
-  const [usageData, setUsageData] = useState<{
-    summary: typeof ACCOUNT_USAGE_SUMMARY;
-    bySigner: typeof ACCOUNT_USAGE_BY_SIGNER;
-    byToken: typeof ACCOUNT_USAGE_BY_TOKEN;
-    daily: typeof ACCOUNT_USAGE_DAILY;
-  } | null>(null);
+  const [usageData, setUsageData] = useState<UsagePayload | null>(null);
   const [highlightedRequestId, setHighlightedRequestId] = useState<
     string | null
   >(null);
@@ -152,23 +169,14 @@ export default function UsageTab() {
           method: "GET",
           cache: "no-store",
         });
-        const payload = (await response.json().catch(() => ({}))) as {
-          summary?: typeof ACCOUNT_USAGE_SUMMARY;
-          bySigner?: typeof ACCOUNT_USAGE_BY_SIGNER;
-          byToken?: typeof ACCOUNT_USAGE_BY_TOKEN;
-          daily?: typeof ACCOUNT_USAGE_DAILY;
+        const payload = (await response.json().catch(() => ({}))) as Partial<UsagePayload> & {
           error_description?: string;
         };
         if (!response.ok) {
           throw new Error(payload.error_description || "Failed to load usage data.");
         }
         if (!cancelled) {
-          setUsageData({
-            summary: payload.summary ?? ACCOUNT_USAGE_SUMMARY,
-            bySigner: payload.bySigner ?? ACCOUNT_USAGE_BY_SIGNER,
-            byToken: payload.byToken ?? ACCOUNT_USAGE_BY_TOKEN,
-            daily: payload.daily ?? ACCOUNT_USAGE_DAILY,
-          });
+          setUsageData(normalizeUsagePayload(payload));
         }
       } catch (error) {
         if (!cancelled) {
@@ -190,10 +198,10 @@ export default function UsageTab() {
     };
   }, [period]);
 
-  const summary = usageData?.summary ?? ACCOUNT_USAGE_SUMMARY;
-  const signerRows = usageData?.bySigner ?? ACCOUNT_USAGE_BY_SIGNER;
-  const tokenRows = usageData?.byToken ?? ACCOUNT_USAGE_BY_TOKEN;
-  const dailyRows = usageData?.daily ?? ACCOUNT_USAGE_DAILY;
+  const summary = usageData?.summary;
+  const signerRows = usageData?.bySigner ?? [];
+  const tokenRows = usageData?.byToken ?? [];
+  const dailyRows = usageData?.daily ?? [];
 
   const chartData = useMemo(
     () => filterByPeriod(dailyRows, period),
@@ -239,14 +247,15 @@ export default function UsageTab() {
   }, [period]);
 
   const filteredActivity = useMemo<AccountActivityRow[]>(() => {
-    return MOCK_RECENT_REQUESTS.filter((row) => {
+    const rows = usageData?.recentRequests ?? [];
+    return rows.filter((row) => {
       const ts = new Date(row.timestamp).getTime();
       if (Number.isNaN(ts) || ts < periodCutoffMs) return false;
       if (signerFilter !== "all" && row.signer !== signerFilter) return false;
       if (tokenFilter !== "all" && row.tokenId !== tokenFilter) return false;
       return true;
     });
-  }, [periodCutoffMs, signerFilter, tokenFilter]);
+  }, [usageData?.recentRequests, periodCutoffMs, signerFilter, tokenFilter]);
 
   const clearAllFilters = () => {
     setPeriod("30d");
@@ -287,23 +296,20 @@ export default function UsageTab() {
   }, [targetRequestId, filteredActivity]);
 
   const headerStats: NetworkStat[] = useMemo(() => {
+    if (!summary) return [];
     const freePct = Math.round(
-      (summary.freeTierUsed /
-        summary.freeTierLimit) *
-        100,
+      (summary.freeTierUsed / summary.freeTierLimit) * 100,
     );
     return [
       {
         label: "Requests this period",
         value: summary.requests.toLocaleString(),
-        delta: "+12.4% vs last period",
-        trend: "up",
+        trend: "flat",
       },
       {
         label: "Spend this period",
         value: summary.spendDisplay,
-        delta: "+8.1% vs last period",
-        trend: "up",
+        trend: "flat",
       },
       {
         label: `Free tier (${freePct}% used)`,
@@ -333,6 +339,8 @@ export default function UsageTab() {
     [tokenRows],
   );
 
+  const showSyncBanner = usageLoading && usageData;
+
   return (
     <div className="px-6 pt-6 pb-10">
       {usageError && (
@@ -341,12 +349,32 @@ export default function UsageTab() {
         </div>
       )}
 
-      {usageLoading && (
+      {usageLoading && !usageData && (
+        <div className="space-y-6" aria-busy="true" aria-label="Loading usage">
+          <p className="text-center text-xs text-white/50">Loading usage…</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-[88px] animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.04]"
+              />
+            ))}
+          </div>
+          <div className="h-[380px] animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.04]" />
+          <div className="h-[200px] animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.04]" />
+          <div className="h-[200px] animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.04]" />
+          <div className="h-[240px] animate-pulse rounded-xl border border-white/[0.06] bg-white/[0.04]" />
+        </div>
+      )}
+
+      {showSyncBanner && (
         <div className="mb-4 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-xs text-white/50">
           Syncing usage from pymthouse...
         </div>
       )}
 
+      {usageData && (
+        <>
       {/* KPI cards */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {headerStats.map((stat) => (
@@ -743,6 +771,8 @@ export default function UsageTab() {
           </div>
         )}
       </div>
+        </>
+      )}
     </div>
   );
 }
