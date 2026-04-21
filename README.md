@@ -36,9 +36,6 @@ cp .env.example .env.local
 
 | Variable                | Required | Description                                                                              |
 | ----------------------- | -------- | ---------------------------------------------------------------------------------------- |
-| `MAILCHIMP_API_KEY`     | Yes      | Mailchimp API key for early access signups                                               |
-| `MAILCHIMP_AUDIENCE_ID` | Yes      | Mailchimp audience/list ID                                                               |
-| `MAILCHIMP_TAG`         | No       | Tag applied to new subscribers (default: "v2 Website Signups")                           |
 | `THEGRAPH_API_KEY`      | No       | Authenticated subgraph requests for live protocol stats (falls back to hardcoded values) |
 
 ### Run Development Server
