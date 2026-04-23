@@ -116,9 +116,9 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 
 ### Positioning (v2 Thesis — March 2026)
 
-- **Thesis statement:** "Livepeer is the open network for GPU-powered video."
-- **Canonical headline:** "The open network for GPU-powered video"
-- **Tagline (footer):** "The open network for GPU-powered video."
+- **Thesis statement:** "Livepeer is the open network for real-time ai video."
+- **Canonical headline:** "The open network for real-time ai video"
+- **Tagline (footer):** "The open network for real-time ai video."
 - Lead with solutions (builds on the network), not raw protocol capabilities.
 - The network provides GPU infrastructure. Solutions provide the product experience.
 - **Three competitive variables (cost / capability / community):**
@@ -126,7 +126,7 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
   - **Capability:** Specialized for real-time, streaming video inference. Nine years of video processing optimization. BYOC flexibility for custom models and pipelines. No other network is built specifically for this.
   - **Community:** The network is operated by independent orchestrators, expanded by builders building on builders, and open to permissionless participation. This is a structural property of the infrastructure — not a Discord server or governance forum. A centralized provider structurally cannot replicate this.
 - Not a trilemma — cost, capability, and community interact.
-- **External competitive frame:** Livepeer solutions (powered by community-operated GPU infrastructure) vs. centralized alternatives (AWS, RunPod, Fal, Replicate) for GPU-powered video. Name competitors explicitly — the target audience is comparison-shopping.
+- **External competitive frame:** Livepeer solutions (powered by community-operated GPU infrastructure) vs. centralized alternatives (AWS, RunPod, Fal, Replicate) for real-time ai video. Name competitors explicitly — the target audience is comparison-shopping.
 - **Internal only (not for website copy):** DePIN comparisons (Theta, Render, Akash). These are relevant for internal strategy but not for developer-facing positioning.
 - **Narrative routing principle:** Every piece of external communication should route audiences to solutions on the network. The question the website answers: "What's being built on Livepeer, and how can I use it?"
 - **Solutions on the network:** Daydream (real-time generative video), Frameworks (sovereign live streaming), Streamplace (decentralized social video), Embody (AI avatars). These are the ecosystem, not Livepeer products.
@@ -151,12 +151,12 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 | "GPU providers" (dev-facing)               | "nodes" (too generic)                                 |
 | "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model)           |
 | "inference"                                | "processing" (when referring to AI specifically)      |
-| "GPU-powered video"                        | "real-time AI video" (previous headline, now retired) |
+| "real-time ai video"                       | "GPU-powered video" (previous headline, now retired) |
 
 ### What the v2 thesis kills (do not use this framing)
 
 - ~~"The network is the product."~~ → The network is infrastructure. Solutions are the products.
-- ~~"Livepeer is a generalized GPU compute network."~~ → It's specialized. GPU-powered video.
+- ~~"Livepeer is a generalized GPU compute network."~~ → It's specialized. Real-time ai video.
 - ~~"We need to attract developers to the raw protocol."~~ → Route audiences to solutions.
 - ~~"Enterprise is the near-term market."~~ → The edges are.
 - ~~"Centralized vs. decentralized."~~ → The tension is centralized-proprietary vs. community-operated/open.

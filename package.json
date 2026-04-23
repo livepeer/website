@@ -10,7 +10,8 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit --incremental false",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "build:brand-kit": "node scripts/build-brand-kit.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.15.0",
