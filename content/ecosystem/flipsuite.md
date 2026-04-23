@@ -5,6 +5,7 @@ description: Discord-native Web3 community platform — holder gating, quests, t
 categories:
   - Community
   - Agents
+  - API
 logo: flipsuite.png
 order: 13
 madeBy: Flipsuite
@@ -19,25 +20,26 @@ privacy: https://docs.flipsuite.xyz/legal/privacy
 
 ## Overview
 
-Flipsuite is an all-in-one Web3 platform for Discord communities, delivered through **Flippy** — a bot that drops onchain tooling directly into any server. Holder verification, point systems, quests, tipping, storefronts, trading, and AI-powered experiences all run inside Discord, so community operators can reward and engage members without dragging them off-platform.
+Flipsuite is a community rewards playground and growth machine for Discord. Quest. Reward. Repeat. Everything runs inside the server through **Flippy**, the everything companion — tag it to manage balances, ask questions, send or claim rewards, and track leaderboards without ever leaving Discord.
 
-Flippy pairs slash-command modules with LLM-powered features so community actions, questing, and conversational flows feel native to Discord.
+Operators get an end-to-end engagement stack — quests, automated reward distribution, multi-chain gating, storefronts, and an onchain DEX — wired together under a single bot and a single API.
 
 ## What you can build
 
-- **Token-gated communities** — verify holders across chains and assign roles based on tokens, NFTs, points, or linked X accounts
-- **Quests and point economies** — run Discord, onchain, X, or custom tasks that reward members with points, tokens, or NFTs
-- **Tipping and trading** — send tips, run airdrops and raffles, swap tokens, and trade perps on Hyperliquid — all from slash commands
-- **Branded storefronts** — sell roles, points, and custom items with integrated crypto payments
-- **AI-powered community experiences** — LLM-driven features inside Flippy that communities can enable alongside every other module
+- **Quest campaigns that reward real actions** — automate payouts across a growing list of community tasks and custom API integrations, paying out in onchain rewards or offchain points
+- **Tips, raffles, and airdrops** — hand out tokens, NFTs, or points with fully automated distribution, schedule recurring drops, and manage them as a team
+- **Multi-chain gating** — lock roles behind onchain holdings, offchain points, or custom requirements across 31+ supported blockchains
+- **Storefronts** — monetize with purchasable roles, points, and custom items, stacked with quests and gating for a self-sustaining reward economy
+- **Onchain swap and trading** — a built-in DEX for cross-chain swaps, limit orders, and trading, so rewards stay usable in the same place members earn them
+- **Apps on top of Flipsuite** — integrate quests, rewards, and wallet functionality into external apps and workflows via the Developer API
 
 ## Developer surface
 
 - **Flippy bot** — invite once, configure modules per server via an admin control panel
-- **Module system** — Gating, Points, Quests, Rewards, Storefronts, Tipping, Trading, Gen — enable only what you need
-- **REST APIs** — Community and Core APIs expose gating, points, quests, and tipping for external integrations
-- **Multi-chain** — wallet infrastructure (Flipwallets) spans every chain Flipsuite supports
+- **Developer API** — quests, rewards, and wallet functionality exposed for external integrations
+- **Multi-chain wallets** — Flipsuite's wallet infrastructure spans every supported chain
+- **Conversational control** — natural-language interaction with Flippy for balances, rewards, leaderboards, and Q&A
 
 ## Powered by Livepeer
 
-Flipsuite routes its LLM inference to the Livepeer network through its own gateway, using the same OpenAI-compatible inference pattern that Blue Claw and other network builds rely on. That gives Flippy access to open-source language models running on the network's GPU supply — surfaced inside Discord as first-class commands and flows, without Flipsuite running GPUs itself.
+Flipsuite routes its LLM inference to the Livepeer network through its own gateway, using the same OpenAI-compatible inference pattern that Blue Claw and other network builds rely on. That gives Flippy access to open-source language models running on the network's GPU supply — surfaced inside Discord as first-class conversational commands and flows, without Flipsuite running GPUs itself.
