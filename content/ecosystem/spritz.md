@@ -7,7 +7,7 @@ categories:
   - Community
   - Decentralized
 logo: spritz.svg
-order: 12
+order: 13
 madeBy: Spritz
 twitter: https://x.com/spritzchat
 github: https://github.com/Spritz-Labs/spritz

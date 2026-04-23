@@ -6,7 +6,7 @@ categories:
   - Agents
   - API
 logo: blueclaw.webp
-order: 5
+order: 4
 madeBy: OpenClaw
 twitter:
 github: https://github.com/blueclaw-network

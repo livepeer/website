@@ -7,7 +7,7 @@ categories:
   - Community
   - Decentralized
 logo: higher-zip.svg
-order: 9
+order: 10
 madeBy:
 twitter: https://x.com/higheronchain
 github:
