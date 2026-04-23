@@ -28,9 +28,9 @@ const APPS = [
     iconColor: "text-blue-bright",
   },
   {
-    label: "Developer Portal",
+    label: "Developer Dashboard",
     subtitle: "Discover & Build",
-    href: "/portal",
+    href: "/dashboard",
     external: false,
     icon: Hammer,
     iconBg: "bg-green/15",

@@ -52,9 +52,9 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const PORTAL_NAV_ITEMS = [
-  { label: "Home", href: "/portal", icon: "House" as const },
-  { label: "Explore", href: "/portal/explore", icon: "LayoutGrid" as const },
-  { label: "Stats", href: "/portal/stats", icon: "BarChart3" as const },
+  { label: "Home", href: "/dashboard", icon: "House" as const },
+  { label: "Explore", href: "/dashboard/explore", icon: "LayoutGrid" as const },
+  { label: "Stats", href: "/dashboard/stats", icon: "BarChart3" as const },
 ] as const;
 
 export const EXTERNAL_LINKS = {

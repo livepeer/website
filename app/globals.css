@@ -30,11 +30,11 @@
   --color-dark-card: #1e1e1e;
   --color-dark-border: #2a2a2a;
 
-  /* ─── Portal surface hierarchy ────────────────────────────────────────────
+  /* ─── Dashboard surface hierarchy ────────────────────────────────────────────
    * 4-tier dark ramp. Shell is darker than dark so the glass header actually
    * refracts content upward instead of tinting a background of its own colour.
    * Canvas intentionally equals --color-dark (#121212) so the marketing →
-   * portal transition has no visible seam. Raised is the hover / nested-card
+   * dashboard transition has no visible seam. Raised is the hover / nested-card
    * tier — one step above elevated popovers. */
   --color-shell: #0e0e0e;
   --color-surface-raised: #242424;
