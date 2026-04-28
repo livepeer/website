@@ -7,7 +7,7 @@ categories:
   - Agents
   - API
 logo: flipsuite.png
-order: 13
+order: 6
 madeBy: Flipsuite
 twitter: https://x.com/flipsuitexyz
 github: https://github.com/flipsuite

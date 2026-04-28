@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Community
 logo: tribesocial.webp
-order: 8
+order: 9
 madeBy: Tribe Social
 twitter: https://twitter.com/TribeSocialApp
 github:

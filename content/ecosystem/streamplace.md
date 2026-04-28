@@ -5,6 +5,7 @@ description: The video layer for decentralized social networks. Open-source, sel
 categories:
   - Streaming
   - Decentralized
+  - API
 logo: stream-place.png
 order: 3
 madeBy: Aquareum Inc

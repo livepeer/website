@@ -6,7 +6,7 @@ categories:
   - AI Video
   - Agents
 logo: embody.svg
-order: 4
+order: 7
 madeBy: DeFine + Dane
 twitter:
 github: https://github.com/its-DeFine

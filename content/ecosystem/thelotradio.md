@@ -7,7 +7,7 @@ categories:
   - Music
 logo: thelotradio.svg
 logoBg: "#FFFFFF"
-order: 6
+order: 8
 madeBy: The Lot Radio
 twitter: https://x.com/TheLotRadio
 github:

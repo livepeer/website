@@ -6,7 +6,7 @@ categories:
   - Streaming
   - API
 logo: livepeer-studio.png
-order: 7
+order: 5
 madeBy: Livepeer Inc
 twitter: https://twitter.com/livepeerstudio
 github: https://github.com/livepeer/studio
