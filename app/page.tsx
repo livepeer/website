@@ -3,8 +3,10 @@ import UseCases from "@/components/home/UseCases";
 import BuiltOnLivepeer, {
   type BuiltOnLivepeerMeta,
 } from "@/components/home/BuiltOnLivepeer";
+import LatestPosts from "@/components/home/LatestPosts";
 import CommunityCTA from "@/components/home/CommunityCTA";
 import { getAppBySlug } from "@/lib/ecosystem";
+import { getAllPosts } from "@/lib/blog";
 
 const FEATURED_SLUGS = ["daydream", "frameworks", "streamplace", "embody"];
 
@@ -16,11 +18,16 @@ export default function Home() {
     })
   );
 
+  const latestPosts = getAllPosts()
+    .slice(0, 3)
+    .map((p) => ({ ...p, content: "" }));
+
   return (
     <>
       <Hero />
       <UseCases />
       <BuiltOnLivepeer meta={builtOnLivepeerMeta} />
+      <LatestPosts posts={latestPosts} />
       <CommunityCTA />
     </>
   );
