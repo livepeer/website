@@ -1,0 +1,15 @@
+# Livepeer Foundation — Vulnerability Disclosure
+#
+# Smart contract / on-chain protocol issues:
+#   Use the Immunefi program below for cash bounties.
+#
+# Websites, explorer & other Foundation-operated apps:
+#   Email security@livepeer.foundation. Informal, discretionary
+#   program with public acknowledgment for valid reports.
+
+Contact: mailto:security@livepeer.foundation
+Contact: https://immunefi.com/bug-bounty/livepeer/
+Expires: 2027-05-08T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://livepeer.org/.well-known/security.txt
+Policy: https://livepeer.org/security/non-protocol/policy
