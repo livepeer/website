@@ -2,7 +2,6 @@
 title: "Real-time AI Video Drives Q1 ATHs"
 description: "Messari's State of Livepeer Q1 2026 report: network usage and fees hit all-time highs, with AI inference accounting for ~60% of protocol revenue."
 date: "2026-05-18"
-author: "Messari"
 category: "Network"
 tags: ["Messari", "Network Stats", "Real-time AI Video", "Q1 2026"]
 image: "/images/blog/q1-2026-messari/total-minutes.png"
