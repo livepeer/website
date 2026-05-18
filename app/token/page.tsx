@@ -882,7 +882,7 @@ export default function TokenPage() {
   return (
     <>
       {/* Hero — brand page treatment */}
-      <section className="relative flex min-h-[70vh] items-center overflow-hidden">
+      <section className="relative flex min-h-screen items-center overflow-hidden">
         {/* Full-bleed ImageMask */}
         <div className="absolute inset-0">
           <ImageMask
@@ -1023,7 +1023,7 @@ export default function TokenPage() {
           }}
         />
 
-        <Container className="relative z-10 py-24 lg:py-32">
+        <Container className="relative z-10">
           <motion.div
             className="mx-auto max-w-3xl text-center"
             initial={{ opacity: 0, y: 20 }}
