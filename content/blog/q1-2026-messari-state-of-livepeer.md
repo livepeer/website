@@ -10,8 +10,6 @@ draft: false
 
 Messari's [*State of Livepeer Q1 2026 Report*](https://messari.io/report/state-of-livepeer-q1-2026), by Senior Research Analyst [Jake Koch-Gallup](https://x.com/immutablejacob), marks a milestone for Livepeer: the network reached all-time highs in both usage and fee generation, while AI inference remained the largest driver of protocol revenue.
 
-![Total minutes processed on Livepeer in Q1 2026](/images/blog/q1-2026-messari/total-minutes.png)
-
 Livepeer processed 134.4 million minutes in Q1, up 71.9% quarter over quarter. This reflects deeper production usage across existing applications and builders, with demand increasingly concentrated in real-time AI and agent-related workloads.
 
 ![Demand-side fees Q1 2026](/images/blog/q1-2026-messari/demand-fees.png)
