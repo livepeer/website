@@ -6,7 +6,7 @@ author: "Messari"
 category: "Network"
 tags: ["Messari", "Network Stats", "Real-time AI Video", "Q1 2026"]
 image: "/images/blog/q1-2026-messari/total-minutes.png"
-draft: true
+draft: false
 ---
 
 Messari's [*State of Livepeer Q1 2026 Report*](https://messari.io/report/state-of-livepeer-q1-2026), by Senior Research Analyst [Jake Koch-Gallup](https://x.com/immutablejacob), marks a milestone for Livepeer: the network reached all-time highs in both usage and fee generation, while AI inference remained the largest driver of protocol revenue.
