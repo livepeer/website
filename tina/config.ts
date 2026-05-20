@@ -1,5 +1,15 @@
 import { defineConfig } from "tinacms";
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `tina/config.ts: missing ${name}. Set it in .env (see .env.example) or your CI/Vercel environment.`,
+    );
+  }
+  return value;
+}
+
 // Branch resolution per Tina's Vercel docs:
 // https://tina.io/docs/integration/vercel-branches
 // NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF is exposed to the browser so the admin
@@ -11,8 +21,8 @@ const branch =
 
 export default defineConfig({
   branch,
-  clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID!,
-  token: process.env.TINA_TOKEN!,
+  clientId: requireEnv("NEXT_PUBLIC_TINA_CLIENT_ID"),
+  token: requireEnv("TINA_TOKEN"),
 
   build: {
     outputFolder: "admin",
