@@ -47,6 +47,15 @@ export default defineConfig({
     },
   },
 
+  search: {
+    tina: {
+      indexerToken: process.env.NEXT_PUBLIC_TINA_SEARCH_TOKEN || "",
+      stopwordLanguages: ["eng"],
+    },
+    indexBatchSize: 100,
+    maxSearchIndexFieldLength: 100,
+  },
+
   schema: {
     collections: [
       {
