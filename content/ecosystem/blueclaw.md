@@ -5,7 +5,7 @@ description: OpenAI-compatible inference for autonomous agents — flat-rate pri
 categories:
   - Agents
   - API
-logo: blueclaw.webp
+logo: /ecosystem/blueclaw.webp
 order: 4
 madeBy: OpenClaw
 twitter:

@@ -6,7 +6,7 @@ categories:
   - AI Video
   - Generative
   - API
-logo: daydream.svg
+logo: /ecosystem/daydream.svg
 order: 1
 madeBy: Livepeer Inc
 twitter: https://x.com/DaydreamLiveAI
