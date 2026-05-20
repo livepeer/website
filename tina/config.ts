@@ -2,12 +2,18 @@ import { defineConfig } from "tinacms";
 
 function requireEnv(name: string): string {
   const value = process.env[name];
-  if (!value) {
+  if (value) return value;
+  // Build-time only: Tina's CLI runs this in Node where all env vars are
+  // populated. In the bundled admin SPA, non-NEXT_PUBLIC_ vars (TINA_TOKEN)
+  // are stripped from the client bundle by design — the token gets inlined
+  // into tina/__generated__/client.ts at build time. Throwing there would
+  // crash the admin UI on the deployed site.
+  if (typeof window === "undefined") {
     throw new Error(
       `tina/config.ts: missing ${name}. Set it in .env (see .env.example) or your CI/Vercel environment.`,
     );
   }
-  return value;
+  return "";
 }
 
 function slugifyFilename(raw: string | undefined): string {
