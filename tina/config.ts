@@ -1,9 +1,12 @@
 import { defineConfig } from "tinacms";
 
+// Branch resolution per Tina's Vercel docs:
+// https://tina.io/docs/integration/vercel-branches
+// NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF is exposed to the browser so the admin
+// UI on preview deploys points at the right branch.
 const branch =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF ||
   process.env.NEXT_PUBLIC_TINA_BRANCH ||
-  process.env.VERCEL_GIT_COMMIT_REF ||
-  process.env.HEAD ||
   "main";
 
 export default defineConfig({
