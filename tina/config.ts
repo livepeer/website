@@ -10,6 +10,15 @@ function requireEnv(name: string): string {
   return value;
 }
 
+function slugifyFilename(raw: string | undefined): string {
+  const s = (raw || "")
+    .toLowerCase()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return s || "untitled";
+}
+
 // Branch resolution per Tina's Vercel docs:
 // https://tina.io/docs/integration/vercel-branches
 // NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF is exposed to the browser so the admin
@@ -47,12 +56,7 @@ export default defineConfig({
         format: "md",
         ui: {
           filename: {
-            slugify: (values) =>
-              (values?.title || "")
-                .toLowerCase()
-                .replace(/['"]/g, "")
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, ""),
+            slugify: (values) => slugifyFilename(values?.title),
           },
         },
         fields: [
@@ -128,12 +132,7 @@ export default defineConfig({
         format: "md",
         ui: {
           filename: {
-            slugify: (values) =>
-              (values?.name || "")
-                .toLowerCase()
-                .replace(/['"]/g, "")
-                .replace(/[^a-z0-9]+/g, "-")
-                .replace(/^-+|-+$/g, ""),
+            slugify: (values) => slugifyFilename(values?.name),
           },
         },
         fields: [
