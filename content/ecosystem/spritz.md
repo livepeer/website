@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Community
   - Decentralized
-logo: spritz.svg
+logo: /ecosystem/spritz.svg
 order: 13
 madeBy: Spritz
 twitter: https://x.com/spritzchat

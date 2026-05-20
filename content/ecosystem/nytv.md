@@ -5,7 +5,7 @@ description: Independent 24/7 live television station streaming culture and prog
 categories:
   - Streaming
   - Community
-logo: nytv-live.jpg
+logo: /ecosystem/nytv-live.jpg
 order: 11
 madeBy:
 twitter: https://twitter.com/NYTV_

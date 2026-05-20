@@ -209,7 +209,7 @@ input AppFilter {
   url: StringFilter
   description: StringFilter
   categories: StringFilter
-  logo: StringFilter
+  logo: ImageFilter
   order: NumberFilter
   madeBy: StringFilter
   twitter: StringFilter

@@ -5,7 +5,7 @@ description: Independent 24/7 online radio broadcasting live DJ sets from a ship
 categories:
   - Streaming
   - Music
-logo: thelotradio.svg
+logo: /ecosystem/thelotradio.svg
 logoBg: "#FFFFFF"
 order: 8
 madeBy: The Lot Radio

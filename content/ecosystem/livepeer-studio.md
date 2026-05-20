@@ -5,7 +5,7 @@ description: Real-time interactive streaming platform — live video, VOD, and t
 categories:
   - Streaming
   - API
-logo: livepeer-studio.png
+logo: /ecosystem/livepeer-studio.png
 order: 5
 madeBy: Livepeer Inc
 twitter: https://twitter.com/livepeerstudio

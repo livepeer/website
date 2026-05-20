@@ -18,7 +18,9 @@ export default defineConfig({
 
   media: {
     tina: {
-      mediaRoot: "images/blog",
+      // Empty root so the media manager can browse both /images/blog and
+      // /ecosystem. Per-field uploadDir steers new uploads to the right folder.
+      mediaRoot: "",
       publicFolder: "public",
     },
   },
@@ -86,6 +88,7 @@ export default defineConfig({
             name: "image",
             label: "Hero Image",
             type: "image",
+            uploadDir: () => "images/blog",
           },
           {
             name: "imageAlt",
@@ -159,10 +162,9 @@ export default defineConfig({
           },
           {
             name: "logo",
-            label: "Logo filename",
-            type: "string",
-            description:
-              "Filename only (e.g. blueclaw.webp). Drop the file into public/ecosystem/ first.",
+            label: "Logo",
+            type: "image",
+            uploadDir: () => "ecosystem",
           },
           {
             name: "order",

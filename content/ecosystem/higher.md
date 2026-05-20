@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Community
   - Decentralized
-logo: higher-zip.svg
+logo: /ecosystem/higher-zip.svg
 order: 10
 madeBy:
 twitter: https://x.com/higheronchain
