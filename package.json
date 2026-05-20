@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
     "dev:next": "next dev",
-    "build": "tinacms build --skip-cloud-checks --skip-indexing && next build",
+    "build": "tinacms build && next build",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit --incremental false",
