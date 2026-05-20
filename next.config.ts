@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  async rewrites() {
+    return [
+      // Serve the Tina admin SPA at /admin (file lives at public/admin/index.html)
+      { source: "/admin", destination: "/admin/index.html" },
+    ];
+  },
   async redirects() {
     return [
       // Old livepeer.org routes → new site equivalents
