@@ -61,5 +61,4 @@ img/
 !/tina/__generated__/frags.gql
 !/tina/__generated__/queries.gql
 !/tina/__generated__/schema.gql
-/tina/tina-lock.json
 /public/admin/
