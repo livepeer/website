@@ -105,6 +105,91 @@ export default defineConfig({
           },
         ],
       },
+      {
+        name: "app",
+        label: "Ecosystem Apps",
+        path: "content/ecosystem",
+        format: "md",
+        ui: {
+          filename: {
+            slugify: (values) =>
+              (values?.name || "")
+                .toLowerCase()
+                .replace(/['"]/g, "")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, ""),
+          },
+        },
+        fields: [
+          {
+            name: "name",
+            label: "Name",
+            type: "string",
+            isTitle: true,
+            required: true,
+          },
+          {
+            name: "url",
+            label: "URL",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "description",
+            label: "Description",
+            type: "string",
+            ui: { component: "textarea" },
+          },
+          {
+            name: "categories",
+            label: "Categories",
+            type: "string",
+            list: true,
+            options: [
+              "AI Video",
+              "API",
+              "Agents",
+              "Community",
+              "Decentralized",
+              "Generative",
+              "Music",
+              "Self-hosted",
+              "Streaming",
+            ],
+          },
+          {
+            name: "logo",
+            label: "Logo filename",
+            type: "string",
+            description:
+              "Filename only (e.g. blueclaw.webp). Drop the file into public/ecosystem/ first.",
+          },
+          {
+            name: "order",
+            label: "Sort order",
+            type: "number",
+            description: "Lower numbers appear first on the listing page.",
+          },
+          {
+            name: "madeBy",
+            label: "Made by",
+            type: "string",
+          },
+          { name: "twitter", label: "Twitter / X URL", type: "string" },
+          { name: "github", label: "GitHub URL", type: "string" },
+          { name: "contact", label: "Contact email or URL", type: "string" },
+          { name: "docs", label: "Docs URL", type: "string" },
+          { name: "support", label: "Support URL", type: "string" },
+          { name: "terms", label: "Terms URL", type: "string" },
+          { name: "privacy", label: "Privacy URL", type: "string" },
+          {
+            name: "body",
+            label: "Body",
+            type: "rich-text",
+            isBody: true,
+          },
+        ],
+      },
     ],
   },
 });

@@ -15,3 +15,22 @@ fragment PostParts on Post {
   draft
   body
 }
+
+fragment AppParts on App {
+  __typename
+  name
+  url
+  description
+  categories
+  logo
+  order
+  madeBy
+  twitter
+  github
+  contact
+  docs
+  support
+  terms
+  privacy
+  body
+}

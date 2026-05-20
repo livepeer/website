@@ -56,10 +56,13 @@ type Query {
   document(collection: String, relativePath: String): DocumentNode!
   post(relativePath: String): Post!
   postConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PostFilter): PostConnection!
+  app(relativePath: String): App!
+  appConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: AppFilter): AppConnection!
 }
 
 input DocumentFilter {
   post: PostFilter
+  app: AppFilter
 }
 
 type DocumentConnectionEdges {
@@ -85,7 +88,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Post | Folder
+union DocumentNode = Post | App | Folder
 
 type PostAuthor {
   name: String
@@ -170,6 +173,66 @@ type PostConnection implements Connection {
   edges: [PostConnectionEdges]
 }
 
+type App implements Node & Document {
+  name: String!
+  url: String!
+  description: String
+  categories: [String]
+  logo: String
+  order: Float
+  madeBy: String
+  twitter: String
+  github: String
+  contact: String
+  docs: String
+  support: String
+  terms: String
+  privacy: String
+  body: JSON
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input NumberFilter {
+  lt: Float
+  lte: Float
+  gte: Float
+  gt: Float
+  eq: Float
+  exists: Boolean
+  in: [Float]
+}
+
+input AppFilter {
+  name: StringFilter
+  url: StringFilter
+  description: StringFilter
+  categories: StringFilter
+  logo: StringFilter
+  order: NumberFilter
+  madeBy: StringFilter
+  twitter: StringFilter
+  github: StringFilter
+  contact: StringFilter
+  docs: StringFilter
+  support: StringFilter
+  terms: StringFilter
+  privacy: StringFilter
+  body: RichTextFilter
+}
+
+type AppConnectionEdges {
+  cursor: String!
+  node: App
+}
+
+type AppConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [AppConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
@@ -178,15 +241,19 @@ type Mutation {
   createFolder(collection: String, relativePath: String!): DocumentNode!
   updatePost(relativePath: String!, params: PostMutation!): Post!
   createPost(relativePath: String!, params: PostMutation!): Post!
+  updateApp(relativePath: String!, params: AppMutation!): App!
+  createApp(relativePath: String!, params: AppMutation!): App!
 }
 
 input DocumentUpdateMutation {
   post: PostMutation
+  app: AppMutation
   relativePath: String
 }
 
 input DocumentMutation {
   post: PostMutation
+  app: AppMutation
 }
 
 input PostAuthorMutation {
@@ -204,6 +271,24 @@ input PostMutation {
   image: String
   imageAlt: String
   draft: Boolean
+  body: JSON
+}
+
+input AppMutation {
+  name: String
+  url: String
+  description: String
+  categories: [String]
+  logo: String
+  order: Float
+  madeBy: String
+  twitter: String
+  github: String
+  contact: String
+  docs: String
+  support: String
+  terms: String
+  privacy: String
   body: JSON
 }
 
