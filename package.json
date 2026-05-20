@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
     "dev:next": "next dev",
-    "build": "tinacms build && next build",
+    "build": "if [ \"$VERCEL_ENV\" = \"production\" ]; then tinacms build && next build; else tinacms build --skip-cloud-checks --skip-indexing && next build; fi",
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit --incremental false",
