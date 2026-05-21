@@ -5,7 +5,7 @@ description: Open-source network for embodied AI avatars — real-time tutoring,
 categories:
   - AI Video
   - Agents
-logo: embody.svg
+logo: /ecosystem/embody.svg
 order: 7
 madeBy: DeFine + Dane
 twitter:

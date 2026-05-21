@@ -5,7 +5,7 @@ description: Custom branded community apps with courses, live calls, and payment
 categories:
   - Streaming
   - Community
-logo: tribesocial.webp
+logo: /ecosystem/tribesocial.webp
 order: 9
 madeBy: Tribe Social
 twitter: https://twitter.com/TribeSocialApp

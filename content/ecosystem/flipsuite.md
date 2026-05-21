@@ -6,7 +6,7 @@ categories:
   - Community
   - Agents
   - API
-logo: flipsuite.png
+logo: /ecosystem/flipsuite.png
 order: 6
 madeBy: Flipsuite
 twitter: https://x.com/flipsuitexyz

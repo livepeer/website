@@ -1,0 +1,36 @@
+fragment PostParts on Post {
+  __typename
+  title
+  description
+  date
+  author {
+    __typename
+    name
+    avatar
+  }
+  category
+  tags
+  image
+  imageAlt
+  draft
+  body
+}
+
+fragment AppParts on App {
+  __typename
+  name
+  url
+  description
+  categories
+  logo
+  order
+  madeBy
+  twitter
+  github
+  contact
+  docs
+  support
+  terms
+  privacy
+  body
+}

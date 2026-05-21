@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Self-hosted
   - API
-logo: frameworks.svg
+logo: /ecosystem/frameworks.svg
 order: 2
 madeBy: DDVTech
 twitter: https://x.com/GetFrames

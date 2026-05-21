@@ -50,3 +50,15 @@ img/
 .vscode/
 *.code-workspace
 .playwright-mcp/
+
+# tinacms — commit only the schema artifacts Tina Cloud reads from main.
+# `client.ts` and `types.ts` embed the build-time TINA_TOKEN, so leave them
+# uncommitted; they regenerate on every `tinacms dev` / `tinacms build`.
+/tina/__generated__/*
+!/tina/__generated__/_graphql.json
+!/tina/__generated__/_lookup.json
+!/tina/__generated__/_schema.json
+!/tina/__generated__/frags.gql
+!/tina/__generated__/queries.gql
+!/tina/__generated__/schema.gql
+/public/admin/
