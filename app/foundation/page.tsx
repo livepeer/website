@@ -1033,7 +1033,7 @@ export default function FoundationPage() {
             aria-hidden="true"
             style={{
               background:
-                "linear-gradient(to bottom, transparent, var(--background))",
+                "linear-gradient(to bottom, transparent, var(--page-background))",
               zIndex: 14,
             }}
           />

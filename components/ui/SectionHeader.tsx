@@ -7,16 +7,18 @@ export default function SectionHeader({
   action,
 }: {
   label?: string;
-  title: string;
+  title: React.ReactNode;
   description?: string;
   align?: "left" | "center" | "split";
-  size?: "default" | "small";
+  size?: "default" | "small" | "compact";
   action?: React.ReactNode;
 }) {
   const headingClass =
-    size === "small"
-      ? "text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-balance"
-      : "text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance";
+    size === "compact"
+      ? "text-2xl font-bold tracking-tight sm:text-3xl lg:text-[38px] lg:leading-[1.1] text-balance"
+      : size === "small"
+        ? "text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-balance"
+        : "text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance";
 
   if (align === "split") {
     const splitHeadingClass =

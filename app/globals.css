@@ -40,6 +40,19 @@
   --font-mono: var(--font-favorit-mono), ui-monospace, monospace;
 }
 
+/* Page-level background — like --color-background but NEVER overridden by
+   nested .theme-dark scopes. Use this when something inside a theme-dark
+   block needs to know what color the surrounding page is. */
+:root {
+  --page-background: #121212;
+  /* Reference-card "paper" background for the token-page construction card */
+  --paper-bg: #1a1812;
+}
+html[data-theme="light"] {
+  --page-background: #ffffff;
+  --paper-bg: #f5f0e6;
+}
+
 /* ── Dark theme (default) ──────────────────────────────────────── */
 :root {
   --color-background: #121212;
@@ -58,6 +71,16 @@
   /* Card hairline — divider between dark visual and light body inside cards.
      Tuned per theme so dark mode stays anchored, light mode reads as a soft fold. */
   --card-hairline: rgba(255, 255, 255, 0.15);
+  /* Visual accent colors — brighter neon in dark, deeper brand in light.
+     Used inside the UseCases visuals so emerald/blue keep their visual
+     weight when flipped onto a light background. */
+  --vis-accent-green: #40bf86;
+  --vis-accent-blue: #60a5fa;
+  --vis-green-soft: rgba(64, 191, 134, 0.18);
+  --vis-green-mid: rgba(64, 191, 134, 0.35);
+  --vis-green-strong: rgba(64, 191, 134, 0.55);
+  --vis-blue-soft: rgba(96, 165, 250, 0.35);
+  --vis-blue-mid: rgba(96, 165, 250, 0.7);
   --hero-base: linear-gradient(160deg, #030d09 0%, #051a10 40%, #071e14 100%);
   --hero-vignette: rgba(6, 6, 6, 0.7);
   --hero-overlay-center: rgba(4, 6, 5, 0.78);
@@ -93,6 +116,13 @@
   --grid-line-faint: rgba(255, 255, 255, 0.06);
   --grid-line-subtle: rgba(255, 255, 255, 0.10);
   --card-hairline: rgba(255, 255, 255, 0.15);
+  --vis-accent-green: #40bf86;
+  --vis-accent-blue: #60a5fa;
+  --vis-green-soft: rgba(64, 191, 134, 0.18);
+  --vis-green-mid: rgba(64, 191, 134, 0.35);
+  --vis-green-strong: rgba(64, 191, 134, 0.55);
+  --vis-blue-soft: rgba(96, 165, 250, 0.35);
+  --vis-blue-mid: rgba(96, 165, 250, 0.7);
   --hero-base: linear-gradient(160deg, #030d09 0%, #051a10 40%, #071e14 100%);
   --hero-vignette: rgba(6, 6, 6, 0.7);
   --hero-overlay-center: rgba(4, 6, 5, 0.78);
@@ -124,6 +154,14 @@ html[data-theme="light"] {
   --grid-line-faint: rgba(18, 18, 18, 0.05);
   --grid-line-subtle: rgba(18, 18, 18, 0.08);
   --card-hairline: rgba(18, 18, 18, 0.07);
+  /* In light mode, use deeper brand colors so accents read with weight */
+  --vis-accent-green: #18794e;
+  --vis-accent-blue: #146a8f;
+  --vis-green-soft: rgba(24, 121, 78, 0.32);
+  --vis-green-mid: rgba(24, 121, 78, 0.55);
+  --vis-green-strong: rgba(24, 121, 78, 0.85);
+  --vis-blue-soft: rgba(20, 106, 143, 0.45);
+  --vis-blue-mid: rgba(20, 106, 143, 0.78);
   --hero-base: linear-gradient(160deg, #f3faf5 0%, #ebf6ef 40%, #e6f3eb 100%);
   --hero-vignette: rgba(255, 255, 255, 0.55);
   --hero-overlay-center: rgba(255, 255, 255, 0.82);
@@ -401,6 +439,56 @@ html[data-theme="light"] .hero-cta-secondary:hover {
   50% {
     transform: translateX(3px);
     opacity: 0.5;
+  }
+}
+
+/* Token page coin — very slow rotation, almost imperceptible at idle */
+@keyframes tokenSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Token diagram — staggered mark-square entrance */
+@keyframes markSquareIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Token diagram — thin brand-green scan line traversing the diagram */
+@keyframes diagramScan {
+  0% {
+    transform: translateY(-220px);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(220px);
+    opacity: 0;
+  }
+}
+
+/* Token diagram — construction guides drawing on */
+@keyframes guideDrawIn {
+  from {
+    stroke-dashoffset: var(--dash-length, 600);
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

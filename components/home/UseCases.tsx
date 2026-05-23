@@ -21,7 +21,7 @@ function WorldsVisual() {
       className="relative h-full overflow-hidden bg-surface"
     >
       {/* Sky gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#080f0c] via-[#060d0a] to-[#0a0a0a] light:from-[#f4faf6] light:via-[#edf5ef] light:to-[#e5eee9]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#080f0c] via-[#060d0a] to-[#0a0a0a] light:from-[#eef8f1] light:via-[#e5f2e9] light:to-[#daede1]" />
 
       {/* Stars */}
       {[
@@ -65,17 +65,17 @@ function WorldsVisual() {
           {/* Far mountains */}
           <path
             d="M0 80 L40 45 L80 65 L130 30 L180 55 L220 25 L270 50 L320 35 L360 55 L400 40 V120 H0Z"
-            fill="rgba(24,121,78,0.18)"
+            fill="var(--vis-green-soft)"
           />
           {/* Mid hills */}
           <path
             d="M0 95 L50 70 L100 85 L160 60 L210 78 L260 65 L320 80 L370 70 L400 82 V120 H0Z"
-            fill="rgba(24,121,78,0.25)"
+            fill="var(--vis-green-mid)"
           />
           {/* Foreground */}
           <path
             d="M0 105 L60 92 L120 100 L180 88 L240 98 L300 90 L360 96 L400 92 V120 H0Z"
-            fill="rgba(24,121,78,0.35)"
+            fill="var(--vis-green-strong)"
           />
           {/* Grid lines overlaying terrain */}
           {[0, 50, 100, 150, 200, 250, 300, 350, 400].map((x) => (
@@ -109,9 +109,9 @@ function WorldsVisual() {
         style={{
           left: 0,
           background:
-            "linear-gradient(to bottom, transparent, rgba(64,191,134,0.5) 30%, rgba(64,191,134,0.8) 50%, rgba(64,191,134,0.5) 70%, transparent)",
+            "linear-gradient(to bottom, transparent, color-mix(in srgb, var(--vis-accent-green) 60%, transparent) 30%, var(--vis-accent-green) 50%, color-mix(in srgb, var(--vis-accent-green) 60%, transparent) 70%, transparent)",
           boxShadow:
-            "0 0 8px rgba(64,191,134,0.4), 0 0 20px rgba(64,191,134,0.2)",
+            "0 0 8px color-mix(in srgb, var(--vis-accent-green) 50%, transparent), 0 0 20px color-mix(in srgb, var(--vis-accent-green) 25%, transparent)",
           opacity: inView ? 1 : 0,
           animation: inView ? "generateSweep 4.5s linear forwards" : "none",
         }}
@@ -176,7 +176,7 @@ function AvatarsVisual() {
   ];
   return (
     <div className="relative h-full overflow-hidden bg-surface">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f0f3f8] light:via-[#e7ecf3] light:to-[#f0f3f8]" />
       <div className="relative flex h-full items-center justify-center gap-4 px-4 py-5">
         {/* Input */}
         <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-foreground/[0.1] bg-card">
@@ -195,7 +195,7 @@ function AvatarsVisual() {
                 y1={pts[a][1]}
                 x2={pts[b][0]}
                 y2={pts[b][1]}
-                stroke="rgba(96,165,250,0.35)"
+                stroke="var(--vis-blue-soft)"
                 strokeWidth="0.5"
               />
             ))}
@@ -205,7 +205,7 @@ function AvatarsVisual() {
                 cx={x}
                 cy={y}
                 r="1"
-                fill="rgba(96,165,250,0.7)"
+                fill="var(--vis-blue-mid)"
                 style={{
                   animation: "breathe 4s ease-in-out infinite",
                   animationDelay: `${i * 0.15}s`,
@@ -347,14 +347,17 @@ function TrackingBox({
           <div
             className="absolute inset-0 rounded-sm"
             style={{
-              border: `1.5px solid ${d.color}66`,
-              boxShadow: `0 0 6px ${d.color}25, 0 0 14px ${d.color}10`,
+              border: `1.5px solid color-mix(in srgb, ${d.color} 60%, transparent)`,
+              boxShadow: `0 0 6px color-mix(in srgb, ${d.color} 25%, transparent), 0 0 14px color-mix(in srgb, ${d.color} 12%, transparent)`,
             }}
           />
           {/* Label + confidence */}
           <div
             className="absolute -top-3.5 left-0 flex items-center gap-1 rounded-sm px-1 py-px font-mono text-[7px]"
-            style={{ background: `${d.color}25`, color: `${d.color}cc` }}
+            style={{
+              background: `color-mix(in srgb, ${d.color} 18%, transparent)`,
+              color: `color-mix(in srgb, ${d.color} 90%, transparent)`,
+            }}
           >
             <span>{d.label}</span>
             <span style={{ opacity: 0.6 }}>{conf.toFixed(2)}</span>
@@ -373,7 +376,7 @@ const analysisDetections: Detection[] = [
     w: 20,
     h: 40,
     label: "person",
-    color: "#34d399",
+    color: "var(--vis-accent-green)",
     conf: 0.94,
     drift: { freqX: 0.3, freqY: 0.18, amtX: 8, amtY: 12 },
     sil: { left: "15%", top: "7.5%", w: "35%", h: "95%", opacity: 0.06 },
@@ -384,7 +387,7 @@ const analysisDetections: Detection[] = [
     w: 16,
     h: 32,
     label: "person",
-    color: "#34d399",
+    color: "var(--vis-accent-green)",
     conf: 0.87,
     drift: { freqX: 0.22, freqY: 0.28, amtX: 6, amtY: 10 },
     sil: { left: "12.5%", top: "9.4%", w: "37.5%", h: "87.5%", opacity: 0.045 },
@@ -395,7 +398,7 @@ const analysisDetections: Detection[] = [
     w: 30,
     h: 18,
     label: "vehicle",
-    color: "#60a5fa",
+    color: "var(--vis-accent-blue)",
     conf: 0.91,
     drift: { freqX: 0.15, freqY: 0.35, amtX: 14, amtY: 3 },
     sil: { left: "6.7%", top: "11.1%", w: "86.7%", h: "66.7%", opacity: 0.03 },
@@ -495,7 +498,7 @@ function PipelinesVisual() {
   const nodeY = 14;
   return (
     <div className="relative h-full overflow-hidden bg-surface">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#eef6f0] light:via-[#e5efe8] light:to-[#eef6f0]" />
 
       {/* Pipeline node graph */}
       <div className="absolute inset-x-3 top-3 bottom-10 flex items-center justify-center">
@@ -523,7 +526,7 @@ function PipelinesVisual() {
                   style={{ animation: "dashFlow 1.5s linear infinite" }}
                 />
                 {/* Data packet */}
-                <circle r="2.5" cy={cy} fill="#40bf86">
+                <circle r="2.5" cy={cy} fill="var(--vis-accent-green)">
                   <animate
                     attributeName="cx"
                     from={x1}
@@ -542,7 +545,7 @@ function PipelinesVisual() {
                   />
                 </circle>
                 {/* Second staggered packet */}
-                <circle r="2" cy={cy} fill="#40bf86">
+                <circle r="2" cy={cy} fill="var(--vis-accent-green)">
                   <animate
                     attributeName="cx"
                     from={x1}
@@ -575,11 +578,11 @@ function PipelinesVisual() {
                 rx="5"
                 fill={
                   node.active
-                    ? "rgba(24,121,78,0.25)"
+                    ? "var(--vis-green-mid)"
                     : "color-mix(in srgb, currentColor 5%, transparent)"
                 }
                 stroke={
-                  node.active ? "rgba(24,121,78,0.7)" : "color-mix(in srgb, currentColor 12%, transparent)"
+                  node.active ? "var(--vis-green-strong)" : "color-mix(in srgb, currentColor 12%, transparent)"
                 }
                 strokeWidth="1"
                 style={
@@ -596,7 +599,7 @@ function PipelinesVisual() {
                 className="font-mono"
                 fontSize="9"
                 fill={
-                  node.active ? "rgba(64,191,134,0.9)" : "color-mix(in srgb, currentColor 50%, transparent)"
+                  node.active ? "var(--vis-accent-green)" : "color-mix(in srgb, currentColor 50%, transparent)"
                 }
               >
                 {node.label}
@@ -627,7 +630,7 @@ function TranscodingVisual() {
   ];
   return (
     <div className="relative h-full overflow-hidden bg-surface">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f3eb] light:via-[#efece2] light:to-[#f5f3eb]" />
 
       {/* Mini player chrome */}
       <div className="absolute inset-x-3 top-3 bottom-10 rounded-md border border-foreground/[0.1] bg-card overflow-hidden">
@@ -759,7 +762,7 @@ export default function UseCases() {
             />
           </motion.div>
 
-          <div className="mt-20 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
+          <div className="mt-20 grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-6 lg:gap-y-6">
             {useCases.map((useCase) => (
               <motion.div
                 key={useCase.title}
@@ -770,7 +773,13 @@ export default function UseCases() {
                 <div className="relative block h-full overflow-hidden rounded-xl border border-foreground/[0.07] bg-card">
                   {/* Dark visual — edge-to-edge specimen frame */}
                   <div
-                    className={`relative ${useCase.colSpan === 4 ? "h-[200px] lg:h-[260px]" : "h-[200px]"}`}
+                    className={`relative ${
+                      useCase.colSpan === 6
+                        ? "h-[200px] lg:h-[240px]"
+                        : useCase.colSpan === 4
+                          ? "h-[200px] lg:h-[290px]"
+                          : "h-[200px] lg:h-[220px]"
+                    }`}
                   >
                     <useCase.Visual />
                     {/* Hairline divider where screen meets body */}
