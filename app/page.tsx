@@ -8,7 +8,7 @@ import CommunityCTA from "@/components/home/CommunityCTA";
 import { getAppBySlug } from "@/lib/ecosystem";
 import { getAllPosts } from "@/lib/blog";
 
-const FEATURED_SLUGS = ["daydream", "frameworks", "streamplace", "embody"];
+const FEATURED_SLUGS = ["daydream", "frameworks", "streamplace"];
 
 export default function Home() {
   const builtOnLivepeerMeta: BuiltOnLivepeerMeta = Object.fromEntries(

@@ -980,7 +980,7 @@ export default function FoundationPage() {
       <div className="relative overflow-hidden">
         <TileGrid />
 
-        <section className="relative flex min-h-screen items-center">
+        <section className="theme-dark relative flex min-h-screen items-center bg-background text-foreground">
           {/* Dark B&W background photograph */}
           <img
             src="/images/foundation-hero.png"
@@ -1012,13 +1012,13 @@ export default function FoundationPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <p className="mb-6 font-mono text-xs font-medium tracking-wider text-white/60 uppercase">
+              <p className="mb-6 font-mono text-xs font-medium tracking-wider text-foreground/60 uppercase">
                 The Livepeer Foundation
               </p>
-              <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-7xl">
+              <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-7xl">
                 Stewarding the World&apos;s Open Video Infrastructure
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/65 lg:text-xl text-pretty">
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-foreground/65 lg:text-xl text-pretty">
                 The Livepeer Foundation is a neutral, non-profit steward of the
                 Livepeer protocol, coordinating long-term strategy, core
                 development and ecosystem growth to strengthen and expand the
@@ -1032,7 +1032,8 @@ export default function FoundationPage() {
             className="pointer-events-none absolute bottom-0 left-0 right-0 h-48"
             aria-hidden="true"
             style={{
-              background: "linear-gradient(to bottom, transparent, #121212)",
+              background:
+                "linear-gradient(to bottom, transparent, var(--background))",
               zIndex: 14,
             }}
           />
@@ -1042,7 +1043,7 @@ export default function FoundationPage() {
       {/* ---- Mission ---- */}
       <section className="relative flex items-center justify-center py-24 sm:py-36 lg:py-48">
         <div className="relative px-6 text-center md:px-0 max-w-[90vw] md:max-w-[55.55vw]">
-          <p className="absolute inset-x-0 -top-12 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+          <p className="absolute inset-x-0 -top-12 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
             Our Mission
           </p>
           <ScrollRevealMission />
@@ -1078,18 +1079,18 @@ export default function FoundationPage() {
                     key={pillar.num}
                     variants={fadeUp}
                     transition={{ duration: 0.5 }}
-                    className="flex flex-col rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-8"
+                    className="theme-dark text-foreground flex flex-col rounded-xl border border-foreground/[0.07] bg-[#1a1a1a] p-8"
                   >
-                    <p className="font-mono text-[11px] tracking-wider text-white/25">
+                    <p className="font-mono text-[11px] tracking-wider text-foreground/25">
                       {pillar.num}{" "}
-                      <span className="ml-1.5 text-white/40">
+                      <span className="ml-1.5 text-foreground/40">
                         {pillar.title}
                       </span>
                     </p>
                     <div className="my-6 h-44 w-full">
                       <Illus />
                     </div>
-                    <h3 className="mt-auto text-xl font-medium leading-snug text-white lg:text-2xl">
+                    <h3 className="mt-auto text-xl font-medium leading-snug text-foreground lg:text-2xl">
                       {pillar.description}
                     </h3>
                   </motion.div>
@@ -1127,18 +1128,18 @@ export default function FoundationPage() {
                     key={value.title}
                     variants={fadeUp}
                     transition={{ duration: 0.5 }}
-                    className="flex flex-col rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-8"
+                    className="theme-dark text-foreground flex flex-col rounded-xl border border-foreground/[0.07] bg-[#1a1a1a] p-8"
                   >
-                    <p className="font-mono text-[11px] tracking-wider text-white/25">
+                    <p className="font-mono text-[11px] tracking-wider text-foreground/25">
                       0{i + 1}{" "}
-                      <span className="ml-1.5 text-white/40">
+                      <span className="ml-1.5 text-foreground/40">
                         {value.title}
                       </span>
                     </p>
                     <div className="my-6 h-44 w-full">
                       <Illus />
                     </div>
-                    <h3 className="mt-auto text-xl font-medium leading-snug text-white lg:text-2xl">
+                    <h3 className="mt-auto text-xl font-medium leading-snug text-foreground lg:text-2xl">
                       {value.description}
                     </h3>
                   </motion.div>

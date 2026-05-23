@@ -39,9 +39,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${favoritPro.variable} ${favoritMono.variable}`}
     >
       <head>
+        {/* No-FOUC theme init — must run synchronously before paint so
+            the user's stored preference is applied before any CSS resolves.
+            We use a raw <script> via dangerouslySetInnerHTML rather than
+            `next/script` with beforeInteractive: in the App Router, that
+            strategy doesn't actually inject a synchronous inline tag for
+            children content (it encodes the source as JSON data for
+            Next's runtime to evaluate post-hydration). A raw inline script
+            in <head> is the only reliable pre-paint hook. */}
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('theme');var t;if(s==='system'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}else if(s==='light'||s==='dark'){t=s;}else{t='dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+          }}
+        />
         {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (
           <>
             {/* Google Analytics 4 */}
@@ -75,7 +90,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className="flex min-h-screen flex-col bg-dark font-sans text-white antialiased">
+      <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

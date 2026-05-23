@@ -44,13 +44,10 @@ export default function ImageMask({
       className={`relative overflow-hidden ${className}`}
       style={{ containerType: "inline-size" }}
     >
-      {/* Layer 0: Dark green base */}
+      {/* Layer 0: Theme-aware base — dark green in dark mode, pale green in light mode */}
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(160deg, #030d09 0%, #051a10 40%, #071e14 100%)",
-        }}
+        style={{ background: "var(--hero-base)" }}
       />
 
       {/* Layer 1: Media (B&W, darkened) */}
@@ -66,7 +63,7 @@ export default function ImageMask({
             playsInline
             className="h-full w-full object-cover"
             style={{
-              filter: "contrast(1.1) brightness(0.5)",
+              filter: "var(--hero-media-filter)",
             }}
           />
         ) : src ? (
@@ -75,7 +72,7 @@ export default function ImageMask({
             alt={alt || ""}
             className="h-full w-full object-cover"
             style={{
-              filter: "contrast(1.1) brightness(0.5)",
+              filter: "var(--hero-media-filter)",
             }}
           />
         ) : null}
@@ -85,8 +82,7 @@ export default function ImageMask({
           <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(160deg, rgba(24,121,78,0.22) 0%, rgba(13,61,43,0.32) 50%, rgba(24,121,78,0.18) 100%)",
+              background: "var(--hero-tint)",
               mixBlendMode: "multiply",
             }}
           />
@@ -114,8 +110,8 @@ export default function ImageMask({
                 tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
               WebkitBackdropFilter:
                 tile.blur > 0 ? `blur(${tile.blur}px) saturate(1.4)` : "none",
-              borderRight: "1px solid rgba(255,255,255,0.18)",
-              borderBottom: "1px solid rgba(255,255,255,0.18)",
+              borderRight: "1px solid var(--grid-line-strong)",
+              borderBottom: "1px solid var(--grid-line-strong)",
             }}
           />
         ))}
@@ -145,7 +141,7 @@ export default function ImageMask({
         aria-hidden="true"
         style={{
           background:
-            "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 30%, rgba(6,6,6,0.7) 100%)",
+            "radial-gradient(ellipse 75% 70% at 50% 50%, transparent 30%, var(--hero-vignette) 100%)",
         }}
       />
     </div>

@@ -66,7 +66,17 @@ export default function CommunityCTA() {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(to bottom, #121212 0%, #121212 20%, transparent 100%)",
+            "linear-gradient(to bottom, var(--color-background) 0%, var(--color-background) 20%, transparent 100%)",
+        }}
+      />
+
+      {/* Bottom fade — blends into footer */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-64"
+        aria-hidden="true"
+        style={{
+          background:
+            "linear-gradient(to top, var(--color-background) 0%, var(--color-background) 20%, transparent 100%)",
         }}
       />
 
@@ -77,6 +87,7 @@ export default function CommunityCTA() {
       <div
         className="pointer-events-none absolute inset-0 opacity-15"
         aria-hidden="true"
+        style={{ filter: "blur(2px)" }}
       >
         <ImageMask
           video="/videos/ai-face.mp4"
@@ -99,13 +110,13 @@ export default function CommunityCTA() {
             transition={{ duration: 0.4 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
               The Network
             </p>
             <h2 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
               Powered by independent GPU providers
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty">
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty">
               Livepeer is a global network of independent GPU providers,
               builders, and engineers who run the network and shape its
               direction. Open-source. Permissionless.
@@ -113,11 +124,7 @@ export default function CommunityCTA() {
             <div className="mt-8">
               <a
                 href="/primer"
-                className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-                }}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-200 hover:bg-foreground/90 active:bg-foreground/80"
               >
                 About the network <span aria-hidden="true">→</span>
               </a>
@@ -133,14 +140,14 @@ export default function CommunityCTA() {
                 rel="noopener noreferrer"
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className="group flex items-start gap-4 rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-6 transition-colors duration-200 hover:border-white/[0.12]"
+                className="group flex items-start gap-4 rounded-xl border border-foreground/[0.07] bg-card p-6 transition-colors duration-200 hover:border-foreground/[0.12]"
               >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-green transition-colors duration-200 group-hover:border-white/[0.10]">
+                <div className="icon-accent flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-foreground/[0.06] bg-foreground/[0.03] transition-colors duration-200 group-hover:border-foreground/[0.10]">
                   {resource.icon}
                 </div>
                 <div>
                   <h3 className="text-sm font-medium">{resource.name}</h3>
-                  <p className="mt-1 text-sm text-white/50">
+                  <p className="mt-1 text-sm text-foreground/50">
                     {resource.description}
                   </p>
                 </div>

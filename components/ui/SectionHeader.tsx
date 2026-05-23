@@ -27,7 +27,7 @@ export default function SectionHeader({
     return (
       <div>
         {label && (
-          <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+          <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
             {label}
           </p>
         )}
@@ -36,7 +36,7 @@ export default function SectionHeader({
             {title}
           </h2>
           {description && (
-            <p className="max-w-md text-xl leading-relaxed text-white/50 text-pretty lg:max-w-[30rem]">
+            <p className="max-w-md text-xl leading-relaxed text-foreground/50 text-pretty lg:max-w-[30rem]">
               {description}
             </p>
           )}
@@ -48,7 +48,7 @@ export default function SectionHeader({
   return (
     <div className={align === "center" ? "text-center" : ""}>
       {label && (
-        <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+        <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
           {label}
         </p>
       )}
@@ -62,7 +62,7 @@ export default function SectionHeader({
       )}
       {description && (
         <p
-          className={`mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty ${align === "center" ? "mx-auto" : ""}`}
+          className={`mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty ${align === "center" ? "mx-auto" : ""}`}
         >
           {description}
         </p>

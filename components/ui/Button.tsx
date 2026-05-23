@@ -4,12 +4,12 @@ type Variant = "primary" | "secondary" | "white" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const variantStyles: Record<Variant, string> = {
-  primary: "bg-green text-white hover:bg-green-light active:bg-green-dark",
+  primary: "cta-primary text-white hover:brightness-110 active:brightness-95",
   secondary:
-    "border border-white/20 text-white hover:bg-white/10 active:bg-white/5",
+    "border border-foreground/20 text-foreground hover:bg-foreground/10 active:bg-foreground/5",
   white:
-    "bg-white text-black hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-30",
-  ghost: "text-white/70 hover:text-white hover:bg-white/5",
+    "bg-foreground text-background hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-30",
+  ghost: "text-foreground/70 hover:text-foreground hover:bg-foreground/5",
 };
 
 const sizeStyles: Record<Size, string> = {

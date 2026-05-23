@@ -28,8 +28,8 @@ function StatCell({
       <div className="font-mono text-5xl font-bold text-gradient lg:text-6xl">
         {display}
       </div>
-      <div className="mt-3 text-sm font-medium text-white/70">{label}</div>
-      <p className="mt-1 text-xs text-white/30">{description}</p>
+      <div className="mt-3 text-sm font-medium text-foreground/70">{label}</div>
+      <p className="mt-1 text-xs text-foreground/30">{description}</p>
     </div>
   );
 }
@@ -54,20 +54,20 @@ export default function NetworkStats() {
             transition={{ duration: 0.4 }}
             className="text-center"
           >
-            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-white/30 uppercase">
+            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
               Proven at Scale
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
               Proven at scale
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/50 text-pretty">
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty">
               The Livepeer network is live, battle-tested, and growing every
               day.
             </p>
           </motion.div>
 
           <motion.div
-            className="mt-16 overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]"
+            className="mt-16 overflow-hidden rounded-xl border border-foreground/[0.07] bg-[#1a1a1a]"
             variants={{
               hidden: { opacity: 0, y: 12 },
               visible: { opacity: 1, y: 0 },
@@ -88,7 +88,7 @@ export default function NetworkStats() {
                 label="Total stake"
                 description="LPT staked securing the network"
               />
-              <div className="border-t border-white/[0.07] lg:border-t-0">
+              <div className="border-t border-foreground/[0.07] lg:border-t-0">
                 <StatCell
                   target={150}
                   suffix="M+"
@@ -96,7 +96,7 @@ export default function NetworkStats() {
                   description="Video processed through the network to date"
                 />
               </div>
-              <div className="border-t border-white/[0.07] lg:border-t-0">
+              <div className="border-t border-foreground/[0.07] lg:border-t-0">
                 <StatCell
                   target={99}
                   suffix=".9%"

@@ -19,8 +19,8 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
         href={item.href}
         className={`select-none rounded-full px-3.5 py-1.5 text-sm transition-all ${
           active
-            ? "bg-white/10 text-white font-medium"
-            : "text-white/50 hover:text-white hover:bg-white/[0.06]"
+            ? "bg-foreground/10 text-foreground font-medium"
+            : "text-foreground/50 hover:text-foreground hover:bg-foreground/[0.06]"
         }`}
       >
         {item.label}
@@ -46,8 +46,8 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
       <button
         className={`cursor-pointer select-none flex items-center gap-1 rounded-full px-3.5 py-1.5 text-sm transition-all ${
           open
-            ? "text-white bg-white/[0.06]"
-            : "text-white/50 hover:text-white hover:bg-white/[0.06]"
+            ? "text-foreground bg-foreground/[0.06]"
+            : "text-foreground/50 hover:text-foreground hover:bg-foreground/[0.06]"
         }`}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
@@ -66,7 +66,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
 
       {open && (
         <div className="absolute left-1/2 top-full z-50 pt-2 -translate-x-1/2">
-          <div className="min-w-[220px] rounded-xl border border-white/10 bg-dark/95 p-1.5 shadow-xl shadow-black/30 backdrop-blur-xl">
+          <div className="min-w-[220px] rounded-xl border border-foreground/10 bg-background/95 p-1.5 shadow-xl shadow-black/30 backdrop-blur-xl">
             {item.children.map((child) => {
               const isExternal = child.external;
               const Tag = isExternal ? "a" : Link;
@@ -79,14 +79,14 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
                   key={child.label}
                   href={child.href}
                   onClick={() => setOpen(false)}
-                  className="select-none flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
+                  className="select-none flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
                   {...extraProps}
                 >
                   {child.label}
 
                   {isExternal && (
                     <svg
-                      className="ml-auto h-3 w-3 text-white/30"
+                      className="ml-auto h-3 w-3 text-foreground/30"
                       fill="none"
                       viewBox="0 0 12 12"
                       stroke="currentColor"
@@ -156,8 +156,8 @@ export default function Header() {
           <div
             className={`flex items-center gap-1.5 rounded-full border px-3 py-2 transition-all duration-300 ${
               scrolled
-                ? "border-white/10 bg-dark/80 shadow-lg shadow-black/20 backdrop-blur-xl"
-                : "border-white/[0.06] bg-dark/40 backdrop-blur-md"
+                ? "border-foreground/10 bg-background/80 shadow-lg shadow-black/20 backdrop-blur-xl"
+                : "border-foreground/[0.06] bg-background/40 backdrop-blur-md"
             }`}
           >
             {/* Logo */}
@@ -166,11 +166,11 @@ export default function Header() {
               className="flex flex-shrink-0 items-center rounded-full px-2 py-1"
               aria-label="Livepeer home"
             >
-              <LivepeerWordmark className="h-3.5 w-auto text-white" />
+              <LivepeerWordmark className="h-3.5 w-auto text-foreground" />
             </Link>
 
             {/* Separator */}
-            <div className="mx-1 h-5 w-px bg-white/10" />
+            <div className="mx-1 h-5 w-px bg-foreground/10" />
 
             {/* Desktop nav links */}
             <nav
@@ -188,7 +188,7 @@ export default function Header() {
                 href="https://discord.gg/livepeer"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-dark transition-colors hover:bg-white/90 active:bg-white/80 select-none"
+                className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90 active:bg-foreground/80 select-none"
               >
                 Join Discord
                 <svg
@@ -209,24 +209,24 @@ export default function Header() {
 
             {/* Mobile hamburger */}
             <button
-              className="cursor-pointer select-none relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-white/5 md:hidden"
+              className="cursor-pointer select-none relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-foreground/5 md:hidden"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
             >
               <div className="flex flex-col items-center gap-[5px]">
                 <span
-                  className={`block h-[1.5px] w-4 bg-white/70 transition-all duration-200 ${
+                  className={`block h-[1.5px] w-4 bg-foreground/70 transition-all duration-200 ${
                     mobileOpen ? "translate-y-[6.5px] rotate-45" : ""
                   }`}
                 />
                 <span
-                  className={`block h-[1.5px] w-4 bg-white/70 transition-all duration-200 ${
+                  className={`block h-[1.5px] w-4 bg-foreground/70 transition-all duration-200 ${
                     mobileOpen ? "opacity-0" : ""
                   }`}
                 />
                 <span
-                  className={`block h-[1.5px] w-4 bg-white/70 transition-all duration-200 ${
+                  className={`block h-[1.5px] w-4 bg-foreground/70 transition-all duration-200 ${
                     mobileOpen ? "-translate-y-[6.5px] -rotate-45" : ""
                   }`}
                 />
@@ -238,7 +238,7 @@ export default function Header() {
 
       {/* Mobile overlay — rendered outside header to avoid translate containing block */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[45] bg-dark/95 backdrop-blur-xl pt-20 md:hidden">
+        <div className="fixed inset-0 z-[45] bg-background/95 backdrop-blur-xl pt-20 md:hidden">
           <nav className="flex flex-col gap-1 px-6" aria-label="Mobile">
             {NAV_ITEMS.map((item) => {
               const active = pathname === item.href;
@@ -253,8 +253,8 @@ export default function Header() {
                       }
                       className={`cursor-pointer select-none flex w-full items-center justify-between rounded-xl px-4 py-3 text-lg transition-colors ${
                         expanded
-                          ? "bg-white/10 text-white font-medium"
-                          : "text-white/50 hover:bg-white/5 hover:text-white"
+                          ? "bg-foreground/10 text-foreground font-medium"
+                          : "text-foreground/50 hover:bg-foreground/5 hover:text-foreground"
                       }`}
                     >
                       {item.label}
@@ -289,14 +289,14 @@ export default function Header() {
                               key={child.label}
                               href={child.href}
                               onClick={() => setMobileOpen(false)}
-                              className="select-none flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+                              className="select-none flex items-center gap-2 rounded-lg px-4 py-2.5 text-base text-foreground/50 transition-colors hover:bg-foreground/5 hover:text-foreground"
                               {...extraProps}
                             >
                               {child.label}
 
                               {isExternal && (
                                 <svg
-                                  className="h-3 w-3 text-white/30"
+                                  className="h-3 w-3 text-foreground/30"
                                   fill="none"
                                   viewBox="0 0 12 12"
                                   stroke="currentColor"
@@ -325,8 +325,8 @@ export default function Header() {
                   onClick={() => setMobileOpen(false)}
                   className={`select-none rounded-xl px-4 py-3 text-lg transition-colors ${
                     active
-                      ? "bg-white/10 text-white font-medium"
-                      : "text-white/50 hover:bg-white/5 hover:text-white"
+                      ? "bg-foreground/10 text-foreground font-medium"
+                      : "text-foreground/50 hover:bg-foreground/5 hover:text-foreground"
                   }`}
                 >
                   {item.label}
@@ -341,7 +341,7 @@ export default function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMobileOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-green px-5 py-3 text-base font-medium text-white transition-colors hover:bg-green-light active:bg-green-dark select-none"
+                className="cta-primary flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-base font-medium text-white transition-all hover:brightness-110 active:brightness-95 select-none"
               >
                 Join Discord
                 <svg

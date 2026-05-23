@@ -132,12 +132,12 @@ export default function NetworkParticipants() {
                 key={role.title}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className="flex items-start gap-5 rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-6 transition-colors duration-200 hover:border-white/[0.12]"
+                className="flex items-start gap-5 rounded-xl border border-foreground/[0.07] bg-[#1a1a1a] p-6 transition-colors duration-200 hover:border-foreground/[0.12]"
               >
                 <div className="flex-shrink-0 text-green">{role.icon}</div>
                 <div>
                   <h3 className="text-base font-medium">{role.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-white/40">
+                  <p className="mt-1.5 text-sm leading-relaxed text-foreground/40">
                     {role.description}
                   </p>
                 </div>

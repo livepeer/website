@@ -35,7 +35,7 @@ export default function BlogListingClient({
       </div>
 
       {filteredPosts.length === 0 && (
-        <p className="py-16 text-center font-mono text-sm text-white/30">
+        <p className="py-16 text-center font-mono text-sm text-foreground/30">
           No posts in this category yet.
         </p>
       )}

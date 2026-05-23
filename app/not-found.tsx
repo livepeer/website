@@ -6,10 +6,10 @@ export default function NotFound() {
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
         Page not found!
       </h1>
-      <p className="mt-4 max-w-md text-lg text-white/60">
+      <p className="mt-4 max-w-md text-lg text-foreground/60">
         Sorry, but the page you were looking for could not be found.
       </p>
-      <p className="mt-2 text-lg text-white/60">
+      <p className="mt-2 text-lg text-foreground/60">
         <Link
           href="/"
           className="text-green underline underline-offset-4 hover:text-green-light"

@@ -18,10 +18,10 @@ function WorldsVisual() {
   return (
     <div
       ref={ref}
-      className="relative h-full overflow-hidden rounded-lg bg-[#070b0a]"
+      className="relative h-full overflow-hidden bg-surface"
     >
       {/* Sky gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#080f0c] via-[#060d0a] to-[#0a0a0a]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#080f0c] via-[#060d0a] to-[#0a0a0a] light:from-[#f4faf6] light:via-[#edf5ef] light:to-[#e5eee9]" />
 
       {/* Stars */}
       {[
@@ -38,7 +38,7 @@ function WorldsVisual() {
       ].map(([x, y], i) => (
         <div
           key={i}
-          className="absolute h-px w-px rounded-full bg-white/50"
+          className="absolute h-px w-px rounded-full bg-foreground/50"
           style={{
             left: `${x}%`,
             top: `${y}%`,
@@ -85,7 +85,7 @@ function WorldsVisual() {
               y1="0"
               x2={x}
               y2="120"
-              stroke="rgba(255,255,255,0.07)"
+              stroke="color-mix(in srgb, currentColor 7%, transparent)"
               strokeWidth="0.5"
             />
           ))}
@@ -96,7 +96,7 @@ function WorldsVisual() {
               y1={y}
               x2="400"
               y2={y}
-              stroke="rgba(255,255,255,0.07)"
+              stroke="color-mix(in srgb, currentColor 7%, transparent)"
               strokeWidth="0.5"
             />
           ))}
@@ -124,10 +124,10 @@ function WorldsVisual() {
       >
         GENERATING
       </div>
-      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-white/35">
+      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-foreground/35">
         60 FPS
       </div>
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Frame 1,847 &middot; 12ms
       </div>
     </div>
@@ -175,12 +175,13 @@ function AvatarsVisual() {
     [11, 15],
   ];
   return (
-    <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
-      <div className="flex h-full items-center justify-center gap-4 px-4 py-5">
+    <div className="relative h-full overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
+      <div className="relative flex h-full items-center justify-center gap-4 px-4 py-5">
         {/* Input */}
-        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-white/[0.1] bg-[#131313]">
+        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-foreground/[0.1] bg-card">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-[55%] w-[45%] rounded-[50%] bg-white/[0.05]" />
+            <div className="h-[55%] w-[45%] rounded-[50%] bg-foreground/[0.05]" />
           </div>
           <svg
             className="absolute inset-0 h-full w-full"
@@ -219,7 +220,7 @@ function AvatarsVisual() {
 
         {/* Arrow */}
         <svg
-          className="h-3 w-4 flex-shrink-0 text-white/25"
+          className="h-3 w-4 flex-shrink-0 text-foreground/25"
           viewBox="0 0 16 12"
           fill="none"
           style={{ animation: "arrowFlow 2.5s ease-in-out infinite" }}
@@ -234,7 +235,7 @@ function AvatarsVisual() {
         </svg>
 
         {/* Output */}
-        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-white/[0.1] bg-[#131313]">
+        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-foreground/[0.1] bg-card">
           <div className="absolute inset-0 flex items-center justify-center">
             <div
               className="relative h-[55%] w-[45%] rounded-[50%] bg-gradient-to-b from-purple-500/[0.12] to-emerald-500/[0.08]"
@@ -252,7 +253,7 @@ function AvatarsVisual() {
       </div>
 
       {/* Bottom label */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Style: Anime &middot; 22ms
       </div>
     </div>
@@ -454,16 +455,16 @@ function AnalysisVisual() {
   ).length;
 
   return (
-    <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#0a0a0a] to-[#0d1117]" />
+    <div className="relative h-full overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#0a0a0a] to-[#0d1117] light:from-[#f3f5f8] light:via-[#eceff2] light:to-[#f3f5f8]" />
       {analysisDetections.map((d, i) => (
         <TrackingBox key={i} d={d} active={active[i]} entered={entered[i]} />
       ))}
       <div className="absolute left-3 top-2.5 flex items-center gap-1.5">
         <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
-        <span className="font-mono text-[9px] text-white/40">LIVE</span>
+        <span className="font-mono text-[9px] text-foreground/40">LIVE</span>
       </div>
-      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-white/35">
+      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-foreground/35">
         YOLOv8 &middot; 8ms
       </div>
       <div className="absolute bottom-2.5 left-3 flex gap-3 font-mono text-[9px]">
@@ -493,8 +494,8 @@ function PipelinesVisual() {
   const nodeH = 26;
   const nodeY = 14;
   return (
-    <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d]" />
+    <div className="relative h-full overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
 
       {/* Pipeline node graph */}
       <div className="absolute inset-x-3 top-3 bottom-10 flex items-center justify-center">
@@ -516,7 +517,7 @@ function PipelinesVisual() {
                   y1={cy}
                   x2={x2}
                   y2={cy}
-                  stroke="rgba(255,255,255,0.15)"
+                  stroke="color-mix(in srgb, currentColor 15%, transparent)"
                   strokeWidth="1"
                   strokeDasharray="4 4"
                   style={{ animation: "dashFlow 1.5s linear infinite" }}
@@ -575,10 +576,10 @@ function PipelinesVisual() {
                 fill={
                   node.active
                     ? "rgba(24,121,78,0.25)"
-                    : "rgba(255,255,255,0.05)"
+                    : "color-mix(in srgb, currentColor 5%, transparent)"
                 }
                 stroke={
-                  node.active ? "rgba(24,121,78,0.7)" : "rgba(255,255,255,0.12)"
+                  node.active ? "rgba(24,121,78,0.7)" : "color-mix(in srgb, currentColor 12%, transparent)"
                 }
                 strokeWidth="1"
                 style={
@@ -595,7 +596,7 @@ function PipelinesVisual() {
                 className="font-mono"
                 fontSize="9"
                 fill={
-                  node.active ? "rgba(64,191,134,0.9)" : "rgba(255,255,255,0.5)"
+                  node.active ? "rgba(64,191,134,0.9)" : "color-mix(in srgb, currentColor 50%, transparent)"
                 }
               >
                 {node.label}
@@ -606,7 +607,7 @@ function PipelinesVisual() {
       </div>
 
       {/* Bottom HUD */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Pipeline: img2img &middot; 3 stages
       </div>
       <div className="absolute bottom-2.5 right-3 font-mono text-[9px] text-emerald-400/60">
@@ -625,11 +626,11 @@ function TranscodingVisual() {
     { res: "360p", fps: "30fps", width: "42%" },
   ];
   return (
-    <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d]" />
+    <div className="relative h-full overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d] light:from-[#f5f6f4] light:via-[#eef0ed] light:to-[#f5f6f4]" />
 
       {/* Mini player chrome */}
-      <div className="absolute inset-x-3 top-3 bottom-10 rounded-md border border-white/[0.1] bg-[#131313] overflow-hidden">
+      <div className="absolute inset-x-3 top-3 bottom-10 rounded-md border border-foreground/[0.1] bg-card overflow-hidden">
         {/* Video area gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent" />
 
@@ -653,14 +654,14 @@ function TranscodingVisual() {
                   className="absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%)",
+                      "linear-gradient(90deg, transparent 30%, color-mix(in srgb, currentColor 12%, transparent) 50%, transparent 70%)",
                     backgroundSize: "200% 100%",
                     animation: "shimmer 3s ease-in-out infinite",
                     animationDelay: `${i * 0.4}s`,
                   }}
                 />
               </div>
-              <span className="font-mono text-[10px] text-white/50 whitespace-nowrap">
+              <span className="font-mono text-[10px] text-foreground/50 whitespace-nowrap">
                 {r.res} {r.fps}
               </span>
             </div>
@@ -669,7 +670,7 @@ function TranscodingVisual() {
       </div>
 
       {/* Bottom stats */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Bitrate: 4.2 Mbps &middot; Latency: 85ms
       </div>
     </div>
@@ -680,6 +681,7 @@ function TranscodingVisual() {
 const useCases: {
   title: string;
   description: string;
+  tag: string;
   attribution: string;
   Visual: React.ComponentType;
   colSpan: 2 | 4 | 6;
@@ -688,6 +690,7 @@ const useCases: {
     title: "AI-Generated Worlds",
     description:
       "Live environments inferred in real time from user inputs. Not pre-rendered, not pre-recorded. The world itself is the model's output.",
+    tag: "Generative",
     attribution: "Powered by Daydream on Livepeer.",
     Visual: WorldsVisual,
     colSpan: 4,
@@ -696,6 +699,7 @@ const useCases: {
     title: "AI Avatars",
     description:
       "Video representations of AI agents that respond in real time, for tutoring, telepresence, and conversational interfaces.",
+    tag: "Avatars",
     attribution: "Powered by Embody on Livepeer.",
     Visual: AvatarsVisual,
     colSpan: 2,
@@ -704,6 +708,7 @@ const useCases: {
     title: "Live Video Intelligence",
     description:
       "Real-time analysis of live streams: sports broadcasts, security feeds, manufacturing lines. Processed during, not after.",
+    tag: "Intelligence",
     attribution: "Emerging on Livepeer.",
     Visual: AnalysisVisual,
     colSpan: 2,
@@ -712,6 +717,7 @@ const useCases: {
     title: "Prompt-Driven Live Transformation",
     description:
       "A creator goes live and the stream adapts: lighting, environment, visual style, based on a text prompt, in real time.",
+    tag: "Pipelines",
     attribution: "Powered by Daydream on Livepeer.",
     Visual: PipelinesVisual,
     colSpan: 4,
@@ -720,6 +726,7 @@ const useCases: {
     title: "Live Transcoding & Streaming",
     description:
       "Adaptive bitrate transcoding across a global GPU network with sub-second latency.",
+    tag: "Streaming",
     attribution: "Live on Livepeer.",
     Visual: TranscodingVisual,
     colSpan: 6,
@@ -735,8 +742,6 @@ const colSpanClass: Record<number, string> = {
 export default function UseCases() {
   return (
     <section className="relative py-24 lg:py-32">
-      <div className="divider-gradient absolute top-0 left-0 right-0" />
-
       <Container>
         <motion.div
           initial="hidden"
@@ -762,17 +767,26 @@ export default function UseCases() {
                 transition={{ duration: 0.4 }}
                 className={`md:col-span-1 ${colSpanClass[useCase.colSpan]}`}
               >
-                <div className="block h-full overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]">
+                <div className="relative block h-full overflow-hidden rounded-xl border border-foreground/[0.07] bg-card">
+                  {/* Dark visual — edge-to-edge specimen frame */}
                   <div
-                    className={`p-2.5 pb-0 ${useCase.colSpan === 4 ? "h-[180px] lg:h-[240px]" : "h-[180px]"}`}
+                    className={`relative ${useCase.colSpan === 4 ? "h-[200px] lg:h-[260px]" : "h-[200px]"}`}
                   >
                     <useCase.Visual />
+                    {/* Hairline divider where screen meets body */}
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
+                      aria-hidden="true"
+                      style={{ background: "var(--card-hairline)" }}
+                    />
                   </div>
-                  <div className="px-5 py-5">
-                    <h3 className="text-lg font-medium text-white/90">
+
+                  {/* Body */}
+                  <div className="px-5 py-6 lg:px-6 lg:py-7">
+                    <h3 className="text-[19px] font-bold tracking-tight text-foreground lg:text-[21px]">
                       {useCase.title}
                     </h3>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-white/40">
+                    <p className="mt-2.5 text-[13.5px] leading-[1.65] text-foreground/65">
                       {useCase.description}
                     </p>
                   </div>

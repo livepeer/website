@@ -70,7 +70,7 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="flex justify-center">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 font-mono text-sm text-white/30 transition-colors hover:text-white/60"
+            className="inline-flex items-center gap-2 font-mono text-sm text-foreground/30 transition-colors hover:text-foreground/60"
           >
             ← All posts
           </Link>

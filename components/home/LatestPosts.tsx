@@ -51,10 +51,10 @@ export default function LatestPosts({ posts }: { posts: BlogPost[] }) {
               >
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-foreground/[0.07] bg-card transition-colors hover:border-foreground/[0.14]"
                 >
                   {post.image && (
-                    <div className="relative aspect-[16/10] overflow-hidden border-b border-white/[0.06]">
+                    <div className="relative aspect-[16/10] overflow-hidden border-b border-foreground/[0.06]">
                       <img
                         src={post.image}
                         alt={post.imageAlt || post.title}
@@ -71,20 +71,20 @@ export default function LatestPosts({ posts }: { posts: BlogPost[] }) {
                       <span className="text-green-light/70">
                         {post.category}
                       </span>
-                      <span className="text-white/15">·</span>
-                      <time dateTime={post.date} className="text-white/30">
+                      <span className="text-foreground/15">·</span>
+                      <time dateTime={post.date} className="text-foreground/30">
                         {formatDate(post.date)}
                       </time>
                     </div>
-                    <h3 className="line-clamp-3 text-[17px] leading-snug font-semibold tracking-tight text-white transition-colors group-hover:text-green-light">
+                    <h3 className="line-clamp-3 text-[17px] leading-snug font-semibold tracking-tight text-foreground transition-colors group-hover:text-green-light">
                       {post.title}
                     </h3>
                     {post.description && (
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/40">
+                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/40">
                         {post.description}
                       </p>
                     )}
-                    <div className="mt-auto flex items-center gap-2 pt-5 font-mono text-[11px] text-white/25">
+                    <div className="mt-auto flex items-center gap-2 pt-5 font-mono text-[11px] text-foreground/25">
                       {post.author && (
                         <>
                           <span className="truncate">{post.author.name}</span>
@@ -108,11 +108,7 @@ export default function LatestPosts({ posts }: { posts: BlogPost[] }) {
           >
             <Link
               href="/blog"
-              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-              }}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-200 hover:bg-foreground/90 active:bg-foreground/80"
             >
               Read all posts <span aria-hidden="true">→</span>
             </Link>

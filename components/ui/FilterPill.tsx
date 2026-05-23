@@ -53,7 +53,7 @@ export default function FilterPill({
     "cursor-pointer font-mono text-xs font-medium transition-colors";
   const pillColors = isActive
     ? "border border-green bg-green text-white"
-    : "border border-white/10 text-white/50 hover:text-white/80";
+    : "border border-foreground/10 text-foreground/50 hover:text-foreground/80";
 
   /* Simple pill — no dropdown */
   if (!dropdown) {
@@ -81,7 +81,7 @@ export default function FilterPill({
       >
         <span>{label}</span>
         {activeCount > 0 && (
-          <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-white/20 px-1 text-[10px]">
+          <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-foreground/20 px-1 text-[10px]">
             {activeCount}
           </span>
         )}
@@ -97,7 +97,7 @@ export default function FilterPill({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-lg border border-dark-border bg-dark-card p-2 shadow-xl shadow-black/40"
+            className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-lg border border-border bg-card p-2 shadow-xl shadow-black/40"
           >
             {dropdown.items.map((item) => {
               const checked = dropdown.activeItems.includes(item);
@@ -106,13 +106,13 @@ export default function FilterPill({
                   key={item}
                   type="button"
                   onClick={() => dropdown.onItemToggle(item)}
-                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 font-mono text-xs transition-colors hover:bg-white/[0.04]"
+                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-1.5 font-mono text-xs transition-colors hover:bg-foreground/[0.04]"
                 >
                   <span
                     className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
                       checked
                         ? "border-green bg-green"
-                        : "border-white/20 bg-white/[0.04]"
+                        : "border-foreground/20 bg-foreground/[0.04]"
                     }`}
                   >
                     {checked && (
@@ -127,7 +127,7 @@ export default function FilterPill({
                       </svg>
                     )}
                   </span>
-                  <span className={checked ? "text-white/80" : "text-white/50"}>
+                  <span className={checked ? "text-foreground/80" : "text-foreground/50"}>
                     {item}
                   </span>
                 </button>

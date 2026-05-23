@@ -15,23 +15,23 @@ function CostVis() {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-2.5">
-        <span className="w-14 font-mono text-[10px] text-white/25">Cloud</span>
-        <div className="h-2 flex-1 rounded-full bg-white/[0.04]">
+        <span className="w-14 font-mono text-[10px] text-foreground/25">Cloud</span>
+        <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
-            className="h-full rounded-full bg-white/10"
+            className="h-full rounded-full bg-foreground/10"
             initial={{ width: 0 }}
             whileInView={{ width: "100%" }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
         </div>
-        <span className="font-mono text-[10px] text-white/25">$1.00</span>
+        <span className="font-mono text-[10px] text-foreground/25">$1.00</span>
       </div>
       <div className="flex items-center gap-2.5">
         <span className="w-14 font-mono text-[10px] text-emerald-400/50">
           Livepeer
         </span>
-        <div className="h-2 flex-1 rounded-full bg-white/[0.04]">
+        <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
             className="h-full rounded-full bg-emerald-500/40"
             initial={{ width: 0 }}
@@ -51,23 +51,23 @@ function LatencyVis() {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-2.5">
-        <span className="w-14 font-mono text-[10px] text-white/25">Cloud</span>
-        <div className="h-2 flex-1 rounded-full bg-white/[0.04]">
+        <span className="w-14 font-mono text-[10px] text-foreground/25">Cloud</span>
+        <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
-            className="h-full rounded-full bg-white/10"
+            className="h-full rounded-full bg-foreground/10"
             initial={{ width: 0 }}
             whileInView={{ width: "70%" }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
         </div>
-        <span className="font-mono text-[10px] text-white/25">2-5s</span>
+        <span className="font-mono text-[10px] text-foreground/25">2-5s</span>
       </div>
       <div className="flex items-center gap-2.5">
         <span className="w-14 font-mono text-[10px] text-emerald-400/50">
           Livepeer
         </span>
-        <div className="h-2 flex-1 rounded-full bg-white/[0.04]">
+        <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
             className="h-full rounded-full bg-emerald-500/40"
             initial={{ width: 0 }}
@@ -89,16 +89,16 @@ function ColdStartVis() {
   return (
     <div className="flex items-center gap-3">
       <motion.div
-        className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2"
+        className="flex items-center gap-2 rounded-md border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2"
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
       >
-        <div className="h-2 w-2 rounded-full border border-white/20 border-t-transparent animate-spin" />
+        <div className="h-2 w-2 rounded-full border border-foreground/20 border-t-transparent animate-spin" />
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] text-white/25">Cloud GPU</span>
-          <span className="font-mono text-[10px] text-white/15">30-60s</span>
+          <span className="font-mono text-[10px] text-foreground/25">Cloud GPU</span>
+          <span className="font-mono text-[10px] text-foreground/15">30-60s</span>
         </div>
       </motion.div>
       <motion.div
@@ -142,15 +142,15 @@ function ColdStartVis() {
 function ScaleVis() {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+      <div className="flex items-center gap-2 rounded-md border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2">
         <div className="flex gap-[3px]">
           {[1, 1, 1, 1].map((_, i) => (
-            <div key={i} className="h-3 w-1.5 rounded-sm bg-white/10" />
+            <div key={i} className="h-3 w-1.5 rounded-sm bg-foreground/10" />
           ))}
         </div>
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] text-white/25">Cloud</span>
-          <span className="font-mono text-[10px] text-white/15">Fixed</span>
+          <span className="font-mono text-[10px] text-foreground/25">Cloud</span>
+          <span className="font-mono text-[10px] text-foreground/15">Fixed</span>
         </div>
       </div>
       <div className="flex items-center gap-2 rounded-md border border-emerald-500/15 bg-emerald-500/[0.04] px-3 py-2">
@@ -198,7 +198,7 @@ function AdvantageCard({
     <motion.div
       variants={fadeUp}
       transition={{ duration: 0.4 }}
-      className={`group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] p-7 transition-colors duration-200 hover:border-white/[0.12] ${className}`}
+      className={`group relative flex flex-col overflow-hidden rounded-xl border border-foreground/[0.07] bg-[#1a1a1a] p-7 transition-colors duration-200 hover:border-foreground/[0.12] ${className}`}
     >
       {children}
     </motion.div>
@@ -232,7 +232,7 @@ export default function WhyLivepeer() {
                 6x
               </div>
               <h3 className="mt-2 text-base font-medium">Cost Reduction</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
+              <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/50">
                 Usage-based GPU pricing with no reserved instances or idle
                 capacity.
               </p>
@@ -246,7 +246,7 @@ export default function WhyLivepeer() {
                 &lt;1s
               </div>
               <h3 className="mt-2 text-base font-medium">Real-Time Latency</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
+              <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/50">
                 Purpose-built for continuous, frame-by-frame AI inference on
                 live video.
               </p>
@@ -260,7 +260,7 @@ export default function WhyLivepeer() {
                 0s
               </div>
               <h3 className="mt-2 text-base font-medium">Cold Start</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
+              <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/50">
                 Warm GPUs 24/7 — inference starts immediately on every stream.
               </p>
               <div className="mt-5">
@@ -273,7 +273,7 @@ export default function WhyLivepeer() {
                 ∞
               </div>
               <h3 className="mt-2 text-base font-medium">Elastic Scale</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/50">
+              <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/50">
                 Go from 1 to 10,000 streams without provisioning a single GPU.
               </p>
               <div className="mt-5">
@@ -285,12 +285,12 @@ export default function WhyLivepeer() {
           <motion.p
             variants={fadeUp}
             transition={{ duration: 0.4 }}
-            className="mt-10 text-center text-sm text-white/40"
+            className="mt-10 text-center text-sm text-foreground/40"
           >
             Curious how it all works?{" "}
             <Link
               href="/primer"
-              className="text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors"
+              className="text-foreground/60 underline underline-offset-2 hover:text-foreground/80 transition-colors"
             >
               Read the 10-minute primer &rarr;
             </Link>

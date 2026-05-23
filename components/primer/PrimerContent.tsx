@@ -34,6 +34,28 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
   const [bgColor, setBgColor] = useState<string>(CHAPTERS[0].bg);
   const [tocOpen, setTocOpen] = useState(false);
   const tocRef = useRef<HTMLDivElement>(null);
+  const tocCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openToc = useCallback(() => {
+    if (tocCloseTimeoutRef.current) {
+      clearTimeout(tocCloseTimeoutRef.current);
+      tocCloseTimeoutRef.current = null;
+    }
+    setTocOpen(true);
+  }, []);
+
+  const scheduleCloseToc = useCallback(() => {
+    if (tocCloseTimeoutRef.current) clearTimeout(tocCloseTimeoutRef.current);
+    tocCloseTimeoutRef.current = setTimeout(() => setTocOpen(false), 150);
+  }, []);
+
+  // Clear any pending close-timeout when the component unmounts, so the
+  // setState callback doesn't fire against a destroyed component.
+  useEffect(() => {
+    return () => {
+      if (tocCloseTimeoutRef.current) clearTimeout(tocCloseTimeoutRef.current);
+    };
+  }, []);
 
   // IntersectionObserver for background color transitions
   useEffect(() => {
@@ -101,15 +123,25 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         }}
       />
 
-      {/* ─── Fixed Contents button — top right, aligned with nav bar ─── */}
+      {/* ─── Fixed Contents button — sits inside a centered max-w-7xl
+              container that mirrors the header's layout. This makes the
+              button's right offset symmetric with the logo's left offset
+              at ALL viewport widths (including > 1280px where the header
+              container is centered and not flush with the viewport edge). ─── */}
       <div
-        className="fixed top-[19px] right-4 z-50 md:top-[18px] md:right-6"
+        className="pointer-events-none fixed inset-x-0 top-[19px] z-50 md:top-[18px]"
         ref={tocRef}
       >
-        <button
-          onClick={() => setTocOpen(!tocOpen)}
+        <div className="mx-auto flex w-full max-w-7xl justify-end px-6 lg:px-8">
+          <div
+            className="pointer-events-auto relative"
+            onMouseEnter={openToc}
+            onMouseLeave={scheduleCloseToc}
+          >
+          <button
+            onClick={() => setTocOpen(!tocOpen)}
           className={`cursor-pointer select-none flex items-center justify-center uppercase transition-all
-            h-12 w-12 rounded-full border border-white/40 bg-white/20 backdrop-blur-2xl shadow-[0_2px_16px_rgba(0,0,0,0.1)]
+            h-12 w-12 rounded-full border border-foreground/40 bg-foreground/20 backdrop-blur-2xl shadow-[0_2px_16px_rgba(0,0,0,0.1)]
             md:h-[44px] md:w-auto md:gap-3 md:px-5 md:border-[1.5px] md:border-black md:bg-[#a6adeb]/80 md:backdrop-blur-xl ${tocOpen ? "md:shadow-[0_0_#000]" : "md:shadow-[3px_3px_#000]"} md:hover:shadow-none`}
           style={{
             fontFamily: "var(--font-mono), monospace",
@@ -162,14 +194,18 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
           </svg>
         </button>
 
-        {/* Dropdown — opens downward */}
+        {/* Dropdown — opens downward. Outer wrapper sits flush with the
+            button (top: 100%) and uses transparent top padding to create the
+            visual gap, so the hover hit-area is continuous and moving the
+            cursor from button → dropdown never crosses an empty zone. */}
         {tocOpen && (
           <div
-            className="absolute top-[calc(100%+8px)] right-0 w-[300px] rounded-lg border-[1.5px] border-black bg-white p-2 shadow-lg"
+            className="absolute top-full right-0 w-[300px] pt-2"
             style={{
               animation: "fadeIn 0.15s ease-out",
             }}
           >
+          <div className="rounded-lg border-[1.5px] border-black bg-white p-2 shadow-lg">
             {CHAPTERS.map((ch, i) => (
               <a
                 key={ch.id}
@@ -193,7 +229,10 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
               </a>
             ))}
           </div>
+          </div>
         )}
+          </div>
+        </div>
       </div>
 
       {/* ─── Hero ─── */}
@@ -936,7 +975,7 @@ function InvolvedButton({
     <Link
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="select-none inline-block self-center rounded-md border-2 border-black px-6 py-2.5 text-sm font-bold uppercase text-black no-underline transition-all hover:bg-black hover:text-white"
+      className="select-none inline-block self-center rounded-md border-2 border-black px-6 py-2.5 text-sm font-bold uppercase text-black no-underline transition-all hover:bg-black hover:text-foreground"
       style={{ backgroundColor: "#ffd184" }}
     >
       {label}

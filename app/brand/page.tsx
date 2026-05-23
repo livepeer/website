@@ -58,7 +58,7 @@ function CopyButton({ value, label }: { value: string; label?: string }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }}
-      className="group flex cursor-pointer select-none items-center gap-1.5 font-mono text-xs text-white/50 transition-colors hover:text-white/80"
+      className="group flex cursor-pointer select-none items-center gap-1.5 font-mono text-xs text-foreground/50 transition-colors hover:text-foreground/80"
       aria-label={`Copy ${label || value}`}
     >
       <span>{value}</span>
@@ -93,12 +93,12 @@ function Swatch({
   return (
     <div>
       <div
-        className={`h-20 rounded-lg border ${dark ? "border-white/10" : "border-dark-border"}`}
+        className={`h-20 rounded-lg border ${dark ? "border-foreground/10" : "border-border"}`}
         style={{ backgroundColor: hex }}
       />
-      <p className="mt-2 text-sm text-white">{name}</p>
+      <p className="mt-2 text-sm text-foreground">{name}</p>
       <CopyButton value={hex} label={name} />
-      {token && <p className="font-mono text-[11px] text-white/30">{token}</p>}
+      {token && <p className="font-mono text-[11px] text-foreground/30">{token}</p>}
     </div>
   );
 }
@@ -115,21 +115,36 @@ function LogoCard({
   children: React.ReactNode;
 }) {
   const isDark = bg === "dark";
+  // These cards demonstrate the white-on-dark and black-on-light logo
+  // variants from the brand book, so their backgrounds MUST stay fixed
+  // regardless of the active theme. Using theme-adaptive tokens (bg-card,
+  // bg-foreground) would invert the cards in light mode and hide the
+  // logos against same-colored backgrounds.
   return (
     <div
-      className={`rounded-xl border ${isDark ? "border-dark-border bg-dark-card" : "border-white/10 bg-white"}`}
+      className={`rounded-xl border ${
+        isDark
+          ? "border-white/10 bg-[#121212]"
+          : "border-black/10 bg-white"
+      }`}
     >
       <div className="flex h-40 items-center justify-center px-8">
         {children}
       </div>
       <div
-        className={`flex items-center justify-between border-t px-4 py-3 text-xs ${isDark ? "border-dark-border text-white/50" : "border-black/10 text-black/50"}`}
+        className={`flex items-center justify-between border-t px-4 py-3 text-xs ${
+          isDark
+            ? "border-white/10 text-white/50"
+            : "border-black/10 text-black/50"
+        }`}
       >
         <span className="font-mono uppercase tracking-wider">{variant}</span>
         <a
           href={`/brand-assets/${file}`}
           download
-          className={`font-mono transition-colors ${isDark ? "hover:text-white" : "hover:text-black"}`}
+          className={`font-mono transition-colors ${
+            isDark ? "hover:text-white" : "hover:text-black"
+          }`}
         >
           Download SVG ↓
         </a>
@@ -144,13 +159,13 @@ export default function BrandPage() {
       {/* Header */}
       <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-20">
         <Container>
-          <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
+          <p className="mb-3 font-mono text-sm font-medium tracking-wider text-foreground/40 uppercase">
             Brand
           </p>
           <h1 className="max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
             Brand guidelines
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-white/60">
+          <p className="mt-6 max-w-xl text-lg text-foreground/60">
             Everything you need to use the Livepeer brand. Download the full
             kit or grab individual assets below.
           </p>
@@ -164,7 +179,7 @@ export default function BrandPage() {
               Download Brand Kit
               <Download className="h-4 w-4" strokeWidth={2.5} />
             </Button>
-            <span className="font-mono text-xs text-white/40">
+            <span className="font-mono text-xs text-foreground/40">
               ZIP · Logos + colors + usage notes
             </span>
           </div>
@@ -177,14 +192,14 @@ export default function BrandPage() {
         <Container>
           <div className="mb-10 flex flex-wrap items-baseline justify-between gap-4">
             <div>
-              <p className="mb-2 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <p className="mb-2 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Logo
               </p>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
                 Three variants
               </h2>
             </div>
-            <p className="max-w-md text-sm text-white/60">
+            <p className="max-w-md text-sm text-foreground/60">
               Symbol, wordmark, and lockup. White on dark, black on light.
               Never rotate, stretch, recolor, or apply effects.
             </p>
@@ -238,35 +253,35 @@ export default function BrandPage() {
 
           <dl className="mt-10 grid gap-x-10 gap-y-4 text-sm sm:grid-cols-2">
             <div className="flex gap-3">
-              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Clear space
               </dt>
-              <dd className="text-white/60">
+              <dd className="text-foreground/60">
                 Maintain space equal to the symbol width on all sides.
               </dd>
             </div>
             <div className="flex gap-3">
-              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Minimum size
               </dt>
-              <dd className="text-white/60">
+              <dd className="text-foreground/60">
                 Symbol: 16px. Wordmark and lockup: 24px tall.
               </dd>
             </div>
             <div className="flex gap-3">
-              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Symbol
               </dt>
-              <dd className="text-white/60">
+              <dd className="text-foreground/60">
                 Favicons, avatars, app icons — compact spaces where the brand
                 is known.
               </dd>
             </div>
             <div className="flex gap-3">
-              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <dt className="w-28 flex-shrink-0 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Lockup
               </dt>
-              <dd className="text-white/60">
+              <dd className="text-foreground/60">
                 Partner pages, press kits, event signage — anywhere the
                 audience may not know the brand.
               </dd>
@@ -281,7 +296,7 @@ export default function BrandPage() {
         <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <div className="mb-10">
-            <p className="mb-2 font-mono text-xs tracking-wider text-white/40 uppercase">
+            <p className="mb-2 font-mono text-xs tracking-wider text-foreground/40 uppercase">
               Color
             </p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -291,7 +306,7 @@ export default function BrandPage() {
 
           <div className="space-y-10">
             <div>
-              <p className="mb-4 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <p className="mb-4 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Green
               </p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -302,7 +317,7 @@ export default function BrandPage() {
             </div>
 
             <div>
-              <p className="mb-4 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <p className="mb-4 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Blue
               </p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -313,7 +328,7 @@ export default function BrandPage() {
             </div>
 
             <div>
-              <p className="mb-4 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <p className="mb-4 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Surfaces
               </p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -324,15 +339,15 @@ export default function BrandPage() {
             </div>
 
             <div>
-              <p className="mb-4 font-mono text-xs tracking-wider text-white/40 uppercase">
+              <p className="mb-4 font-mono text-xs tracking-wider text-foreground/40 uppercase">
                 Greyscale
               </p>
-              <div className="hidden overflow-hidden rounded-lg border border-dark-border sm:flex">
+              <div className="hidden overflow-hidden rounded-lg border border-border sm:flex">
                 {greyscale.map((hex) => (
                   <div key={hex} className="flex-1">
                     <div className="h-16" style={{ backgroundColor: hex }} />
-                    <div className="bg-dark-card px-1 py-2 text-center">
-                      <p className="font-mono text-[10px] text-white/40">
+                    <div className="bg-card px-1 py-2 text-center">
+                      <p className="font-mono text-[10px] text-foreground/40">
                         {hex}
                       </p>
                     </div>
@@ -343,10 +358,10 @@ export default function BrandPage() {
                 {greyscale.map((hex) => (
                   <div
                     key={hex}
-                    className="flex items-center gap-3 rounded-lg border border-dark-border bg-dark-card p-2"
+                    className="flex items-center gap-3 rounded-lg border border-border bg-card p-2"
                   >
                     <div
-                      className={`h-10 w-10 flex-shrink-0 rounded ${hex === "#FFFFFF" ? "border border-white/10" : ""}`}
+                      className={`h-10 w-10 flex-shrink-0 rounded ${hex === "#FFFFFF" ? "border border-foreground/10" : ""}`}
                       style={{ backgroundColor: hex }}
                     />
                     <CopyButton value={hex} />
@@ -363,7 +378,7 @@ export default function BrandPage() {
         <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
           <div className="mb-10">
-            <p className="mb-2 font-mono text-xs tracking-wider text-white/40 uppercase">
+            <p className="mb-2 font-mono text-xs tracking-wider text-foreground/40 uppercase">
               Typography
             </p>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -372,36 +387,36 @@ export default function BrandPage() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-xl border border-dark-border bg-dark-card p-8">
+            <div className="rounded-xl border border-border bg-card p-8">
               <div className="mb-6 flex items-baseline justify-between">
                 <h3 className="text-xl font-medium">Favorit Pro</h3>
-                <span className="font-mono text-xs text-white/40">Sans</span>
+                <span className="font-mono text-xs text-foreground/40">Sans</span>
               </div>
-              <p className="mb-8 text-sm text-white/50">
+              <p className="mb-8 text-sm text-foreground/50">
                 Primary typeface. Headings, body, UI. Licensed from Dinamo
                 Type.
               </p>
               <div className="space-y-5">
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Light 300
                   </p>
                   <p className="text-2xl font-light">The open network</p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Regular 400
                   </p>
                   <p className="text-2xl">The open network</p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Medium 500
                   </p>
                   <p className="text-2xl font-medium">The open network</p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Bold 700
                   </p>
                   <p className="text-2xl font-bold">The open network</p>
@@ -409,23 +424,23 @@ export default function BrandPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-dark-border bg-dark-card p-8">
+            <div className="rounded-xl border border-border bg-card p-8">
               <div className="mb-6 flex items-baseline justify-between">
                 <h3 className="text-xl font-medium">Favorit Mono</h3>
-                <span className="font-mono text-xs text-white/40">Mono</span>
+                <span className="font-mono text-xs text-foreground/40">Mono</span>
               </div>
-              <p className="mb-8 text-sm text-white/50">
+              <p className="mb-8 text-sm text-foreground/50">
                 Stats, labels, code. Licensed from Dinamo Type.
               </p>
               <div className="space-y-5">
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Regular 400
                   </p>
                   <p className="font-mono text-xl">GPU · 0123456789</p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Medium 500
                   </p>
                   <p className="font-mono text-xl font-medium">
@@ -433,7 +448,7 @@ export default function BrandPage() {
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono text-[10px] tracking-wider text-white/30 uppercase">
+                  <p className="font-mono text-[10px] tracking-wider text-foreground/30 uppercase">
                     Bold 700
                   </p>
                   <p className="font-mono text-xl font-bold">
@@ -444,7 +459,7 @@ export default function BrandPage() {
             </div>
           </div>
 
-          <p className="mt-6 font-mono text-xs text-white/40">
+          <p className="mt-6 font-mono text-xs text-foreground/40">
             Line heights — 93% display headings · 100% body · 120% mono labels.
           </p>
         </Container>
@@ -454,13 +469,13 @@ export default function BrandPage() {
       <section className="relative py-16 lg:py-20">
         <div className="divider-gradient absolute top-0 left-0 right-0" />
         <Container>
-          <p className="text-white/60">
+          <p className="text-foreground/60">
             Questions about using the Livepeer brand?{" "}
             <a
               href={EXTERNAL_LINKS.discord}
               target="_blank"
               rel="noreferrer"
-              className="text-white underline-offset-4 hover:underline"
+              className="text-foreground underline-offset-4 hover:underline"
             >
               Ask on Discord →
             </a>

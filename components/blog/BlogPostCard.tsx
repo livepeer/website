@@ -28,10 +28,10 @@ export default function BlogPostCard({
     >
       <Link
         href={`/blog/${post.slug}`}
-        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-dark-border bg-dark-card transition-colors hover:border-white/10 select-none"
+        className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-foreground/10 select-none"
       >
         {post.image && (
-          <div className="aspect-[16/9] overflow-hidden border-b border-white/[0.06]">
+          <div className="aspect-[16/9] overflow-hidden border-b border-foreground/[0.06]">
             <img
               src={post.image}
               alt={post.imageAlt || post.title}
@@ -45,17 +45,17 @@ export default function BlogPostCard({
             <Badge>{post.category}</Badge>
           </div>
 
-          <h3 className="text-xl font-bold tracking-tight text-white transition-colors group-hover:text-green-light">
+          <h3 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-green-light">
             {post.title}
           </h3>
 
           {post.description && (
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/40">
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/40">
               {post.description}
             </p>
           )}
 
-          <div className="mt-auto flex items-center gap-2 pt-4 font-mono text-xs text-white/25">
+          <div className="mt-auto flex items-center gap-2 pt-4 font-mono text-xs text-foreground/25">
             {post.author && (
               <>
                 <span>{post.author.name}</span>

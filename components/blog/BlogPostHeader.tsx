@@ -19,12 +19,12 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
       className="mb-12"
     >
       {/* Breadcrumb */}
-      <div className="mb-8 flex items-center gap-2 font-mono text-sm text-white/30">
-        <Link href="/blog" className="transition-colors hover:text-white/60">
+      <div className="mb-8 flex items-center gap-2 font-mono text-sm text-foreground/30">
+        <Link href="/blog" className="transition-colors hover:text-foreground/60">
           Blog
         </Link>
         <span>›</span>
-        <span className="text-white/50">{post.category}</span>
+        <span className="text-foreground/50">{post.category}</span>
       </div>
 
       {/* Title */}
@@ -33,7 +33,7 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
       </h1>
 
       {/* Meta row */}
-      <div className="mt-6 flex items-center gap-3 font-mono text-sm text-white/40">
+      <div className="mt-6 flex items-center gap-3 font-mono text-sm text-foreground/40">
         {post.author && (
           <>
             <span>{post.author.name}</span>
@@ -47,7 +47,7 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
 
       {/* Featured image */}
       {post.image && (
-        <div className="mt-10 overflow-hidden rounded-xl border border-dark-border">
+        <div className="mt-10 overflow-hidden rounded-xl border border-border">
           <img
             src={post.image}
             alt={post.imageAlt || post.title}

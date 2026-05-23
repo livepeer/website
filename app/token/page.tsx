@@ -882,7 +882,7 @@ export default function TokenPage() {
   return (
     <>
       {/* Hero — brand page treatment */}
-      <section className="relative flex min-h-screen items-center overflow-hidden">
+      <section className="theme-dark relative flex min-h-screen items-center overflow-hidden bg-background text-foreground">
         {/* Full-bleed ImageMask */}
         <div className="absolute inset-0">
           <ImageMask
@@ -1030,13 +1030,13 @@ export default function TokenPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-white/40 uppercase">
+            <p className="mb-3 font-mono text-sm font-medium tracking-wider text-foreground/40 uppercase">
               Livepeer Token
             </p>
             <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-7xl lg:leading-[1.1]">
               The token that powers the network
             </h1>
-            <p className="mt-6 text-lg text-white/60">
+            <p className="mt-6 text-lg text-foreground/60">
               Livepeer Token (LPT) is part of the coordination mechanism behind
               the Livepeer network. It aligns incentives between the GPU
               providers who do the work, the applications that need video
@@ -1055,7 +1055,8 @@ export default function TokenPage() {
           className="pointer-events-none absolute bottom-0 left-0 right-0 h-48"
           aria-hidden="true"
           style={{
-            background: "linear-gradient(to bottom, transparent, #121212)",
+            background:
+              "linear-gradient(to bottom, transparent, var(--background))",
           }}
         />
       </section>
@@ -1104,7 +1105,7 @@ export default function TokenPage() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.4 }}
-              className="mt-10"
+              className="theme-dark text-foreground mt-10 overflow-hidden rounded-2xl bg-background"
             >
               <TokenFlowVisualization />
             </motion.div>
@@ -1139,17 +1140,17 @@ export default function TokenPage() {
                   rel="noopener noreferrer"
                   variants={fadeUp}
                   transition={{ duration: 0.4 }}
-                  className="group flex flex-col items-center gap-4 rounded-xl border border-white/[0.07] bg-[#1a1a1a] px-6 py-7 transition-all duration-200 hover:border-white/[0.15] hover:bg-[#1e1e1e]"
+                  className="group flex flex-col items-center gap-4 rounded-xl border border-foreground/[0.07] bg-card px-6 py-7 transition-all duration-200 hover:border-foreground/[0.15] hover:bg-surface"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.06] transition-colors group-hover:bg-white/[0.1]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/[0.06] transition-colors group-hover:bg-foreground/[0.1]">
                     <exchange.Logo className="h-5 w-5" />
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[14px] font-medium text-white/80 group-hover:text-white">
+                    <span className="text-[14px] font-medium text-foreground/80 group-hover:text-foreground">
                       {exchange.name}
                     </span>
                     <svg
-                      className="h-3 w-3 text-white/20 transition-all group-hover:text-white/40 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      className="h-3 w-3 text-foreground/20 transition-all group-hover:text-foreground/40 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       fill="none"
                       viewBox="0 0 12 12"
                       stroke="currentColor"

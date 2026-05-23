@@ -19,7 +19,7 @@ export default function PageHero({ children }: PageHeroProps) {
         {Array.from({ length: 9 * 5 }).map((_, i) => (
           <div
             key={i}
-            className="border-r border-b border-white/[0.04]"
+            className="border-r border-b border-foreground/[0.04]"
             style={{ aspectRatio: "1" }}
           />
         ))}

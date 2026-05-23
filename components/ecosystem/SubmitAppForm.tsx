@@ -39,21 +39,21 @@ export default function SubmitAppForm() {
       <Container>
         <div className="mx-auto max-w-5xl">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-8 flex items-center justify-center gap-2 font-mono text-sm text-white/30">
+            <div className="mb-8 flex items-center justify-center gap-2 font-mono text-sm text-foreground/30">
               <Link
                 href="/ecosystem"
-                className="transition-colors hover:text-white/60"
+                className="transition-colors hover:text-foreground/60"
               >
                 Ecosystem
               </Link>
               <span>›</span>
-              <span className="text-white/50">Submit</span>
+              <span className="text-foreground/50">Submit</span>
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               Building on Livepeer?
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-balance text-white/60 sm:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-balance text-foreground/60 sm:text-lg">
               Fill out the template and open a pull request. We&apos;ll review
               and add your app to the ecosystem directory.
             </p>
@@ -61,68 +61,68 @@ export default function SubmitAppForm() {
 
           {/* Preview: YAML → rendered card */}
           <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-[1fr_auto_1fr]">
-            <div className="overflow-hidden rounded-2xl border border-dark-border bg-dark-card">
-              <div className="flex items-center justify-between border-b border-dark-border px-4 py-2.5">
-                <span className="font-mono text-[11px] text-white/30">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
+              <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
+                <span className="font-mono text-[11px] text-foreground/30">
                   content/ecosystem/your-app.md
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-white/20">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/20">
                   YAML
                 </span>
               </div>
               <pre className="whitespace-pre-wrap break-words px-5 py-4 font-mono text-xs leading-relaxed sm:text-[13px]">
                 <code>
-                  <span className="text-white/25">---</span>
+                  <span className="text-foreground/25">---</span>
                   {"\n"}
-                  <span className="text-white/40">name:</span>
-                  <span className="text-white/80"> {SAMPLE.name}</span>
+                  <span className="text-foreground/40">name:</span>
+                  <span className="text-foreground/80"> {SAMPLE.name}</span>
                   {"\n"}
-                  <span className="text-white/40">url:</span>
-                  <span className="text-white/80"> {SAMPLE.url}</span>
+                  <span className="text-foreground/40">url:</span>
+                  <span className="text-foreground/80"> {SAMPLE.url}</span>
                   {"\n"}
-                  <span className="text-white/40">description:</span>
-                  <span className="text-white/80"> {SAMPLE.description}</span>
+                  <span className="text-foreground/40">description:</span>
+                  <span className="text-foreground/80"> {SAMPLE.description}</span>
                   {"\n"}
-                  <span className="text-white/40">categories:</span>
+                  <span className="text-foreground/40">categories:</span>
                   {"\n"}
                   {SAMPLE.categories.map((cat) => (
                     <span key={cat}>
-                      <span className="text-white/40">{"  - "}</span>
-                      <span className="text-white/80">{cat}</span>
+                      <span className="text-foreground/40">{"  - "}</span>
+                      <span className="text-foreground/80">{cat}</span>
                       {"\n"}
                     </span>
                   ))}
-                  <span className="text-white/40">logo:</span>
-                  <span className="text-white/80"> {SAMPLE.logo}</span>
+                  <span className="text-foreground/40">logo:</span>
+                  <span className="text-foreground/80"> {SAMPLE.logo}</span>
                   {"\n"}
-                  <span className="text-white/25">---</span>
+                  <span className="text-foreground/25">---</span>
                 </code>
               </pre>
             </div>
 
             <div
-              className="flex items-center justify-center text-white/20"
+              className="flex items-center justify-center text-foreground/20"
               aria-hidden="true"
             >
               <ArrowRight className="hidden h-5 w-5 lg:block" />
               <ArrowRight className="h-5 w-5 rotate-90 lg:hidden" />
             </div>
 
-            <div className="flex h-full flex-col rounded-2xl border border-dark-border bg-dark-card p-5 sm:p-6">
+            <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
               <div className="mb-4 flex items-start justify-between">
-                <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06]">
-                  <span className="text-2xl font-semibold text-white/30">
+                <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.06]">
+                  <span className="text-2xl font-semibold text-foreground/30">
                     {SAMPLE.name.charAt(0)}
                   </span>
                 </div>
               </div>
-              <h3 className="text-base font-semibold text-white">
+              <h3 className="text-base font-semibold text-foreground">
                 {SAMPLE.name}
               </h3>
-              <p className="mt-0.5 font-mono text-xs text-white/25">
+              <p className="mt-0.5 font-mono text-xs text-foreground/25">
                 {SAMPLE.hostname}
               </p>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-white/40">
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/40">
                 {SAMPLE.description}
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
@@ -148,7 +148,7 @@ export default function SubmitAppForm() {
               Open template in GitHub
               <ArrowUpRight className="h-4 w-4" />
             </Button>
-            <p className="mt-3 font-mono text-[11px] text-white/30">
+            <p className="mt-3 font-mono text-[11px] text-foreground/30">
               Requires a GitHub account.
             </p>
           </div>
@@ -158,7 +158,7 @@ export default function SubmitAppForm() {
           <div className="flex justify-center">
             <Link
               href="/ecosystem"
-              className="group inline-flex items-center gap-2 font-mono text-sm text-white/30 transition-colors hover:text-white/60"
+              className="group inline-flex items-center gap-2 font-mono text-sm text-foreground/30 transition-colors hover:text-foreground/60"
             >
               <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
               Back to ecosystem

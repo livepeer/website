@@ -38,7 +38,7 @@ function WorldsVisual() {
       ].map(([x, y], i) => (
         <div
           key={i}
-          className="absolute h-px w-px rounded-full bg-white/50"
+          className="absolute h-px w-px rounded-full bg-foreground/50"
           style={{
             left: `${x}%`,
             top: `${y}%`,
@@ -124,10 +124,10 @@ function WorldsVisual() {
       >
         GENERATING
       </div>
-      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-white/35">
+      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-foreground/35">
         60 FPS
       </div>
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Frame 1,847 &middot; 12ms
       </div>
     </div>
@@ -147,7 +147,7 @@ function TranscodingVisual() {
       <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d0d] via-[#0a0a0a] to-[#0d0d0d]" />
 
       {/* Mini player chrome */}
-      <div className="absolute inset-x-3 top-3 bottom-10 rounded-md border border-white/[0.1] bg-[#131313] overflow-hidden">
+      <div className="absolute inset-x-3 top-3 bottom-10 rounded-md border border-foreground/[0.1] bg-[#131313] overflow-hidden">
         {/* Video area gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent" />
 
@@ -178,7 +178,7 @@ function TranscodingVisual() {
                   }}
                 />
               </div>
-              <span className="font-mono text-[10px] text-white/50 whitespace-nowrap">
+              <span className="font-mono text-[10px] text-foreground/50 whitespace-nowrap">
                 {r.res} {r.fps}
               </span>
             </div>
@@ -187,7 +187,7 @@ function TranscodingVisual() {
       </div>
 
       {/* Bottom stats */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Bitrate: 4.2 Mbps &middot; Latency: 85ms
       </div>
     </div>
@@ -399,9 +399,9 @@ function AnalysisVisual() {
       ))}
       <div className="absolute left-3 top-2.5 flex items-center gap-1.5">
         <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
-        <span className="font-mono text-[9px] text-white/40">LIVE</span>
+        <span className="font-mono text-[9px] text-foreground/40">LIVE</span>
       </div>
-      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-white/35">
+      <div className="absolute right-3 top-2.5 font-mono text-[9px] text-foreground/35">
         YOLOv8 &middot; 8ms
       </div>
       <div className="absolute bottom-2.5 left-3 flex gap-3 font-mono text-[9px]">
@@ -464,9 +464,9 @@ function AvatarsVisual() {
     <div className="relative h-full overflow-hidden rounded-lg bg-[#0a0a0a]">
       <div className="flex h-full items-center justify-center gap-4 px-4 py-5">
         {/* Input */}
-        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-white/[0.1] bg-[#131313]">
+        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-foreground/[0.1] bg-[#131313]">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-[55%] w-[45%] rounded-[50%] bg-white/[0.05]" />
+            <div className="h-[55%] w-[45%] rounded-[50%] bg-foreground/[0.05]" />
           </div>
           <svg
             className="absolute inset-0 h-full w-full"
@@ -505,7 +505,7 @@ function AvatarsVisual() {
 
         {/* Arrow */}
         <svg
-          className="h-3 w-4 flex-shrink-0 text-white/25"
+          className="h-3 w-4 flex-shrink-0 text-foreground/25"
           viewBox="0 0 16 12"
           fill="none"
           style={{ animation: "arrowFlow 2.5s ease-in-out infinite" }}
@@ -520,7 +520,7 @@ function AvatarsVisual() {
         </svg>
 
         {/* Output */}
-        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-white/[0.1] bg-[#131313]">
+        <div className="relative h-[110px] w-[80px] flex-shrink-0 overflow-hidden rounded-md border border-foreground/[0.1] bg-[#131313]">
           <div className="absolute inset-0 flex items-center justify-center">
             <div
               className="relative h-[55%] w-[45%] rounded-[50%] bg-gradient-to-b from-purple-500/[0.12] to-emerald-500/[0.08]"
@@ -538,7 +538,7 @@ function AvatarsVisual() {
       </div>
 
       {/* Bottom label */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Style: Anime &middot; 22ms
       </div>
     </div>
@@ -562,7 +562,7 @@ function SyntheticDataVisual() {
         {thumbnails.map((t, i) => (
           <div
             key={t.label}
-            className={`relative overflow-hidden rounded-md border border-white/[0.1] bg-gradient-to-br ${t.from} ${t.to}`}
+            className={`relative overflow-hidden rounded-md border border-foreground/[0.1] bg-gradient-to-br ${t.from} ${t.to}`}
           >
             {/* Subtle noise texture */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGZpbHRlciBpZD0ibiI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOCIgbnVtT2N0YXZlcz0iNCIgLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9IjAuMDMiLz48L3N2Zz4=')] opacity-50" />
@@ -577,7 +577,7 @@ function SyntheticDataVisual() {
                 animationDelay: `${i * 0.6}s`,
               }}
             />
-            <div className="absolute bottom-1 left-1.5 font-mono text-[7px] text-white/40">
+            <div className="absolute bottom-1 left-1.5 font-mono text-[7px] text-foreground/40">
               {t.label}
             </div>
           </div>
@@ -723,7 +723,7 @@ function PipelinesVisual() {
       </div>
 
       {/* Bottom HUD */}
-      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-white/35">
+      <div className="absolute bottom-2.5 left-3 font-mono text-[9px] text-foreground/35">
         Pipeline: img2img &middot; 3 stages
       </div>
       <div className="absolute bottom-2.5 right-3 font-mono text-[9px] text-emerald-400/60">
@@ -818,17 +818,17 @@ export default function Capabilities() {
                 transition={{ duration: 0.4 }}
                 className={`md:col-span-1 ${colSpanClass[cap.colSpan]}`}
               >
-                <div className="block h-full overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a]">
+                <div className="block h-full overflow-hidden rounded-xl border border-foreground/[0.07] bg-[#1a1a1a]">
                   <div
                     className={`p-2.5 pb-0 ${cap.colSpan === 4 ? "h-[180px] lg:h-[240px]" : "h-[180px]"}`}
                   >
                     <cap.Visual />
                   </div>
                   <div className="px-5 py-5">
-                    <h3 className="text-lg font-medium text-white/90">
+                    <h3 className="text-lg font-medium text-foreground/90">
                       {cap.title}
                     </h3>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-white/40">
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-foreground/40">
                       {cap.description}
                     </p>
                   </div>

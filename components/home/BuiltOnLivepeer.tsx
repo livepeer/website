@@ -10,7 +10,154 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-/* ── Logos ── */
+/* ── Brand panels ── each project's poster: bold brand-colored panel with
+   its logo + wordmark as the hero. Replaces the bespoke dashboard mocks. */
+
+function DaydreamPanel() {
+  return (
+    <div
+      className="relative flex h-full items-center justify-center overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, #E84549 0%, #F38F3E 35%, #3DB5BE 70%, #406FA0 100%)",
+      }}
+    >
+      <div
+        className="absolute inset-0 opacity-25 mix-blend-overlay"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 30% 30%, rgba(255,255,255,0.4), transparent 70%)",
+        }}
+      />
+      <div className="relative flex items-center gap-3 text-white">
+        <svg
+          width="42"
+          height="40"
+          viewBox="0 0 78 74"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path d="M35 8 A28 28 0 0 0 35 64 L35 8 Z" fill="currentColor" />
+          <circle cx="52" cy="36" r="15" fill="currentColor" />
+        </svg>
+        <span className="text-[32px] font-bold tracking-tight">Daydream</span>
+      </div>
+    </div>
+  );
+}
+
+function FrameworksPanel() {
+  return (
+    <div
+      className="relative flex h-full items-center justify-center overflow-hidden"
+      style={{ background: "#1b1c28" }}
+    >
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          background:
+            "repeating-linear-gradient(180deg, transparent 0, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 4px)",
+        }}
+      />
+      <div className="relative flex items-center gap-3 text-white">
+        <svg width="40" height="40" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M3 4L7 10L3 16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M17 4L13 10L17 16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <line
+            x1="8"
+            y1="14"
+            x2="12"
+            y2="6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+        <span className="text-[32px] font-bold tracking-tight">Frameworks</span>
+      </div>
+    </div>
+  );
+}
+
+function StreamplacePanel() {
+  return (
+    <div
+      className="relative flex h-full items-center justify-center overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, #E967B8 0%, #D94BA8 50%, #B23A8C 100%)",
+      }}
+    >
+      <div
+        className="absolute inset-0 opacity-20 mix-blend-overlay"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 70% 30%, rgba(255,255,255,0.5), transparent 65%)",
+        }}
+      />
+      <div className="relative flex items-center gap-3 text-white">
+        <svg width="38" height="38" viewBox="0 0 493.29 481.09" fill="none">
+          <path
+            d="m253.76 445.69-208.02-93.734-45.742-290.22 243.33-61.739 249.95 58.678-9.9427 310.8z"
+            fill="currentColor"
+            fillOpacity="0.95"
+          />
+          <path
+            d="m253.59 481.09-241.31-105.15-12.277-314.2 253.59 70.875 239.69-73.936-85.842 261.91z"
+            fill="currentColor"
+            fillOpacity="0.7"
+          />
+          <path
+            d="m493.29 58.678-239.7 73.933-0.59253 348.48 230.34-111.61z"
+            fill="currentColor"
+            fillOpacity="0.45"
+          />
+        </svg>
+        <span className="text-[32px] font-bold tracking-tight">Streamplace</span>
+      </div>
+    </div>
+  );
+}
+
+function EmbodyPanel() {
+  return (
+    <div
+      className="relative flex h-full items-center justify-center overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 45%, #34d399 100%)",
+      }}
+    >
+      <div
+        className="absolute inset-0 opacity-30 mix-blend-overlay"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 30% 40%, rgba(255,255,255,0.4), transparent 65%)",
+        }}
+      />
+      <div className="relative flex items-center gap-3 text-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/15 backdrop-blur-md">
+          <div className="h-4 w-4 rounded-full bg-white/70" />
+        </div>
+        <span className="text-[32px] font-bold tracking-tight">Embody</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── Logos ── kept for any non-poster contexts (none currently in this file). */
 
 function DaydreamLogo({ className }: { className?: string }) {
   return (
@@ -23,7 +170,7 @@ function DaydreamLogo({ className }: { className?: string }) {
             "linear-gradient(135deg, #F73B41, #FF982E, #2FBEC5, #36619D)",
         }}
       />
-      <span className="text-[17px] font-bold tracking-tight text-white">
+      <span className="text-[19px] font-bold tracking-tight text-foreground">
         Daydream
       </span>
     </div>
@@ -37,14 +184,14 @@ function FrameworksLogo({ className }: { className?: string }) {
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path
           d="M3 4L7 10L3 16"
-          stroke="white"
+          stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M17 4L13 10L17 16"
-          stroke="white"
+          stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -54,12 +201,12 @@ function FrameworksLogo({ className }: { className?: string }) {
           y1="14"
           x2="12"
           y2="6"
-          stroke="white"
+          stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-[17px] font-bold tracking-tight text-white">
+      <span className="text-[19px] font-bold tracking-tight text-foreground">
         Frameworks
       </span>
     </div>
@@ -84,7 +231,7 @@ function StreamplaceLogo({ className }: { className?: string }) {
           fill="#ac6e81"
         />
       </svg>
-      <span className="text-[17px] font-bold tracking-tight text-white">
+      <span className="text-[19px] font-bold tracking-tight text-foreground">
         Streamplace
       </span>
     </div>
@@ -98,7 +245,7 @@ function EmbodyLogo({ className }: { className?: string }) {
       <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple-400/40 to-emerald-400/30">
         <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
       </div>
-      <span className="text-[17px] font-bold tracking-tight text-white">
+      <span className="text-[19px] font-bold tracking-tight text-foreground">
         Embody
       </span>
     </div>
@@ -115,7 +262,7 @@ function DaydreamVisual() {
   ];
 
   return (
-    <div className="relative h-full min-h-[220px] overflow-hidden bg-[#0e0e0e]">
+    <div className="relative h-full min-h-[220px] overflow-hidden bg-surface">
       {/* Ambient glow */}
       <div
         className="absolute h-[300px] w-[300px] rounded-full opacity-20 blur-[100px]"
@@ -129,7 +276,7 @@ function DaydreamVisual() {
       {/* Main canvas area */}
       <div className="absolute inset-4 flex flex-col">
         {/* Toolbar */}
-        <div className="flex items-center justify-between rounded-t-md border border-b-0 border-white/[0.08] bg-black/30 px-3 py-2">
+        <div className="flex items-center justify-between rounded-t-md border border-b-0 border-foreground/[0.08] bg-black/30 light:bg-foreground/[0.04] px-3 py-2">
           <div className="flex items-center gap-1.5">
             <span
               className="h-1.5 w-1.5 rounded-full animate-pulse"
@@ -143,18 +290,18 @@ function DaydreamVisual() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[8px] text-white/20">
+            <span className="font-mono text-[8px] text-foreground/20">
               1920×1080
             </span>
-            <span className="font-mono text-[8px] text-white/20">30fps</span>
-            <span className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-[8px] text-cyan-400/50">
+            <span className="font-mono text-[8px] text-foreground/20">30fps</span>
+            <span className="rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[8px] text-cyan-400/50">
               GPU×4
             </span>
           </div>
         </div>
 
         {/* Video preview area — large central frame */}
-        <div className="relative flex-1 rounded-b-md border border-white/[0.08] bg-black/20">
+        <div className="relative flex-1 rounded-b-md border border-foreground/[0.08] bg-black/20 light:bg-foreground/[0.03]">
           {/* Abstract "generated scene" — layered geometric shapes */}
           <svg
             className="absolute inset-0 h-full w-full"
@@ -184,7 +331,7 @@ function DaydreamVisual() {
             />
             <path
               d="M0 110 C120 60, 220 130, 340 80 S480 110, 500 70"
-              stroke="rgba(255,255,255,0.04)"
+              stroke="color-mix(in srgb, currentColor 4%, transparent)"
               strokeWidth="0.8"
             />
             {/* Scattered particles */}
@@ -222,12 +369,12 @@ function DaydreamVisual() {
           </svg>
 
           {/* Pipeline frame strip at bottom */}
-          <div className="absolute inset-x-0 bottom-0 border-t border-white/[0.06] bg-black/50 px-3 py-2">
+          <div className="absolute inset-x-0 bottom-0 border-t border-foreground/[0.06] bg-black/50 light:bg-foreground/[0.08] px-3 py-2">
             <div className="flex gap-2">
               {frames.map((f, i) => (
                 <div key={i} className="flex-1">
                   <div
-                    className={`aspect-video rounded border border-white/[0.08] bg-gradient-to-br ${f.gradient}`}
+                    className={`aspect-video rounded border border-foreground/[0.08] bg-gradient-to-br ${f.gradient}`}
                   >
                     {/* Mini abstract content per frame */}
                     <svg
@@ -243,7 +390,7 @@ function DaydreamVisual() {
                             width="40"
                             height="25"
                             rx="2"
-                            fill="rgba(255,255,255,0.06)"
+                            fill="color-mix(in srgb, currentColor 6%, transparent)"
                           />
                           <circle
                             cx="40"
@@ -314,11 +461,11 @@ function DaydreamVisual() {
                     </svg>
                   </div>
                   <div className="mt-1 flex items-center justify-between">
-                    <span className="font-mono text-[7px] text-white/25">
+                    <span className="font-mono text-[7px] text-foreground/25">
                       {f.label}
                     </span>
                     {i < 3 && (
-                      <span className="font-mono text-[7px] text-white/15">
+                      <span className="font-mono text-[7px] text-foreground/15">
                         &rarr;
                       </span>
                     )}
@@ -333,11 +480,6 @@ function DaydreamVisual() {
         </div>
       </div>
 
-      {/* Bottom gradient + logo */}
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-transparent" />
-      <div className="absolute bottom-3.5 left-5">
-        <DaydreamLogo />
-      </div>
     </div>
   );
 }
@@ -345,8 +487,8 @@ function DaydreamVisual() {
 /* ── Product visual: Frameworks — developer tools ── */
 function StudioVisual() {
   return (
-    <div className="relative h-[220px] overflow-hidden bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#0a0a0a] to-[#0d0d10]" />
+    <div className="relative h-full min-h-[220px] overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#0a0a0a] to-[#0d0d10] light:from-[#f3f5f8] light:via-[#eceff2] light:to-[#f3f5f8]" />
 
       {/* Subtle brand gradient accent */}
       <div
@@ -360,14 +502,14 @@ function StudioVisual() {
       />
 
       {/* Mini API dashboard */}
-      <div className="absolute inset-4 rounded-md border border-white/[0.06] bg-[#0c0c0c]">
-        <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
+      <div className="absolute inset-4 rounded-md border border-foreground/[0.06] bg-card">
+        <div className="flex items-center gap-2 border-b border-foreground/[0.06] px-3 py-2">
           <div className="flex gap-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-white/10" />
-            <div className="h-1.5 w-1.5 rounded-full bg-white/10" />
-            <div className="h-1.5 w-1.5 rounded-full bg-white/10" />
+            <div className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
+            <div className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
+            <div className="h-1.5 w-1.5 rounded-full bg-foreground/10" />
           </div>
-          <div className="ml-2 h-3 w-24 rounded bg-white/[0.04]" />
+          <div className="ml-2 h-3 w-24 rounded bg-foreground/[0.04]" />
         </div>
 
         <div className="p-3">
@@ -408,7 +550,7 @@ function StudioVisual() {
                 >
                   {row.method}
                 </span>
-                <span className="font-mono text-[8px] text-white/30">
+                <span className="font-mono text-[8px] text-foreground/30">
                   {row.path}
                 </span>
                 <span
@@ -417,7 +559,7 @@ function StudioVisual() {
                     color:
                       row.status === "200"
                         ? "rgba(41,151,100,0.6)"
-                        : "rgba(255,255,255,0.2)",
+                        : "color-mix(in srgb, currentColor 20%, transparent)",
                   }}
                 >
                   {row.status}
@@ -434,12 +576,12 @@ function StudioVisual() {
             ].map((s) => (
               <div
                 key={s.label}
-                className="rounded border border-white/[0.06] bg-white/[0.02] px-2 py-1.5"
+                className="rounded border border-foreground/[0.06] bg-foreground/[0.02] px-2 py-1.5"
               >
-                <div className="font-mono text-[7px] text-white/20">
+                <div className="font-mono text-[7px] text-foreground/20">
                   {s.label}
                 </div>
-                <div className="font-mono text-[12px] font-semibold text-white/60">
+                <div className="font-mono text-[12px] font-semibold text-foreground/60">
                   {s.value}
                 </div>
               </div>
@@ -448,11 +590,6 @@ function StudioVisual() {
         </div>
       </div>
 
-      {/* Bottom gradient + logo */}
-      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent" />
-      <div className="absolute bottom-3 left-5">
-        <FrameworksLogo className="h-5 w-auto opacity-90" />
-      </div>
     </div>
   );
 }
@@ -460,9 +597,9 @@ function StudioVisual() {
 /* ── Product visual: Streamplace — decentralized social livestreaming ── */
 function StreamplaceVisual() {
   return (
-    <div className="relative h-[220px] overflow-hidden bg-[#0a0a0a]">
+    <div className="relative h-full min-h-[220px] overflow-hidden bg-surface">
       {/* Streamplace brand: pink/mauve tones */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#140d10] via-[#0a0a0a] to-[#110d0f]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#140d10] via-[#0a0a0a] to-[#110d0f] light:from-[#faeef2] light:via-[#f3e8ed] light:to-[#faeef2]" />
 
       {/* Subtle brand glow */}
       <div
@@ -472,12 +609,12 @@ function StreamplaceVisual() {
 
       <div className="absolute inset-4 flex gap-3">
         {/* Stream viewer — main content area */}
-        <div className="relative flex-1 overflow-hidden rounded-md border border-white/[0.06] bg-[#111]">
+        <div className="relative flex-1 overflow-hidden rounded-md border border-foreground/[0.06] bg-[#111] light:bg-card">
           {/* Video placeholder with silhouette */}
           <div className="flex h-full items-center justify-center">
             <div className="relative flex flex-col items-center">
-              <div className="h-12 w-12 rounded-full bg-white/[0.06]" />
-              <div className="mt-1 h-8 w-16 rounded-t-full bg-white/[0.04]" />
+              <div className="h-12 w-12 rounded-full bg-foreground/[0.06]" />
+              <div className="mt-1 h-8 w-16 rounded-t-full bg-foreground/[0.04]" />
             </div>
           </div>
 
@@ -490,8 +627,8 @@ function StreamplaceVisual() {
           </div>
 
           {/* Viewer count */}
-          <div className="absolute right-2 top-2 rounded bg-black/40 px-2 py-0.5">
-            <span className="font-mono text-[8px] text-white/30">
+          <div className="absolute right-2 top-2 rounded bg-black/40 light:bg-foreground/[0.06] px-2 py-0.5">
+            <span className="font-mono text-[8px] text-foreground/30">
               847 watching
             </span>
           </div>
@@ -499,22 +636,22 @@ function StreamplaceVisual() {
           {/* Streamer handle */}
           <div className="absolute bottom-2 left-2 flex items-center gap-1.5">
             <div className="h-4 w-4 rounded-full bg-[#de91a6]/30" />
-            <span className="font-mono text-[8px] text-white/40">
+            <span className="font-mono text-[8px] text-foreground/40">
               @alice.bsky.social
             </span>
           </div>
 
           {/* AT Protocol badge */}
-          <div className="absolute bottom-2 right-2 rounded bg-white/[0.04] px-1.5 py-0.5">
-            <span className="font-mono text-[7px] text-white/20">
+          <div className="absolute bottom-2 right-2 rounded bg-foreground/[0.04] px-1.5 py-0.5">
+            <span className="font-mono text-[7px] text-foreground/20">
               AT Protocol
             </span>
           </div>
         </div>
 
         {/* Chat / social sidebar */}
-        <div className="flex w-[100px] flex-col gap-1.5 overflow-hidden rounded-md border border-white/[0.06] bg-[#0c0c0c] p-2">
-          <div className="font-mono text-[7px] text-white/25 uppercase">
+        <div className="flex w-[100px] flex-col gap-1.5 overflow-hidden rounded-md border border-foreground/[0.06] bg-card p-2">
+          <div className="font-mono text-[7px] text-foreground/25 uppercase">
             Chat
           </div>
           {[
@@ -528,23 +665,18 @@ function StreamplaceVisual() {
               <span style={{ color: "rgba(222,145,166,0.6)" }}>
                 @{c.handle}
               </span>
-              <span className="text-white/25"> {c.msg}</span>
+              <span className="text-foreground/25"> {c.msg}</span>
             </div>
           ))}
           {/* Chat input */}
-          <div className="mt-auto rounded border border-white/[0.06] bg-white/[0.02] px-1.5 py-1">
-            <span className="font-mono text-[7px] text-white/15">
+          <div className="mt-auto rounded border border-foreground/[0.06] bg-foreground/[0.02] px-1.5 py-1">
+            <span className="font-mono text-[7px] text-foreground/15">
               Say something...
             </span>
           </div>
         </div>
       </div>
 
-      {/* Bottom gradient + logo */}
-      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-      <div className="absolute bottom-3.5 left-5">
-        <StreamplaceLogo />
-      </div>
     </div>
   );
 }
@@ -552,8 +684,8 @@ function StreamplaceVisual() {
 /* ── Product visual: Embody — AI agent avatars ── */
 function EmbodyVisual() {
   return (
-    <div className="relative h-[220px] overflow-hidden bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0f0d14] via-[#0a0a0a] to-[#0d100f]" />
+    <div className="relative h-full min-h-[220px] overflow-hidden bg-surface">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0f0d14] via-[#0a0a0a] to-[#0d100f] light:from-[#f3eef9] light:via-[#ece4f3] light:to-[#f3eef9]" />
 
       {/* Subtle glow */}
       <div
@@ -587,30 +719,30 @@ function EmbodyVisual() {
 
           {/* Agent info panel */}
           <div className="flex flex-col gap-2">
-            <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+            <div className="rounded-md border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2">
               <div className="font-mono text-[7px] text-purple-400/50 uppercase">
                 Agent Status
               </div>
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-                <span className="font-mono text-[10px] text-white/50">
+                <span className="font-mono text-[10px] text-foreground/50">
                   Active
                 </span>
               </div>
             </div>
-            <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+            <div className="rounded-md border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2">
               <div className="font-mono text-[7px] text-purple-400/50 uppercase">
                 Mode
               </div>
-              <div className="mt-0.5 font-mono text-[10px] text-white/50">
+              <div className="mt-0.5 font-mono text-[10px] text-foreground/50">
                 Voice + Avatar
               </div>
             </div>
-            <div className="rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+            <div className="rounded-md border border-foreground/[0.06] bg-foreground/[0.02] px-3 py-2">
               <div className="font-mono text-[7px] text-purple-400/50 uppercase">
                 Latency
               </div>
-              <div className="mt-0.5 font-mono text-[10px] text-white/50">
+              <div className="mt-0.5 font-mono text-[10px] text-foreground/50">
                 18ms
               </div>
             </div>
@@ -618,20 +750,32 @@ function EmbodyVisual() {
         </div>
       </div>
 
-      {/* Bottom gradient + logo */}
-      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-      <div className="absolute bottom-3.5 left-5">
-        <EmbodyLogo />
-      </div>
     </div>
   );
 }
 
 const projects = [
-  { slug: "daydream", Visual: DaydreamVisual, Logo: DaydreamLogo },
-  { slug: "frameworks", Visual: StudioVisual, Logo: FrameworksLogo },
-  { slug: "streamplace", Visual: StreamplaceVisual, Logo: StreamplaceLogo },
-  { slug: "embody", Visual: EmbodyVisual, Logo: EmbodyLogo },
+  {
+    slug: "daydream",
+    name: "Daydream",
+    category: "Generative",
+    tagline: "Real-time generative AI video, open and remixable",
+    Panel: DaydreamPanel,
+  },
+  {
+    slug: "frameworks",
+    name: "Frameworks",
+    category: "Infrastructure",
+    tagline: "The open streaming stack for live video",
+    Panel: FrameworksPanel,
+  },
+  {
+    slug: "streamplace",
+    name: "Streamplace",
+    category: "Social",
+    tagline: "The video layer for decentralized social",
+    Panel: StreamplacePanel,
+  },
 ];
 
 export type BuiltOnLivepeerMeta = Record<
@@ -644,9 +788,6 @@ export default function BuiltOnLivepeer({
 }: {
   meta: BuiltOnLivepeerMeta;
 }) {
-  const [featured, ...rest] = projects;
-  const featuredMeta = meta[featured.slug];
-
   return (
     <section className="relative py-24 lg:py-32">
       <div className="divider-gradient absolute top-0 left-0 right-0" />
@@ -667,60 +808,43 @@ export default function BuiltOnLivepeer({
             />
           </motion.div>
 
-          {/* Bento grid: featured card + 3 smaller cards */}
-          <div className="mt-20 grid gap-4 lg:grid-cols-2 lg:grid-rows-3">
-            {/* Featured — Daydream (spans all 3 rows on desktop) */}
-            <motion.div
-              variants={fadeUp}
-              transition={{ duration: 0.4 }}
-              className="lg:row-span-3"
-            >
-              <Link
-                href={`/ecosystem/${featured.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
+          {/* Linear-style brand poster grid — each project is a bold,
+              brand-colored panel with the logo as the hero, tagline + link
+              sitting on the page below. */}
+          <div className="mt-20 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-3 md:gap-y-12">
+            {projects.map((project) => (
+              <motion.div
+                key={project.slug}
+                variants={fadeUp}
+                transition={{ duration: 0.4 }}
               >
-                <div className="relative flex-1 min-h-[220px]">
-                  <div className="absolute inset-0">
-                    <featured.Visual />
-                  </div>
-                </div>
-                <div className="px-6 py-5">
-                  <p className="text-sm leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
-                    {featuredMeta.description}
-                  </p>
-                  <span className="mt-3 inline-block text-[13px] text-white/25">
-                    {featuredMeta.domain}
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-
-            {/* 3 smaller cards stacked on the right */}
-            {rest.map((project) => {
-              const projectMeta = meta[project.slug];
-              return (
-                <motion.div
-                  key={project.slug}
-                  variants={fadeUp}
-                  transition={{ duration: 0.4 }}
+                <Link
+                  href={`/ecosystem/${project.slug}`}
+                  className="group block"
                 >
-                  <Link
-                    href={`/ecosystem/${project.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-[#1a1a1a] transition-colors hover:border-white/[0.14]"
-                  >
-                    <div className="px-5 pt-5 pb-4">
-                      <project.Logo />
-                      <p className="mt-3 text-[13px] leading-relaxed text-white/50 transition-colors group-hover:text-white/70">
-                        {projectMeta.description}
-                      </p>
-                      <span className="mt-3 inline-block text-[13px] text-white/25">
-                        {projectMeta.domain}
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
+                  {/* Brand poster panel */}
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-xl ring-1 ring-foreground/[0.06] transition-all duration-300 group-hover:ring-foreground/[0.12] group-hover:-translate-y-0.5">
+                    <project.Panel />
+                  </div>
+                  {/* Caption */}
+                  <p className="mt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45">
+                    {project.category}
+                  </p>
+                  <h3 className="mt-2 text-[19px] font-medium leading-snug tracking-tight text-foreground lg:text-[21px]">
+                    {project.tagline}
+                  </h3>
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-foreground/55 transition-colors group-hover:text-foreground">
+                    Learn more
+                    <span
+                      className="transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
           </div>
 
           <motion.div
@@ -730,11 +854,7 @@ export default function BuiltOnLivepeer({
           >
             <Link
               href="/ecosystem"
-              className="inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:brightness-110 active:brightness-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-              }}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all duration-200 hover:bg-foreground/90 active:bg-foreground/80"
             >
               Explore the ecosystem <span aria-hidden="true">→</span>
             </Link>

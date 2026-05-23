@@ -134,7 +134,7 @@ export default function Hero() {
             top: "0vw",
             width: `${3 * TILE}vw`,
             aspectRatio: "1 / 1",
-            border: "1px solid rgba(255,255,255,0.15)",
+            border: "1px solid var(--grid-line-strong)",
           }}
         />
 
@@ -146,7 +146,7 @@ export default function Hero() {
             top: `${3 * TILE}vw`,
             width: `${2 * TILE}vw`,
             aspectRatio: "1 / 1",
-            border: "1px solid rgba(255,255,255,0.10)",
+            border: "1px solid var(--grid-line-subtle)",
           }}
         />
 
@@ -172,7 +172,7 @@ export default function Hero() {
               width: "40%",
               height: "1px",
               background:
-                "linear-gradient(to right, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 35%, transparent 70%)",
+                "linear-gradient(to right, var(--grid-line), transparent 70%)",
               transformOrigin: "0% 50%",
               transform: `rotate(${angle}deg)`,
             }}
@@ -188,7 +188,7 @@ export default function Hero() {
             width: "1px",
             height: `${2 * TILE}vw`,
             background:
-              "linear-gradient(to bottom, rgba(255,255,255,0.10), transparent 100%)",
+              "linear-gradient(to bottom, var(--grid-line-subtle), transparent 100%)",
           }}
         />
 
@@ -207,7 +207,7 @@ export default function Hero() {
               top: "-0.5px",
               width: "13px",
               height: "1px",
-              background: "rgba(255,255,255,0.12)",
+              background: "var(--grid-line)",
             }}
           />
           <div
@@ -217,7 +217,7 @@ export default function Hero() {
               top: "-6px",
               width: "1px",
               height: "13px",
-              background: "rgba(255,255,255,0.12)",
+              background: "var(--grid-line)",
             }}
           />
         </div>
@@ -226,19 +226,20 @@ export default function Hero() {
         <PulseTrail />
       </div>
 
-      {/* Center darken for text readability — wider/stronger on mobile */}
+      {/* Center contrast overlay — darkens in dark mode, lightens in light mode
+          to keep text readable over the video. Strength flips via CSS vars. */}
       <div
         className="pointer-events-none absolute inset-0 lg:hidden"
         style={{
           background:
-            "radial-gradient(ellipse 90% 60% at 50% 48%, rgba(4,6,5,0.88) 0%, rgba(4,6,5,0.5) 70%, transparent 100%)",
+            "radial-gradient(ellipse 90% 60% at 50% 48%, var(--hero-overlay-mobile) 0%, color-mix(in srgb, var(--hero-overlay-mobile), transparent 45%) 70%, transparent 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0 hidden lg:block"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 48%, rgba(4,6,5,0.78) 0%, rgba(4,6,5,0.35) 70%, transparent 100%)",
+            "radial-gradient(ellipse 60% 50% at 50% 48%, var(--hero-overlay-center) 0%, color-mix(in srgb, var(--hero-overlay-center), transparent 55%) 70%, transparent 100%)",
         }}
       />
 
@@ -277,11 +278,11 @@ export default function Hero() {
           >
             The open network for
             <br />
-            <span className="text-gradient">real-time AI video</span>
+            <span className="hero-accent">real-time AI video</span>
           </motion.h1>
 
           <motion.p
-            className="mx-auto mt-6 max-w-xl text-lg text-white/50"
+            className="mx-auto mt-6 max-w-xl text-lg text-foreground/50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -298,11 +299,7 @@ export default function Hero() {
           >
             <Link
               href="/ecosystem"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
-              style={{
-                background:
-                  "linear-gradient(135deg, #1E9960 0%, #18794E 60%, #115C3B 100%)",
-              }}
+              className="hero-cta-primary inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 animate-[ctaGlow_4s_ease-in-out_infinite] hover:brightness-110 active:brightness-95"
             >
               Explore the ecosystem <span aria-hidden="true">→</span>
             </Link>
@@ -310,7 +307,7 @@ export default function Hero() {
               href="https://discord.gg/livepeer"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition-all duration-200 hover:bg-white/20 hover:border-white/25 active:bg-white/25"
+              className="hero-cta-secondary inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-foreground/10 bg-foreground/5 px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-xl transition-all duration-200 hover:bg-foreground/20 hover:border-foreground/25 active:bg-foreground/25"
             >
               Join Discord <span aria-hidden="true">↗</span>
             </a>
@@ -323,7 +320,8 @@ export default function Hero() {
         className="pointer-events-none absolute bottom-0 left-0 right-0 h-48"
         aria-hidden="true"
         style={{
-          background: "linear-gradient(to bottom, transparent, #121212)",
+          background:
+            "linear-gradient(to bottom, transparent, var(--hero-bottom-fade))",
         }}
       />
     </section>

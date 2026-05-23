@@ -131,7 +131,7 @@ export default function EcosystemListingClient({
                 href="/ecosystem/submit"
                 variant="secondary"
                 size="sm"
-                className="shrink-0 backdrop-blur-sm text-white/60 hover:text-white/80"
+                className="shrink-0 backdrop-blur-sm text-foreground/60 hover:text-foreground/80"
               >
                 <Plus className="h-3 w-3" />
                 Submit App
@@ -164,14 +164,14 @@ export default function EcosystemListingClient({
             </div>
 
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-white/50" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-foreground/50" />
               <input
                 type="text"
                 placeholder="Search"
                 aria-label="Search ecosystem apps"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-md border border-white/[0.12] bg-white/[0.03] backdrop-blur-sm py-1.5 pl-9 pr-8 text-sm text-white/60 placeholder:text-white/30 transition-colors duration-200 focus:bg-white/[0.05] focus:border-white/20 focus:outline-none sm:w-56 select-none"
+                className="w-full rounded-md border border-foreground/[0.12] bg-foreground/[0.03] backdrop-blur-sm py-1.5 pl-9 pr-8 text-sm text-foreground/60 placeholder:text-foreground/30 transition-colors duration-200 focus:bg-foreground/[0.05] focus:border-foreground/20 focus:outline-none sm:w-56 select-none"
               />
               <AnimatePresence>
                 {search && (
@@ -180,7 +180,7 @@ export default function EcosystemListingClient({
                     animate={{ opacity: 1, transition: { duration: 0.2 } }}
                     exit={{ opacity: 0, transition: { duration: 0.5 } }}
                     onClick={() => setSearch("")}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-white/50 transition-colors hover:text-white/80"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-foreground/50 transition-colors hover:text-foreground/80"
                     aria-label="Clear search"
                   >
                     <svg
@@ -233,10 +233,10 @@ export default function EcosystemListingClient({
                   >
                     <Link
                       href={`/ecosystem/${app.slug}`}
-                      className="group flex h-full flex-col rounded-2xl border border-dark-border bg-dark-card p-5 transition-colors hover:border-white/10 sm:p-6 select-none"
+                      className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-colors hover:border-foreground/10 sm:p-6 select-none"
                     >
                       <div className="mb-4 flex items-start justify-between">
-                        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06]">
+                        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.06]">
                           {app.logo ? (
                             <img
                               src={`/ecosystem/${app.logo}`}
@@ -252,20 +252,20 @@ export default function EcosystemListingClient({
                               }
                             />
                           ) : (
-                            <span className="text-2xl font-semibold text-white/30">
+                            <span className="text-2xl font-semibold text-foreground/30">
                               {app.name.charAt(0)}
                             </span>
                           )}
                         </div>
-                        <ArrowRight className="h-4 w-4 text-white/0 transition-colors group-hover:text-white/40" />
+                        <ArrowRight className="h-4 w-4 text-foreground/0 transition-colors group-hover:text-foreground/40" />
                       </div>
-                      <h3 className="text-base font-semibold text-white transition-colors group-hover:text-green-light">
+                      <h3 className="text-base font-semibold text-foreground transition-colors group-hover:text-green-light">
                         {app.name}
                       </h3>
-                      <p className="mt-0.5 font-mono text-xs text-white/25">
+                      <p className="mt-0.5 font-mono text-xs text-foreground/25">
                         {app.hostname}
                       </p>
-                      <p className="mt-3 flex-1 text-sm leading-relaxed text-white/40">
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/40">
                         {app.description}
                       </p>
                       <div className="mt-4 flex flex-wrap gap-1.5">
@@ -282,17 +282,17 @@ export default function EcosystemListingClient({
             </div>
           ) : (
             <div className="mt-16">
-              <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 No results found{search ? ` for \u201c${search}\u201d` : ""}
               </h3>
-              <p className="mt-3 flex items-center gap-3 text-sm text-white/40">
+              <p className="mt-3 flex items-center gap-3 text-sm text-foreground/40">
                 Try searching for another term.
                 <button
                   onClick={() => {
                     setSearch("");
                     setActiveCategories([]);
                   }}
-                  className="cursor-pointer rounded border border-white/10 px-3 py-1 text-xs font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80"
+                  className="cursor-pointer rounded border border-foreground/10 px-3 py-1 text-xs font-medium text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground/80"
                 >
                   Clear search
                 </button>
@@ -320,7 +320,7 @@ export default function EcosystemListingClient({
               />
               <button
                 onClick={handleButtonLoad}
-                className="hidden cursor-pointer rounded-sm border border-white/10 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:border-white/20 hover:text-white/80 sm:inline-block"
+                className="hidden cursor-pointer rounded-sm border border-foreground/10 px-6 py-2.5 text-sm font-medium text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground/80 sm:inline-block"
               >
                 View more
               </button>
