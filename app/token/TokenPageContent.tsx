@@ -1679,7 +1679,7 @@ export default function TokenPageContent({
               <h1 className="text-4xl font-medium leading-[1.04] tracking-[-0.022em] sm:text-5xl lg:text-[64px] lg:leading-[1.0]">
                 <span className="block text-foreground">The token that</span>
                 <span className="block text-foreground/40">
-                  aligns the network.
+                  powers the network.
                 </span>
               </h1>
 

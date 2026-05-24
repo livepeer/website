@@ -243,7 +243,7 @@ export default function Hero() {
         }}
       />
 
-      {/* "GENERATING" label — near starburst origin */}
+      {/* "GENERATING" label — bottom-right corner of the hero */}
       <div
         className="pointer-events-none absolute inset-0 z-[1]"
         aria-hidden="true"
@@ -251,8 +251,8 @@ export default function Hero() {
         <div
           className="absolute flex items-center gap-2"
           style={{
-            left: `${0.3 * TILE}vw`,
-            top: `${0.25 * TILE}vw`,
+            right: `${0.3 * TILE}vw`,
+            bottom: `${0.25 * TILE}vw`,
           }}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70 animate-pulse" />
@@ -271,7 +271,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-7xl"
+            className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
