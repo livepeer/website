@@ -35,66 +35,62 @@ export default function LatestPosts({ posts }: { posts: BlogPost[] }) {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Field Notes"
-              title="Keep up with the latest on Livepeer"
+              title={
+                <>
+                  Keep up with the{" "}
+                  <span className="text-foreground/50">latest on Livepeer</span>
+                </>
+              }
               description="Protocol updates, ecosystem launches, and the thinking behind real-time AI video — straight from the people building the network."
               align="split"
             />
           </motion.div>
 
-          <div className="mt-20 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* Editorial card grid — mirrors the ecosystem "Discover applications
+              built on Livepeer" section. Image lives in a standalone rounded
+              panel with a thin ring; metadata sits below on the page background
+              (no container), so the page rhythm flows from posters → captions
+              consistently across both sections. */}
+          <div className="mt-20 grid gap-x-6 gap-y-10 md:grid-cols-2 md:gap-y-12 lg:grid-cols-3">
             {posts.map((post) => (
               <motion.article
                 key={post.slug}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className="h-full"
               >
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-xl border border-foreground/[0.07] bg-card transition-colors hover:border-foreground/[0.14]"
-                >
+                <Link href={`/blog/${post.slug}`} className="group block">
                   {post.image && (
-                    <div className="relative aspect-[16/10] overflow-hidden border-b border-foreground/[0.06]">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5">
                       <img
                         src={post.image}
                         alt={post.imageAlt || post.title}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                       />
-                      <div
-                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
-                        aria-hidden="true"
-                      />
                     </div>
                   )}
-                  <div className="flex flex-1 flex-col p-6">
-                    <div className="mb-3 flex items-center gap-2 font-mono text-[11px] tracking-wider uppercase">
-                      <span className="text-green-light/70">
-                        {post.category}
-                      </span>
-                      <span className="text-foreground/15">·</span>
-                      <time dateTime={post.date} className="text-foreground/30">
-                        {formatDate(post.date)}
-                      </time>
-                    </div>
-                    <h3 className="line-clamp-3 text-[17px] leading-snug font-semibold tracking-tight text-foreground transition-colors group-hover:text-green-light">
-                      {post.title}
-                    </h3>
-                    {post.description && (
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground/40">
-                        {post.description}
-                      </p>
+                  <p className="mt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45">
+                    <span>{post.category}</span>
+                    <span className="mx-2 text-foreground/15">·</span>
+                    <time dateTime={post.date}>{formatDate(post.date)}</time>
+                  </p>
+                  <h3 className="mt-2 text-[19px] font-medium leading-snug tracking-tight text-foreground transition-colors group-hover:text-green-light lg:text-[21px]">
+                    {post.title}
+                  </h3>
+                  {post.description && (
+                    <p className="mt-3 line-clamp-2 text-[14.5px] leading-relaxed text-foreground/50">
+                      {post.description}
+                    </p>
+                  )}
+                  <div className="mt-4 flex items-center gap-2 font-mono text-[11px] text-foreground/30">
+                    {post.author && (
+                      <>
+                        <span className="truncate">{post.author.name}</span>
+                        <span>·</span>
+                      </>
                     )}
-                    <div className="mt-auto flex items-center gap-2 pt-5 font-mono text-[11px] text-foreground/25">
-                      {post.author && (
-                        <>
-                          <span className="truncate">{post.author.name}</span>
-                          <span>·</span>
-                        </>
-                      )}
-                      <span className="whitespace-nowrap">
-                        {post.readingTime}
-                      </span>
-                    </div>
+                    <span className="whitespace-nowrap">
+                      {post.readingTime}
+                    </span>
                   </div>
                 </Link>
               </motion.article>

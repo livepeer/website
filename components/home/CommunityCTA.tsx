@@ -83,17 +83,22 @@ export default function CommunityCTA() {
       {/* Animated green glow */}
       <GlowOverlay x={50} y={30} radius={70} opacity={0.2} duration={10} />
 
-      {/* B&W Muybridge plate photo behind tile mask — bold background */}
+      {/* B&W Muybridge plate photo behind tile mask — bold background.
+          Dropped the wrapper `filter: blur(2px)` (it was being re-applied
+          to every frame of the autoplaying video, dragging scroll perf)
+          and disabled the scan-line sweep in this instance — the video
+          already sits at 15% opacity behind text + overlays, so neither
+          treatment was visually load-bearing. */}
       <div
         className="pointer-events-none absolute inset-0 opacity-15"
         aria-hidden="true"
-        style={{ filter: "blur(2px)" }}
       >
         <ImageMask
           video="/videos/ai-face.mp4"
           cols={5}
           rows={4}
           seed={55}
+          scanLine={false}
           className="h-full w-full"
         />
       </div>
@@ -114,7 +119,8 @@ export default function CommunityCTA() {
               The Network
             </p>
             <h2 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Powered by independent GPU providers
+              Powered by independent{" "}
+              <span className="text-foreground/50">GPU providers</span>
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty">
               Livepeer is a global network of independent GPU providers,

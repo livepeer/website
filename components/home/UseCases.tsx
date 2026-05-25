@@ -756,7 +756,12 @@ export default function UseCases() {
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Use Cases"
-              title="What you can build with real-time AI video"
+              title={
+                <>
+                  What you can build with{" "}
+                  <span className="text-foreground/50">real-time AI video</span>
+                </>
+              }
               description="Build live generated worlds, AI avatars, real-time style transfer, and more — powered by Livepeer's open GPU network."
               align="split"
             />

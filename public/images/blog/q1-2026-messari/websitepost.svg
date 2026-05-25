@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Livepeer network usage rising to all-time high in Q1 2026">
   <!-- Dark canvas matching the site's dark theme -->
-  <rect width="1200" height="720" fill="#121212"/>
+  <rect width="1200" height="720" fill="#1c1c1c"/>
 
   <!-- Five video-frame rectangles ascending to an all-time-high peak -->
   <rect x="180" y="518" width="120" height="84" fill="none" stroke="#3DD68C" stroke-width="2"/>

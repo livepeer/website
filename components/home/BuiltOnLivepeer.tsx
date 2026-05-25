@@ -131,127 +131,6 @@ function StreamplacePanel() {
   );
 }
 
-function EmbodyPanel() {
-  return (
-    <div
-      className="relative flex h-full items-center justify-center overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 45%, #34d399 100%)",
-      }}
-    >
-      <div
-        className="absolute inset-0 opacity-30 mix-blend-overlay"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 60% at 30% 40%, rgba(255,255,255,0.4), transparent 65%)",
-        }}
-      />
-      <div className="relative flex items-center gap-3 text-white">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/15 backdrop-blur-md">
-          <div className="h-4 w-4 rounded-full bg-white/70" />
-        </div>
-        <span className="text-[32px] font-bold tracking-tight">Embody</span>
-      </div>
-    </div>
-  );
-}
-
-/* ── Logos ── kept for any non-poster contexts (none currently in this file). */
-
-function DaydreamLogo({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      {/* Gradient mark */}
-      <div
-        className="h-5 w-5 rounded-md"
-        style={{
-          background:
-            "linear-gradient(135deg, #F73B41, #FF982E, #2FBEC5, #36619D)",
-        }}
-      />
-      <span className="text-[19px] font-bold tracking-tight text-foreground">
-        Daydream
-      </span>
-    </div>
-  );
-}
-
-function FrameworksLogo({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      {/* Interlocking brackets mark */}
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path
-          d="M3 4L7 10L3 16"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M17 4L13 10L17 16"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <line
-          x1="8"
-          y1="14"
-          x2="12"
-          y2="6"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-      </svg>
-      <span className="text-[19px] font-bold tracking-tight text-foreground">
-        Frameworks
-      </span>
-    </div>
-  );
-}
-
-function StreamplaceLogo({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      {/* Crystal gem mark from actual logo */}
-      <svg width="20" height="20" viewBox="0 0 493.29 481.09" fill="none">
-        <path
-          d="m253.76 445.69-208.02-93.734-45.742-290.22 243.33-61.739 249.95 58.678-9.9427 310.8z"
-          fill="#f8baca"
-        />
-        <path
-          d="m253.59 481.09-241.31-105.15-12.277-314.2 253.59 70.875 239.69-73.936-85.842 261.91z"
-          fill="#de91a6"
-        />
-        <path
-          d="m493.29 58.678-239.7 73.933-0.59253 348.48 230.34-111.61z"
-          fill="#ac6e81"
-        />
-      </svg>
-      <span className="text-[19px] font-bold tracking-tight text-foreground">
-        Streamplace
-      </span>
-    </div>
-  );
-}
-
-function EmbodyLogo({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      {/* Abstract avatar mark */}
-      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-purple-400/40 to-emerald-400/30">
-        <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
-      </div>
-      <span className="text-[19px] font-bold tracking-tight text-foreground">
-        Embody
-      </span>
-    </div>
-  );
-}
-
 /* ── Product visual: Daydream — real-time AI video ── */
 function DaydreamVisual() {
   const frames = [
@@ -802,7 +681,12 @@ export default function BuiltOnLivepeer({
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }}>
             <SectionHeader
               label="Ecosystem"
-              title="Discover applications built on Livepeer"
+              title={
+                <>
+                  Discover applications{" "}
+                  <span className="text-foreground/50">built on Livepeer</span>
+                </>
+              }
               description="Explore applications and emerging capabilities on Livepeer, from real-time AI video and AI avatars to transcoding and streaming."
               align="split"
             />

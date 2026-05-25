@@ -271,7 +271,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl"
+            className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-[64px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}

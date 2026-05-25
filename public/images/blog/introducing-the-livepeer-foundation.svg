@@ -1,6 +1,5 @@
 <svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="1200" height="675" fill="#1c1c1c"/>
-  <rect x="20" y="20" width="1160" height="635" rx="12" stroke="#333" stroke-width="1" fill="none"/>
 
   <g transform="translate(0, 48)">
   <!-- Central hexagon -->

@@ -1,6 +1,5 @@
 <svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="1200" height="675" fill="#1c1c1c"/>
-  <rect x="20" y="20" width="1160" height="635" rx="12" stroke="#333" stroke-width="1" fill="none"/>
   
   <!-- Concentric rings -->
   <circle cx="600" cy="337" r="180" stroke="#18794E" stroke-width="1.5" opacity="0.5"/>
