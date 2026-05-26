@@ -37,16 +37,17 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "Resources",
-    href: "/brand",
+    href: "/foundation",
     children: [
       { label: "Primer", href: "/primer" },
       { label: "Blog", href: "/blog" },
+      { label: "Foundation", href: "/foundation" },
+      { label: "Brand", href: "/brand" },
       {
         label: "Documentation",
         href: "https://docs.livepeer.org",
         external: true,
       },
-      { label: "Brand", href: "/brand" },
     ],
   },
 ];

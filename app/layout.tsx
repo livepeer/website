@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { favoritPro, favoritMono } from "@/lib/fonts";
+import { favoritPro, favoritMono, instrumentSerif } from "@/lib/fonts";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
@@ -40,7 +40,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${favoritPro.variable} ${favoritMono.variable}`}
+      className={`${favoritPro.variable} ${favoritMono.variable} ${instrumentSerif.variable}`}
     >
       <head>
         {/* No-FOUC theme init — must run synchronously before paint so
@@ -54,7 +54,7 @@ export default function RootLayout({
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('theme');var t;if(s==='system'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}else if(s==='light'||s==='dark'){t=s;}else{t='dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+            __html: `(function(){try{var p=window.location.pathname;var force=p==='/foundation'||p.indexOf('/foundation/')===0;var t;if(force){t='dark';}else{var s=localStorage.getItem('theme');if(s==='system'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}else if(s==='light'||s==='dark'){t=s;}else{t='dark';}}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
           }}
         />
         {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (

@@ -38,6 +38,7 @@
 
   --font-sans: var(--font-favorit-pro), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-favorit-mono), ui-monospace, monospace;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 /* Page-level background — like --color-background but NEVER overridden by

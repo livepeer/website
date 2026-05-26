@@ -1,5 +1,15 @@
 import localFont from "next/font/local";
-import { Raleway } from "next/font/google";
+import { Raleway, Instrument_Serif } from "next/font/google";
+
+// Editorial display serif — used sparingly (currently Foundation page hero)
+// as an elegant counter-voice to Favorit Pro sans.
+export const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+  weight: "400",
+  style: ["normal", "italic"],
+});
 
 export const favoritPro = localFont({
   variable: "--font-favorit-pro",
