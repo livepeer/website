@@ -810,7 +810,7 @@ function ChapterHeader({
 const CHAPTERS = [
   { num: "01", label: "The Foundation" },
   { num: "02", label: "What We Do" },
-  { num: "03", label: "The Network" },
+  { num: "03", label: "The Project" },
   // 04 / The Team is hidden until we have headshots — see the
   // commented-out section in FoundationPage's render.
 ];
@@ -1177,8 +1177,8 @@ export default function FoundationPage() {
           <div className="mx-auto max-w-3xl py-14 lg:py-40">
             <ChapterHeader
               num="03"
-              crumb="The Network"
-              title="About The Network"
+              crumb="The Project"
+              title="About The Project"
               graphic={<NetworkGraphic />}
             />
 
