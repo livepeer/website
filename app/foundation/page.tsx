@@ -1016,7 +1016,7 @@ export default function FoundationPage() {
               className="mt-6 font-serif font-normal leading-[0.95] tracking-[-0.02em] text-balance text-white lg:mt-8"
               style={{ fontSize: "clamp(2.5rem, 7.2vw, 5.75rem)" }}
             >
-              Sustaining the open network for real-time AI video
+              Advancing the open network for real-time AI video
             </motion.h1>
 
             <motion.p
