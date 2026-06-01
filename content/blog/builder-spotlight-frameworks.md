@@ -6,7 +6,7 @@ category: "Ecosystem"
 tags: ["builder-spotlight", "frameworks", "SPE", "live-streaming"]
 image: "/images/blog/builder-spotlight-frameworks.svg"
 imageAlt: "FrameWorks - Builder Spotlight"
-draft: false
+draft: true
 ---
 
 Livepeer has had no shortage of builders over its nine-year history. Far fewer have worked on its core infrastructure from the inside, run a top-ranked orchestrator node on the supply side, and then founded a platform to succeed one of its flagship applications. Marco van Dijk has done all three.
