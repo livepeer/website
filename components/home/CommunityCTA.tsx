@@ -215,9 +215,9 @@ export default function CommunityCTA() {
                 +{remainingContributors}
               </a>
             </div>
-            <p className="max-w-xl text-sm text-foreground/50">
+            <p className="max-w-xl text-sm text-foreground/90">
               Built in the open by{" "}
-              <span className="text-foreground/80">
+              <span className="font-medium text-foreground">
                 {CONTRIBUTOR_STATS.contributors} contributors
               </span>
               .{" "}
@@ -225,7 +225,7 @@ export default function CommunityCTA() {
                 href={EXTERNAL_LINKS.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-medium text-foreground transition-colors duration-200 hover:text-green-bright"
+                className="inline-flex items-center gap-1 font-medium text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors duration-200 hover:text-green-bright hover:decoration-green-bright"
               >
                 Contribute on GitHub <span aria-hidden="true">→</span>
               </a>
