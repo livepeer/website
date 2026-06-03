@@ -5,6 +5,16 @@ import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 import GlowOverlay from "@/components/ui/GlowOverlay";
 import { EXTERNAL_LINKS } from "@/lib/constants";
+import {
+  CONTRIBUTORS,
+  CONTRIBUTOR_STATS,
+  type Contributor,
+} from "@/lib/contributors";
+
+const sizedAvatar = (avatar: string, size: number) => `${avatar}&s=${size}`;
+const contributorName = (c: Contributor) =>
+  c.name && c.name !== "-" ? c.name : c.login;
+const spotlightAvatars = CONTRIBUTORS.slice(0, 16);
 
 const resources = [
   {
@@ -160,6 +170,51 @@ export default function CommunityCTA() {
               </motion.a>
             ))}
           </div>
+
+          {/* Open-source contributor strip — understated proof of the
+              "builders and engineers who run the network" line above. */}
+          <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="mt-16 flex flex-col items-center gap-5 border-t border-foreground/[0.08] pt-12 text-center"
+          >
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              {spotlightAvatars.map((c) => (
+                <a
+                  key={c.login}
+                  href={`https://github.com/${c.login}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`${contributorName(c)} · ${c.yearly.toLocaleString()} contributions`}
+                  className="block"
+                >
+                  <img
+                    src={sizedAvatar(c.avatar, 96)}
+                    alt={contributorName(c)}
+                    width={36}
+                    height={36}
+                    loading="lazy"
+                    className="h-9 w-9 rounded-full object-cover ring-1 ring-foreground/10 grayscale transition-all duration-200 hover:scale-110 hover:grayscale-0 hover:ring-green/60"
+                  />
+                </a>
+              ))}
+            </div>
+            <p className="max-w-xl text-sm text-foreground/50">
+              Built in the open by{" "}
+              <span className="text-foreground/80">
+                {CONTRIBUTOR_STATS.contributors} contributors
+              </span>
+              .{" "}
+              <a
+                href={EXTERNAL_LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-medium text-foreground transition-colors duration-200 hover:text-green-bright"
+              >
+                Contribute on GitHub <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </motion.div>
         </motion.div>
       </Container>
     </section>
