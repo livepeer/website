@@ -14,7 +14,9 @@ import {
 const sizedAvatar = (avatar: string, size: number) => `${avatar}&s=${size}`;
 const contributorName = (c: Contributor) =>
   c.name && c.name !== "-" ? c.name : c.login;
-const spotlightAvatars = CONTRIBUTORS.slice(0, 16);
+const spotlightAvatars = CONTRIBUTORS.slice(0, 12);
+const remainingContributors =
+  CONTRIBUTOR_STATS.contributors - spotlightAvatars.length;
 
 const resources = [
   {
@@ -69,7 +71,7 @@ const fadeUp = {
 
 export default function CommunityCTA() {
   return (
-    <section className="relative py-32 lg:py-44 overflow-hidden">
+    <section className="relative py-24 lg:py-32 overflow-hidden">
       {/* Top fade — blends into section above */}
       <div
         className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-64"
@@ -172,32 +174,46 @@ export default function CommunityCTA() {
           </div>
 
           {/* Open-source contributor strip — understated proof of the
-              "builders and engineers who run the network" line above. */}
+              "builders and engineers who run the network" line above.
+              Pulled close to the resource cards so the cards + people read
+              as one community hub. Overlapping cluster keeps the visual
+              weight centered rather than stretched edge-to-edge. */}
           <motion.div
             variants={fadeUp}
             transition={{ duration: 0.4 }}
-            className="mt-16 flex flex-col items-center gap-5 border-t border-foreground/[0.08] pt-12 text-center"
+            className="mt-12 flex flex-col items-center gap-4 text-center"
           >
-            <div className="flex flex-wrap items-center justify-center gap-1.5">
-              {spotlightAvatars.map((c) => (
+            <div className="flex items-center justify-center">
+              {spotlightAvatars.map((c, i) => (
                 <a
                   key={c.login}
                   href={`https://github.com/${c.login}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`${contributorName(c)} · ${c.yearly.toLocaleString()} contributions`}
-                  className="block"
+                  style={{ zIndex: spotlightAvatars.length - i }}
+                  className="group relative -ml-2 transition-transform duration-200 first:ml-0 hover:z-20 hover:-translate-y-1"
                 >
                   <img
                     src={sizedAvatar(c.avatar, 96)}
                     alt={contributorName(c)}
-                    width={36}
-                    height={36}
+                    width={40}
+                    height={40}
                     loading="lazy"
-                    className="h-9 w-9 rounded-full object-cover ring-1 ring-foreground/10 grayscale transition-all duration-200 hover:scale-110 hover:grayscale-0 hover:ring-green/60"
+                    className="h-10 w-10 rounded-full object-cover ring-2 ring-background grayscale transition duration-200 group-hover:scale-110 group-hover:grayscale-0 group-hover:ring-green/60"
                   />
                 </a>
               ))}
+              <a
+                href={EXTERNAL_LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`+${remainingContributors} more contributors`}
+                style={{ zIndex: 0 }}
+                className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.06] font-mono text-[10px] font-medium text-foreground/60 ring-2 ring-background transition-colors duration-200 hover:bg-foreground/[0.1] hover:text-green-bright"
+              >
+                +{remainingContributors}
+              </a>
             </div>
             <p className="max-w-xl text-sm text-foreground/50">
               Built in the open by{" "}
