@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 import GlowOverlay from "@/components/ui/GlowOverlay";
+import CyclingWords from "@/components/ui/CyclingWords";
 import { EXTERNAL_LINKS } from "@/lib/constants";
 import {
   CONTRIBUTORS,
@@ -127,12 +128,16 @@ export default function CommunityCTA() {
             transition={{ duration: 0.4 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
+            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/60 uppercase">
               The Network
             </p>
             <h2 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Powered by independent{" "}
-              <span className="text-foreground/50">GPU providers</span>
+              <span className="block">Powered by independent</span>
+              <CyclingWords
+                className="text-gradient"
+                interval={4000}
+                words={["GPU providers", "video engineers", "builders"]}
+              />
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty">
               Livepeer is a global network of independent GPU providers,
