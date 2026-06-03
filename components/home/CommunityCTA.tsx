@@ -100,7 +100,7 @@ export default function CommunityCTA() {
           already sits at 15% opacity behind text + overlays, so neither
           treatment was visually load-bearing. */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-15"
+        className="pointer-events-none absolute inset-0 opacity-15 light:opacity-[0.045]"
         aria-hidden="true"
       >
         <ImageMask
