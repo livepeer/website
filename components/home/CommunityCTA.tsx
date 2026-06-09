@@ -4,7 +4,20 @@ import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
 import GlowOverlay from "@/components/ui/GlowOverlay";
+import CyclingWords from "@/components/ui/CyclingWords";
 import { EXTERNAL_LINKS } from "@/lib/constants";
+import {
+  CONTRIBUTORS,
+  CONTRIBUTOR_STATS,
+  type Contributor,
+} from "@/lib/contributors";
+
+const sizedAvatar = (avatar: string, size: number) => `${avatar}&s=${size}`;
+const contributorName = (c: Contributor) =>
+  c.name && c.name !== "-" ? c.name : c.login;
+const spotlightAvatars = CONTRIBUTORS.slice(0, 12);
+const remainingContributors =
+  CONTRIBUTOR_STATS.contributors - spotlightAvatars.length;
 
 const resources = [
   {
@@ -59,7 +72,7 @@ const fadeUp = {
 
 export default function CommunityCTA() {
   return (
-    <section className="relative py-32 lg:py-44 overflow-hidden">
+    <section className="relative py-24 lg:py-32 overflow-hidden">
       {/* Top fade — blends into section above */}
       <div
         className="pointer-events-none absolute top-0 left-0 right-0 z-10 h-64"
@@ -90,7 +103,7 @@ export default function CommunityCTA() {
           already sits at 15% opacity behind text + overlays, so neither
           treatment was visually load-bearing. */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-15"
+        className="pointer-events-none absolute inset-0 opacity-15 light:opacity-[0.045]"
         aria-hidden="true"
       >
         <ImageMask
@@ -115,12 +128,16 @@ export default function CommunityCTA() {
             transition={{ duration: 0.4 }}
             className="mx-auto max-w-3xl text-center"
           >
-            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/30 uppercase">
+            <p className="mb-4 font-mono text-xs font-medium tracking-wider text-foreground/60 uppercase">
               The Network
             </p>
             <h2 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Powered by independent{" "}
-              <span className="text-foreground/50">GPU providers</span>
+              <span className="block">Powered by independent</span>
+              <CyclingWords
+                className="text-gradient"
+                interval={4000}
+                words={["GPU providers", "video engineers", "builders"]}
+              />
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-foreground/50 text-pretty">
               Livepeer is a global network of independent GPU providers,
@@ -160,6 +177,65 @@ export default function CommunityCTA() {
               </motion.a>
             ))}
           </div>
+
+          {/* Open-source contributor strip — understated proof of the
+              "builders and engineers who run the network" line above.
+              Pulled close to the resource cards so the cards + people read
+              as one community hub. Overlapping cluster keeps the visual
+              weight centered rather than stretched edge-to-edge. */}
+          <motion.div
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="mt-12 flex flex-col items-center gap-4 text-center"
+          >
+            <div className="flex items-center justify-center">
+              {spotlightAvatars.map((c, i) => (
+                <a
+                  key={c.login}
+                  href={`https://github.com/${c.login}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`${contributorName(c)} · ${c.yearly.toLocaleString()} contributions`}
+                  style={{ zIndex: spotlightAvatars.length - i }}
+                  className="group relative -ml-2 transition-transform duration-200 first:ml-0 hover:z-20 hover:-translate-y-1"
+                >
+                  <img
+                    src={sizedAvatar(c.avatar, 96)}
+                    alt={contributorName(c)}
+                    width={40}
+                    height={40}
+                    loading="lazy"
+                    className="h-10 w-10 rounded-full object-cover ring-2 ring-background grayscale transition duration-200 group-hover:scale-110 group-hover:grayscale-0 group-hover:ring-green/60"
+                  />
+                </a>
+              ))}
+              <a
+                href={EXTERNAL_LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`+${remainingContributors} more contributors`}
+                style={{ zIndex: 0 }}
+                className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.06] font-mono text-[10px] font-medium text-foreground/60 ring-2 ring-background transition-colors duration-200 hover:bg-foreground/[0.1] hover:text-green-bright"
+              >
+                +{remainingContributors}
+              </a>
+            </div>
+            <p className="max-w-xl text-sm text-foreground/90">
+              Built in the open by{" "}
+              <span className="font-medium text-foreground">
+                {CONTRIBUTOR_STATS.contributors} contributors
+              </span>
+              .{" "}
+              <a
+                href={EXTERNAL_LINKS.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-medium text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors duration-200 hover:text-green-bright hover:decoration-green-bright"
+              >
+                Contribute on GitHub <span aria-hidden="true">→</span>
+              </a>
+            </p>
+          </motion.div>
         </motion.div>
       </Container>
     </section>
