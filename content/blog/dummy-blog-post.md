@@ -8,7 +8,7 @@ category: "Network"
 tags: ["ai-pipelines", "orchestrators", "network", "developers"]
 image: "/images/blog/real-time-update-network-vision.svg"
 imageAlt: "Livepeer network vision — real-time AI video infrastructure"
-draft: true
+draft: false
 ---
 
 The demand for AI-enhanced video is growing faster than any single cloud provider can handle. Style transfer, object detection, background replacement, upscaling — these tasks once required expensive GPU clusters and multi-second latencies. Today, developers using Livepeer are running them at sub-200ms latency, at scale, for a fraction of the cost.
