@@ -163,7 +163,11 @@ function DesktopNav({
         {activeItem && activeItem.children && activeRect && (
           <motion.div
             key="nav-dropdown"
-            initial={{ opacity: 0, y: 4 }}
+            initial={{
+              opacity: 0,
+              y: 4,
+              x: activeRect.left + activeRect.width / 2,
+            }}
             animate={{
               opacity: 1,
               y: 0,
