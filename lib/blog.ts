@@ -70,7 +70,9 @@ export function getAllPosts(): BlogPost[] {
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
     .filter((post) => {
-      if (process.env.NODE_ENV === "production") return !post.draft;
+      // Hide drafts only on the public production deployment; keep them visible
+      // on Vercel preview deployments and in local dev for pre-publish review.
+      if (process.env.VERCEL_ENV === "production") return !post.draft;
       return true;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
