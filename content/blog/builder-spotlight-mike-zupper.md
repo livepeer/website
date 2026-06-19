@@ -4,7 +4,8 @@ description: "Building on Open Compute: Mike Zupper, builder of BlueClaw and co-
 date: "2026-06-18"
 category: "Ecosystem"
 tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
-image: "/images/blog/builder-spotlight-mike-zupper.png"
+image: "/images/blog/builder-spotlight-mike-zupper-card.png"
+heroImage: "/images/blog/builder-spotlight-mike-zupper.png"
 imageAlt: "Mike Zupper - Builder Spotlight"
 draft: true
 ---

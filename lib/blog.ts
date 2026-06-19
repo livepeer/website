@@ -25,6 +25,7 @@ export type BlogPost = {
   category: string;
   tags: string[];
   image: string;
+  heroImage: string;
   imageAlt: string;
   draft: boolean;
   readingTime: string;
@@ -58,6 +59,7 @@ export function getPostBySlug(slug: string): BlogPost {
     category: data.category ?? "News",
     tags: data.tags ?? [],
     image: data.image ?? "",
+    heroImage: data.heroImage ?? "",
     imageAlt: data.imageAlt ?? "",
     draft: data.draft ?? false,
     readingTime: stats.text,
