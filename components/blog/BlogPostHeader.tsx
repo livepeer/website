@@ -45,11 +45,12 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
         <span>{post.readingTime}</span>
       </div>
 
-      {/* Featured image */}
-      {post.image && (
+      {/* Featured image — prefer a dedicated in-article hero, falling back to
+          the frontmatter `image` (which also drives the listing/social card) */}
+      {(post.heroImage || post.image) && (
         <div className="mt-10 overflow-hidden rounded-xl border border-border">
           <img
-            src={post.image}
+            src={post.heroImage || post.image}
             alt={post.imageAlt || post.title}
             className="w-full"
           />

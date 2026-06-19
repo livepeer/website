@@ -25,6 +25,7 @@ export type BlogPost = {
   category: string;
   tags: string[];
   image: string;
+  heroImage: string;
   imageAlt: string;
   draft: boolean;
   readingTime: string;
@@ -58,6 +59,7 @@ export function getPostBySlug(slug: string): BlogPost {
     category: data.category ?? "News",
     tags: data.tags ?? [],
     image: data.image ?? "",
+    heroImage: data.heroImage ?? "",
     imageAlt: data.imageAlt ?? "",
     draft: data.draft ?? false,
     readingTime: stats.text,
@@ -70,7 +72,9 @@ export function getAllPosts(): BlogPost[] {
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
     .filter((post) => {
-      if (process.env.NODE_ENV === "production") return !post.draft;
+      // Hide drafts only on the public production deployment; keep them visible
+      // on Vercel preview deployments and in local dev for pre-publish review.
+      if (process.env.VERCEL_ENV === "production") return !post.draft;
       return true;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

@@ -52,7 +52,10 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  if (post.draft && process.env.NODE_ENV === "production") {
+  // Drafts are hidden only on the public production deployment. They remain
+  // visible on Vercel preview deployments (VERCEL_ENV === "preview") and in
+  // local dev so they can be reviewed before going public.
+  if (post.draft && process.env.VERCEL_ENV === "production") {
     notFound();
   }
 
