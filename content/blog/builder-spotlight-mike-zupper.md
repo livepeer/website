@@ -7,7 +7,7 @@ tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
 image: "/images/blog/builder-spotlight-mike-zupper-card.png"
 heroImage: "/images/blog/builder-spotlight-mike-zupper.png"
 imageAlt: "Mike Zupper - Builder Spotlight"
-draft: true
+draft: false
 ---
 
 It's 2am in southeastern Pennsylvania and Mike Zupper is in what he calls his dojo. The kids are asleep upstairs. He is on his laptop, cloning a repository he wants to understand, intending to take it apart and put it back together by sunrise. He has been doing some version of this for nearly thirty years.
