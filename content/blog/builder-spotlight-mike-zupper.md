@@ -1,6 +1,6 @@
 ---
-title: "Builder Spotlight: Mike Zupper"
-description: "Building on Open Compute: Mike Zupper, builder of BlueClaw and co-founder of Cloud SPE."
+title: "Rip it up and Start Again: A Life at the Dawn of the Internet"
+description: "How Mike Zupper went from architecture student to systems architect for the internet age"
 date: "2026-06-18"
 category: "Ecosystem"
 tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
