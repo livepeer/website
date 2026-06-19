@@ -1,7 +1,7 @@
 ---
 title: "Rip it up and Start Again: A Life at the Dawn of the Internet"
 description: "How Mike Zupper went from architecture student to systems architect for the internet age"
-date: "2026-06-18"
+date: "2026-06-19"
 category: "Ecosystem"
 tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
 image: "/images/blog/builder-spotlight-mike-zupper-card.png"
