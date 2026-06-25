@@ -19,6 +19,10 @@ const spotlightAvatars = CONTRIBUTORS.slice(0, 12);
 const remainingContributors =
   CONTRIBUTOR_STATS.contributors - spotlightAvatars.length;
 
+// Show 5 avatars on mobile, 8 on sm, all 12 on lg.
+const avatarVisibilityClass = (i: number) =>
+  i < 5 ? "" : i < 8 ? "hidden sm:block" : "hidden lg:block";
+
 const resources = [
   {
     name: "Discord",
@@ -197,7 +201,7 @@ export default function CommunityCTA() {
                   rel="noopener noreferrer"
                   title={`${contributorName(c)} · ${c.yearly.toLocaleString()} contributions`}
                   style={{ zIndex: spotlightAvatars.length - i }}
-                  className="group relative -ml-2 transition-transform duration-200 first:ml-0 hover:z-20 hover:-translate-y-1"
+                  className={`group relative -ml-2 transition-transform duration-200 first:ml-0 hover:z-20 hover:-translate-y-1 ${avatarVisibilityClass(i)}`}
                 >
                   <img
                     src={sizedAvatar(c.avatar, 96)}
