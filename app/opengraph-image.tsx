@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "Livepeer — Open infrastructure for real-time AI video";
+export const alt = "Livepeer — The world's open video infrastructure";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -130,7 +130,7 @@ export default async function OGImage() {
           display: "flex",
         }}
       >
-        Open infrastructure for real-time AI video
+        The world’s open video infrastructure
       </div>
 
       {/* Accent line */}
