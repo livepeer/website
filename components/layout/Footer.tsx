@@ -76,7 +76,7 @@ export default function Footer() {
               <LivepeerLockup className="h-5 w-auto text-foreground" />
             </Link>
             <p className="mt-4 text-sm text-foreground/50">
-              The open network for real-time AI video.
+              The World’s Open Video Infrastructure
             </p>
             <div className="mt-6 flex items-center gap-3">
               {socialLinks.map((social) => (

@@ -1,5 +1,4 @@
 import Hero from "@/components/home/Hero";
-import UseCases from "@/components/home/UseCases";
 import BuiltOnLivepeer, {
   type BuiltOnLivepeerMeta,
 } from "@/components/home/BuiltOnLivepeer";
@@ -25,7 +24,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <UseCases />
       <BuiltOnLivepeer meta={builtOnLivepeerMeta} />
       <LatestPosts posts={latestPosts} />
       <CommunityCTA />
