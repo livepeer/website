@@ -278,7 +278,7 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <Link
-              href="/blog/a-new-livepeer"
+              href="/blog/livepeer-2-0-video-agent-platform"
               className="group inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/5 py-1 pl-3 pr-2.5 text-sm backdrop-blur-xl transition-all duration-200 hover:border-foreground/25 hover:bg-foreground/10"
             >
               <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-emerald-400/80 animate-pulse" />
