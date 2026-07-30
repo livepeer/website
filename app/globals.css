@@ -691,6 +691,30 @@ html[data-theme="light"] .hero-cta-secondary:hover {
   height: auto;
 }
 
+.blog-prose video {
+  display: block;
+  width: 100%;
+  border-radius: 0.75rem;
+  margin: 2rem 0;
+}
+
+.blog-prose figure {
+  margin: 2rem 0;
+}
+
+.blog-prose figure video,
+.blog-prose figure img {
+  margin: 0;
+}
+
+.blog-prose figcaption {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  opacity: 0.5;
+  text-align: center;
+}
+
 .blog-prose hr {
   border: none;
   height: 1px;

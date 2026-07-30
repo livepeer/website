@@ -1,0 +1,118 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="675" fill="#1c1c1c"/>
+
+  <!-- outer edge ties: the stack is open at every seam, nothing enclosed -->
+  <line x1="320" y1="190" x2="320" y2="490" stroke="#18794E" stroke-width="1" opacity="0.35" stroke-dasharray="6 5"/>
+  <line x1="880" y1="190" x2="880" y2="490" stroke="#18794E" stroke-width="1" opacity="0.35" stroke-dasharray="6 5"/>
+  <line x1="320" y1="190" x2="880" y2="490" stroke="#18794E" stroke-width="1" opacity="0.2"/>
+  <line x1="880" y1="190" x2="320" y2="490" stroke="#18794E" stroke-width="1" opacity="0.2"/>
+
+  <!-- ================= LAYER 1 — THE AGENT ================= -->
+  <g>
+    <polygon points="600,114 880,190 600,266 320,190" stroke="#40bf86" stroke-width="3.5" fill="#40bf86" fill-opacity="0.05"/>
+
+    <!-- prompt entering from outside the frame -->
+    <line x1="600" y1="68" x2="600" y2="181" stroke="#40bf86" stroke-width="2.5"/>
+    <circle cx="600" cy="64" r="8" stroke="#40bf86" stroke-width="2" fill="none"/>
+    <line x1="600" y1="64" x2="548" y2="38" stroke="#1e9960" stroke-width="1.5" opacity="0.7"/>
+    <line x1="600" y1="64" x2="652" y2="38" stroke="#1e9960" stroke-width="1.5" opacity="0.7"/>
+
+    <!-- MCP connector -->
+    <polygon points="600,172 620,181 620,199 600,208 580,199 580,181" stroke="#40bf86" stroke-width="2.5" fill="#1e9960" fill-opacity="0.22"/>
+    <circle cx="600" cy="190" r="4" fill="#40bf86"/>
+
+    <!-- capability fan-out across the agent plane -->
+    <line x1="600" y1="190" x2="460" y2="190" stroke="#1e9960" stroke-width="1.5" opacity="0.75"/>
+    <line x1="600" y1="190" x2="740" y2="190" stroke="#1e9960" stroke-width="1.5" opacity="0.75"/>
+    <line x1="600" y1="190" x2="600" y2="150" stroke="#1e9960" stroke-width="1.5" opacity="0.75"/>
+    <line x1="600" y1="190" x2="600" y2="230" stroke="#1e9960" stroke-width="1.5" opacity="0.75"/>
+    <circle cx="460" cy="190" r="5.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="740" cy="190" r="5.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="600" cy="148" r="5.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="600" cy="232" r="5.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+  </g>
+
+  <!-- ================= LAYER 2 — THE NETWORK ================= -->
+  <!-- heterogeneous supply: circle = GPU, square = CPU, diamond = remote API, triangle = media capability -->
+  <g>
+    <polygon points="600,264 880,340 600,416 320,340" stroke="#40bf86" stroke-width="3.5" fill="#40bf86" fill-opacity="0.04"/>
+
+    <!-- mesh between providers, drawn first -->
+    <g stroke="#18794E" stroke-width="1" opacity="0.55">
+      <line x1="480" y1="322" x2="600" y2="340"/>
+      <line x1="600" y1="340" x2="720" y2="322"/>
+      <line x1="480" y1="358" x2="600" y2="340"/>
+      <line x1="600" y1="340" x2="720" y2="358"/>
+      <line x1="480" y1="322" x2="600" y2="296"/>
+      <line x1="600" y1="296" x2="720" y2="322"/>
+      <line x1="480" y1="358" x2="600" y2="384"/>
+      <line x1="600" y1="384" x2="720" y2="358"/>
+      <line x1="400" y1="340" x2="480" y2="322"/>
+      <line x1="400" y1="340" x2="480" y2="358"/>
+      <line x1="800" y1="340" x2="720" y2="322"/>
+      <line x1="800" y1="340" x2="720" y2="358"/>
+    </g>
+    <line x1="480" y1="322" x2="480" y2="358" stroke="#18794E" stroke-width="1" opacity="0.4"/>
+    <line x1="720" y1="322" x2="720" y2="358" stroke="#18794E" stroke-width="1" opacity="0.4"/>
+
+    <!-- GPU hub -->
+    <circle cx="600" cy="340" r="10" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c"/>
+    <circle cx="600" cy="340" r="3.5" fill="#40bf86"/>
+
+    <!-- media capability (non-GPU) -->
+    <polygon points="600,288 610,304 590,304" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c"/>
+    <!-- CPU-only node -->
+    <rect x="592" y="376" width="16" height="16" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c"/>
+
+    <!-- CPU -->
+    <rect x="472" y="314" width="16" height="16" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c"/>
+    <!-- remote API passthrough -->
+    <rect x="712" y="314" width="16" height="16" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c" transform="rotate(45 720 322)"/>
+    <rect x="472" y="350" width="16" height="16" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c" transform="rotate(45 480 358)"/>
+    <!-- GPU -->
+    <circle cx="720" cy="358" r="7" stroke="#40bf86" stroke-width="2.5" fill="#1c1c1c"/>
+
+    <!-- longtail supply at the open edges -->
+    <circle cx="400" cy="340" r="6" stroke="#1e9960" stroke-width="2" fill="#1c1c1c"/>
+    <rect x="794" y="334" width="12" height="12" stroke="#1e9960" stroke-width="2" fill="#1c1c1c" transform="rotate(45 800 340)"/>
+  </g>
+
+  <!-- ================= LAYER 3 — THE PROTOCOL ================= -->
+  <g>
+    <polygon points="600,414 880,490 600,566 320,490" stroke="#40bf86" stroke-width="3.5" fill="#40bf86" fill-opacity="0.04"/>
+
+    <!-- burn-mint equilibrium as a closed loop -->
+    <ellipse cx="600" cy="490" rx="132" ry="36" stroke="#40bf86" stroke-width="2.5" fill="none"/>
+    <ellipse cx="600" cy="490" rx="68" ry="19" stroke="#1e9960" stroke-width="2" fill="#1e9960" fill-opacity="0.15"/>
+
+    <!-- direction of flow around the loop -->
+    <polygon points="600,454 588,459 590,449" fill="#40bf86"/>
+    <polygon points="600,526 612,521 610,531" fill="#40bf86"/>
+
+    <!-- stake-elected validator set -->
+    <circle cx="732" cy="490" r="6.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="468" cy="490" r="6.5" stroke="#40bf86" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="694" cy="464" r="5.5" stroke="#1e9960" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="506" cy="516" r="5.5" stroke="#1e9960" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="694" cy="516" r="5.5" stroke="#1e9960" stroke-width="2" fill="#1c1c1c"/>
+    <circle cx="506" cy="464" r="5.5" stroke="#1e9960" stroke-width="2" fill="#1c1c1c"/>
+
+    <!-- fixed per-node bonds -->
+    <line x1="468" y1="490" x2="532" y2="490" stroke="#18794E" stroke-width="1" opacity="0.5"/>
+    <line x1="668" y1="490" x2="732" y2="490" stroke="#18794E" stroke-width="1" opacity="0.5"/>
+
+    <circle cx="600" cy="490" r="5" fill="#40bf86"/>
+  </g>
+
+  <!-- ================= THE CONTINUOUS SPINE — OPEN ALL THE WAY DOWN ================= -->
+  <line x1="600" y1="208" x2="600" y2="340" stroke="#40bf86" stroke-width="2.5"/>
+  <line x1="600" y1="340" x2="600" y2="490" stroke="#40bf86" stroke-width="2.5"/>
+  <line x1="600" y1="490" x2="600" y2="600" stroke="#40bf86" stroke-width="2.5"/>
+  <line x1="600" y1="600" x2="548" y2="626" stroke="#1e9960" stroke-width="1.5" opacity="0.7"/>
+  <line x1="600" y1="600" x2="652" y2="626" stroke="#1e9960" stroke-width="1.5" opacity="0.7"/>
+  <polygon points="600,618 590,600 610,600" stroke="#40bf86" stroke-width="2" fill="none"/>
+
+  <!-- settlement returning up the stack -->
+  <path d="M642,504 C684,456 682,268 618,206" stroke="#1e9960" stroke-width="1.5" fill="none" stroke-dasharray="5 4" opacity="0.75"/>
+  <polygon points="618,206 631,211 626,199" fill="#1e9960" opacity="0.85"/>
+</svg>
