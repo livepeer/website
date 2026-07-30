@@ -1,5 +1,5 @@
 ---
-title: "Livepeer 2.0: The video agent platform"
+title: "Livepeer 2.0: The Open video agent platform"
 description: "An inside look at Livepeer 2.0, the open compute network for AI video, and Livepeer Agent—the open-source MCP connector supercharging AI agent workflows."
 date: "2026-07-29"
 category: "Product & Protocol"
@@ -18,7 +18,7 @@ imageAlt: "Livepeer 2.0 — open all the way down"
 draft: false
 ---
 
-Livepeer 2.0 is in motion. Here's what's changing in the network and the protocol, and what's still to come.
+_Livepeer 2.0 is in motion. Here's what's changing in the network and the protocol, and what's still to come._
 
 Agents are taking over the video production line. The tools to generate, edit, and transform video are now embedded in the daily workflow of millions of creators, and yet almost all of them sit behind a closed platform and a tight rate limit.
 
@@ -31,7 +31,7 @@ Livepeer's open infrastructure is the counterforce. We believe that video infras
 
 ## The next chapter for Livepeer
 
-Two weeks ago, Livepeer co-founder Doug Petkanics laid out [A Path to Livepeer 2.0](https://forum.livepeer.org). After nine years of critical engineering work to build a decentralized GPU network, this ambitious set of upgrades across the Livepeer Network and Protocol enable Livepeer to go to market for the first time without relying on third-party products or applications. This next chapter for Livepeer gives AI agents a truly open network of AI models, tools, and compute for creating and transforming video and media, while still allowing for open experimentation on the network. The three primary changes wrapped in the next chapter for Livepeer include:
+Two weeks ago, Livepeer co-founder Doug Petkanics laid out [A Path to Livepeer 2.0](https://forum.livepeer.org/t/a-path-to-livepeer-2-0/3291). After nine years of critical engineering work to build a decentralized GPU network, this ambitious set of upgrades across the Livepeer Network and Protocol enable Livepeer to go to market for the first time without relying on third-party products or applications. This next chapter for Livepeer gives AI agents a truly open network of AI models, tools, and compute for creating and transforming video and media, while still allowing for open experimentation on the network. The three primary changes wrapped in the next chapter for Livepeer include:
 
 ### Connecting the protocol to usage
 
