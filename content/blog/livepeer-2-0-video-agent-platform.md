@@ -1,5 +1,5 @@
 ---
-title: "Livepeer 2.0: The Open video agent platform"
+title: "Livepeer 2.0: The Open Video Agent Platform"
 description: "An inside look at Livepeer 2.0, the open compute network for AI video, and Livepeer Agent—the open-source MCP connector supercharging AI agent workflows."
 date: "2026-07-29"
 category: "Product & Protocol"
