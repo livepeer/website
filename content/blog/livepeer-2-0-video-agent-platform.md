@@ -43,7 +43,7 @@ This is where we need our delegators, node operators, and contributors to serve 
 
 Livepeer's node operators historically competed on one thing: hardware. The node operator role was relatively straightforward, as it followed a core loop of 1) bring GPUs, 2) run transcoding or inference, and 3) earn fees. That loop breaks under the complexity of AI, where the network now needs hundreds of models available on demand on top of performant compute service providers.
 
-With the network changes outlined in A Path to Livepeer 2.0, nodes will serve open models locally, pass through to remote APIs, provide compute, and run non-GPU media capabilities like layering audio, clipping, captions, resolution changes, overlays, object-aware augmentation, and so much more. The unit of supply is no longer a GPU—it's compute. This opens the door to CPU-only nodes, API specialist nodes, and operators who compete on breadth and quality of service instead of just silicon.
+With the network changes outlined in A Path to Livepeer 2.0, nodes will serve open models locally, connect APIs, provide compute, and run non-GPU media capabilities like layering audio, clipping, captions, resolution changes, overlays, object-aware augmentation, and so much more. The unit of supply is no longer a GPU—it's compute. This opens the door to CPU-only nodes, API specialist nodes, and operators who compete on breadth and quality of service instead of just silicon.
 
 ### Bringing an agent to market
 
