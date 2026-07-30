@@ -270,15 +270,43 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
+          {/* Announcement banner — sits above the headline */}
+          <motion.div
+            className="mb-6 flex justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <Link
+              href="/blog/livepeer-2-0-video-agent-platform"
+              className="group inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/5 py-1 pl-3 pr-2.5 text-sm backdrop-blur-xl transition-all duration-200 hover:border-foreground/25 hover:bg-foreground/10"
+            >
+              <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-emerald-400/80 animate-pulse" />
+              <span className="text-foreground/70">
+                A new Livepeer is coming
+              </span>
+              <span className="h-3.5 w-px flex-shrink-0 bg-foreground/15" />
+              <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                Read more
+                <span
+                  aria-hidden="true"
+                  className="transition-transform duration-200 group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </span>
+            </Link>
+          </motion.div>
+
           <motion.h1
             className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-[64px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
           >
-            The open network for
+            The world’s open
             <br />
-            <span className="hero-accent">real-time AI video</span>
+            <span className="hero-accent">video infrastructure</span>
           </motion.h1>
 
           <motion.p
@@ -287,8 +315,8 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Generate, transform, and interpret live video streams on a
-            permissionless GPU network built for real-time video inference.
+            Generate, transform, and interpret video on a permissionless GPU
+            network built for AI video inference.
           </motion.p>
 
           <motion.div
