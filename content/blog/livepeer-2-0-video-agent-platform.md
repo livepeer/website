@@ -35,7 +35,7 @@ Two weeks ago, Livepeer co-founder Doug Petkanics laid out [A Path to Livepeer 2
 
 ### Connecting the protocol to usage
 
-The proposed protocol updates include a Burn-Mint Equilibrium, a stake-elected validator set, and fixed per-node bonds in place of the 100-orchestrator cap. All of these design mechanisms intend to point at one outcome: where LPT rewards flow to nodes performing quality work connected directly to demand.
+The proposed protocol updates include a Burn-Mint Equilibrium, a stake-elected validator set, and fixed per-node bonds in place of the 100-orchestrator cap. All of these design mechanisms intend to point at one outcome: where LPT rewards flow to nodes performing and securing quality work connected directly to demand.
 
 This is where we need our delegators, node operators, and contributors to serve as thoughtful design partners to solidify our approach to the most critical protocol design questions.
 
