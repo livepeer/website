@@ -21,6 +21,10 @@ export default function BlogPostCard({
     year: "numeric",
     month: "short",
     day: "numeric",
+    // UTC to match the frontmatter date and the share card. Without it a
+    // date like "2026-07-29" parses as UTC midnight and renders a day early
+    // for anyone west of UTC — visibly disagreeing with the card's own date.
+    timeZone: "UTC",
   });
 
   return (
@@ -34,15 +38,17 @@ export default function BlogPostCard({
         href={`/blog/${post.slug}`}
         className="group block select-none"
       >
-        {post.image && (
-          <div className="relative aspect-[16/10] overflow-hidden rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5">
-            <img
-              src={post.image}
-              alt={post.imageAlt || post.title}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-          </div>
-        )}
+        {/* The post's artwork on its own. Deliberately not the share card: the
+            title, category and date already sit beneath this as text, so a card
+            carrying them again would only repeat itself. */}
+        <div className="relative aspect-[16/10] overflow-hidden rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5">
+          <img
+            src={`/blog/${post.slug}/thumbnail`}
+            alt={post.imageAlt || post.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
+        </div>
         <p className="mt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45">
           <span>{post.category}</span>
           <span className="mx-2 text-foreground/15">·</span>

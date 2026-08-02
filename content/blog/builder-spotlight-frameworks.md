@@ -6,6 +6,7 @@ category: "Ecosystem"
 tags: ["builder-spotlight", "frameworks", "SPE", "live-streaming"]
 image: "/images/blog/builder-spotlight-frameworks.svg"
 imageAlt: "FrameWorks - Builder Spotlight"
+cardArt: "/images/blog/cards/builder-spotlight-frameworks.jpg"
 draft: false
 ---
 

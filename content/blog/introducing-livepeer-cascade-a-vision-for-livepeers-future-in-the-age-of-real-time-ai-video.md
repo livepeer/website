@@ -8,6 +8,7 @@ category: "News"
 tags: ["cascade", "vision", "realtime-ai", "roadmap"]
 image: "/images/blog/introducing-livepeer-cascade.svg"
 imageAlt: "Introducing Livepeer Cascade"
+cardArt: "/images/blog/cards/introducing-livepeer-cascade.jpg"
 draft: false
 ---
 

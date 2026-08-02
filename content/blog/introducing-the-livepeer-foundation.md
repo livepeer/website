@@ -6,6 +6,7 @@ category: "News"
 tags: ["governance", "foundation", "announcement"]
 image: "/images/blog/introducing-the-livepeer-foundation.svg"
 imageAlt: "Livepeer Foundation announcement banner"
+cardArt: "/images/blog/cards/introducing-the-livepeer-foundation.jpg"
 draft: false
 ---
 

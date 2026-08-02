@@ -5,6 +5,7 @@ date: "2026-05-18"
 category: "Network"
 tags: ["Messari", "Network Stats", "Real-time AI Video", "Q1 2026"]
 image: "/images/blog/q1-2026-messari/websitepost.svg"
+cardArt: "/images/blog/cards/q1-2026-messari.jpg"
 draft: false
 ---
 

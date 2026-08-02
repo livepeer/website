@@ -6,6 +6,7 @@ category: "Ecosystem"
 tags: ["onchain-builders", "streamplace", "SPE", "decentralized-social"]
 image: "/images/blog/onchain-builders-streamplace.svg"
 imageAlt: "Streamplace - Livepeer Onchain Builders"
+cardArt: "/images/blog/cards/onchain-builders-streamplace.jpg"
 draft: false
 ---
 

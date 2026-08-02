@@ -59,11 +59,12 @@ export default function LatestPosts({ posts }: { posts: BlogPost[] }) {
                 transition={{ duration: 0.4 }}
               >
                 <Link href={`/blog/${post.slug}`} className="group block">
-                  {post.image && (
+                  {post.cardArt && (
                     <div className="relative aspect-[16/10] overflow-hidden rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5">
                       <img
-                        src={post.image}
+                        src={`/blog/${post.slug}/thumbnail`}
                         alt={post.imageAlt || post.title}
+                        loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                       />
                     </div>

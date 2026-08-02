@@ -6,6 +6,7 @@ category: "Ecosystem"
 tags: ["delegation", "staking", "tokenomics", "network"]
 image: "/images/blog/why-delegation-still-matters.svg"
 imageAlt: "Delegation in the Livepeer network"
+cardArt: "/images/blog/cards/why-delegation-still-matters.jpg"
 draft: false
 ---
 

@@ -19,6 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
+    // Share artwork comes from the generated card in `opengraph-image.tsx`.
+    // Naming `images` here would override that, so only do it for the rare post
+    // that ships bespoke social artwork via `shareImage`.
+    const images = post.shareImage ? [post.shareImage] : undefined;
     return {
       title: `${post.title} | Livepeer Blog`,
       description: post.description,
@@ -28,13 +32,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: "article",
         publishedTime: post.date,
         authors: post.author ? [post.author.name] : [],
-        images: post.image ? [post.image] : [],
+        ...(images ? { images } : {}),
       },
       twitter: {
         card: "summary_large_image",
         title: post.title,
         description: post.description,
-        images: post.image ? [post.image] : [],
+        ...(images ? { images } : {}),
       },
     };
   } catch {

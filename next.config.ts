@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // `sharp` powers the blog share-card / thumbnail dither (lib/og-card.tsx).
+  // Keep it out of the server bundle: webpack otherwise follows sharp's
+  // `require('@img/sharp-libvips-dev/*')` (source-build-only optionals that
+  // aren't installed) and the build fails with "Module not found". Externalised,
+  // it's a plain runtime require of the prebuilt binary.
+  serverExternalPackages: ["sharp"],
   // Bundler-agnostic polling interval for file watching — works with both
   // Turbopack (default in Next 15) and Webpack. Needed because the native
   // file watcher doesn't pick up changes reliably in git worktrees.

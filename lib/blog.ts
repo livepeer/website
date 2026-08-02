@@ -26,6 +26,18 @@ export type BlogPost = {
   tags: string[];
   image: string;
   heroImage: string;
+  /**
+   * Opt-out from the generated share card (`app/blog/[slug]/opengraph-image`).
+   * Set only when a post has bespoke social artwork worth shipping instead.
+   */
+  shareImage: string;
+  /**
+   * Photograph or artwork from the post to carry the share card. Set it when
+   * the post has an image strong enough to stand on its own at thumbnail size —
+   * a photo, a chart, a real screenshot; not a text slide or a banner that
+   * already has the headline on it. Posts without one get a typographic card.
+   */
+  cardArt: string;
   imageAlt: string;
   draft: boolean;
   readingTime: string;
@@ -60,6 +72,8 @@ export function getPostBySlug(slug: string): BlogPost {
     tags: data.tags ?? [],
     image: data.image ?? "",
     heroImage: data.heroImage ?? "",
+    shareImage: data.shareImage ?? "",
+    cardArt: data.cardArt ?? "",
     imageAlt: data.imageAlt ?? "",
     draft: data.draft ?? false,
     readingTime: stats.text,
@@ -79,6 +93,19 @@ export function getAllPosts(): BlogPost[] {
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return posts;
+}
+
+/**
+ * Slugs that are publicly reachable. Applies the same production draft filter
+ * as {@link getAllPosts}, so the static image and thumbnail routes never
+ * pre-render or expose drafts that `app/blog/[slug]/page.tsx` hides in
+ * production, while keeping every slug available in preview and local dev.
+ */
+export function getPublicPostSlugs(): string[] {
+  return getPostSlugs().filter(
+    (slug) =>
+      process.env.VERCEL_ENV !== "production" || !getPostBySlug(slug).draft
+  );
 }
 
 export function getCategories(): string[] {

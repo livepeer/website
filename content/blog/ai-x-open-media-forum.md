@@ -6,6 +6,7 @@ category: "Community"
 tags: ["events", "ai", "open-media", "creativity", "devconnect"]
 image: "/images/blog/ai-x-open-media-forum.svg"
 imageAlt: "AI x Open Media Forum at Devconnect Buenos Aires"
+cardArt: "/images/blog/cards/ai-x-open-media-forum.jpg"
 draft: false
 ---
 

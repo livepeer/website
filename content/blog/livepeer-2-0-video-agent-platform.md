@@ -15,6 +15,7 @@ tags:
   ]
 image: "/images/blog/livepeer-2-0-video-agent-platform/open-all-the-way-down.svg"
 imageAlt: "Livepeer 2.0 — open all the way down"
+cardArt: "/images/blog/cards/livepeer-2-0-video-agent-platform.jpg"
 draft: false
 ---
 

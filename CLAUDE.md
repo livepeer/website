@@ -22,7 +22,7 @@
 - **API routes**: none currently active.
 - **Use cases**: `use-cases/` has 7 sub-routes — all currently redirect to home. No `/use-cases` index page.
 - **Layout**: `layout.tsx` wraps all pages with Header + Footer. Global metadata and font classes defined here.
-- **SEO**: OG images generated via `next/og` at root and `/blog` levels. Primer and blog pages have per-page metadata.
+- **SEO**: OG images generated via `next/og` at root and `/blog` levels. Primer and blog pages have per-page metadata. Per-post blog share cards + listing thumbnails are an ordered-dither halftone rendered by `lib/og-card.tsx` — routes: `blog/[slug]/opengraph-image.tsx`, `twitter-image.tsx`, `thumbnail/route.tsx`. See **Blog card art & share images** under Conventions.
 - **Styling**: `globals.css` — Tailwind v4 `@theme` block, utility classes, keyframe animations.
 
 ### `components/`
@@ -50,7 +50,7 @@
 
 ### `content/`
 
-- `blog/` — markdown blog posts with YAML frontmatter (title, description, date, author, category, tags, image, draft). Draft posts are hidden in production.
+- `blog/` — markdown blog posts with YAML frontmatter (title, description, date, author, category, tags, image, `cardArt`, `shareImage`, draft). Draft posts are hidden in production. `cardArt` drives the dithered thumbnail + share card — see **Blog card art & share images** under Conventions.
 
 ### Reference docs
 
@@ -72,6 +72,26 @@
 - Static files in `public/images/`, `public/videos/`, `public/fonts/`.
 - Videos use `autoPlay muted loop playsInline`.
 - `globals.css` includes `prefers-reduced-motion` to blanket-disable all animations.
+
+### Blog card art & share images
+
+Every blog post's share card (Open Graph + Twitter) and its listing thumbnail are the **same artwork**, rendered by one module — `lib/og-card.tsx` — as an **ordered-dither (8×8 Bayer) halftone in brand green** on a near-black panel. The share card wraps that dither in card furniture (Holographik grid, `LIVEPEER` wordmark, category, title, date, `LIVEPEER.ORG`); the thumbnail is the bare dither with thin corner registration marks. They share the same `photoField` tonal curve and cell pitch, so a post looks identical when shared and when browsed. Keep it that way — don't fork the treatment per surface.
+
+**To give a new post card art:**
+
+1. Source a **square** image and save it to `public/images/blog/cards/<slug>.jpg` (match the post's slug).
+2. Add `cardArt: /images/blog/cards/<slug>.jpg` to the post's frontmatter. That single field lights up every surface: the share/OG image, the Twitter image, the blog detail hero (`BlogPostHeader`), the home "Field Notes" grid (`LatestPosts`), and the listing (`BlogPostCard`).
+3. A post **without** `cardArt` falls back to a typographic share card (an abstract per-slug field, `POST_FIELD` in `og-card.tsx`) and shows **no** image on the listing/home grid. Prefer real card art.
+
+**The aesthetic the dither needs** (this is what makes the green read as dense-on-the-subject, sparse-toward-the-edges — the signature look): a **single subject, centered, on a dark studio background that vignettes to black at the frame edges** — the object emerging from shadow. Sources on light/grey/white backgrounds, busy close-ups, or edge-to-edge landscapes fill the frame with flat dither and read as a grey square — re-source them. B&W or high-contrast monochrome sources dither best.
+
+**Sourcing recipe** (used for the existing cards): generate with the Livepeer Agent `create_media`, `model_override: "flux-dev"`, `aspect_ratio: "1:1"` (~$0.03/image; Adam has authorized the Agent for this task specifically). Prompt shape that obeys the aesthetic:
+
+> _"Black and white studio photograph of a single [SUBJECT], centered and isolated on a pure black background, large and filling most of the frame, dramatic directional lighting, [subject] emerging from deep shadow, background fading to solid black at all edges, sharp focus, fine detail, moody cinematic monochrome, high contrast."_
+
+Include "large and filling most of the frame" or flux shrinks the subject to a speck. To refine an approved image (extend an element, fix an object, change an angle) use `model_override: "kontext-edit"` with the image URL as `source_url` — it preserves the rest of the frame. **Before installing, dither-test it**: drop the file at the card path and fetch `http://localhost:3000/blog/<slug>/thumbnail` to see the real halftone at thumbnail size — detail that reads in the source often dissolves in the dither.
+
+Don't edit `lib/og-card.tsx`'s tonal curve, tone ramp, cell pitch, or `PALETTE` to make one post work — tune the **source image** instead, so the whole set stays one system.
 
 ### Grid system — "Holographik" visual language
 

@@ -8,6 +8,7 @@ category: "News"
 tags: ["livepeer-inc", "strategy", "realtime-ai", "announcement"]
 image: "/images/blog/livepeer-incorporated-and-realtime-ai.svg"
 imageAlt: "Livepeer Inc strategy update"
+cardArt: "/images/blog/cards/livepeer-incorporated-and-realtime-ai.jpg"
 draft: false
 ---
 

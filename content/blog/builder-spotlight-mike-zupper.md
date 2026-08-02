@@ -7,6 +7,7 @@ tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
 image: "/images/blog/builder-spotlight-mike-zupper-card.png"
 heroImage: "/images/blog/builder-spotlight-mike-zupper.png"
 imageAlt: "Mike Zupper - Builder Spotlight"
+cardArt: "/images/blog/cards/builder-spotlight-mike-zupper.jpg"
 draft: false
 ---
 

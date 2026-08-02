@@ -6,6 +6,7 @@ category: "Governance"
 tags: ["governance", "treasury", "community", "grants"]
 image: "/images/blog/using-the-livepeer-community-treasury.svg"
 imageAlt: "Livepeer Community Treasury illustration"
+cardArt: "/images/blog/cards/using-the-livepeer-community-treasury.jpg"
 draft: false
 author:
   name: "Doug Petkanics"

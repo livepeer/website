@@ -6,6 +6,7 @@ category: "News"
 tags: ["vision", "network", "realtime-ai", "roadmap"]
 image: "/images/blog/real-time-update-network-vision.svg"
 imageAlt: "Livepeer network vision update"
+cardArt: "/images/blog/cards/a-real-time-update-to-the-livepeer-network-vision.jpg"
 draft: false
 ---
 

@@ -9,6 +9,10 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
     year: "numeric",
     month: "long",
     day: "numeric",
+    // UTC to match the frontmatter date and the share card. Without it a
+    // date like "2026-07-29" parses as UTC midnight and renders a day early
+    // for anyone west of UTC — visibly disagreeing with the card's own date.
+    timeZone: "UTC",
   });
 
   return (
@@ -45,14 +49,20 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
         <span>{post.readingTime}</span>
       </div>
 
-      {/* Featured image — prefer a dedicated in-article hero, falling back to
-          the frontmatter `image` (which also drives the listing/social card) */}
-      {(post.heroImage || post.image) && (
-        <div className="mt-10 overflow-hidden rounded-xl border border-border">
+      {/* Featured image — the post's own dithered thumbnail, so the detail view,
+          the listing and the home page all lead with the same artwork. Falls
+          back to a dedicated hero / frontmatter image only when a post has no
+          card art. */}
+      {(post.cardArt || post.heroImage || post.image) && (
+        <div className="mt-10 aspect-[16/10] overflow-hidden rounded-xl border border-border">
           <img
-            src={post.heroImage || post.image}
+            src={
+              post.cardArt
+                ? `/blog/${post.slug}/thumbnail`
+                : post.heroImage || post.image
+            }
             alt={post.imageAlt || post.title}
-            className="w-full"
+            className="h-full w-full object-cover"
           />
         </div>
       )}
