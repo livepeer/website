@@ -148,15 +148,15 @@ export function EcosystemListing({
                     The two alphas are deliberately different. Equal sRGB steps
                     are not equal perceptual steps — oklch L is steep near black
                     and flat near white — so one shared value cannot serve both.
-                    Light was tuned between two rejected ends: 0.08 (ΔL 0.060)
-                    read as no hover at all, 0.15 (ΔL 0.112) read as too dark.
-                    0.12 sits at ΔL 0.087, near the midpoint. Dark stays at
-                    0.08, which lifts ΔL 0.191 — just under the 0.205 `card`
+                    Light was tuned down from two rejected ends: 0.15 (ΔL 0.112) and
+                    0.12 (ΔL 0.087) both read as too dark, 0.08 (ΔL 0.060) as no
+                    hover at all. 0.10 sits at ΔL 0.072. Dark stays at 0.08,
+                    which lifts ΔL 0.191 — just under the 0.205 `card`
                     used to give it. These cards carry no border, so the fill is
                     the only thing that materialises them. */}
                 <Link
                   href={`/ecosystem/${app.slug}`}
-                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.12] dark:hover:bg-foreground/[0.08]"
+                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.10] dark:hover:bg-foreground/[0.08]"
                 >
                   {app.logo ? (
                     // The mockup uses object-cover because its images are
