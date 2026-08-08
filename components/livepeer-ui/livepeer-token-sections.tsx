@@ -130,16 +130,14 @@ function OkxMark({ className }: { className?: string }) {
  * category as a contributor's logoBg in the ecosystem catalogue. Every other
  * surface on this page is a registry token.
  */
-const EXCHANGE_STYLES: Record<
-  string,
-  { className: string; markSize: string }
-> = {
-  Binance: { className: "bg-[#ffd000] text-black", markSize: "size-7" },
-  Coinbase: { className: "bg-[#0052ff] text-white", markSize: "size-7" },
-  Kraken: { className: "bg-[#5741d9] text-white", markSize: "size-7" },
-  Uniswap: { className: "bg-[#ff007a] text-white", markSize: "size-8" },
-  OKX: { className: "bg-[#b6ff20] text-black", markSize: "size-8" },
-};
+const EXCHANGE_STYLES: Record<string, { className: string; markSize: string }> =
+  {
+    Binance: { className: "bg-[#ffd000] text-black", markSize: "size-7" },
+    Coinbase: { className: "bg-[#0052ff] text-white", markSize: "size-7" },
+    Kraken: { className: "bg-[#5741d9] text-white", markSize: "size-7" },
+    Uniswap: { className: "bg-[#ff007a] text-white", markSize: "size-8" },
+    OKX: { className: "bg-[#b6ff20] text-black", markSize: "size-8" },
+  };
 
 const EXCHANGE_MARKS: Record<
   string,
@@ -457,10 +455,7 @@ export function TokenHeroSection({
           <p className="text-xs text-muted-foreground">{content.eyebrow}</p>
         </div>
 
-        {/* font-display (Favorit Pro) is opt-in per design.md. A one-line
-            statement of what the token is for is the kind of editorial moment
-            it exists for. */}
-        <h1 className="mt-6 max-w-[22ch] font-display text-display-sm text-balance sm:text-display-fluid">
+        <h1 className="mt-6 max-w-[22ch] text-display-sm text-balance sm:text-display-fluid">
           {content.heading}
         </h1>
         <p className="mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">
@@ -503,7 +498,9 @@ export function TokenExchangesSection({
             rather than competing on hue. */}
         <div className="flex items-center justify-center bg-foreground px-6 text-center text-background sm:px-10">
           <h2 className="flex items-center gap-1.5 text-xs">
-            <span className="text-background/60">{content.exchanges.leadIn}</span>
+            <span className="text-background/60">
+              {content.exchanges.leadIn}
+            </span>
             <span className="flex items-center gap-1">
               <LivepeerGradientSymbol
                 className="h-2.5 w-auto shrink-0 sm:h-3"

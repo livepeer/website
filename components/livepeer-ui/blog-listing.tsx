@@ -90,7 +90,7 @@ export function BlogListing({
     <div className="px-4 pt-16 pb-24 sm:px-6 lg:px-10">
       <div className="mx-auto w-full max-w-page">
         <header className="pt-12 text-center lg:pt-16">
-          <h1 className="font-display text-display-sm text-balance sm:text-display-fluid">
+          <h1 className="text-display-sm text-balance sm:text-display-fluid">
             {heading}
           </h1>
         </header>
@@ -144,11 +144,11 @@ export function BlogListing({
                       />
                     )}
                   </div>
-                  {/* font-display at reading size. design.md keeps Favorit Pro
-                      for editorial statements, and a headline is exactly that
-                      — this is the one place the face appears below hero
-                      scale. */}
-                  <h2 className="font-display text-xl leading-snug font-light tracking-tight text-pretty">
+                  {/* font-medium, not the font-light this carried under
+                      Favorit: at 20px Inter's 300 goes thin and the title stops
+                      out-weighing the body copy beneath it. Matches the
+                      ecosystem card title, which is Inter at font-medium. */}
+                  <h2 className="text-xl leading-snug font-medium tracking-tight text-pretty">
                     {post.title}
                   </h2>
                   {/* whitespace-nowrap with a truncating date: at 390px a

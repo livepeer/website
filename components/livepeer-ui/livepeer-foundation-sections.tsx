@@ -150,7 +150,11 @@ function FoundationVenn() {
               stopColor="var(--color-brand)"
               stopOpacity="0.1"
             />
-            <stop offset="100%" stopColor="var(--color-brand)" stopOpacity="0" />
+            <stop
+              offset="100%"
+              stopColor="var(--color-brand)"
+              stopOpacity="0"
+            />
           </radialGradient>
           {/* Nested clips: the fill is drawn across the whole box and then cut
               to the part inside both circles, which is what makes the lens a
@@ -201,7 +205,7 @@ export function FoundationHeroSection({
           <p className="text-xs text-muted-foreground">{content.eyebrow}</p>
         </div>
 
-        <h1 className="mt-6 max-w-[22ch] font-display text-display-sm text-balance sm:text-display-fluid">
+        <h1 className="mt-6 max-w-[22ch] text-display-sm text-balance sm:text-display-fluid">
           {content.heading}
         </h1>
         <p className="mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">
@@ -241,7 +245,7 @@ export function FoundationMandateSection({
           <FoundationVenn />
         </div>
 
-        <h2 className="max-w-[22ch] font-display text-display-sm text-balance sm:text-display-fluid">
+        <h2 className="max-w-[22ch] text-display-sm text-balance sm:text-display-fluid">
           {content.heading}
         </h2>
         <p className="mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">

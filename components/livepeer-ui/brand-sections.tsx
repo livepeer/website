@@ -6,6 +6,7 @@ import {
   LivepeerWordmark,
 } from "@/components/brand";
 import { CopyButton } from "@/components/copy-button";
+import { MarkConstructionDiagram } from "@/components/livepeer-ui/mark-construction";
 import { Button } from "@/components/ui/button";
 
 /* ------------------------------------------------------------------ *
@@ -93,49 +94,6 @@ const MARKS = [
   },
 ];
 
-/**
- * A clear-space diagram, because the rule is spatial.
- *
- * "Space equal to the symbol's width on all sides" is a sentence someone has
- * to translate before they can apply it. Drawing it removes the translation:
- * the dashed box is the boundary, the four ticks are the measure, and the
- * measure is the symbol itself.
- */
-function ClearSpaceDiagram() {
-  return (
-    <div className="rounded-sm border border-border p-8 sm:p-12">
-      <div className="mx-auto flex max-w-sm items-center justify-center">
-        {/* Padding is the symbol's own width — 73/89 of its height, the mark's
-            aspect ratio — so the drawing stays correct at any size rather than
-            encoding a pixel value.
-
-            Both values spell var() out. Tailwind v4 dropped v3's bare
-            [--custom-property] shorthand in favour of (--custom-property), and
-            the silent failure mode is a rule that never compiles: h-[--symbol-h]
-            left the symbol at zero height while the padding beside it, written
-            with an explicit var(), resolved fine. */}
-        <div
-          className="relative border border-dashed border-border p-[calc(var(--symbol-h)*73/89)]"
-          style={{ "--symbol-h": "3rem" } as React.CSSProperties}
-        >
-          <LivepeerSymbol
-            className="h-[var(--symbol-h)] w-auto text-foreground"
-            aria-hidden="true"
-          />
-          {/* One labelled edge rather than four: the rule is the same on every
-              side, and repeating it four times only adds ink. */}
-          {/* nowrap: the box is only as wide as the symbol plus its margin, so
-              without it the label breaks onto three stacked lines and spills
-              out of the drawing it is annotating. */}
-          <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-background px-2 font-mono text-[0.625rem] whitespace-nowrap tracking-wide text-muted-foreground uppercase">
-            = symbol width
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function BrandMarkSection({ kitHref }: { kitHref: string }) {
   return (
     <Section
@@ -217,7 +175,7 @@ export function BrandMarkSection({ kitHref }: { kitHref: string }) {
           </p>
         </div>
 
-        <ClearSpaceDiagram />
+        <MarkConstructionDiagram />
       </div>
     </Section>
   );
@@ -511,7 +469,10 @@ export function BrandHeroSection({
       <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
         {eyebrow}
       </p>
-      <h1 className="mt-6 font-display text-display-sm text-balance sm:text-display-fluid">
+      {/* Inter, like every other page title. The Favorit Pro specimen further
+          down the page is the one place this page sets the display face — there
+          it is the subject, not the styling. */}
+      <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
         {heading}
       </h1>
       <p className="mx-auto mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">

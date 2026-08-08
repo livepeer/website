@@ -28,13 +28,7 @@ function formatDate(iso: string): string {
  * share bar, no related strip — because the piece is the page. The only
  * navigation is the breadcrumb at the top and the way back at the bottom.
  */
-export function BlogPost({
-  post,
-  html,
-}: {
-  post: BlogPostView;
-  html: string;
-}) {
+export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
   return (
     <div className="px-4 pt-24 pb-24 sm:px-6 lg:px-10">
       <article className="mx-auto max-w-[680px]">
@@ -45,7 +39,10 @@ export function BlogPost({
           >
             {/* "Latest Updates", matching the nav's label for this section —
                 the URL stays /blog, the word the site uses is Latest. */}
-            <Link href="/blog" className="transition-colors hover:text-foreground">
+            <Link
+              href="/blog"
+              className="transition-colors hover:text-foreground"
+            >
               Latest Updates
             </Link>
             <span aria-hidden="true">›</span>
@@ -53,9 +50,15 @@ export function BlogPost({
           </nav>
 
           {/* Smaller than the index's title, deliberately: the index is a
-              display statement, an article headline is read. font-display at
-              light weight keeps the editorial voice without the scale. */}
-          <h1 className="font-display text-3xl font-light tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
+              display statement, an article headline is read.
+
+              font-medium, matching the index card titles, so a headline carries
+              the same weight whether it is met on the card or on the article.
+              This ran at font-light while it was set in Favorit; under Inter
+              that read thin rather than editorial, and at 30px on a phone it
+              stopped anchoring the page. 600 was the alternative and is heavier
+              than anything else on the site. */}
+          <h1 className="text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
             {post.title}
           </h1>
 

@@ -98,10 +98,7 @@ export function EcosystemListing({
     <div className="px-4 pt-16 pb-24 sm:px-6 lg:px-10">
       <div className="mx-auto w-full max-w-page">
         <header className="pt-12 text-center lg:pt-16">
-          {/* font-display (Favorit Pro) is opt-in per design.md — reserved for
-              major editorial statements. A catalogue title is one of the few
-              places on the site that qualifies. */}
-          <h1 className="font-display text-display-sm text-balance sm:text-display-fluid">
+          <h1 className="text-display-sm text-balance sm:text-display-fluid">
             {heading}
           </h1>
         </header>

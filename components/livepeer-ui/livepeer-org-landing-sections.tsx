@@ -1,19 +1,19 @@
-import Link from "next/link"
-import { ArrowRightIcon } from "lucide-react"
+import Link from "next/link";
+import { ArrowRightIcon } from "lucide-react";
 
-import { AgentWordmark, LivepeerWordmark } from "@/components/brand"
-import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility"
-import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts"
-import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream"
-import { PlaybookPreview } from "@/components/livepeer-ui/playbook-preview"
-import { Button } from "@/components/ui/button"
-import { CtaArrow } from "@/components/ui/cta-arrow"
-import { ExternalArrow } from "@/components/ui/external-arrow"
-import { cn } from "@/lib/utils"
+import { AgentWordmark, LivepeerWordmark } from "@/components/brand";
+import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility";
+import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
+import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream";
+import { PlaybookPreview } from "@/components/livepeer-ui/playbook-preview";
+import { Button } from "@/components/ui/button";
+import { CtaArrow } from "@/components/ui/cta-arrow";
+import { ExternalArrow } from "@/components/ui/external-arrow";
+import { cn } from "@/lib/utils";
 
-type HomeContent = NonNullable<LivepeerOrgPage["homeContent"]>
+type HomeContent = NonNullable<LivepeerOrgPage["homeContent"]>;
 
-type HeroCta = { label: string; href: string; newTab?: boolean }
+type HeroCta = { label: string; href: string; newTab?: boolean };
 
 /**
  * A hero CTA, with the affordance matched to what the link actually does.
@@ -27,7 +27,7 @@ type HeroCta = { label: string; href: string; newTab?: boolean }
  * elsewhere"; CtaArrow is the chevron-into-arrow that just means "go".
  */
 function renderCta(cta: HeroCta, className: string, variant?: "outline") {
-  const offSite = cta.href.startsWith("http")
+  const offSite = cta.href.startsWith("http");
 
   return (
     <Button
@@ -57,21 +57,21 @@ function renderCta(cta: HeroCta, className: string, variant?: "outline") {
         <CtaArrow />
       )}
     </Button>
-  )
+  );
 }
 
 export function NetworkHeroSection({
   content,
 }: {
   content: HomeContent["hero"] & {
-    description?: string
+    description?: string;
     banner?: {
-      label: string
-      title: string
-      description: string
-      href: string
-    }
-  }
+      label: string;
+      title: string;
+      description: string;
+      href: string;
+    };
+  };
 }) {
   return (
     // -mt-16 pulls the hero up under the transparent header (which sits in flow
@@ -153,7 +153,11 @@ export function NetworkHeroSection({
 
           {/* Two-line headline, both lines in the foreground colour. The
               display scale bakes in a 300 weight; 400 gives it a little more
-              presence at hero size without tipping into a heavier voice. */}
+              presence at hero size without tipping into a heavier voice.
+
+              Inter, matching every page title on the site. The display scale
+              utilities set size, weight and tracking only — they do not imply a
+              typeface, so text-display-* in font-sans is the normal case. */}
           <h1 className="animate-stagger-in text-display-md font-normal text-balance [animation-delay:120ms] sm:text-display-fluid">
             {content.heading}
             <br />
@@ -194,13 +198,13 @@ export function NetworkHeroSection({
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function LivepeerAgentFeatureSection({
   content,
 }: {
-  content: HomeContent["agentFeature"]
+  content: HomeContent["agentFeature"];
 }) {
   return (
     // The playbook is the product surface, so it is shown upright and sharp
@@ -293,13 +297,13 @@ export function LivepeerAgentFeatureSection({
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export function OrchestratorCtaSection({
   content,
 }: {
-  content: HomeContent["providerCta"]
+  content: HomeContent["providerCta"];
 }) {
   return (
     // 40rem rather than the mockup's 56rem: there the band is a bright inverted
@@ -354,5 +358,5 @@ export function OrchestratorCtaSection({
         </div>
       </div>
     </section>
-  )
+  );
 }

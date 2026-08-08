@@ -19,7 +19,7 @@ import {
 const foundation: FoundationContent = {
   hero: {
     eyebrow: "The Livepeer Foundation",
-    heading: "Advancing the world's open networks",
+    heading: "Advancing the world's open inference network.",
     description:
       "The Livepeer Foundation is an independent non-profit accountable to network participants, advancing Livepeer's long-term health through strategy, core development, and ecosystem growth.",
     cta: {
