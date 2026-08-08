@@ -48,7 +48,7 @@ Eight linked pages, all designed in the mockup set (`/docs/public-beta/livepeer-
 | Token | `/token` | no live protocol stats in the new design |
 | Foundation | `/foundation` | |
 | Latest (blog) | `/blog` | nav labels it "Latest"; URL stays `/blog` |
-| Brand | `/brand` | **no mockup** — design from design.md + registry Foundations, needs CD review |
+| Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
 | Primer | `/primer` | **keep intact, unlinked** — its own scoped legacy CSS; only consumer of `lib/subgraph.ts` |
 
 Redirect changes live in `next.config.ts`: `/network` & `/orchestrate` → `/compute`; the five `/use-cases/*` → `/agent` (transcoding one → `/compute`); `/delegate` stays external (explorer). Keep existing blog host + slug redirects.
@@ -75,6 +75,11 @@ Also deleted with the cutover: `components/home/*`, `components/legacy/*`,
 PascalCase `components/ui/*` visuals, `lib/constants.ts`, and the five
 `app/use-cases/*` routes — the redirects in `next.config.ts` are what serve
 those URLs now, so the pages were unreachable anyway.
+
+The Foundation page **deliberately drops** content the old page carried — the
+three pillars spelled out individually, and the "About The Project" block with
+the Messari citation. That is a considered editorial cut, not migration loss:
+don't restore it from git history.
 
 **Share images** (`lib/og.tsx`): `/` renders the registry's `@livepeer-ui/og`
 card verbatim — the lockup centred on `#000000`. Every other page renders the
