@@ -140,17 +140,22 @@ export function EcosystemListing({
                     descriptions run short.
 
                     The hover fill is a fraction of foreground, not a surface
-                    token, because every surface token that lifts off black in
-                    dark sits *on top of* white in light. `card` is the clear
-                    case: oklch(0.205) over black is a 23-byte lift, but in
-                    light both card and background are oklch(1 0 0), so the
-                    hover painted white on white and there was no state at all.
-                    An alpha over foreground is relative to whatever the page
-                    is, so it lifts either way — measured at 20 bytes in both
-                    themes, matching what card gave dark. */}
+                    token: `card` is oklch(1 0 0) in light — identical to
+                    `background` — so a card fill painted white on white and
+                    there was no hover state at all. An alpha over foreground
+                    is relative to whatever the page is, so it lifts either way.
+
+                    The two alphas are deliberately different. Equal sRGB steps
+                    are not equal perceptual steps — oklch L is steep near black
+                    and flat near white — so one shared value cannot serve both:
+                    at 0.08 dark lifts ΔL 0.191 while light manages only 0.060,
+                    and light reads as having no hover. 0.15 puts light at ΔL
+                    0.112. Dark stays at 0.08, just under the 0.205 that `card`
+                    used to give it. These cards carry no border, so the fill is
+                    the only thing that materialises them — it has to register. */}
                 <Link
                   href={`/ecosystem/${app.slug}`}
-                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.08]"
+                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.15] dark:hover:bg-foreground/[0.08]"
                 >
                   {app.logo ? (
                     // The mockup uses object-cover because its images are
