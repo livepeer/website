@@ -465,15 +465,15 @@ export function BrandSystemSection({
       <ul className="grid gap-3 sm:grid-cols-3">
         {links.map((link) => (
           <li key={link.href}>
-            {/* foreground alpha, not `card`: card and background hold the same
-                oklch(1 0 0) in light, so a card fill is invisible there. The
-                split alphas are because equal sRGB steps are not equal
-                perceptual ones — see the note on the ecosystem listing cards. */}
+            {/* Per-theme fill, matching the ecosystem cards: `card` is
+                oklch(1 0 0) in light — identical to the background — so it is
+                invisible there, and `muted/50` is rgb 7 in dark, so it
+                disappears there. Each theme takes the one that lifts. */}
             <a
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-foreground/[0.10] dark:hover:bg-foreground/[0.08]"
+              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-muted/50 dark:hover:bg-card"
             >
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 {link.label}

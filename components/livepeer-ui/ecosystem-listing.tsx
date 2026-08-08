@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -139,24 +140,23 @@ export function EcosystemListing({
                     of boxes. min-h holds the row height steady when
                     descriptions run short.
 
-                    The hover fill is a fraction of foreground, not a surface
-                    token: `card` is oklch(1 0 0) in light — identical to
-                    `background` — so a card fill painted white on white and
-                    there was no hover state at all. An alpha over foreground
-                    is relative to whatever the page is, so it lifts either way.
+                    Hover is a fill plus the arrow going to foreground. The
+                    arrow is the registry's, and it is the half that carries the
+                    state — an earlier pass dropped it (the registry card links
+                    out, so its icon is an external ↗; ours goes to a local
+                    detail page) and then tried to make the fill alone do both
+                    jobs, which is why it kept reading as too heavy.
 
-                    The two alphas are deliberately different. Equal sRGB steps
-                    are not equal perceptual steps — oklch L is steep near black
-                    and flat near white — so one shared value cannot serve both.
-                    Light was tuned down from two rejected ends: 0.15 (ΔL 0.112) and
-                    0.12 (ΔL 0.087) both read as too dark, 0.08 (ΔL 0.060) as no
-                    hover at all. 0.10 sits at ΔL 0.072. Dark stays at 0.08,
-                    which lifts ΔL 0.191 — just under the 0.205 `card`
-                    used to give it. These cards carry no border, so the fill is
-                    the only thing that materialises them. */}
+                    The fill is per-theme because one value cannot serve both.
+                    Light takes the registry's `muted/50`: rgb 250, barely
+                    there, which is all it needs to be. That same value in dark
+                    is rgb 7 — ΔL 0.129 off pure black — and disappears, so dark
+                    takes `card` (rgb 23, ΔL 0.205), the surface token that
+                    actually lifts. Both are semantic tokens; the split is the
+                    honest consequence of a pure-black background. */}
                 <Link
                   href={`/ecosystem/${app.slug}`}
-                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.10] dark:hover:bg-foreground/[0.08]"
+                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-muted/50 dark:hover:bg-card"
                 >
                   {app.logo ? (
                     // The mockup uses object-cover because its images are
@@ -189,12 +189,22 @@ export function EcosystemListing({
                       {app.name.charAt(0)}
                     </span>
                   )}
-                  <div className="mt-6">
-                    <h2 className="text-lg font-medium">{app.name}</h2>
-                    {/* Mono: a hostname is an identifier, not prose. */}
-                    <p className="mt-1 font-mono text-xs text-muted-foreground">
-                      {app.hostname}
-                    </p>
+                  <div className="mt-6 flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="text-lg font-medium">{app.name}</h2>
+                      {/* Mono: a hostname is an identifier, not prose. */}
+                      <p className="mt-1 font-mono text-xs text-muted-foreground">
+                        {app.hostname}
+                      </p>
+                    </div>
+                    {/* ArrowRight, not the registry's ArrowUpRight: this card
+                        goes to /ecosystem/[slug], not off-site. Same
+                        group-hover treatment — it is the half of the hover
+                        state that actually reads. */}
+                    <ArrowRightIcon
+                      className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+                      aria-hidden="true"
+                    />
                   </div>
                   <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
                     {app.description}
