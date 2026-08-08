@@ -473,7 +473,7 @@ export function BrandSystemSection({
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-foreground/[0.15] dark:hover:bg-foreground/[0.08]"
+              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-foreground/[0.12] dark:hover:bg-foreground/[0.08]"
             >
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 {link.label}
