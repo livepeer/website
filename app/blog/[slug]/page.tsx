@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import Container from "@/components/ui/Container";
-import BlogPostHeader from "@/components/blog/BlogPostHeader";
-import BlogPostContent from "@/components/blog/BlogPostContent";
+
+import { BlogPost } from "@/components/livepeer-ui/blog-post";
 import { getPostBySlug, getPostSlugs, renderMarkdown } from "@/lib/blog";
 
 type Props = {
@@ -62,23 +60,19 @@ export default async function BlogPostPage({ params }: Props) {
   const html = await renderMarkdown(post.content);
 
   return (
-    <article className="pt-24 pb-16 lg:pt-32 lg:pb-24">
-      <Container className="max-w-[680px]">
-        <BlogPostHeader post={post} />
-
-        <BlogPostContent html={html} />
-
-        <div className="divider-gradient my-16" />
-
-        <div className="flex justify-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 font-mono text-sm text-foreground/30 transition-colors hover:text-foreground/60"
-          >
-            ← All posts
-          </Link>
-        </div>
-      </Container>
-    </article>
+    <BlogPost
+      post={{
+        title: post.title,
+        category: post.category,
+        date: post.date,
+        readingTime: post.readingTime,
+        // heroImage is the wide 16:9 art; image is the square card cover. Fall
+        // back to the cover so a post that only ships one still opens on
+        // something rather than a bare panel.
+        heroImage: post.heroImage || post.image || undefined,
+        imageAlt: post.imageAlt || undefined,
+      }}
+      html={html}
+    />
   );
 }

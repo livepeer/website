@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import EcosystemDetail from "@/components/ecosystem/EcosystemDetail";
+import { EcosystemDetail } from "@/components/livepeer-ui/ecosystem-detail";
 import {
   getAppBySlug,
   getAppSlugs,
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
-    return { title: "App Not Found — Livepeer Ecosystem" };
+    return { title: "Project Not Found — Livepeer Ecosystem" };
   }
 }
 

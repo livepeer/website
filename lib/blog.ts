@@ -11,6 +11,29 @@ import readingTime from "reading-time";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
+/**
+ * The blog's taxonomy — declared here, not inferred from whatever the posts
+ * happen to say.
+ *
+ * A derived list drifts: one post typed "News" and another "Network" and the
+ * filter grows a category nobody chose. This is the closed set a post must
+ * pick from, and getPostBySlug rejects anything else, so a typo fails the
+ * build instead of quietly splitting the archive in two.
+ *
+ * Order is the order they appear in the filter panel, and it is editorial
+ * rather than alphabetical: what the network did, then the two product
+ * surfaces, then the people and the governance around them.
+ */
+export const BLOG_CATEGORIES = [
+  "Network",
+  "Agent",
+  "Community",
+  "Proposals",
+  "Engineering",
+] as const;
+
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+
 export type BlogAuthor = {
   name: string;
   avatar?: string;
@@ -46,6 +69,13 @@ export function getPostBySlug(slug: string): BlogPost {
 
   const stats = readingTime(content);
 
+  const category = data.category;
+  if (!BLOG_CATEGORIES.includes(category)) {
+    throw new Error(
+      `content/blog/${slug}.md: category ${JSON.stringify(category)} is not one of ${BLOG_CATEGORIES.join(", ")}.`
+    );
+  }
+
   return {
     slug,
     title: data.title ?? "",
@@ -56,7 +86,7 @@ export function getPostBySlug(slug: string): BlogPost {
         ? { name: data.author }
         : data.author
       : undefined,
-    category: data.category ?? "News",
+    category,
     tags: data.tags ?? [],
     image: data.image ?? "",
     heroImage: data.heroImage ?? "",
@@ -81,10 +111,17 @@ export function getAllPosts(): BlogPost[] {
   return posts;
 }
 
+/**
+ * The taxonomy, in declared order, narrowed to categories that have posts.
+ *
+ * Declared-but-empty categories are held back rather than shown: a filter
+ * option that can only ever return "No posts match that search" is a dead end
+ * dressed as a choice. Agent and Engineering appear the moment a post uses
+ * them — no code change needed.
+ */
 export function getCategories(): string[] {
-  const posts = getAllPosts();
-  const categories = new Set(posts.map((p) => p.category));
-  return Array.from(categories);
+  const inUse = new Set(getAllPosts().map((post) => post.category));
+  return BLOG_CATEGORIES.filter((name) => inUse.has(name));
 }
 
 export async function renderMarkdown(content: string): Promise<string> {

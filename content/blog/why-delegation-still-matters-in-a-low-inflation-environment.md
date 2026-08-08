@@ -2,10 +2,11 @@
 title: "Why Delegation Still Matters in a Low-Inflation Environment"
 description: "As Livepeer's inflation rate adjusts dynamically, delegation remains critical to network security, economic alignment, and growth."
 date: "2025-07-24"
-category: "Ecosystem"
+category: "Community"
 tags: ["delegation", "staking", "tokenomics", "network"]
-image: "/images/blog/why-delegation-still-matters.svg"
-imageAlt: "Delegation in the Livepeer network"
+image: "https://cdn.sanity.io/images/l36s876e/production/7bd4492abf0c18ac08045592a5987d56e11e3e91-1456x816.png?fm=webp&q=82"
+heroImage: "https://cdn.sanity.io/images/l36s876e/production/7bd4492abf0c18ac08045592a5987d56e11e3e91-1456x816.png?fm=webp&q=82"
+imageAlt: "Close view of green blades in soft light"
 draft: false
 ---
 

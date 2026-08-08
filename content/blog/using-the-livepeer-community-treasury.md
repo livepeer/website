@@ -2,10 +2,11 @@
 title: "Using the Livepeer Community Treasury"
 description: "A guide to the processes and social conventions for submitting proposals, building community support, and accessing funding from the Livepeer on-chain treasury."
 date: "2023-11-07"
-category: "Governance"
+category: "Proposals"
 tags: ["governance", "treasury", "community", "grants"]
-image: "/images/blog/using-the-livepeer-community-treasury.svg"
-imageAlt: "Livepeer Community Treasury illustration"
+image: "https://cdn.sanity.io/images/l36s876e/production/d20446b7a982e3bd955481a32e8c4fb78435ac97-1456x816.png?fm=webp&q=82"
+heroImage: "https://cdn.sanity.io/images/l36s876e/production/d20446b7a982e3bd955481a32e8c4fb78435ac97-1456x816.png?fm=webp&q=82"
+imageAlt: "Front-facing metallic vault structure in dark blue light"
 draft: false
 author:
   name: "Doug Petkanics"

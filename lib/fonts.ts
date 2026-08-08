@@ -1,14 +1,12 @@
 import localFont from "next/font/local";
-import { Raleway, Instrument_Serif } from "next/font/google";
+import { Inter, Raleway } from "next/font/google";
 
-// Editorial display serif — used sparingly (currently Foundation page hero)
-// as an elegant counter-voice to Favorit Pro sans.
-export const instrumentSerif = Instrument_Serif({
+// Inter — the Livepeer UI product/interface typeface (font-sans). Default for
+// nav, body, forms, data, docs, and ordinary headings.
+export const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-instrument-serif",
+  variable: "--font-inter",
   display: "swap",
-  weight: "400",
-  style: ["normal", "italic"],
 });
 
 export const favoritPro = localFont({

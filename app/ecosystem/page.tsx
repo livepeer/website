@@ -1,34 +1,47 @@
-import EcosystemListingClient, {
+import type { Metadata } from "next";
+
+import {
+  EcosystemListing,
   type EcosystemListingApp,
-} from "@/components/ecosystem/EcosystemListingClient";
+} from "@/components/livepeer-ui/ecosystem-listing";
 import { getAllApps, getEcosystemCategories } from "@/lib/ecosystem";
 
-export default async function EcosystemPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ categories?: string; q?: string }>;
-}) {
-  const { categories: catsParam, q } = await searchParams;
+// Copy mirrors the public-beta mockup. The projects themselves are contributor
+// markdown in content/ecosystem/* (see CLAUDE.md → Content), read at build time.
+const ecosystem = {
+  heading: "Built on Livepeer",
+  searchPlaceholder: "Search ecosystem",
+  emptyMessage: "No projects match that search.",
+  submitLabel: "Submit project",
+  submitHref: "/ecosystem/submit",
+};
+
+export const metadata: Metadata = {
+  title: "Ecosystem",
+  description:
+    "Projects, tools, and products built on Livepeer — the open inference network for AI video and image workloads.",
+};
+
+export default function EcosystemPage() {
   const apps: EcosystemListingApp[] = getAllApps().map((app) => ({
     slug: app.slug,
     name: app.name,
-    url: app.url,
     hostname: app.hostname,
     description: app.description,
     categories: app.categories,
     logo: app.logo,
     logoBg: app.logoBg,
   }));
-  const categories = getEcosystemCategories();
 
   return (
-    <EcosystemListingClient
+    <EcosystemListing
       apps={apps}
-      categories={categories}
-      initialCategories={
-        catsParam ? catsParam.split(",").map(decodeURIComponent) : []
-      }
-      initialSearch={q ?? ""}
+      categories={getEcosystemCategories()}
+      heading={ecosystem.heading}
+      searchPlaceholder={ecosystem.searchPlaceholder}
+      emptyMessage={ecosystem.emptyMessage}
+      submitLabel={ecosystem.submitLabel}
+      submitHref={ecosystem.submitHref}
     />
   );
 }

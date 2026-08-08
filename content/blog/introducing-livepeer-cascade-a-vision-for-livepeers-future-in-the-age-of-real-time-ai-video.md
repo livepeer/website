@@ -4,10 +4,11 @@ description: "Discover Livepeer's vision to revolutionize real-time AI video wit
 date: "2024-11-01"
 author:
   name: "Doug Petkanics"
-category: "News"
+category: "Network"
 tags: ["cascade", "vision", "realtime-ai", "roadmap"]
-image: "/images/blog/introducing-livepeer-cascade.svg"
-imageAlt: "Introducing Livepeer Cascade"
+image: "https://cdn.sanity.io/images/l36s876e/production/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png?fm=webp&q=82"
+heroImage: "https://cdn.sanity.io/images/l36s876e/production/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png?fm=webp&q=82"
+imageAlt: "Orange tubular channel with reflective highlights"
 draft: false
 ---
 
