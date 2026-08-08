@@ -139,15 +139,18 @@ export function EcosystemListing({
                     of boxes. min-h holds the row height steady when
                     descriptions run short.
 
-                    The hover surface is card (L 0.205), the middle of the
-                    registry's three dark steps. The mockup's muted/50 lands
-                    near L 0.08 from pure black and muted itself only reaches
-                    0.16 — neither registers as a state change — while
-                    secondary at 0.269 lifts far enough to read as a selected
-                    card rather than a hovered one. */}
+                    The hover fill is a fraction of foreground, not a surface
+                    token, because every surface token that lifts off black in
+                    dark sits *on top of* white in light. `card` is the clear
+                    case: oklch(0.205) over black is a 23-byte lift, but in
+                    light both card and background are oklch(1 0 0), so the
+                    hover painted white on white and there was no state at all.
+                    An alpha over foreground is relative to whatever the page
+                    is, so it lifts either way — measured at 20 bytes in both
+                    themes, matching what card gave dark. */}
                 <Link
                   href={`/ecosystem/${app.slug}`}
-                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-card"
+                  className="group flex min-h-72 flex-col rounded-sm p-6 transition-colors hover:bg-foreground/[0.08]"
                 >
                   {app.logo ? (
                     // The mockup uses object-cover because its images are

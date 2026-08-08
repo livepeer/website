@@ -465,11 +465,14 @@ export function BrandSystemSection({
       <ul className="grid gap-3 sm:grid-cols-3">
         {links.map((link) => (
           <li key={link.href}>
+            {/* foreground alpha, not `card`: card and background hold the same
+                oklch(1 0 0) in light, so a card fill is invisible there. See
+                the note on the ecosystem listing cards. */}
             <a
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-card"
+              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-foreground/[0.08]"
             >
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 {link.label}
