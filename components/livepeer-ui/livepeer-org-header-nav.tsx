@@ -161,12 +161,17 @@ export function LivepeerOrgNavItem({
   item,
   navigationImages,
   onNavigate,
+  onPointerEnter,
+  onFocus,
   className,
 }: {
   site: LivepeerOrgSite;
   item: EditorialLink;
   navigationImages?: LivepeerOrgNavigationImages;
   onNavigate?: () => void;
+  /** Reported to the grid so one shared highlight can follow the pointer. */
+  onPointerEnter?: React.PointerEventHandler<HTMLElement>;
+  onFocus?: React.FocusEventHandler<HTMLElement>;
   className?: string;
 }) {
   const href = resolveHref(site, item.label, item.href);
@@ -224,13 +229,107 @@ export function LivepeerOrgNavItem({
       rel="noreferrer"
       className={itemClassName}
       onClick={onNavigate}
+      onPointerEnter={onPointerEnter}
+      onFocus={onFocus}
     >
       {content}
     </a>
   ) : (
-    <Link href={href} className={itemClassName} onClick={onNavigate}>
+    <Link
+      href={href}
+      className={itemClassName}
+      onClick={onNavigate}
+      onPointerEnter={onPointerEnter}
+      onFocus={onFocus}
+    >
       {content}
     </Link>
+  );
+}
+
+/**
+ * The panel's item grid, with one highlight that travels between the cards.
+ *
+ * Per-item `hover:bg-*` cross-fades: the card you left dims while the card you
+ * arrived at lifts, and two adjacent cards fading in opposite directions reads
+ * as a blink rather than a movement. A single element that moves gives the
+ * hover continuity — the same device as the login dropdown, which slides
+ * vertically between two rows.
+ *
+ * Both axes are tracked, not just x. The grid is 3 columns at `lg` and 4 at
+ * `xl`, so a four-item group wraps: moving along a row is the lateral slide,
+ * and moving to the row below travels down as well.
+ *
+ * Position is written to the node rather than held in state, and the transition
+ * is unconditional. A CSS transition only runs if the property was already
+ * transitionable in the previous computed style, so toggling a transition class
+ * in the same commit that moves the element makes it teleport — React renders
+ * both together, which no amount of tuning fixes.
+ */
+function LivepeerOrgNavItemGrid({
+  site,
+  links,
+  navigationImages,
+  onNavigate,
+}: {
+  site: LivepeerOrgSite;
+  links: EditorialLink[];
+  navigationImages?: LivepeerOrgNavigationImages;
+  onNavigate?: () => void;
+}) {
+  const highlightRef = React.useRef<HTMLDivElement>(null);
+  const highlightShown = React.useRef(false);
+  const [highlightOn, setHighlightOn] = React.useState(false);
+
+  const trackHighlight = React.useCallback((element: HTMLElement) => {
+    const node = highlightRef.current;
+    if (!node) return;
+    // First card placed without travelling to it: otherwise the highlight
+    // flies in from the panel's top-left corner.
+    const place = !highlightShown.current;
+    if (place) node.style.transition = "none";
+    node.style.transform = `translate(${element.offsetLeft}px, ${element.offsetTop}px)`;
+    node.style.width = `${element.offsetWidth}px`;
+    node.style.height = `${element.offsetHeight}px`;
+    if (place) {
+      void node.offsetWidth;
+      node.style.transition = "";
+    }
+    highlightShown.current = true;
+    setHighlightOn(true);
+  }, []);
+
+  return (
+    <div
+      className="relative grid grid-cols-3 gap-2 xl:grid-cols-4"
+      onPointerLeave={() => {
+        highlightShown.current = false;
+        setHighlightOn(false);
+      }}
+    >
+      <div
+        ref={highlightRef}
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute top-0 left-0 h-0 w-0 rounded-sm bg-foreground/[0.1] transition-[transform,width,height,opacity] duration-200 ease-out",
+          highlightOn ? "opacity-100" : "opacity-0"
+        )}
+      />
+      {links.map((item) => (
+        <LivepeerOrgNavItem
+          key={`${item.label}-${item.href}`}
+          site={site}
+          item={item}
+          navigationImages={navigationImages}
+          onNavigate={onNavigate}
+          onPointerEnter={(event) => trackHighlight(event.currentTarget)}
+          onFocus={(event) => trackHighlight(event.currentTarget)}
+          // The card's own fill is disabled — with both, the static one paints
+          // over the moving one and the travel is invisible underneath it.
+          className="relative h-36 hover:bg-transparent focus-visible:bg-transparent"
+        />
+      ))}
+    </div>
   );
 }
 
@@ -246,7 +345,13 @@ export function LivepeerOrgHeaderNav({
   const reduceMotion = useReducedMotion();
   const [activeTitle, setActiveTitle] = React.useState<string | null>(null);
   const [renderedTitle, setRenderedTitle] = React.useState("Network");
-  const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // One highlight that slides along the trigger row, horizontally — the same
+  // device as the login dropdown, which moves vertically between two items.
+  // Per-trigger backgrounds would cross-fade, and with four triggers side by
+  // side that reads as a flicker; a single element that travels gives the
+  // highlight continuity, so the eye follows it instead of re-finding it.
+ const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const switchTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   // Mirrors activeTitle so openMenu can branch on the current state without
   // taking it as a dependency (which would re-create the handler each open).
@@ -255,6 +360,10 @@ export function LivepeerOrgHeaderNav({
   // its height to fit whichever group is active.
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [panelHeight, setPanelHeight] = React.useState<number | null>(null);
+  // Gates the switch from an "auto" height target to the measured pixel one —
+  // see the panel's `animate` prop. Reset on close so the next open unrolls to
+  // "auto" again rather than to a height measured for a different group.
+  const [openSettled, setOpenSettled] = React.useState(false);
   const renderedGroup = getLivepeerOrgHeaderGroup(
     site,
     renderedTitle as (typeof livepeerOrgHeaderGroups)[number]
@@ -273,6 +382,7 @@ export function LivepeerOrgHeaderNav({
   React.useLayoutEffect(() => {
     activeRef.current = activeTitle;
     if (activeTitle) measureHeight();
+    else setOpenSettled(false);
   }, [activeTitle, renderedTitle, measureHeight]);
 
   React.useEffect(() => {
@@ -354,13 +464,20 @@ export function LivepeerOrgHeaderNav({
   return (
     <>
       <nav
-        className="relative z-10 hidden items-center gap-0 before:absolute before:inset-x-0 before:-top-7 before:h-7 before:content-[''] lg:flex"
+        // -my-6/py-6: the triggers are 16px of text, so without this the row
+        // that responds to the pointer is a 16px strip inside a 64px header,
+        // with ~25px of dead space below it. The highlight pill is 32px tall,
+        // so the thing you can see was twice the height of the thing you could
+        // hover — and drifting a few pixels vertically while moving sideways
+        // left the nav, which reset the highlight and turned the next move into
+        // a fresh placement instead of a slide. Padding makes the hit area the
+        // full header row; the negative margin keeps layout unchanged.
+        className="relative z-10 -my-6 hidden items-center gap-0 py-6 lg:flex"
         aria-label="Site sections"
         onPointerEnter={cancelClose}
         onPointerLeave={scheduleClose}
         onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget))
-            scheduleClose();
+          if (!event.currentTarget.contains(event.relatedTarget)) scheduleClose();
         }}
       >
         {headerItems.map((title) => {
@@ -416,7 +533,20 @@ export function LivepeerOrgHeaderNav({
             // content there is". Opacity is front-loaded (120ms) so the surface
             // is solid while it unrolls; fading and growing at once reads mushy.
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: panelHeight ?? "auto" }}
+            // "auto" until the opening animation has finished, then the
+            // measured pixel height. panelHeight is null on the very first
+            // open — nothing has been measured yet — so this used to animate
+            // toward "auto" and then get re-targeted to a number the moment
+            // the layout effect measured, mid-flight. Framer restarts the
+            // animation on a changed target, and that restart is the stutter
+            // you only ever see the first time. Switching to pixels after the
+            // open lands keeps group-to-group resizing animated, which is what
+            // the measurement is for.
+            animate={{
+              opacity: 1,
+              height: openSettled && panelHeight !== null ? panelHeight : "auto",
+            }}
+            onAnimationComplete={() => setOpenSettled(true)}
             exit={{
               opacity: 0,
               height: 0,
@@ -459,18 +589,13 @@ export function LivepeerOrgHeaderNav({
                       ? { duration: 0 }
                       : { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
                   }
-                  className="grid grid-cols-3 gap-2 xl:grid-cols-4"
                 >
-                  {renderedLinks.map((item) => (
-                    <LivepeerOrgNavItem
-                      key={`${item.label}-${item.href}`}
-                      site={site}
-                      item={item}
-                      navigationImages={navigationImages}
-                      onNavigate={() => setActiveTitle(null)}
-                      className="h-36"
-                    />
-                  ))}
+                  <LivepeerOrgNavItemGrid
+                    site={site}
+                    links={renderedLinks}
+                    navigationImages={navigationImages}
+                    onNavigate={() => setActiveTitle(null)}
+                  />
                 </motion.div>
               </AnimatePresence>
             </div>
