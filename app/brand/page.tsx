@@ -53,9 +53,13 @@ export const metadata: Metadata = {
 };
 
 export default function BrandPage() {
+  // Gutter and max-width on the same element, as in the header, the footer and
+  // SectionRule. With the gutter on an outer wrapper instead, max-w-page
+  // constrains the content box rather than the padded box, so the column lands
+  // 40px wider on each side than the chrome above and below it.
   return (
-    <div className="px-4 pt-16 pb-24 sm:px-6 lg:px-10">
-      <div className="mx-auto w-full max-w-page">
+    <div className="pt-16 pb-24">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         <BrandHeroSection {...brand.hero} />
         <BrandMarkSection kitHref={brand.kitHref} />
         <BrandColorSection />

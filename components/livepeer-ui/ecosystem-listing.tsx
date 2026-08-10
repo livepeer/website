@@ -94,9 +94,12 @@ export function EcosystemListing({
     });
   }, [apps, query, selected]);
 
+  // Gutter and max-width on one element — see the note in app/brand/page.tsx.
+  // Split across two, max-w-page bounds the content box instead of the padded
+  // box and the column runs 40px wider each side than the header and footer.
   return (
-    <div className="px-4 pt-16 pb-24 sm:px-6 lg:px-10">
-      <div className="mx-auto w-full max-w-page">
+    <div className="pt-16 pb-24">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         <header className="pt-12 text-center lg:pt-16">
           <h1 className="text-display-sm text-balance sm:text-display-fluid">
             {heading}

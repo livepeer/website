@@ -5,21 +5,19 @@ import { join } from "node:path";
 /**
  * Social share cards.
  *
- * The registry defines the brand card outright — `@livepeer-ui/og` is "the
- * Livepeer lockup centered on black, 1200 × 630", pure `#000000` with a white
- * 640px lockup and nothing else. `renderBrandCard()` is that card verbatim; it
- * is what livepeer.org itself shares.
+ * Every card is one of Peace Node's stock images with the lockup over it. Page
+ * cards centre the lockup and say nothing else — the art is what distinguishes
+ * /agent from /token in a feed, and the platform already prints the title and
+ * hostname as text beside the image. Blog cards add the post title, because a
+ * headline is the one thing a reader chooses on and it is not otherwise in the
+ * picture.
  *
- * `renderPageCard()` is the same canvas with a page title, so a shared link to
- * /compute is distinguishable from one to /token in a feed. It adds no new
- * design language: black, the lockup, one `--border` hairline, and display
- * type. Deliberately no description and no domain — every platform renders the
- * og:description and the hostname as text beside the card already, so putting
- * them *in* the image is the same word doing the job twice.
- *
- * Both are dark-only. A share card is one fixed PNG and cannot answer the
- * viewer's theme, so "both themes are first-class" has nothing to attach to
- * here; black is what the registry specifies.
+ * The source is pulled from the CDN already cropped to 1200 × 630, so Satori
+ * never resamples it. That also fixes a real softness: the art was being served
+ * through the `?fm=webp&q=82` in the blog frontmatter, which measured half the
+ * detail of the original — the grain that makes these read as photographs was
+ * being compressed into flat mush. `fm=jpg&q=95` restores it at a fifth of the
+ * weight of the source PNG.
  */
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -29,21 +27,27 @@ export const OG_CONTENT_TYPE = "image/png";
 const BACKGROUND = "#000000";
 /** `--foreground` in dark — oklch(0.985 0 0). */
 const FOREGROUND = "#fafafa";
-/** `--border` in dark — oklch(1 0 0 / 15%). */
-const BORDER = "rgba(255, 255, 255, 0.15)";
 
 // Inlined rather than imported from components/brand.tsx: Satori resolves no
 // CSS custom properties and does not inherit `currentColor` the way a browser
 // does, so the fill has to be a literal on the element. The registry's own og
 // item inlines the same paths for the same reason.
 const LOCKUP_VIEWBOX = "0 0 711 89";
-const LOCKUP_PATHS = [
+// The wordmark's own viewBox, matching components/brand.tsx — the paths are
+// shared, so the wordmark is the lockup cropped past the symbol rather than a
+// second copy of the letterforms.
+const WORDMARK_VIEWBOX = "115 0 596 90";
+/** The six squares of the symbol. */
+const SYMBOL_PATHS = [
   "M0 16.4436V0.944092H15.4995V16.4436H0Z",
   "M28.4692 34.504V19.0045H43.9687V34.504H28.4692Z",
   "M56.8936 52.5661V37.0667H72.393V52.5661H56.8936Z",
   "M28.4692 70.5814V55.0819H43.9687V70.5814H28.4692Z",
   "M0 88.6207V73.1212H15.4995V88.6207H0Z",
   "M0 52.5661V37.0667H15.4995V52.5661H0Z",
+];
+/** L-I-V-E-P-E-E-R. */
+const WORDMARK_PATHS = [
   "M118.899 88.6863V0.97998H135.921V73.6405H185.815V88.6863H118.899Z",
   "M195.932 88.6863V0.97998H212.954V88.6863H195.932Z",
   "M291.653 0.97998H310.34L277.221 88.6863H255.142L221.283 0.97998H240.34L266.551 70.9493L291.653 0.97998Z",
@@ -54,9 +58,11 @@ const LOCKUP_PATHS = [
   "M641.85 88.6863V0.97998H682.925C698.488 0.983166 710.061 8.54418 710.061 22.8274C710.061 33.708 705.127 40.3254 695.013 44.0563C704.202 44.0563 708.766 48.2153 708.766 56.4722V88.6863H691.744V60.6923C691.744 54.3927 689.894 52.5578 683.541 52.5578H658.872V88.6863H641.85ZM658.872 37.0884H677.867C687.797 37.0884 692.977 33.7995 692.977 26.616C692.977 19.4325 687.982 16.0258 677.867 16.0258H658.872V37.0884Z",
 ];
 
-/** The lockup's intrinsic aspect ratio, so a width is the only input needed. */
+/** Intrinsic aspect ratios, so a width is the only input either one needs. */
 const LOCKUP_RATIO = 89 / 711;
+const WORDMARK_RATIO = 90 / 596;
 
+/** Symbol and wordmark together — the full mark, for the centred page cards. */
 function Lockup({ width }: { width: number }) {
   return (
     <svg
@@ -66,7 +72,7 @@ function Lockup({ width }: { width: number }) {
       height={Math.round(width * LOCKUP_RATIO)}
       fill={FOREGROUND}
     >
-      {LOCKUP_PATHS.map((d) => (
+      {[...SYMBOL_PATHS, ...WORDMARK_PATHS].map((d) => (
         <path key={d} d={d} />
       ))}
     </svg>
@@ -74,25 +80,156 @@ function Lockup({ width }: { width: number }) {
 }
 
 /**
- * The registry's og item, unchanged: the lockup centered on black.
+ * Wordmark alone, for the blog cards' corner mark.
  *
- * Renders no text, so it needs no font — which is why it is a separate
- * function rather than `renderPageCard()` with the title omitted.
+ * The symbol is six small squares, and at the size a corner mark wants they
+ * land around 4px each and turn to mush. Dropping it lets the letterforms have
+ * the whole width instead of the 83% the lockup leaves them.
  */
-export function renderBrandCard() {
-  return new ImageResponse(
-    (
+function Wordmark({ width }: { width: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={WORDMARK_VIEWBOX}
+      width={width}
+      height={Math.round(width * WORDMARK_RATIO)}
+      fill={FOREGROUND}
+    >
+      {WORDMARK_PATHS.map((d) => (
+        <path key={d} d={d} />
+      ))}
+    </svg>
+  );
+}
+
+const CDN = "https://cdn.sanity.io/images/l36s876e/production";
+
+/**
+ * The art each page shares under.
+ *
+ * Drawn from Peace Node's stock-image set — the nav thumbnails plus the assets
+ * on the marketing page — so a card is recognisably from the same library as
+ * the rest of the site. Pages reuse the image their own nav entry already
+ * carries where one exists; /, /foundation and /blog take unused assets so no
+ * two pages share a picture.
+ */
+export const ogArt = {
+  home: `${CDN}/a8385777180dc439004d670730f378a416102dbe-1456x816.png`,
+  agent: `${CDN}/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png`,
+  compute: `${CDN}/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png`,
+  token: `${CDN}/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png`,
+  ecosystem: `${CDN}/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png`,
+  foundation: `${CDN}/3210a93c58ad86eda9c081a5d8f5687c923c736f-1456x816.png`,
+  blog: `${CDN}/c2628855a32836a85f90ba723cd2629f9a84c942-1456x816.png`,
+  brand: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
+} as const;
+
+/**
+ * Fetch the art already cropped to the card, as a data URI.
+ *
+ * The CDN does the resize, so Satori composites 1200 × 630 pixels onto a
+ * 1200 × 630 canvas and never resamples. Returns null rather than throwing —
+ * a card with no art still carries the lockup, which is a better failure than
+ * a build that dies because a CDN blipped.
+ */
+async function loadArt(url: string): Promise<string | null> {
+  try {
+    const source = new URL(url);
+    source.search = "";
+    source.searchParams.set("w", String(OG_SIZE.width));
+    source.searchParams.set("h", String(OG_SIZE.height));
+    source.searchParams.set("fit", "crop");
+    source.searchParams.set("fm", "jpg");
+    source.searchParams.set("q", "95");
+    const response = await fetch(source);
+    if (!response.ok) return null;
+    const bytes = Buffer.from(await response.arrayBuffer());
+    return `data:image/jpeg;base64,${bytes.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The art and its scrim, as sibling layers.
+ *
+ * Every layer is absolutely positioned against the same root box, and that root
+ * carries no padding and no centring. Satori resolves `position: absolute`
+ * against the padding box of the nearest positioned ancestor *after* its flex
+ * alignment has been applied, so padding or `justifyContent` on the root shifts
+ * the artwork off the canvas instead of the content — which is exactly what it
+ * did on the first pass.
+ */
+function ArtBackdrop({ art, scrim }: { art: string | null; scrim: string }) {
+  return (
+    <>
+      {art && (
+        <img
+          src={art}
+          alt=""
+          width={OG_SIZE.width}
+          height={OG_SIZE.height}
+          style={{ position: "absolute", top: 0, left: 0 }}
+        />
+      )}
+      {/* The art runs from near-black to blown highlights, so the lockup cannot
+          rely on it. A scrim guarantees the contrast instead of hoping for it. */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: OG_SIZE.width,
+          height: OG_SIZE.height,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: BACKGROUND,
+          background: scrim,
         }}
-      >
-        <Lockup width={640} />
+      />
+    </>
+  );
+}
+
+/** The root every card shares: no padding, no alignment — see ArtBackdrop. */
+const CANVAS = {
+  position: "relative" as const,
+  display: "flex" as const,
+  width: OG_SIZE.width,
+  height: OG_SIZE.height,
+  background: BACKGROUND,
+};
+
+/** A layer filling the canvas, which is where alignment and padding may live. */
+const LAYER = {
+  position: "absolute" as const,
+  top: 0,
+  left: 0,
+  width: OG_SIZE.width,
+  height: OG_SIZE.height,
+  display: "flex" as const,
+};
+
+/** A page card: the lockup centred on the page's art. */
+export async function renderArtCard(art: string) {
+  const image = await loadArt(art);
+
+  return new ImageResponse(
+    (
+      <div style={CANVAS}>
+        {/* Radial, not a flat wash. A single tint heavy enough to carry white
+            over the brightest of these images drains the colour out of the
+            darker ones — a flat 45% measured 2.2:1 on the brightest, and the
+            wash needed to fix that turned the vignette into a visible smudge.
+            Darkening only the middle clears 3.6:1 at worst while leaving the
+            art intact at the edges. 3:1 is the bar that applies here: the
+            lockup is a graphic, so WCAG 1.4.11 governs, not the 4.5:1 written
+            for body text. */}
+        <ArtBackdrop
+          art={image}
+          scrim="radial-gradient(circle at 50% 50%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.66) 40%, rgba(0,0,0,0.34) 75%, rgba(0,0,0,0.22) 100%)"
+        />
+        <div style={{ ...LAYER, alignItems: "center", justifyContent: "center" }}>
+          <Lockup width={520} />
+        </div>
       </div>
     ),
     OG_SIZE
@@ -100,67 +237,49 @@ export function renderBrandCard() {
 }
 
 /**
- * A page card: lockup, hairline, page title.
+ * A blog card: the post's own art, the lockup, and the headline.
  *
- * The hairline is the same device the site's own header uses at the same
- * `--border` value — it separates the mark from the page the way the header
- * separates chrome from content, rather than decorating the card.
+ * Favorit Pro rather than Inter, which every page title on the site now uses.
+ * design.md reserves the display face for "major marketing statements and
+ * editorial titles" and rules it out for product UI — a share card is the
+ * former, and it is the one surface here that is pure marketing.
  */
-export async function renderPageCard(title: string) {
-  // Satori reads ttf/otf/woff but not woff2, so the OTF cuts are the only
-  // usable Favorit Pro in the repo. The display roles are weight 300 and this
-  // is 400 — the one place a card departs from the type scale. Light is
-  // woff2-only, and at the size a feed thumbnail renders, 400 holds up better
-  // than 300 anyway.
-  const favoritPro = await readFile(
-    join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")
-  );
+export async function renderPostCard(art: string | undefined, title: string) {
+  const [image, favoritPro] = await Promise.all([
+    art ? loadArt(art) : Promise.resolve(null),
+    // Satori reads ttf/otf/woff but not woff2, so the OTF cuts are the only
+    // usable Favorit Pro in the repo.
+    readFile(join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")),
+  ]);
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          background: BACKGROUND,
-          fontFamily: "Favorit Pro",
-        }}
-      >
-        <div style={{ display: "flex", padding: "80px 80px 0" }}>
-          <Lockup width={240} />
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            height: 1,
-            marginTop: 48,
-            background: BORDER,
-          }}
+      <div style={{ ...CANVAS, fontFamily: "Favorit Pro" }}>
+        {/* Weighted to the foot, where the headline sits: light enough at the
+            top that the art still reads, dense enough at the bottom that the
+            title holds over any of it. */}
+        <ArtBackdrop
+          art={image}
+          scrim="linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.88) 100%)"
         />
-
         <div
           style={{
-            display: "flex",
-            flex: 1,
-            // Centred in the field below the rule, not bottom-anchored:
-            // anchoring left a ~310px void in the middle of the card that read
-            // as a gap rather than as space.
-            alignItems: "center",
-            padding: "0 80px",
+            ...LAYER,
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: 64,
           }}
         >
+          <div style={{ display: "flex" }}>
+            <Wordmark width={180} />
+          </div>
           <div
             style={{
               display: "flex",
-              maxWidth: 1000,
-              fontSize: 80,
-              lineHeight: 0.98,
-              // --text-display-* tracking, so the title is set the way the
-              // pages set their own headings.
-              letterSpacing: "-0.045em",
+              maxWidth: 940,
+              fontSize: 60,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
               color: FOREGROUND,
             }}
           >
@@ -172,12 +291,7 @@ export async function renderPageCard(title: string) {
     {
       ...OG_SIZE,
       fonts: [
-        {
-          name: "Favorit Pro",
-          data: favoritPro,
-          weight: 400,
-          style: "normal",
-        },
+        { name: "Favorit Pro", data: favoritPro, weight: 400, style: "normal" },
       ],
     }
   );
