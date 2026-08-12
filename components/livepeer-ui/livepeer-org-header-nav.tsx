@@ -161,17 +161,12 @@ export function LivepeerOrgNavItem({
   item,
   navigationImages,
   onNavigate,
-  onPointerEnter,
-  onFocus,
   className,
 }: {
   site: LivepeerOrgSite;
   item: EditorialLink;
   navigationImages?: LivepeerOrgNavigationImages;
   onNavigate?: () => void;
-  /** Reported to the grid so one shared highlight can follow the pointer. */
-  onPointerEnter?: React.PointerEventHandler<HTMLElement>;
-  onFocus?: React.FocusEventHandler<HTMLElement>;
   className?: string;
 }) {
   const href = resolveHref(site, item.label, item.href);
@@ -229,107 +224,13 @@ export function LivepeerOrgNavItem({
       rel="noreferrer"
       className={itemClassName}
       onClick={onNavigate}
-      onPointerEnter={onPointerEnter}
-      onFocus={onFocus}
     >
       {content}
     </a>
   ) : (
-    <Link
-      href={href}
-      className={itemClassName}
-      onClick={onNavigate}
-      onPointerEnter={onPointerEnter}
-      onFocus={onFocus}
-    >
+    <Link href={href} className={itemClassName} onClick={onNavigate}>
       {content}
     </Link>
-  );
-}
-
-/**
- * The panel's item grid, with one highlight that travels between the cards.
- *
- * Per-item `hover:bg-*` cross-fades: the card you left dims while the card you
- * arrived at lifts, and two adjacent cards fading in opposite directions reads
- * as a blink rather than a movement. A single element that moves gives the
- * hover continuity — the same device as the login dropdown, which slides
- * vertically between two rows.
- *
- * Both axes are tracked, not just x. The grid is 3 columns at `lg` and 4 at
- * `xl`, so a four-item group wraps: moving along a row is the lateral slide,
- * and moving to the row below travels down as well.
- *
- * Position is written to the node rather than held in state, and the transition
- * is unconditional. A CSS transition only runs if the property was already
- * transitionable in the previous computed style, so toggling a transition class
- * in the same commit that moves the element makes it teleport — React renders
- * both together, which no amount of tuning fixes.
- */
-function LivepeerOrgNavItemGrid({
-  site,
-  links,
-  navigationImages,
-  onNavigate,
-}: {
-  site: LivepeerOrgSite;
-  links: EditorialLink[];
-  navigationImages?: LivepeerOrgNavigationImages;
-  onNavigate?: () => void;
-}) {
-  const highlightRef = React.useRef<HTMLDivElement>(null);
-  const highlightShown = React.useRef(false);
-  const [highlightOn, setHighlightOn] = React.useState(false);
-
-  const trackHighlight = React.useCallback((element: HTMLElement) => {
-    const node = highlightRef.current;
-    if (!node) return;
-    // First card placed without travelling to it: otherwise the highlight
-    // flies in from the panel's top-left corner.
-    const place = !highlightShown.current;
-    if (place) node.style.transition = "none";
-    node.style.transform = `translate(${element.offsetLeft}px, ${element.offsetTop}px)`;
-    node.style.width = `${element.offsetWidth}px`;
-    node.style.height = `${element.offsetHeight}px`;
-    if (place) {
-      void node.offsetWidth;
-      node.style.transition = "";
-    }
-    highlightShown.current = true;
-    setHighlightOn(true);
-  }, []);
-
-  return (
-    <div
-      className="relative grid grid-cols-3 gap-2 xl:grid-cols-4"
-      onPointerLeave={() => {
-        highlightShown.current = false;
-        setHighlightOn(false);
-      }}
-    >
-      <div
-        ref={highlightRef}
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute top-0 left-0 h-0 w-0 rounded-sm bg-foreground/[0.1] transition-[transform,width,height,opacity] duration-200 ease-out",
-          highlightOn ? "opacity-100" : "opacity-0"
-        )}
-      />
-      {links.map((item) => (
-        <LivepeerOrgNavItem
-          key={`${item.label}-${item.href}`}
-          site={site}
-          item={item}
-          navigationImages={navigationImages}
-          onNavigate={onNavigate}
-          onPointerEnter={(event) => trackHighlight(event.currentTarget)}
-          onFocus={(event) => trackHighlight(event.currentTarget)}
-          // The card's own fill is disabled — with both, the static one paints
-          // over the moving one and the travel is invisible underneath it.
-          className="relative h-36 hover:bg-transparent focus-visible:bg-transparent"
-        />
-      ))}
-    </div>
   );
 }
 
@@ -589,13 +490,18 @@ export function LivepeerOrgHeaderNav({
                       ? { duration: 0 }
                       : { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
                   }
+                  className="grid grid-cols-3 gap-2 xl:grid-cols-4"
                 >
-                  <LivepeerOrgNavItemGrid
-                    site={site}
-                    links={renderedLinks}
-                    navigationImages={navigationImages}
-                    onNavigate={() => setActiveTitle(null)}
-                  />
+                  {renderedLinks.map((item) => (
+                    <LivepeerOrgNavItem
+                      key={`${item.label}-${item.href}`}
+                      site={site}
+                      item={item}
+                      navigationImages={navigationImages}
+                      onNavigate={() => setActiveTitle(null)}
+                      className="h-36"
+                    />
+                  ))}
                 </motion.div>
               </AnimatePresence>
             </div>
