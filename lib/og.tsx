@@ -114,14 +114,18 @@ const CDN = "https://cdn.sanity.io/images/l36s876e/production";
  * two pages share a picture.
  */
 export const ogArt = {
-  home: `${CDN}/a8385777180dc439004d670730f378a416102dbe-1456x816.png`,
+  // The greenest frame in the set — measured 48% of its pixels in the
+  // green band, and 15% close to the brand hue. The default card is the
+  // one most people see, so it is the one that should carry the colour.
+  home: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
   agent: `${CDN}/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png`,
   compute: `${CDN}/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png`,
   token: `${CDN}/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png`,
   ecosystem: `${CDN}/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png`,
   foundation: `${CDN}/3210a93c58ad86eda9c081a5d8f5687c923c736f-1456x816.png`,
   blog: `${CDN}/c2628855a32836a85f90ba723cd2629f9a84c942-1456x816.png`,
-  brand: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
+  // Swapped with home rather than duplicated: no two pages share a frame.
+  brand: `${CDN}/a8385777180dc439004d670730f378a416102dbe-1456x816.png`,
 } as const;
 
 /**
