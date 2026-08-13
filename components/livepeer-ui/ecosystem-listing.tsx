@@ -10,16 +10,19 @@ import {
   CatalogueSearch,
 } from "@/components/livepeer-ui/catalogue-search";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export type EcosystemListingApp = {
   slug: string;
   name: string;
-  hostname: string;
+  displayUrl: string;
   description: string;
   categories: string[];
   logo?: string;
   /** Submitter-supplied tile colour, for marks that need one to read. */
   logoBg?: string;
+  /** Single-ink mark, supplied in black and inverted under .dark. */
+  logoMonochrome?: boolean;
 };
 
 /**
@@ -87,7 +90,7 @@ export function EcosystemListing({
       if (!inCategory) return false;
       if (!q) return true;
       // The query still narrows (AND) within that union.
-      return [app.name, app.hostname, app.description, ...app.categories]
+      return [app.name, app.displayUrl, app.description, ...app.categories]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -175,7 +178,10 @@ export function EcosystemListing({
                         alt=""
                         width={40}
                         height={40}
-                        className="size-10 object-contain"
+                        className={cn(
+                          "size-10 object-contain",
+                          app.logoMonochrome && "dark:invert"
+                        )}
                       />
                     </span>
                   ) : (
@@ -192,9 +198,9 @@ export function EcosystemListing({
                   <div className="mt-6 flex items-start justify-between gap-4">
                     <div>
                       <h2 className="text-lg font-medium">{app.name}</h2>
-                      {/* Mono: a hostname is an identifier, not prose. */}
+                      {/* Mono: a URL is an identifier, not prose. */}
                       <p className="mt-1 font-mono text-xs text-muted-foreground">
-                        {app.hostname}
+                        {app.displayUrl}
                       </p>
                     </div>
                     {/* ArrowRight, not the registry's ArrowUpRight: this card

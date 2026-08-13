@@ -11,7 +11,7 @@ const REQUIRED_FIELDS: Field[] = [
   { key: "name", note: "Display name, as it should appear in the catalogue." },
   {
     key: "url",
-    note: "Where the project lives. The hostname shown under the title is derived from it.",
+    note: "Where the project lives. The URL shown under the title is derived from it.",
   },
   {
     key: "description",
@@ -43,7 +43,7 @@ const OPTIONAL_FIELDS: Field[] = [
 /** The card preview's stand-in project — deliberately generic. */
 const SAMPLE = {
   name: "Your Project",
-  hostname: "your-project.com",
+  displayUrl: "your-project.com",
   description: "One sentence on what it does and who it is for.",
   categories: ["AI Video", "API"],
 };
@@ -199,7 +199,7 @@ export function EcosystemSubmit({
               <span className="text-muted-foreground">name:</span> {SAMPLE.name}
               {"\n"}
               <span className="text-muted-foreground">url:</span> https://
-              {SAMPLE.hostname}
+              {SAMPLE.displayUrl}
               {"\n"}
               <span className="text-muted-foreground">description:</span>{" "}
               {SAMPLE.description}
@@ -222,7 +222,7 @@ export function EcosystemSubmit({
         </Panel>
 
         <Panel path="livepeer.org/ecosystem/your-project">
-          {/* The listing card, rebuilt at rest — same tile, mono hostname, and
+          {/* The listing card, rebuilt at rest — same tile, mono URL, and
               secondary badges, so the preview cannot drift from the real one
               without someone noticing. */}
           <div className="flex flex-col p-6">
@@ -235,7 +235,7 @@ export function EcosystemSubmit({
             <div className="mt-6">
               <p className="text-lg font-medium">{SAMPLE.name}</p>
               <p className="mt-1 font-mono text-xs text-muted-foreground">
-                {SAMPLE.hostname}
+                {SAMPLE.displayUrl}
               </p>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-muted-foreground">

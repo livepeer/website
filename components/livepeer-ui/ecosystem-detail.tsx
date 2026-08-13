@@ -9,6 +9,7 @@ import {
   XIcon,
 } from "@/components/icons/SocialIcons";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import type { EcosystemApp } from "@/lib/ecosystem";
 
@@ -60,19 +61,48 @@ function IconLink({
  * information ("no docs published"), and dropping the row would make two apps
  * with different completeness look identical.
  */
+/** http(s) only — a maker's name must not be mistaken for a relative URL. */
+function isLinkable(value: string) {
+  try {
+    return /^https?:$/.test(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+
 function MetaRow({
   label,
   value,
   display,
+  href,
 }: {
   label: string;
   value?: string;
   display?: string;
+  /** An explicit destination, for rows whose value is prose rather than a URL. */
+  href?: string;
 }) {
   let body: React.ReactNode;
 
   if (!value) {
     body = <span className="text-muted-foreground/50">{EM_DASH}</span>;
+  } else if (href) {
+    body = (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-foreground underline underline-offset-4 transition-opacity hover:opacity-60"
+      >
+        {display ?? value}
+      </a>
+    );
+  } else if (!isEmail(value) && !isLinkable(value)) {
+    // Plain prose — "Made by" carries a company name. This used to fall through
+    // to the anchor below and render href="Livepeer Inc", which the browser
+    // resolved against the current page: every entry's maker credit was a link
+    // to /ecosystem/<name>, a 404.
+    body = <span>{display ?? value}</span>;
   } else if (isEmail(value)) {
     body = (
       <a
@@ -135,7 +165,12 @@ function MetaGroup({
   rows,
 }: {
   title: string;
-  rows: { label: string; value?: string; display?: string }[];
+  rows: {
+    label: string;
+    value?: string;
+    display?: string;
+    href?: string;
+  }[];
 }) {
   if (rows.every((row) => !row.value)) return null;
   return (
@@ -230,7 +265,10 @@ export function EcosystemDetail({
               alt=""
               width={56}
               height={56}
-              className="size-14 object-contain"
+              className={cn(
+                "size-14 object-contain",
+                app.logoMonochrome && "dark:invert"
+              )}
             />
           </span>
         ) : (
@@ -250,7 +288,7 @@ export function EcosystemDetail({
             {app.name}
           </h1>
           <p className="mt-3 font-mono text-xs text-muted-foreground">
-            {app.hostname}
+            {app.displayUrl}
           </p>
           <p className="mt-6 max-w-[46ch] text-reading-body text-pretty text-muted-foreground">
             {app.description}
@@ -304,8 +342,13 @@ export function EcosystemDetail({
           <MetaGroup
             title="Details"
             rows={[
-              { label: "Made by", value: app.madeBy, display: app.madeBy },
-              { label: "Website", value: app.url, display: app.hostname },
+              {
+                label: "Made by",
+                value: app.madeBy,
+                display: app.madeBy,
+                href: app.madeByUrl,
+              },
+              { label: "Website", value: app.url, display: app.displayUrl },
             ]}
           />
 

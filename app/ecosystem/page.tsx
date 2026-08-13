@@ -26,11 +26,12 @@ export default function EcosystemPage() {
   const apps: EcosystemListingApp[] = getAllApps().map((app) => ({
     slug: app.slug,
     name: app.name,
-    hostname: app.hostname,
+    displayUrl: app.displayUrl,
     description: app.description,
     categories: app.categories,
     logo: app.logo,
     logoBg: app.logoBg,
+    logoMonochrome: app.logoMonochrome,
   }));
 
   return (

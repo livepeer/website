@@ -9,9 +9,12 @@ categories:
 # Logo — add the file to public/ecosystem/ in the same PR (SVG or PNG, square, min 128x128)
 logo: your-project.svg
 # logoBg: "#000000"   # optional, used when the logo needs a background plate
+# logoMonochrome: true # optional, for single-ink marks: supply the logo in
+                       # black and it is inverted in dark mode
 
 # Optional metadata
 madeBy: Your Company or Name
+# madeByUrl: https://your-company.com   # optional, makes the credit a link
 # order: 100          # lower numbers sort first; leave unset for default alphabetical
 
 # Optional links (omit any that don't apply)
