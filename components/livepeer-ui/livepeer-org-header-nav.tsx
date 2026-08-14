@@ -391,7 +391,7 @@ export function LivepeerOrgHeaderNav({
                 render={<Link href={getLivepeerOrgFoundationHref(site)} />}
                 onPointerEnter={() => setActiveTitle(null)}
                 onFocus={() => setActiveTitle(null)}
-                className="h-auto rounded-sm px-3 py-0 leading-none font-normal text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground active:translate-y-0 dark:hover:bg-transparent"
+                className="h-auto rounded-sm px-3 py-0 leading-none font-normal text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground active:translate-y-0 dark:hover:bg-transparent [[data-glass]_&]:text-foreground/80 [[data-glass]_&]:hover:text-foreground"
               >
                 Foundation
               </Button>
@@ -411,7 +411,7 @@ export function LivepeerOrgHeaderNav({
               onPointerEnter={() => openMenu(title)}
               onFocus={() => openMenu(title)}
               onClick={() => openMenu(title)}
-              className="h-auto rounded-sm px-3 py-0 leading-none font-normal text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground active:translate-y-0 aria-expanded:bg-transparent aria-expanded:text-foreground dark:hover:bg-transparent"
+              className="h-auto rounded-sm px-3 py-0 leading-none font-normal text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground active:translate-y-0 aria-expanded:bg-transparent aria-expanded:text-foreground dark:hover:bg-transparent [[data-glass]_&]:text-foreground/80 [[data-glass]_&]:hover:text-foreground"
             >
               {group.title}
             </Button>

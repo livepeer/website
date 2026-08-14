@@ -28,7 +28,7 @@ const hero: HomeContent["hero"] & {
   banner: {
     label: "New",
     title: "Livepeer 2.0",
-    description: "A new Livepeer is coming",
+    description: "The open video agent platform",
     href: "/blog/livepeer-2-0-video-agent-platform",
   },
   // Both off-site, but only one is an aside. The Agent console is the product,

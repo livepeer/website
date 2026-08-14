@@ -211,6 +211,12 @@ export function LivepeerOrgHeader({
           document.body
         )}
       <header
+        // Set only while the translucent scrim is up: `solid` bands and the
+        // open mega-menu both render an opaque surface, where the nav's resting
+        // colour is fine.
+        data-glass={
+          scrolled && !desktopMenuOpen && !solid ? "" : undefined
+        }
         className={cn(
           // sticky (not fixed): stays in flow so pages that don't opt into a
           // full-bleed hero start below it, while the hero pulls itself up
@@ -222,22 +228,28 @@ export function LivepeerOrgHeader({
           // While the mega-menu is open it supplies its own backdrop behind the
           // header, so the header stays clear to avoid a doubled blur.
           //
-          // The scrim is asymmetric, and it has to be. Nav links are
-          // muted-foreground: rgb(161) in dark, rgb(115) in light. A black
-          // scrim pushes the backdrop *away* from light text, so dark mode can
-          // stay see-through — at 80% the worst case (a bright image passing
-          // underneath) measures 5.26:1. A white scrim pushes the backdrop
-          // *toward* dark text, so light mode gets worse the more you add:
-          // measured 1.19:1 over dark content at 50%, and still only 3.78:1 at
-          // 90%. Nothing short of opaque clears AA there — at which point it is
-          // 4.60:1. Hence opaque in light, 80% in dark.
+          // Translucent in both themes, so the page reads through the header
+          // rather than disappearing under it.
+          //
+          // That costs the nav its resting colour. muted-foreground over an 80%
+          // white scrim measures 2.11:1 against dark content underneath and only
+          // 3.18:1 against bright — nowhere near AA, and a heavier scrim does not
+          // rescue it (90% still measures 3.78:1). Grey text simply cannot sit on
+          // a light translucent surface. So the links darken to foreground/80
+          // while the glass is up — see [data-glass] below — which measures
+          // 5.78:1 at worst in light and 8.7:1 in dark.
+          //
+          // The registry header does not have this problem because it is not
+          // sticky: `relative z-50 w-full bg-transparent`, scrolling away with
+          // the page. Making it stick over arbitrary content is ours, and so is
+          // the consequence.
           //
           // Measured on /blog, whose grid of arbitrary photographic covers is
           // the worst case the header has to survive.
           scrolled && !desktopMenuOpen
             ? solid
               ? "bg-background"
-              : "bg-background backdrop-blur-xl dark:bg-background/80"
+              : "bg-background/80 backdrop-blur-xl"
             : "bg-transparent"
         )}
       >
