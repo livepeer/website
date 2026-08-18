@@ -55,7 +55,7 @@ export const NAV_ITEMS: NavItem[] = [
 export const EXTERNAL_LINKS = {
   docs: "https://docs.livepeer.org",
   explorer: "https://explorer.livepeer.org",
-  discord: "https://discord.gg/livepeer",
+  discord: "https://discord.gg/55SZFEEH5y",
   twitter: "https://twitter.com/Livepeer",
   github: "https://github.com/livepeer",
   forum: "https://forum.livepeer.org",

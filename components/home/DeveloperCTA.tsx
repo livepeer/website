@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Container from "@/components/ui/Container";
+import { EXTERNAL_LINKS } from "@/lib/constants";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -37,7 +38,7 @@ export default function DeveloperCTA() {
             </p>
             <div className="mt-8 flex justify-center">
               <a
-                href="https://discord.gg/livepeer"
+                href={EXTERNAL_LINKS.discord}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium text-foreground transition-all duration-200 hover:brightness-110 active:brightness-95"
