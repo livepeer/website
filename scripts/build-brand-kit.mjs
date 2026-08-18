@@ -89,7 +89,7 @@ Typography (not included)
 
 More
   Full brand guidelines:  https://livepeer.org/brand
-  Questions:              https://discord.gg/livepeer
+  Questions:              https://discord.gg/55SZFEEH5y
 `;
   writeFileSync(join(kitDir, "README.txt"), readme);
 

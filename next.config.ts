@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/community-hub",
-        destination: "https://discord.gg/livepeer",
+        destination: "https://discord.gg/55SZFEEH5y",
         permanent: false,
       },
       {

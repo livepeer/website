@@ -97,4 +97,4 @@ The initial team includes:
 
 This is just the beginning! If you're building in Web3, exploring real-time video AI, or care about open infrastructure—Livepeer is where you can shape what's next.
 
-[Join The Community](https://discord.gg/livepeer)
+[Join The Community](https://discord.gg/55SZFEEH5y)

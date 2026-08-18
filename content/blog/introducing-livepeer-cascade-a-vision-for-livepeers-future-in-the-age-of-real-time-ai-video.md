@@ -155,4 +155,4 @@ This post contained lots of information about the potential of Cascade and this 
 3. Update our community experience to be an excellent home for those looking to experiment and push the boundaries of what's possible with real-time AI video pipelines.
 4. Leverage our public goods funding programs to create the right incentives to make builders in this space stakeholders in the Livepeer network.
 
-This new and exciting opportunity energizes me. For all those in the community or looking to join the community to get involved in this mission, the best way to start is by joining the [Livepeer Discord community](https://discord.gg/livepeer).
+This new and exciting opportunity energizes me. For all those in the community or looking to join the community to get involved in this mission, the best way to start is by joining the [Livepeer Discord community](https://discord.gg/55SZFEEH5y).

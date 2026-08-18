@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { LivepeerWordmark } from "@/components/icons/LivepeerLogo";
-import { NAV_ITEMS } from "@/lib/constants";
+import { NAV_ITEMS, EXTERNAL_LINKS } from "@/lib/constants";
 import type { NavItem } from "@/lib/constants";
 
 /**
@@ -340,7 +340,7 @@ export default function Header() {
             <div className="flex items-center">
               {!isPrimer && (
                 <a
-                  href="https://discord.gg/livepeer"
+                  href={EXTERNAL_LINKS.discord}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hidden md:inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1.5 text-sm font-medium text-background transition-colors hover:bg-foreground/90 active:bg-foreground/80 select-none"
@@ -493,7 +493,7 @@ export default function Header() {
             {/* Mobile CTA */}
             <div className="mt-6 px-4">
               <a
-                href="https://discord.gg/livepeer"
+                href={EXTERNAL_LINKS.discord}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMobileOpen(false)}

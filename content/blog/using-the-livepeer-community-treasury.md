@@ -73,7 +73,7 @@ Livepeer treasury governance works very similarly to Livepeer protocol governanc
 
 2. Join Community Calls
 
-   1. Treasury Chat. This is a bi-weekly call in the [Livepeer Discord](https://discord.gg/livepeer) for those paying attention to the treasury proposals and governance process. Be prepared to speak about your proposal, answer questions, and receive input.
+   1. Treasury Chat. This is a bi-weekly call in the [Livepeer Discord](https://discord.gg/55SZFEEH5y) for those paying attention to the treasury proposals and governance process. Be prepared to speak about your proposal, answer questions, and receive input.
 
    2. Water Coolers. These are weekly meetings hosted in Discord for Orchestrators and active community members to discuss activities top of mind and a good place to get early feedback and guidance around your proposal.
 

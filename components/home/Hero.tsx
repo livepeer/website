@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import Container from "@/components/ui/Container";
 import ImageMask from "@/components/ui/ImageMask";
+import { EXTERNAL_LINKS } from "@/lib/constants";
 
 /*
   9×5 tile grid with square tiles.
@@ -332,7 +333,7 @@ export default function Hero() {
               Explore the ecosystem <span aria-hidden="true">→</span>
             </Link>
             <a
-              href="https://discord.gg/livepeer"
+              href={EXTERNAL_LINKS.discord}
               target="_blank"
               rel="noopener noreferrer"
               className="hero-cta-secondary inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-lg border border-foreground/10 bg-foreground/5 px-5 py-2.5 text-sm font-medium text-foreground backdrop-blur-xl transition-all duration-200 hover:bg-foreground/20 hover:border-foreground/25 active:bg-foreground/25"
