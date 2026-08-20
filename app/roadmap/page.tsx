@@ -6,13 +6,15 @@ import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
 
 const TITLE = "What we\u2019re building, and when.";
 /**
- * Written to be read away from the page — in a search result, a link preview, a
- * shared card — so it says what the page is and what makes it worth opening
- * rather than describing its own sections. Mirrors the lead, then adds the
- * claim the lead leaves to the cards to make.
+ * The lead, verbatim.
+ *
+ * It is written to be read away from the page already — in a search result, a
+ * link preview, a shared card — so it needs nothing added for those. A second
+ * sentence about owners and sources was making the claim the card's own title
+ * and the page's cards both make, to a reader who has not arrived yet.
  */
 const DESCRIPTION =
-  "One place to see everything being built across Livepeer, and who owns what. Every commitment carries an owner, a target and a source you can check.";
+  "One place to see everything being built across Livepeer, and who owns what.";
 
 /**
  * openGraph and twitter are declared, not inferred.

@@ -24,10 +24,26 @@ function buildNewFileUrl(templateContents: string): string {
   return url.toString();
 }
 
+const DESCRIPTION =
+  "Add your project to the Livepeer ecosystem catalogue — open a pull request with a markdown file and a logo.";
+
+  // openGraph and twitter are declared, not inferred. Next does not fill
+  // og:title from `title` or og:description from `description`, so a page
+  // setting only those two inherits the root layout's openGraph object whole —
+  // and served "Livepeer — The open inference network" with the home page's
+  // description to every timeline it was shared into.
 export const metadata: Metadata = {
   title: "Submit your project",
-  description:
-    "Add your project to the Livepeer ecosystem catalogue — open a pull request with a markdown file and a logo.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Submit your project | Livepeer",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Submit your project | Livepeer",
+    description: DESCRIPTION,
+  },
 };
 
 export default function SubmitAppPage() {

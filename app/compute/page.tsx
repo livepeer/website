@@ -151,10 +151,26 @@ const baselineCta = {
   href: "https://docs.livepeer.org/network/tutorials/run-your-first-orchestrator",
 };
 
+const DESCRIPTION =
+  "Put your GPU to work on Livepeer. Join a pool, run AI-first, or operate a solo node — with the baseline hardware, network, and on-chain requirements for each.";
+
+  // openGraph and twitter are declared, not inferred. Next does not fill
+  // og:title from `title` or og:description from `description`, so a page
+  // setting only those two inherits the root layout's openGraph object whole —
+  // and served "Livepeer — The open inference network" with the home page's
+  // description to every timeline it was shared into.
 export const metadata: Metadata = {
   title: "Provide GPU compute",
-  description:
-    "Put your GPU to work on Livepeer. Join a pool, run AI-first, or operate a solo node — with the baseline hardware, network, and on-chain requirements for each.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Provide GPU compute | Livepeer",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Provide GPU compute | Livepeer",
+    description: DESCRIPTION,
+  },
 };
 
 export default async function ComputePage() {
