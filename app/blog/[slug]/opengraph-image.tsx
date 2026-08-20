@@ -1,4 +1,4 @@
-import { renderPostCard, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og";
+import { renderTitledCard, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og";
 import { getPostBySlug, getPostSlugs } from "@/lib/blog";
 
 export const alt = "Livepeer";
@@ -16,5 +16,5 @@ export default async function OpengraphImage({
 }) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
-  return renderPostCard(post.image, post.title);
+  return renderTitledCard(post.image, post.title);
 }

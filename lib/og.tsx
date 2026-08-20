@@ -242,14 +242,20 @@ export async function renderArtCard(art: string) {
 }
 
 /**
- * A blog card: the post's own art, the lockup, and the headline.
+ * A titled card: art, the wordmark, and a line naming what this is.
+ *
+ * Was renderPostCard, for blog posts alone. Nothing about it is post-specific,
+ * and the card every other page was getting — art plus a centred lockup — is
+ * the same card for all of them, so a shared /roadmap link and a shared /token
+ * link were indistinguishable in a timeline. A page worth sharing should say
+ * which page it is.
  *
  * Favorit Pro rather than Inter, which every page title on the site now uses.
  * design.md reserves the display face for "major marketing statements and
  * editorial titles" and rules it out for product UI — a share card is the
  * former, and it is the one surface here that is pure marketing.
  */
-export async function renderPostCard(art: string | undefined, title: string) {
+export async function renderTitledCard(art: string | undefined, title: string) {
   const [image, favoritPro] = await Promise.all([
     art ? loadArt(art) : Promise.resolve(null),
     // Satori reads ttf/otf/woff but not woff2, so the OTF cuts are the only

@@ -4,10 +4,42 @@ import { Suspense } from "react";
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
 import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
 
+const TITLE = "What we\u2019re building, and when.";
+/**
+ * Written to be read away from the page — in a search result, a link preview, a
+ * shared card — so it says what the page is and what makes it worth opening
+ * rather than describing its own sections. Mirrors the lead, then adds the
+ * claim the lead leaves to the cards to make.
+ */
+const DESCRIPTION =
+  "One place to see everything being built across Livepeer, and who owns what. Every commitment carries an owner, a target and a source you can check.";
+
+/**
+ * openGraph and twitter are declared, not inferred.
+ *
+ * Next does not fill og:title from `title` or og:description from `description`
+ * — a page that sets only those two inherits the root's openGraph object whole,
+ * so /roadmap was serving "Livepeer — The open inference network" and the
+ * home page's description to every timeline it was shared into. The image was
+ * the only part of the card that knew which page it belonged to.
+ *
+ * The card takes the page's headline rather than the word "Roadmap": a shared
+ * link is read beside things competing for the same glance, and the tab title
+ * can stay short because a tab has the URL beside it.
+ */
 export const metadata: Metadata = {
   title: "Roadmap",
-  description:
-    "What Livepeer has shipped, what is being built now, and what is committed next — with owners, targets and a checkable source for every commitment.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 /**
