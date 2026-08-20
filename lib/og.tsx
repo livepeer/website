@@ -273,14 +273,20 @@ export async function renderTitledCard(
             padding: 64,
           }}
         >
-          {/* 215, not 180. The lockup's viewBox carries the symbol, so a
-              180px lockup would set the letterforms 16% smaller than the
-              wordmark did; 215 holds them at exactly the size they were and
-              puts the symbol beside them. Matches the home card, which is the
-              same lockup centred — one brand element across the whole set
-              rather than two. */}
+          {/* Sized against the headline, not against legibility.
+              215 was derived from holding the letterforms at the size the old
+              wordmark set them, which kept the mark 27px tall against a 60px
+              headline — legible at every width and still an afterthought in
+              the frame. Checked against a real Discord unfurl, which draws
+              these around 800px rather than the 400 a Slack preview suggests:
+              at that size 215 disappears and 400 competes with the headline
+              for the subject. 340 puts the mark at 43px, 72% of the headline,
+              so the two anchor opposite corners without either winning.
+
+              It helps the small end too — the symbol's columns go from 3.5px
+              to 5.5px once Slack draws the card at 360px. */}
           <div style={{ display: "flex" }}>
-            <Lockup width={215} />
+            <Lockup width={340} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {eyebrow ? (
