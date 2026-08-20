@@ -11,8 +11,16 @@ import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
  * someone who follows Livepeer and wants the roadmap is looking for "roadmap",
  * not for a sentence about building. The card sets the same pair visually: the
  * page's eyebrow above its headline.
+ *
+ * Branded, because the title travels without the card. In an unfurl the host
+ * line already reads livepeer.org, so "Livepeer" there is a mild echo against
+ * small grey type — but a search result, a bookmark or a pasted link carries
+ * the title alone, and "Roadmap" on its own belongs to nobody. It also keeps
+ * the convention every other page now follows, where the brand is in the card
+ * title. The <title> tag stays plain "Roadmap": a browser tab has the URL
+ * beside it.
  */
-const TITLE = "Roadmap \u2014 what we\u2019re building, and when.";
+const TITLE = "Livepeer Roadmap \u2014 What we\u2019re building, and when.";
 /**
  * The lead, verbatim.
  *

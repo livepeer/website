@@ -33,10 +33,6 @@ const FOREGROUND = "#fafafa";
 // does, so the fill has to be a literal on the element. The registry's own og
 // item inlines the same paths for the same reason.
 const LOCKUP_VIEWBOX = "0 0 711 89";
-// The wordmark's own viewBox, matching components/brand.tsx — the paths are
-// shared, so the wordmark is the lockup cropped past the symbol rather than a
-// second copy of the letterforms.
-const WORDMARK_VIEWBOX = "115 0 596 90";
 /** The six squares of the symbol. */
 const SYMBOL_PATHS = [
   "M0 16.4436V0.944092H15.4995V16.4436H0Z",
@@ -58,11 +54,19 @@ const WORDMARK_PATHS = [
   "M641.85 88.6863V0.97998H682.925C698.488 0.983166 710.061 8.54418 710.061 22.8274C710.061 33.708 705.127 40.3254 695.013 44.0563C704.202 44.0563 708.766 48.2153 708.766 56.4722V88.6863H691.744V60.6923C691.744 54.3927 689.894 52.5578 683.541 52.5578H658.872V88.6863H641.85ZM658.872 37.0884H677.867C687.797 37.0884 692.977 33.7995 692.977 26.616C692.977 19.4325 687.982 16.0258 677.867 16.0258H658.872V37.0884Z",
 ];
 
-/** Intrinsic aspect ratios, so a width is the only input either one needs. */
+/** Intrinsic aspect ratio, so a width is the only input the lockup needs. */
 const LOCKUP_RATIO = 89 / 711;
-const WORDMARK_RATIO = 90 / 596;
 
-/** Symbol and wordmark together — the full mark, for the centred page cards. */
+/**
+ * Symbol and wordmark together — the only mark these cards use.
+ *
+ * The titled card carried the wordmark alone until it was measured: the claim
+ * was that the symbol turns to mush at corner-mark size, and at 215px wide each
+ * of its three columns is 11.6px on the 1200px canvas, 3.5px once Slack draws
+ * the card at 360px. Soft, but the silhouette holds — and a share card is the
+ * site meeting people who are not on it, where the symbol is the part that is
+ * recognised without being read.
+ */
 function Lockup({ width }: { width: number }) {
   return (
     <svg
@@ -73,29 +77,6 @@ function Lockup({ width }: { width: number }) {
       fill={FOREGROUND}
     >
       {[...SYMBOL_PATHS, ...WORDMARK_PATHS].map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
-  );
-}
-
-/**
- * Wordmark alone, for the blog cards' corner mark.
- *
- * The symbol is six small squares, and at the size a corner mark wants they
- * land around 4px each and turn to mush. Dropping it lets the letterforms have
- * the whole width instead of the 83% the lockup leaves them.
- */
-function Wordmark({ width }: { width: number }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox={WORDMARK_VIEWBOX}
-      width={width}
-      height={Math.round(width * WORDMARK_RATIO)}
-      fill={FOREGROUND}
-    >
-      {WORDMARK_PATHS.map((d) => (
         <path key={d} d={d} />
       ))}
     </svg>
@@ -292,8 +273,14 @@ export async function renderTitledCard(
             padding: 64,
           }}
         >
+          {/* 215, not 180. The lockup's viewBox carries the symbol, so a
+              180px lockup would set the letterforms 16% smaller than the
+              wordmark did; 215 holds them at exactly the size they were and
+              puts the symbol beside them. Matches the home card, which is the
+              same lockup centred — one brand element across the whole set
+              rather than two. */}
           <div style={{ display: "flex" }}>
-            <Wordmark width={180} />
+            <Lockup width={215} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {eyebrow ? (
