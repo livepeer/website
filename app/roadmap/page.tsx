@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
@@ -35,60 +34,8 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
-/**
- * A figure inside a sentence, and for one of the three, a destination.
- *
- * "Shipped" is a view — the lifeline's own tab — so its count leads somewhere
- * that exists. "Building now" and "committed next" no longer do. They filtered
- * a `state` param that only the masthead could set, and the register is grouped
- * by quarter, along which the two tenses ran so closely that filtering by one
- * mostly reproduced a heading already on screen. They are numbers now, which is
- * what they were doing best.
- *
- * The whole phrase is the target where there is one: four characters is not a
- * hit area. No underline at rest — the numerals already carry foreground weight
- * — so the rule appears on hover and focus instead.
- */
-function Count({
-  value,
-  label,
-  href,
-}: {
-  value: number;
-  label: string;
-  href?: string;
-}) {
-  const figure = (
-    <>
-      <span className="font-medium text-foreground tabular-nums">{value}</span>{" "}
-      {label}
-    </>
-  );
-  // The plain count needs the same nowrap the linked one carries. Without it
-  // the numeral and its label are just two words: the lead broke after
-  // "check: 3", stranding the figure at the end of one line and its label at
-  // the start of the next. Nothing about a count survives being split.
-  if (!href) return <span className="whitespace-nowrap">{figure}</span>;
-  return (
-    <Link
-      href={href}
-      // Unbreakable. The whole phrase is the hit area, so a line break through
-      // the middle of one splits its hover rule across two lines and reads as
-      // two fragments. This used to be held off by tuning the paragraph's
-      // measure so the break landed on the sentence boundary, which meant any
-      // edit to a label silently re-tore it. Nowrap makes it structural.
-      className="whitespace-nowrap underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border focus-visible:decoration-border focus-visible:outline-none"
-    >
-      {figure}
-    </Link>
-  );
-}
-
 export default function RoadmapPage() {
   const commitments = getCommitments();
-  const building = commitments.filter((c) => c.state === "building").length;
-  const next = commitments.filter((c) => c.state === "next").length;
-  const shipped = commitments.filter((c) => c.state === "shipped").length;
 
   return (
     <div className="pt-10 pb-32">
@@ -153,11 +100,11 @@ export default function RoadmapPage() {
                 which the counts do not itemise, so the colon promised a
                 specification and delivered a tally.
 
-                The tally earns its place here because this is the only line on
-                the page that describes the register whole: the quarter bands
-                count their own quarter, the cards speak for themselves, and a
-                reader who never scrolls should still learn this is fourteen
-                items rather than four hundred.
+                No tally. It lived here while the lead was the only line that
+                described the register whole; the view tabs carry the two counts
+                now, which is where a reader acts on them rather than reads
+                them. Saying it in both places left three numbers in prose that
+                could only be checked against two numbers on a control.
                 Earlier versions opened on the admission rule — "nothing reaches
                 this page without an owner, a date and a source you can check" —
                 which states the editorial policy before the reader knows what
@@ -184,15 +131,7 @@ export default function RoadmapPage() {
                 explaining why the commitments stop. */}
             <p className="mt-7 max-w-[41.5rem] text-lg leading-relaxed text-pretty text-muted-foreground">
               One place to see everything being built across Livepeer, and who
-              owns what.{" "}
-              <Count value={building} label="building now" />,{" "}
-              <Count value={next} label="committed next" />,{" "}
-              <Count
-                value={shipped}
-                label="shipped"
-                href="/roadmap?view=shipped"
-              />
-              .
+              owns what.
             </p>
           </header>
 
