@@ -1229,23 +1229,47 @@ export function Lifeline({
         aria-label="Roadmap views"
         className="-ml-3 flex flex-wrap items-center gap-1"
       >
-        {(["roadmap", "shipped"] as const).map((v) => (
-          <button
-            key={v}
-            type="button"
-            role="tab"
-            aria-selected={view === v}
-            onClick={() => onViewChange(v)}
-            className={cn(
-              "rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              view === v
-                ? "bg-secondary font-medium text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            {v === "roadmap" ? "Roadmap" : "Shipped"}
-          </button>
-        ))}
+        {/* Each tab carries the size of the run behind it.
+              This is the one place on the page where a count is something a
+              reader acts on rather than reads: the tabs are where the two sets
+              are chosen between, so the number answers "how much is over
+              there" before the click rather than after it. The lead's tally
+              describes the register whole; these two describe the halves, and
+              the three agree.
+
+              Counted off the whole register, not the filtered set — a tab
+              label that shrank as you filtered would be reporting on the
+              filter rather than on the run it switches to. */}
+        {(["roadmap", "shipped"] as const).map((v) => {
+          const n = all.filter((c) =>
+            v === "shipped" ? c.state === "shipped" : c.state !== "shipped"
+          ).length;
+          return (
+            <button
+              key={v}
+              type="button"
+              role="tab"
+              aria-selected={view === v}
+              onClick={() => onViewChange(v)}
+              className={cn(
+                "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                view === v
+                  ? "bg-secondary font-medium text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {v === "roadmap" ? "Roadmap" : "Shipped"}
+              <span
+                className={cn(
+                  "tabular-nums",
+                  view === v ? "text-muted-foreground" : "text-muted-foreground/60"
+                )}
+              >
+                {n}
+              </span>
+            </button>
+          );
+        })}
       </div>
       {/* Bleeding to the container edge so the run can reach the edge of the
             page when it scrolls, rather than stopping short and looking

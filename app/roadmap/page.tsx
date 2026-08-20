@@ -138,11 +138,26 @@ export default function RoadmapPage() {
                 meant to be ragged, and two blocks of different measure are not
                 a mismatch when one is a headline and the other is prose.
 
-                What the page adds, on top of the headline.
-                The headline says what is being built and when; this says who is
-                behind it and where to check — the two things a roadmap usually
-                will not tell you, and the pair that turns the headline's "we"
-                into something specific.
+                What the page is, and the shape of what is in it.
+
+                "Who owns what", not "who owns it" or "each piece": there is no
+                single Livepeer team, and the owners on this page are companies,
+                a foundation, two SPEs, an RFP and one individual. "Who owns
+                what" is the only phrasing of the three that can only mean
+                many-to-many, which is the fact the cards spend their effort
+                establishing.
+
+                A full stop, not a colon. The colon worked when this sentence
+                opened "Everything on this page has..." — that set up a set, and
+                the counts partitioned it. This one says what the page is for,
+                which the counts do not itemise, so the colon promised a
+                specification and delivered a tally.
+
+                The tally earns its place here because this is the only line on
+                the page that describes the register whole: the quarter bands
+                count their own quarter, the cards speak for themselves, and a
+                reader who never scrolls should still learn this is fourteen
+                items rather than four hundred.
                 Earlier versions opened on the admission rule — "nothing reaches
                 this page without an owner, a date and a source you can check" —
                 which states the editorial policy before the reader knows what
@@ -168,8 +183,8 @@ export default function RoadmapPage() {
                 register states it outright, which is where it does its work —
                 explaining why the commitments stop. */}
             <p className="mt-7 max-w-[41.5rem] text-lg leading-relaxed text-pretty text-muted-foreground">
-              Every item here names who owns it and links to where it&rsquo;s
-              tracked:{" "}
+              One place to see everything being built across Livepeer, and who
+              owns what.{" "}
               <Count value={building} label="building now" />,{" "}
               <Count value={next} label="committed next" />,{" "}
               <Count
