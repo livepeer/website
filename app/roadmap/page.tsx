@@ -4,7 +4,15 @@ import { Suspense } from "react";
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
 import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
 
-const TITLE = "What we\u2019re building, and when.";
+/**
+ * Named, then claimed.
+ *
+ * The headline alone left the card without the one word a reader scans for —
+ * someone who follows Livepeer and wants the roadmap is looking for "roadmap",
+ * not for a sentence about building. The card sets the same pair visually: the
+ * page's eyebrow above its headline.
+ */
+const TITLE = "Roadmap \u2014 what we\u2019re building, and when.";
 /**
  * The lead, verbatim.
  *

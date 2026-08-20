@@ -14,5 +14,9 @@ export const contentType = OG_CONTENT_TYPE;
 export default function OpengraphImage() {
   // The same curly apostrophe the page and the metadata use. A straight one
   // here rendered a different glyph in the card than in the og:title beside it.
-  return renderTitledCard(ogArt.roadmap, "What we\u2019re building, and when.");
+  return renderTitledCard(
+    ogArt.roadmap,
+    "What we\u2019re building, and when.",
+    "Roadmap"
+  );
 }

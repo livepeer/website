@@ -255,7 +255,18 @@ export async function renderArtCard(art: string) {
  * editorial titles" and rules it out for product UI — a share card is the
  * former, and it is the one surface here that is pure marketing.
  */
-export async function renderTitledCard(art: string | undefined, title: string) {
+export async function renderTitledCard(
+  art: string | undefined,
+  title: string,
+  /**
+   * An optional line above the headline, naming the surface — the same eyebrow
+   * the page itself sets above its h1. A card that only carries a headline
+   * makes the reader infer which part of the site it came from; the page does
+   * not ask that of anyone standing on it, and a timeline is a harder place to
+   * infer from than a page.
+   */
+  eyebrow?: string
+) {
   const [image, favoritPro] = await Promise.all([
     art ? loadArt(art) : Promise.resolve(null),
     // Satori reads ttf/otf/woff but not woff2, so the OTF cuts are the only
@@ -284,17 +295,36 @@ export async function renderTitledCard(art: string | undefined, title: string) {
           <div style={{ display: "flex" }}>
             <Wordmark width={180} />
           </div>
-          <div
-            style={{
-              display: "flex",
-              maxWidth: 940,
-              fontSize: 60,
-              lineHeight: 1.08,
-              letterSpacing: "-0.02em",
-              color: FOREGROUND,
-            }}
-          >
-            {title}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {eyebrow ? (
+              // Sized and tracked off the page's own Label: 11px at 0.09em
+              // there, scaled to the card. Held at 72% rather than full white
+              // so it reads as a label on the headline rather than a second
+              // line of it.
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: 26,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.72)",
+                }}
+              >
+                {eyebrow}
+              </div>
+            ) : null}
+            <div
+              style={{
+                display: "flex",
+                maxWidth: 940,
+                fontSize: 60,
+                lineHeight: 1.08,
+                letterSpacing: "-0.02em",
+                color: FOREGROUND,
+              }}
+            >
+              {title}
+            </div>
           </div>
         </div>
       </div>
