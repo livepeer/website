@@ -1,0 +1,198 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+
+import { Roadmap } from "@/components/livepeer-ui/roadmap";
+import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
+
+export const metadata: Metadata = {
+  title: "Roadmap",
+  description:
+    "What Livepeer has shipped, what is being built now, and what is committed next — with owners, targets and a checkable source for every commitment.",
+};
+
+/**
+ * Where ideas live before they are commitments.
+ *
+ * The requirements doc splits the old subdomain in two: commitments move here,
+ * suggestions stay where they are. "Part of livepeer.org, not a subdomain"
+ * governs the roadmap surface, and the pipeline is exempted from it by name —
+ * it "does that job well", and this page "links to it rather than absorbing
+ * it". So this page retires the board's roadmap half only; the Suggestion
+ * Proposed → promoted flow keeps running there.
+ *
+ * An earlier version pointed at the forum, on the reasoning that the whole
+ * subdomain was going away. It is not.
+ */
+const SUGGESTIONS_HREF = "https://roadmap.livepeer.org";
+
+/** The rail and the cards share this label setting; the header borrows it. */
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+      {children}
+    </span>
+  );
+}
+
+/**
+ * A figure inside a sentence, and for one of the three, a destination.
+ *
+ * "Shipped" is a view — the lifeline's own tab — so its count leads somewhere
+ * that exists. "Building now" and "committed next" no longer do. They filtered
+ * a `state` param that only the masthead could set, and the register is grouped
+ * by quarter, along which the two tenses ran so closely that filtering by one
+ * mostly reproduced a heading already on screen. They are numbers now, which is
+ * what they were doing best.
+ *
+ * The whole phrase is the target where there is one: four characters is not a
+ * hit area. No underline at rest — the numerals already carry foreground weight
+ * — so the rule appears on hover and focus instead.
+ */
+function Count({
+  value,
+  label,
+  href,
+}: {
+  value: number;
+  label: string;
+  href?: string;
+}) {
+  const figure = (
+    <>
+      <span className="font-medium text-foreground tabular-nums">{value}</span>{" "}
+      {label}
+    </>
+  );
+  // The plain count needs the same nowrap the linked one carries. Without it
+  // the numeral and its label are just two words: the lead broke after
+  // "check: 3", stranding the figure at the end of one line and its label at
+  // the start of the next. Nothing about a count survives being split.
+  if (!href) return <span className="whitespace-nowrap">{figure}</span>;
+  return (
+    <Link
+      href={href}
+      // Unbreakable. The whole phrase is the hit area, so a line break through
+      // the middle of one splits its hover rule across two lines and reads as
+      // two fragments. This used to be held off by tuning the paragraph's
+      // measure so the break landed on the sentence boundary, which meant any
+      // edit to a label silently re-tore it. Nowrap makes it structural.
+      className="whitespace-nowrap underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border focus-visible:decoration-border focus-visible:outline-none"
+    >
+      {figure}
+    </Link>
+  );
+}
+
+export default function RoadmapPage() {
+  const commitments = getCommitments();
+  const building = commitments.filter((c) => c.state === "building").length;
+  const next = commitments.filter((c) => c.state === "next").length;
+  const shipped = commitments.filter((c) => c.state === "shipped").length;
+
+  return (
+    <div className="pt-10 pb-32">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
+        {/* One measure for the page.
+            The masthead used to run to the container edge while the register
+            capped well short of it, so the page had two right edges and read
+            as two unrelated blocks. Everything now shares 68rem: the "last
+            verified" stamp lands directly above the right edge of the cards,
+            and the space left over at wide desktop is a margin rather than a
+            mismatch. */}
+        <div className="max-w-[68rem]">
+          {/* The lead is 18px, not the 14px it was.
+              At 14 it was set at the same size as the body copy inside the
+              cards — the page's second sentence reading as a footnote — and a
+              small size forces a small measure, which is why it sat at 59% of
+              the headline's width. At 18px a comfortable measure lands the two
+              blocks close enough to read as a pair. Not identical: the
+              headline's width comes from its own text, so matching it exactly
+              would be a coincidence dressed as a grid. */}
+          <header className="pt-6 lg:pt-8">
+            <Label>Roadmap</Label>
+            {/* No "Here's". It pointed at a page the reader is already on, and
+                it is what decides whether the line fits: 1128px against a
+                1088px measure with it, 861px without.
+
+                "We" rather than naming Livepeer. The wordmark sits ~100px above
+                this line, so the subject is never in doubt, and the lead
+                immediately qualifies the "we" — "every item here names who owns
+                it" — which is the distinction that matters, since this register
+                is owned by several different parties and each card names which.
+
+                text-balance still earns its place at the widths where the line
+                does wrap: it stops the last word stranding alone. */}
+            <h1 className="mt-3 text-display-sm leading-[1.02] tracking-[-0.04em] text-balance sm:text-display-md lg:text-display-lg">
+              What we&rsquo;re building, and when.
+            </h1>
+            {/* The measure is chosen so the paragraph breaks on its own full
+                stop: the standard on line one, the counts on line two, 648/541.
+                At 75ch it broke mid-clause instead and left a 337px stub under
+                an 832px line. This is a preference, not a constraint — the
+                counts are nowrap, so a break can no longer tear one in half
+                whatever the measure does.
+
+                It costs distance to the headline, which runs to 968px — the
+                step widens from 136px to 281px. A paragraph's right edge is
+                meant to be ragged, and two blocks of different measure are not
+                a mismatch when one is a headline and the other is prose.
+
+                What the page adds, on top of the headline.
+                The headline says what is being built and when; this says who is
+                behind it and where to check — the two things a roadmap usually
+                will not tell you, and the pair that turns the headline's "we"
+                into something specific.
+                Earlier versions opened on the admission rule — "nothing reaches
+                this page without an owner, a date and a source you can check" —
+                which states the editorial policy before the reader knows what
+                they are looking at. The rule is real and worth keeping, but it
+                is the mechanism, not the point: someone arriving from a link
+                needs to know this is where Livepeer's delivery work is tracked
+                before they need to know what it takes to get on it. The card
+                fields say owner and date on every record anyway, and the
+                closing block states the rule outright.
+
+                The counts are a sentence, and its subject is borrowed from the
+                sentence above. Two earlier versions left that subject missing:
+                "That's 4 building now, 5 committed next and 11 shipped" hung a
+                list off a pivot pointing back at nothing, and stating the rule
+                as a refusal left the same gap, because "nothing" is not a noun
+                the next sentence can count.
+
+                The lead avoids "building", "committed" and "shipped" in its own
+                words: the three states are the list that follows it, and using
+                any of them twice in one breath reads as a stutter.
+
+                                The refusal is not lost. The closing block at the foot of the
+                register states it outright, which is where it does its work —
+                explaining why the commitments stop. */}
+            <p className="mt-7 max-w-[41.5rem] text-lg leading-relaxed text-pretty text-muted-foreground">
+              Every item here names who owns it and links to where it&rsquo;s
+              tracked:{" "}
+              <Count value={building} label="building now" />,{" "}
+              <Count value={next} label="committed next" />,{" "}
+              <Count
+                value={shipped}
+                label="shipped"
+                href="/roadmap?view=shipped"
+              />
+              .
+            </p>
+          </header>
+
+          {/* useSearchParams needs a boundary, and the register is server-read,
+            so only the interactive shell suspends. The masthead sits outside
+            it, which keeps the h1 in the prerendered HTML. */}
+          <Suspense fallback={<div className="mt-20 h-10 lg:mt-28" />}>
+            <Roadmap
+              commitments={commitments}
+              workstreams={getWorkstreamsInUse(commitments)}
+              suggestionsHref={SUGGESTIONS_HREF}
+            />
+          </Suspense>
+        </div>
+      </div>
+    </div>
+  );
+}

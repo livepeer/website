@@ -1,0 +1,20 @@
+---
+placeholder: true
+title: Capability discovery API
+outcome: Let a gateway ask the network what it can do right now, instead of hard-coding a model list.
+workstream: Network
+state: next
+owners:
+  - Network Engineering SPE
+people:
+  - name: Andre Okafor
+    profile: "000000000000000000000006"
+    avatar: andre-okafor.jpg
+  - name: Mei Tanaka
+    profile: "000000000000000000000007"
+    avatar: mei-tanaka.jpg
+target: Q1 2027
+related:
+  - label: Livepeer Forum
+    href: https://forum.livepeer.org
+---

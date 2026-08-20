@@ -30,7 +30,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Provide GPUs", href: "/compute" },
         { label: "Livepeer Token", href: "/token" },
         { label: "Delegate LPT", href: "https://explorer.livepeer.org" },
-        { label: "Roadmap", href: "https://roadmap.livepeer.org/roadmap" },
+        { label: "Roadmap", href: "/roadmap" },
       ],
     },
     {

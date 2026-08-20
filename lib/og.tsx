@@ -126,6 +126,7 @@ export const ogArt = {
   blog: `${CDN}/c2628855a32836a85f90ba723cd2629f9a84c942-1456x816.png`,
   // Swapped with home rather than duplicated: no two pages share a frame.
   brand: `${CDN}/a8385777180dc439004d670730f378a416102dbe-1456x816.png`,
+  roadmap: `${CDN}/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png`,
 } as const;
 
 /**

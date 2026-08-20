@@ -1,0 +1,28 @@
+---
+title: LIP-118 — Delegated reward calling
+outcome: Let orchestrators delegate the reward call, removing a standing operational chore from running a node.
+workstream: Protocol
+state: shipped
+owners:
+  - rickstaa
+  - Protocol R&D SPE
+  # Placeholder cast — see documentation-v2.md.
+people:
+  - name: Peter Lindqvist
+    avatar: peter-lindqvist.jpg
+    profile: "000000000000000000000019"
+  - name: Elena Vargas
+    avatar: elena-vargas.jpg
+    profile: "000000000000000000000020"
+target: July 2026
+shippedAt: 2026-07-30
+related:
+  - label: LIPs repository
+    href: https://github.com/livepeer/LIPs
+  - label: Livepeer Forum
+    href: https://forum.livepeer.org
+lastVerified: 2026-08-12
+---
+
+Deployed on-chain on 30 July, in the Protocol R&D SPE's highest-volume
+vulnerability-response month to date.

@@ -1,0 +1,26 @@
+---
+title: Documentation v2
+outcome: Restructure the docs so builders can find the network's capabilities without reading the source.
+workstream: Agent
+state: shipped
+owners:
+  - Documentation Restructure RFP
+  # Placeholder cast — invented people on real shipped work, restored so the
+  # card's credit line is not half empty while real rosters are collected.
+  # Same set the _placeholder-* records use. Names, portraits and profile
+  # ids are all stand-ins; replace or delete before launch:
+  #   grep -rn "profile: \"0" content/roadmap
+people:
+  - name: Mei Tanaka
+    avatar: mei-tanaka.jpg
+    profile: "000000000000000000000015"
+  - name: Anjali Raman
+    avatar: anjali-raman.jpg
+    profile: "000000000000000000000016"
+target: May 2026
+shippedAt: 2026-05-04
+related:
+  - label: Livepeer Docs
+    href: https://docs.livepeer.org
+lastVerified: 2026-08-12
+---
