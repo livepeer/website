@@ -236,6 +236,25 @@ export async function renderArtCard(art: string) {
  * editorial titles" and rules it out for product UI — a share card is the
  * former, and it is the one surface here that is pure marketing.
  */
+/**
+ * Headline size, from the length of the headline.
+ *
+ * One size cannot serve both callers: the roadmap's line is 30 characters and
+ * the longest blog title is 94. At a fixed 60 the short one sat light against
+ * the mark, and anything large enough to fix that broke the long one over
+ * three lines. Sized by length, each gets the largest setting that still holds
+ * its own line count — 68 is the most "What we\u2019re building, and when."
+ * takes before it wraps mid-phrase, which costs more than the size gains.
+ *
+ * Steps rather than a curve, so a title near a boundary cannot land on a size
+ * nobody has looked at.
+ */
+function headlineSize(title: string) {
+  if (title.length <= 45) return 68;
+  if (title.length <= 80) return 60;
+  return 52;
+}
+
 export async function renderTitledCard(
   art: string | undefined,
   title: string,
@@ -310,7 +329,7 @@ export async function renderTitledCard(
               style={{
                 display: "flex",
                 maxWidth: 940,
-                fontSize: 60,
+                fontSize: headlineSize(title),
                 lineHeight: 1.08,
                 letterSpacing: "-0.02em",
                 color: FOREGROUND,
