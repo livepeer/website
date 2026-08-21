@@ -107,7 +107,15 @@ export const ogArt = {
   blog: `${CDN}/c2628855a32836a85f90ba723cd2629f9a84c942-1456x816.png`,
   // Swapped with home rather than duplicated: no two pages share a frame.
   brand: `${CDN}/a8385777180dc439004d670730f378a416102dbe-1456x816.png`,
-  roadmap: `${CDN}/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png`,
+  // Matched to home rather than to the rest of the set: 27% of its pixels
+  // saturated against home's 27%, two thirds of that in the green band against
+  // home's two thirds, and a bottom-left band at 32% luminance against home's
+  // 31% — which is the number that decides how hard the scrim has to work under
+  // the headline. The frame this replaced was 64% saturated with 7% green and a
+  // 60% bottom band: the most colourful card on a site whose own colour is one
+  // green. Drawn from the stock library rather than borrowed from home, so no
+  // two pages still share a frame.
+  roadmap: `${CDN}/236781e57df9491a4aa1b5d9cc7d71d6a8270c0c-1456x816.png`,
 } as const;
 
 /**
