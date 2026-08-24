@@ -115,6 +115,12 @@ export const ogArt = {
   // 60% bottom band: the most colourful card on a site whose own colour is one
   // green. Drawn from the stock library rather than borrowed from home, so no
   // two pages still share a frame.
+  //
+  // The nav dropdown thumbnail deliberately keeps the frame this replaced. The
+  // two reference the same asset id and were moved together at first, on the
+  // reasoning that a menu image and a share card showing different pictures is
+  // drift — but they are seen in different places by different readers, and
+  // only the card had a reason to change. /blog and /brand differ the same way.
   roadmap: `${CDN}/236781e57df9491a4aa1b5d9cc7d71d6a8270c0c-1456x816.png`,
 } as const;
 
