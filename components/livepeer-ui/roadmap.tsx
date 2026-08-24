@@ -703,82 +703,69 @@ function Group({
   );
 }
 
-/** One filter control, in both of its layouts. */
+/**
+ * One line of the ledger, which is also the control that acts on it.
+ *
+ * The count leads. It used to trail the label in grey — the register's own
+ * composition, 3 / 3 / 2, set as though it were metadata about the label
+ * rather than the most informative thing in the column. Reading down a fixed
+ * numeral column tells you the shape of the register before you decide to
+ * narrow it; reading down a column of words tells you what the register's
+ * three workstreams are called, which the cards already say.
+ *
+ * Tabular numerals in a fixed 1.75rem column, so the labels start on one edge
+ * whether the count is 3 or 30, and the numbers stack into a rule the eye can
+ * run down.
+ *
+ * Below lg there is no column to run down, so this reverts to a chip: a filled
+ * pill with the count inside it, because a wrapped row of "3 Protocol 3 Network"
+ * reads as broken prose rather than as a ledger.
+ */
 function FilterRow({
   label,
   count,
   active,
   onClick,
-  role,
 }: {
   label: string;
-  count?: number;
+  count: number;
   active: boolean;
   onClick: () => void;
-  role?: "tab";
 }) {
   // A workstream with nothing in the current view is offered as information,
   // not as an affordance: the count says the filter is empty, and the control
   // stops short of letting you dead-end the list to prove it.
   const empty = count === 0 && !active;
-  const isTab = role === "tab";
   return (
     <button
       type="button"
-      role={role}
       disabled={empty}
-      {...(isTab ? { "aria-selected": active } : { "aria-pressed": active })}
+      aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "relative inline-flex items-center gap-2 rounded-full text-left text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring lg:w-full",
-        // The view is a control, so it takes a pill. A workstream is an item in
-        // a list, so it takes weight and colour and a mark — two multi-select
-        // rows and two view tabs styled alike is how you get a reader toggling
-        // the wrong one.
-        isTab
-          ? cn(
-              "px-3 py-1.5",
-              active
-                ? "bg-secondary font-medium text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )
-          : cn(
-              // Two layouts, because the rail is two different objects.
-              // At lg it is a list in a column: labels on one left edge, counts
-              // on the right, the active mark hung in the margin.
-              // Below lg it is a wrapped row of chips with no headings, and
-              // there a bold word beside plain words does not read as a control
-              // at all — "Protocol · Network · Agent" looked like prose with one
-              // word emphasised. A filled pill says pressed.
-              "max-lg:rounded-full max-lg:px-3 max-lg:py-1.5 lg:justify-between lg:py-1.5 lg:pr-1 lg:pl-0",
-              active
-                ? "font-medium text-foreground max-lg:bg-secondary"
-                : "text-muted-foreground hover:text-foreground max-lg:bg-muted/60 max-lg:dark:bg-card"
-            ),
+        "group/row inline-flex items-center rounded-full text-left text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "max-lg:gap-2 max-lg:px-3 max-lg:py-1.5 lg:w-full lg:gap-3 lg:rounded-none lg:py-1",
+        active
+          ? "text-foreground max-lg:bg-secondary"
+          : "text-muted-foreground hover:text-foreground max-lg:bg-muted/60 max-lg:dark:bg-card",
         empty && "pointer-events-none opacity-40"
       )}
     >
-      <span className="flex items-center gap-2">
-        {!isTab && active && (
-          // In the margin, not in the line. Given layout width it pushed every
-          // workstream 12px right of the view pills and the rail's own
-          // headings; hung outside, the labels all start on one edge and the
-          // mark reads as an annotation against them.
-          <span
-            aria-hidden="true"
-            className="absolute top-1/2 -left-3 hidden size-1 -translate-y-1/2 rounded-full bg-foreground lg:block"
-          />
+      {/* The numeral, at the size of the thing it is reporting on. Foreground
+          when the row is on, so the active slice of the register reads as the
+          number it narrowed to. */}
+      <span
+        className={cn(
+          "tabular-nums transition-colors lg:w-7 lg:shrink-0 lg:text-base",
+          // At rest the numeral matches its label rather than sitting under it.
+          // Dimming the lead element below its own annotation argued against
+          // the reason it leads.
+          active ? "text-foreground" : "text-muted-foreground"
         )}
-        {label}
+      >
+        {count}
       </span>
-      {/* Counts earn their place in the rail, where there is room and they warn
-          you before you click into an empty filter. In the chip row they would
-          double every chip's width, so they sit this one out. */}
-      {count !== undefined && (
-        <span className="hidden text-muted-foreground tabular-nums lg:inline">
-          {count}
-        </span>
-      )}
+      <span className={cn(active && "font-medium")}>{label}</span>
     </button>
   );
 }
@@ -869,11 +856,71 @@ function Filters({
     // own height pinned it nowhere — the rail has to be a direct child of the
     // column that stretches to the register's height.
     <div className="lg:sticky lg:top-16 lg:pt-5">
-      {/* Filled rather than outlined: one less line on a page built out of
-          surfaces, and it matches the cards it searches. */}
-      <div className="relative">
+      {/* No headings. Two groups of three rows, separated by a rule, under
+          words that said "State" and "Workstream" — the rows are already the
+          three workstreams and the one state, and naming the categories
+          restated what the rows spell out. The rule does the grouping; the
+          aria-labels carry the semantics for anyone who cannot see it. */}
+      {view === "roadmap" && (
+        <div
+          role="group"
+          aria-label="Filter by state"
+          className="flex flex-wrap gap-2 lg:block lg:gap-0"
+        >
+          <FilterRow
+            label="Building now"
+            count={buildingCount}
+            active={buildingOnly}
+            onClick={() => onBuildingOnlyChange(!buildingOnly)}
+          />
+        </div>
+      )}
+
+      <div
+        role="group"
+        aria-label="Filter by workstream"
+        className={cn(
+          "flex flex-wrap gap-2 lg:block lg:gap-0",
+          view === "roadmap"
+            ? "mt-2 lg:mt-3 lg:border-t lg:border-border lg:pt-3"
+            : ""
+        )}
+      >
+        {workstreams.map((w) => (
+          <FilterRow
+            key={w}
+            label={w}
+            count={counts[w] ?? 0}
+            active={selected.includes(w)}
+            onClick={() => onToggle(w)}
+          />
+        ))}
+      </div>
+
+      {/* One reset, at the foot of everything it resets, and only when there is
+          something to undo. It used to sit in the Workstream heading, naming
+          one facet while operating on three. */}
+      {filtering && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-4"
+        >
+          <XIcon className="size-3.5" aria-hidden="true" />
+          Clear filters
+        </button>
+      )}
+
+      {/* Search last, and quiet.
+          It led this column, which framed the whole rail as a search UI — and
+          on a register of fourteen records nobody types a name they could have
+          scanned to in two screens. It is the fallback for someone who arrived
+          knowing exactly what they were looking for, so it sits where a
+          fallback belongs, and it drops the filled pill for a rule: one less
+          surface in a column that is otherwise all type. */}
+      <div className="relative mt-6 lg:mt-8">
         <SearchIcon
-          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
+          className="pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2 text-muted-foreground"
           aria-hidden="true"
         />
         <input
@@ -882,89 +929,11 @@ function Filters({
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search"
           aria-label="Search commitments"
-          className="h-10 w-full rounded-full bg-muted/70 pr-4 pl-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring dark:bg-card"
+          className="h-9 w-full border-b border-border bg-transparent pr-2 pl-6 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-foreground"
         />
       </div>
 
-      {/* One toggle, not a state facet.
-          The facet this replaces offered "Building now" and "Committed next",
-          where the second option is everything the first is not — so it cost a
-          block of rail to say what one control says. "What is live right now"
-          is the question a roadmap is actually asked; "what is not live" is
-          not.
-
-          Roadmap only: behind us every record shipped, so the toggle would
-          filter to nothing. */}
-      {view === "roadmap" && (
-        <div className="mt-4 lg:mt-8">
-          {/* Labelled, like Workstream below it. One option under a heading
-              reads as a facet with one option; the same control with no heading
-              above a labelled group read as an orphan — a bold line of text
-              that happened to be clickable. */}
-          <div className="mb-2.5 hidden items-baseline lg:flex">
-            <Label>State</Label>
-          </div>
-          <div
-            role="group"
-            aria-label="Filter by state"
-            className="flex flex-wrap gap-2 lg:flex-col lg:gap-x-0 lg:gap-y-0"
-          >
-            <FilterRow
-              label="Building now"
-              count={buildingCount}
-              active={buildingOnly}
-              onClick={() => onBuildingOnlyChange(!buildingOnly)}
-            />
-          </div>
-        </div>
-      )}
-
-      <div className="mt-4 lg:mt-8">
-        <div className="mb-2.5 hidden items-baseline lg:flex">
-          <Label>Workstream</Label>
-        </div>
-        {/* A group, not a tablist: several can be on at once, and they filter
-            rather than switch view. */}
-        <div
-          role="group"
-          aria-label="Filter by workstream"
-          className="flex flex-wrap gap-2 lg:flex-col lg:gap-x-0 lg:gap-y-0"
-        >
-          {workstreams.map((w) => (
-            <FilterRow
-              key={w}
-              label={w}
-              count={counts[w] ?? 0}
-              active={selected.includes(w)}
-              onClick={() => onToggle(w)}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* One reset, at the foot of everything it resets.
-          It used to sit in the Workstream heading and clear the search and the
-          state toggle too — a control naming one facet while operating on
-          three. On mobile it was worse: rendered as the last chip in the
-          workstream row, so "Protocol · Network · Agent · Clear" offered Clear
-          as a fourth workstream.
-
-          Named for what it does rather than for where it sits, and present only
-          when there is something to undo. */}
-      {filtering && (
-        <button
-          type="button"
-          onClick={onClear}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-5"
-        >
-          <XIcon className="size-3.5" aria-hidden="true" />
-          Clear filters
-        </button>
-      )}
-      <SuggestBlock
-        href={suggestionsHref}
-        className="mt-8 hidden lg:block"
-      />
+      <SuggestBlock href={suggestionsHref} className="mt-8 hidden lg:block" />
     </div>
   );
 }
