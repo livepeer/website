@@ -56,7 +56,7 @@ function Label({
  *
  * A dot rather than a badge: three boxed chips per card would rebuild the
  * bordered look this design is getting away from, and the state is already one
- * word long. Green lands on "building now" alone — colour that appears on every
+ * word long. Green lands on "in progress" alone — colour that appears on every
  * state signals nothing, and this way the live work is findable at a glance.
  *
  * Green is brand expression, never an affordance; globals.css scopes
@@ -78,7 +78,7 @@ function StateMark({ state }: { state: Commitment["state"] }) {
       />
       <span className={cn(building && "text-foreground")}>
         {building
-          ? "Building now"
+          ? "In progress"
           : state === "next"
             ? "Committed next"
             : "Shipped"}
@@ -706,57 +706,60 @@ function Group({
 }
 
 /**
- * One workstream, as a row you can switch on.
+ * One filter, as a checkbox.
  *
- * Label first, count right — the conventional facet, after two passes that
- * were not. A count-first ledger read the distribution well and read the
- * labels badly, and scanning for a label is what someone does here: you arrive
- * wanting Protocol, not wanting to audit how the eight records divide.
- * Novelty in a filter rail is paid for by the reader every time.
+ * Every control in this rail asks the same kind of question — is this on? —
+ * and several can be on at once, which is what a checkbox is for. They spent
+ * two passes as toggle buttons carrying aria-pressed: a defensible pattern,
+ * but one that leaves a reader to work out from styling alone whether picking
+ * Protocol replaces Network or joins it. A checkbox answers that before it is
+ * clicked.
  *
- * Below lg the row becomes a chip with the count inside it, because a column
- * that stacks into a list at 208px wraps into prose at 375.
+ * Same at every width. The rows were chips below lg, back when they were
+ * buttons and a wrapped row of plain words did not read as controls. A
+ * checkbox reads as a control anywhere, so the rail is one list at every size
+ * and there is no breakpoint at which it changes its mind about what it is.
  */
 function FilterRow({
   label,
   count,
   active,
-  onClick,
+  onChange,
 }: {
   label: string;
   count: number;
   active: boolean;
-  onClick: () => void;
+  onChange: (v: boolean) => void;
 }) {
   // A workstream with nothing in the current view is offered as information,
   // not as an affordance: the count says the filter is empty, and the control
   // stops short of letting you dead-end the list to prove it.
   const empty = count === 0 && !active;
   return (
-    <button
-      type="button"
-      disabled={empty}
-      aria-pressed={active}
-      onClick={onClick}
+    <label
       className={cn(
-        "inline-flex items-center rounded-full text-left text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        "max-lg:gap-2 max-lg:px-3 max-lg:py-1.5 lg:w-full lg:justify-between lg:gap-3 lg:rounded-none lg:py-1.5",
-        active
-          ? "font-medium text-foreground max-lg:bg-secondary"
-          : "text-muted-foreground hover:text-foreground max-lg:bg-muted/60 max-lg:dark:bg-card",
-        empty && "pointer-events-none opacity-40"
+        "flex items-center gap-2.5 py-1.5 text-sm transition-colors select-none",
+        empty
+          ? "pointer-events-none opacity-40"
+          : "cursor-pointer hover:text-foreground",
+        active ? "font-medium text-foreground" : "text-muted-foreground"
       )}
     >
-      <span>{label}</span>
+      <Checkbox
+        checked={active}
+        disabled={empty}
+        onCheckedChange={(checked) => onChange(checked === true)}
+      />
+      <span className="whitespace-nowrap">{label}</span>
       <span
         className={cn(
-          "tabular-nums",
+          "ml-auto tabular-nums",
           active ? "text-muted-foreground" : "text-muted-foreground/70"
         )}
       >
         {count}
       </span>
-    </button>
+    </label>
   );
 }
 
@@ -866,24 +869,42 @@ function Filters({
         />
       </div>
 
-      <div className="mt-5 lg:mt-7">
-        <div className="mb-2 hidden lg:block">
+      {view === "roadmap" && (
+        /* The bare state name, which a checkbox can carry where a list row
+           could not: "In progress" beside a box is unambiguous, while the same
+           words as a row in a list read as a category with one member.
+
+           "In progress" rather than "Building now" throughout, matching the
+           board this register is derived from — its own statuses are Completed,
+           In Progress, Now, Next, Beyond, Under Review, and a page that renames
+           the one it shows makes the two surfaces disagree in the vocabulary a
+           reader carries between them. */
+        <div className="mt-3 lg:mt-4">
+          <FilterRow
+            label="In progress"
+            count={buildingCount}
+            active={buildingOnly}
+            onChange={onBuildingOnlyChange}
+          />
+        </div>
+      )}
+
+      {/* Broad, then narrow. "In progress" cuts the whole register in half and
+          the workstreams divide what is left, so it is read first — and it
+          hangs off the search field with a tighter gap than the one below it,
+          which is what keeps it from reading as part of this heading. */}
+      <div className="mt-6 lg:mt-8">
+        <div className="mb-1.5">
           <Label>Workstream</Label>
         </div>
-        {/* A group, not a tablist: several can be on at once, and they filter
-            rather than switch view. */}
-        <div
-          role="group"
-          aria-label="Filter by workstream"
-          className="flex flex-wrap gap-2 lg:block lg:gap-0"
-        >
+        <div role="group" aria-label="Filter by workstream">
           {workstreams.map((w) => (
             <FilterRow
               key={w}
               label={w}
               count={counts[w] ?? 0}
               active={selected.includes(w)}
-              onClick={() => onToggle(w)}
+              onChange={() => onToggle(w)}
             />
           ))}
         </div>
@@ -898,28 +919,6 @@ function Filters({
 
           Roadmap only. Behind us every record shipped, so it would filter the
           view away. */}
-      {view === "roadmap" && (
-        // "Only", not the bare state name. A checkbox labelled "Building now"
-        // is a category with one member — the thing that made this look wrong
-        // in the first place. "Only building now" is a modifier on the list,
-        // which is what it does, and it holds one line in a 13rem rail where
-        // the longer phrasing wrapped and stranded the box and the count.
-        <label className="mt-5 flex cursor-pointer items-center gap-2.5 text-sm whitespace-nowrap text-muted-foreground transition-colors select-none has-data-checked:text-foreground hover:text-foreground lg:mt-6">
-          <Checkbox
-            checked={buildingOnly}
-            onCheckedChange={(checked) => onBuildingOnlyChange(checked === true)}
-          />
-          Only building now
-          {/* Shown at both widths, like the workstream counts beside it — the
-              chips carry theirs on mobile, so hiding this one made the same
-              information appear and disappear by breakpoint. It only takes the
-              far right in the rail, where there is a column edge to sit on. */}
-          <span className="tabular-nums text-muted-foreground/70 lg:ml-auto">
-            {buildingCount}
-          </span>
-        </label>
-      )}
-
       {/* One reset, at the foot of everything it resets, and only when there is
           something to undo. It used to sit in the Workstream heading, naming
           one facet while operating on three. */}
@@ -1100,7 +1099,7 @@ export function Roadmap({
   // would show every unselected workstream as 0, which is exactly when the
   // number matters.
   //
-  // The state toggle does count, and has to: with "Building now" on, this was
+  // The state toggle does count, and has to: with "In progress" on, this was
   // still reporting "Protocol 3" off the whole roadmap while clicking Protocol
   // delivered one. A facet that promises a number the next click does not
   // honour is worse than a facet with no numbers at all.

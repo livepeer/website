@@ -83,7 +83,7 @@ Where a name differs, this is the mapping a sync has to implement:
 | --- | --- | --- |
 | `title` | `title` | |
 | `slug` | `source` | `roadmap.livepeer.org/p/{slug}` |
-| `postStatus.name` / `.type` | `state` | The board's six statuses collapse to our three tenses: `In Progress`/`Now` → `building`, `Next`/`Beyond`/`Under Review` → `next`, `Completed` → `shipped`. The three tenses are deliberate — do not mirror all six. |
+| `postStatus.name` / `.type` | `state` | The board's six statuses collapse to our three tenses: `In Progress`/`Now` → `building`, `Next`/`Beyond`/`Under Review` → `next`, `Completed` → `shipped`. The three tenses are deliberate — do not mirror all six. The frontmatter value stays `building`; the interface renders it as **In progress**, matching the board's own wording. |
 | `statusChangedAt` | `shippedAt` | Only meaningful once the status is `Completed`. |
 | `eta` | `target` | ISO instant. The board's own precision is a day; ours is whatever the record states, so a quarter-precision target is a deliberate widening, not a loss. |
 | `date` | `issued` | When the item was created — the board has no separate "Opportunity Issued" field, so this is the closest true equivalent. |
