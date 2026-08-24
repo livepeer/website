@@ -6,6 +6,7 @@ import {
   ArrowUpRightIcon,
   ChevronDownIcon,
   SearchIcon,
+  XIcon,
 } from "lucide-react";
 
 import Image from "next/image";
@@ -742,10 +743,17 @@ function FilterRow({
                 : "text-muted-foreground hover:text-foreground"
             )
           : cn(
-              "justify-between py-1.5 pr-1 pl-0",
+              // Two layouts, because the rail is two different objects.
+              // At lg it is a list in a column: labels on one left edge, counts
+              // on the right, the active mark hung in the margin.
+              // Below lg it is a wrapped row of chips with no headings, and
+              // there a bold word beside plain words does not read as a control
+              // at all — "Protocol · Network · Agent" looked like prose with one
+              // word emphasised. A filled pill says pressed.
+              "max-lg:rounded-full max-lg:px-3 max-lg:py-1.5 lg:justify-between lg:py-1.5 lg:pr-1 lg:pl-0",
               active
-                ? "font-medium text-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "font-medium text-foreground max-lg:bg-secondary"
+                : "text-muted-foreground hover:text-foreground max-lg:bg-muted/60 max-lg:dark:bg-card"
             ),
         empty && "pointer-events-none opacity-40"
       )}
@@ -758,7 +766,7 @@ function FilterRow({
           // mark reads as an annotation against them.
           <span
             aria-hidden="true"
-            className="absolute top-1/2 -left-3 size-1 -translate-y-1/2 rounded-full bg-foreground"
+            className="absolute top-1/2 -left-3 hidden size-1 -translate-y-1/2 rounded-full bg-foreground lg:block"
           />
         )}
         {label}
@@ -889,10 +897,17 @@ function Filters({
           filter to nothing. */}
       {view === "roadmap" && (
         <div className="mt-4 lg:mt-8">
+          {/* Labelled, like Workstream below it. One option under a heading
+              reads as a facet with one option; the same control with no heading
+              above a labelled group read as an orphan — a bold line of text
+              that happened to be clickable. */}
+          <div className="mb-2.5 hidden items-baseline lg:flex">
+            <Label>State</Label>
+          </div>
           <div
             role="group"
             aria-label="Filter by state"
-            className="flex flex-wrap gap-x-4 gap-y-1 lg:flex-col lg:gap-x-0"
+            className="flex flex-wrap gap-2 lg:flex-col lg:gap-x-0 lg:gap-y-0"
           >
             <FilterRow
               label="Building now"
@@ -905,24 +920,15 @@ function Filters({
       )}
 
       <div className="mt-4 lg:mt-8">
-        <div className="mb-2.5 hidden items-baseline justify-between lg:flex">
+        <div className="mb-2.5 hidden items-baseline lg:flex">
           <Label>Workstream</Label>
-          {filtering && (
-            <button
-              type="button"
-              onClick={onClear}
-              className="text-xs text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Clear
-            </button>
-          )}
         </div>
         {/* A group, not a tablist: several can be on at once, and they filter
             rather than switch view. */}
         <div
           role="group"
           aria-label="Filter by workstream"
-          className="flex flex-wrap gap-x-4 gap-y-1 lg:flex-col lg:gap-x-0"
+          className="flex flex-wrap gap-2 lg:flex-col lg:gap-x-0 lg:gap-y-0"
         >
           {workstreams.map((w) => (
             <FilterRow
@@ -933,17 +939,28 @@ function Filters({
               onClick={() => onToggle(w)}
             />
           ))}
-          {filtering && (
-            <button
-              type="button"
-              onClick={onClear}
-              className="py-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
-            >
-              Clear
-            </button>
-          )}
         </div>
       </div>
+
+      {/* One reset, at the foot of everything it resets.
+          It used to sit in the Workstream heading and clear the search and the
+          state toggle too — a control naming one facet while operating on
+          three. On mobile it was worse: rendered as the last chip in the
+          workstream row, so "Protocol · Network · Agent · Clear" offered Clear
+          as a fourth workstream.
+
+          Named for what it does rather than for where it sits, and present only
+          when there is something to undo. */}
+      {filtering && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="mt-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-5"
+        >
+          <XIcon className="size-3.5" aria-hidden="true" />
+          Clear filters
+        </button>
+      )}
       <SuggestBlock
         href={suggestionsHref}
         className="mt-8 hidden lg:block"
@@ -1108,9 +1125,15 @@ export function Roadmap({
     ).length;
   }, [commitments, query, selected]);
 
-  // Rail counts are scoped to the view and the query but NOT to the workstream
-  // selection — a facet that recounted itself as you selected would show every
-  // unselected workstream as 0, which is exactly when the number matters.
+  // Rail counts are scoped to the view, the query and the state toggle, but NOT
+  // to the workstream selection — a facet that recounted itself as you selected
+  // would show every unselected workstream as 0, which is exactly when the
+  // number matters.
+  //
+  // The state toggle does count, and has to: with "Building now" on, this was
+  // still reporting "Protocol 3" off the whole roadmap while clicking Protocol
+  // delivered one. A facet that promises a number the next click does not
+  // honour is worse than a facet with no numbers at all.
   const counts = useMemo(() => {
     const q = query.trim().toLowerCase();
     const tally: Record<string, number> = {};
@@ -1118,6 +1141,7 @@ export function Roadmap({
       const inView =
         view === "shipped" ? c.state === "shipped" : c.state !== "shipped";
       if (!inView) continue;
+      if (buildingOnly && c.state !== "building") continue;
       if (
         q &&
         ![c.title, c.outcome, c.workstream, ...c.owners]
@@ -1129,7 +1153,7 @@ export function Roadmap({
       tally[c.workstream] = (tally[c.workstream] ?? 0) + 1;
     }
     return tally;
-  }, [commitments, query, view]);
+  }, [commitments, query, view, buildingOnly]);
 
   const building = matches.filter((c) => c.state === "building");
   const next = matches.filter((c) => c.state === "next");
@@ -1268,10 +1292,26 @@ export function Roadmap({
           </p>
 
           {shown === 0 ? (
-            <p className="py-16 text-reading-body text-muted-foreground">
-              No commitments match that. Try another workstream, or clear the
-              search.
-            </p>
+            /* An empty result is a place to act, not a place to apologise.
+               The old copy named two of the three inputs — "try another
+               workstream, or clear the search" — which read as a shrug from a
+               page that knows exactly what it is filtering by and can undo it
+               in one click. */
+            <div className="py-16">
+              <p className="text-reading-body text-muted-foreground">
+                Nothing matches those filters.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setParams({ workstream: [], buildingOnly: false });
+                }}
+                className="mt-4 inline-flex items-center gap-1.5 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Clear filters
+              </button>
+            </div>
           ) : (
             <>
               {view === "shipped"
