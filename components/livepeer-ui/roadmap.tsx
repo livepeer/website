@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowUpRightIcon,
@@ -171,51 +171,20 @@ function initials(name: string) {
  * faces from outshouting the commitment it belongs to.
  */
 /**
- * A stable tilt for a pinned photograph, in degrees.
- *
- * Derived from the slug so it survives a server render and a client hydrate
- * identically — Math.random here would produce a different angle on each side
- * and React would throw. Signed, and biased away from zero, because a card at
- * 0.2deg reads as a mistake rather than as a choice.
- */
-function tilt(slug: string) {
-  // FNV-1a with a murmur3 finalizer. A plain `h * 31 + c` was the first version
-  // and its low bits barely move between similar slugs — four cards came out at
-  // -3.9, 2.8, 2.7 and 2.4, three of them leaning the same way by the same
-  // amount, which is exactly the stamped look the tilt exists to avoid. The
-  // finalizer is what makes sign and magnitude independent.
-  let h = 2166136261;
-  for (const ch of slug) {
-    h ^= ch.charCodeAt(0);
-    h = Math.imul(h, 16777619);
-  }
-  h ^= h >>> 15;
-  h = Math.imul(h, 2246822507);
-  h ^= h >>> 13;
-  h >>>= 0;
-  const magnitude = 2.2 + (h % 21) / 10; // 2.2 – 4.2 degrees
-  return (((h >>> 16) & 1 ? -1 : 1) * magnitude).toFixed(2);
-}
-
-/**
  * A stable fill for a monogram, from the registry's categorical five.
  *
  * Keyed on the name so a person keeps their tone across every card they appear
  * on — the point of a categorical colour is that it means the same thing twice.
- * Same hash as the lifeline's tilt: a plain character sum clusters badly on
- * similar strings, and the finalizer is what separates them.
+ * FNV-1a with a murmur3 finalizer: a plain `h * 31 + c` barely moves its low
+ * bits between similar strings, so near-identical names collide on one tone.
  */
 const FACE_TONES = [0, 25, 50, 75, 100].map((step) => ({
-  // The light end of the ramp, not the whole of it.
-  //
-  // Spreading across all five put people on chart-3 and chart-5 — 0.439 and
-  // 0.269 — which are darker than the card they sit on, so a monogram read as a
-  // hole punched in the row rather than as a face. These five are steps between
-  // chart-1 and chart-2 (0.87 down to 0.556), which keeps five distinguishable
-  // fills inside a band that stays lighter than every surface on the page.
-  //
-  // One ink for all five, because the band is narrow enough that it does not
-  // need to switch: chart-5 clears the darkest of them comfortably.
+  // The light end of the ramp, not the whole of it. Spreading across all five
+  // put people on chart-3 and chart-5 — 0.439 and 0.269 — darker than the card
+  // they sit on, so a monogram read as a hole punched in the row. These are
+  // steps between chart-1 and chart-2, a band that stays lighter than every
+  // surface on the page. One ink for all five: the band is narrow enough that
+  // chart-5 clears the darkest of them.
   bg: `color-mix(in oklch, var(--chart-2) ${step}%, var(--chart-1))`,
   ink: "var(--chart-5)",
 }));
@@ -633,7 +602,13 @@ function Group({
     // including the top one took the between-quarters margin — which is what
     // pushed the register 56px below the masthead it is supposed to start level
     // with.
-    <section className="mt-16 first-of-type:mt-0">
+    <section
+      className={cn(
+        "first-of-type:mt-0",
+        // A month nothing landed in is a thinner beat than a month that did.
+        commitments.length === 0 ? "mt-8" : "mt-16"
+      )}
+    >
       {/* The band is generous, and the arithmetic is what lets it be.
           Sizing it to exactly match the search field's 40px box was the wrong
           constraint — what reads as aligned is the two CENTRES, not the two
@@ -649,7 +624,15 @@ function Group({
 
           Flush under the 64px site header rather than clear of it: a gap would
           show cards sliding through it unblurred. */}
-      <h2 className="sticky top-16 z-10 -mx-2 flex items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2 py-6">
+      {/* top-30, not top-16: the view tabs stick at top-16 and stand 56px
+          tall, so a band pinned to the same line would slide under them. The
+          offset is that row's height — change one and the other has to move. */}
+      <h2
+        className={cn(
+          "sticky top-30 z-10 -mx-2 flex items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2",
+          commitments.length === 0 ? "py-2" : "py-6"
+        )}
+      >
         {/* whitespace-nowrap on all three. As flex siblings they were free to
             shrink below their own content, and at 375px they all took the
             offer: "THIS QUARTER" broke in half and "Q3 2026" came apart into
@@ -657,7 +640,17 @@ function Group({
             every other quarter. Held whole they measure ~327px in a 343px row
             and fit. */}
         <span className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-          <span className="text-2xl font-normal tracking-[-0.02em] whitespace-nowrap tabular-nums">
+          <span
+            className={cn(
+              "font-normal tracking-[-0.02em] whitespace-nowrap tabular-nums",
+              // A month that held nothing is set smaller and quieter. At the
+              // same weight as a month that shipped work, an empty band read as
+              // a heading for content that had failed to load.
+              commitments.length === 0
+                ? "text-sm text-muted-foreground/50"
+                : "text-2xl"
+            )}
+          >
             {period}
           </span>
           {/* The one thing a roadmap has to know and this page did not: where
@@ -679,10 +672,12 @@ function Group({
             end of it. The count gives the other end something true to hold, and
             it tracks the filters — so it doubles as the answer to "did that
             narrow anything?" */}
-        <Label className="shrink-0 whitespace-nowrap">
-          {commitments.length}{" "}
-          {commitments.length === 1 ? "commitment" : "commitments"}
-        </Label>
+        {commitments.length > 0 && (
+          <Label className="shrink-0 whitespace-nowrap">
+            {commitments.length}{" "}
+            {commitments.length === 1 ? "commitment" : "commitments"}
+          </Label>
+        )}
       </h2>
       {/* 16px between cards, against 28px of padding inside one.
           At 8 the gap between two separate commitments was less than a third
@@ -696,11 +691,13 @@ function Group({
           It costs ~64px across the current nine cards, and more as the register
           grows. Worth it: this is separation doing a job, unlike the hero
           spacing above it, which was air doing nothing. */}
-      <div className="mt-2 space-y-4">
-        {commitments.map((c) => (
-          <CommitmentCard key={c.slug} commitment={c} />
-        ))}
-      </div>
+      {commitments.length > 0 && (
+        <div className="mt-2 space-y-4">
+          {commitments.map((c) => (
+            <CommitmentCard key={c.slug} commitment={c} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -831,6 +828,10 @@ function SuggestBlock({
  * a row above the list.
  */
 function Filters({
+  view,
+  buildingOnly,
+  onBuildingOnlyChange,
+  buildingCount,
   query,
   onQueryChange,
   workstreams,
@@ -840,6 +841,10 @@ function Filters({
   onClear,
   suggestionsHref,
 }: {
+  view: View;
+  buildingOnly: boolean;
+  onBuildingOnlyChange: (v: boolean) => void;
+  buildingCount: number;
   query: string;
   onQueryChange: (v: string) => void;
   workstreams: string[];
@@ -849,7 +854,7 @@ function Filters({
   onClear: () => void;
   suggestionsHref: string;
 }) {
-  const filtering = selected.length > 0 || query.length > 0;
+  const filtering = selected.length > 0 || query.length > 0 || buildingOnly;
   return (
     // The margins live here rather than on a wrapper. A sticky element only
     // travels within its parent's box, so wrapping this in a div sized to its
@@ -872,6 +877,32 @@ function Filters({
           className="h-10 w-full rounded-full bg-muted/70 pr-4 pl-10 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring dark:bg-card"
         />
       </div>
+
+      {/* One toggle, not a state facet.
+          The facet this replaces offered "Building now" and "Committed next",
+          where the second option is everything the first is not — so it cost a
+          block of rail to say what one control says. "What is live right now"
+          is the question a roadmap is actually asked; "what is not live" is
+          not.
+
+          Roadmap only: behind us every record shipped, so the toggle would
+          filter to nothing. */}
+      {view === "roadmap" && (
+        <div className="mt-4 lg:mt-8">
+          <div
+            role="group"
+            aria-label="Filter by state"
+            className="flex flex-wrap gap-x-4 gap-y-1 lg:flex-col lg:gap-x-0"
+          >
+            <FilterRow
+              label="Building now"
+              count={buildingCount}
+              active={buildingOnly}
+              onClick={() => onBuildingOnlyChange(!buildingOnly)}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="mt-4 lg:mt-8">
         <div className="mb-2.5 hidden items-baseline justify-between lg:flex">
@@ -922,513 +953,63 @@ function Filters({
 }
 
 /**
- * The track record, as a horizontal lifeline.
+ * The view tabs — the one control that swaps the whole register.
  *
- * One tick, one thing shipped. Grouping a year's work into a single column made
- * 2026 six entries deep while every other column held one, so the row was as
- * tall as its busiest year and mostly empty above the rest — and a tick stopped
- * meaning anything consistent. Given a tick each, the run reads at a steady
- * height and its density is the information: six ticks bunched at the right end
- * say more about 2026 than a number ever did.
+ * They lived on the horizontal lifeline while that existed. With the strip
+ * gone they sit at the head of the register they switch, and they stick there:
+ * a reader deep in Q1 2027 who wants the track record should not have to
+ * scroll back to the top to ask for it.
  *
- * Quiet years keep a tick of their own. They cost 5rem, they carry the year in
- * grey, and they are why the row reads as a history rather than a list — the
- * thin stretch through 2019 and 2021 is the shape of the thing. Drop them and
- * eleven events space evenly and imply a steadiness that was never there.
+ * top-16 puts them flush under the site header, and the quarter bands stick to
+ * the row's own bottom edge rather than to the viewport, so the two stack
+ * instead of overlapping. The band's own offset is derived from this row's
+ * height — change one and the other has to move.
  *
- * Columns are sized to their contents rather than to an even grid — measured
- * off the reference, where an empty year is 80px and a year with content is
- * 258px. That is what buys readable titles in a horizontal layout: an even grid
- * across this range gives each column ~120px, under half what the longest title
- * needs, which is what forced an earlier version down to bare dots.
- *
- * The range is derived, never hard-coded — oldest shipped record to newest — so
- * deleting the backfill or adding to it just moves the ends.
+ * Each tab carries the size of the run behind it, counted off the whole
+ * register rather than the filtered set: a label that shrank as you filtered
+ * would report on the filter instead of on the run it switches to.
  */
-const MIN_MILESTONES = 5;
-/** Below this, a press is a click; above it, it is a pan. */
-const DRAG_THRESHOLD = 4;
-/** Velocity retained per 60fps frame after release. */
-const GLIDE_FRICTION = 0.94;
-/** Below this (px/ms) the glide has stopped being motion and is just drift. */
-const GLIDE_FLOOR = 0.02;
-/**
- * Ceiling on release velocity, px/ms.
- *
- * A hand flick lands around 2–4; the number only matters for the outliers.
- * Uncapped, one sharp throw sends the run from end to end in a handful of
- * frames, which reads as a glitch rather than as momentum — and a synthetic
- * pointer, which reports a few enormous jumps instead of many small ones,
- * produces ~20 and does exactly that every time.
- */
-const GLIDE_MAX = 4;
-
-type Tick =
-  | { kind: "entry"; commitment: Commitment; stamp: string }
-  | { kind: "quiet"; year: number };
-
-export function Lifeline({
-  commitments,
-  all,
+function ViewTabs({
   view,
   onViewChange,
+  counts,
 }: {
-  /** What the filters left — the run the strip actually draws. */
-  commitments: Commitment[];
-  /**
-   * The whole register, for the "is there enough history to draw" decision.
-   *
-   * The two are separate so filtering narrows the strip without deleting it.
-   * Gating on the filtered set instead made the lifeline vanish the moment a
-   * workstream took the count under the minimum, which reads as a bug rather
-   * than as a result — and left the rail claiming "Protocol, 3" with nothing
-   * above it. The minimum exists so a two-tick strip is not what greets you on
-   * arrival; once you have narrowed it yourself, a short run is the answer.
-   */
-  all: Commitment[];
   view: View;
   onViewChange: (v: View) => void;
+  counts: { roadmap: number; shipped: number };
 }) {
-  // Above the early return: hooks have to run in the same order every render,
-  // and MIN_MILESTONES bails out below this point.
-  const scroller = useRef<HTMLDivElement>(null);
-  const drag = useRef({
-    active: false,
-    captured: false,
-    startX: 0,
-    startLeft: 0,
-    moved: 0,
-    lastX: 0,
-    lastT: 0,
-    v: 0,
-  });
-  const glideFrame = useRef<number | null>(null);
-  const stopGlide = () => {
-    if (glideFrame.current !== null) {
-      cancelAnimationFrame(glideFrame.current);
-      glideFrame.current = null;
-    }
-  };
-  // A glide left running after unmount would call scrollLeft on a detached node
-  // every frame until it decayed.
-  useEffect(() => stopGlide, []);
-
-  /**
-   * Both views open at their own left edge, and both open on now.
-   *
-   * Shipped used to open scrolled to its far end, so that the newest work led.
-   * It got there, and it felt broken: you land in the middle of a run with
-   * columns clipped off to the left, which reads as a page that has already
-   * been touched rather than one you have just opened. Reversing the order
-   * gets the same result honestly — see the note on how the ticks are built.
-   */
-  useEffect(() => {
-    const el = scroller.current;
-    if (!el) return;
-    stopGlide();
-    el.scrollLeft = 0;
-  }, [view]);
-
-  const stamp = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-US", {
-      timeZone: "UTC",
-      month: "short",
-      year: "numeric",
-    });
-
-  const ticks: Tick[] = [];
-  if (view === "shipped") {
-    if (all.filter((c) => c.state === "shipped").length < MIN_MILESTONES)
-      return null;
-    const shipped = commitments
-      .filter((c) => c.state === "shipped")
-      .sort((a, b) => a.shippedAt!.localeCompare(b.shippedAt!));
-    if (shipped.length === 0) return null;
-    // Quiet years belong to the past only. A year with nothing in it is a fact
-    // about what happened; there is no equivalent claim to make about a future
-    // quarter nobody has committed to yet, and inventing empty windows ahead of
-    // the register would be the padding this page exists to refuse.
-    //
-    // Built forwards here and reversed at the end, so the quiet years still
-    // land between the right entries.
-    const yearOf = (iso: string) => Number(iso.slice(0, 4));
-    const firstYear = yearOf(shipped[0]!.shippedAt!);
-    const lastYear = yearOf(shipped[shipped.length - 1]!.shippedAt!);
-    for (let year = firstYear; year <= lastYear; year++) {
-      const inYear = shipped.filter((c) => yearOf(c.shippedAt!) === year);
-      if (inYear.length === 0) ticks.push({ kind: "quiet", year });
-      else
-        for (const commitment of inYear)
-          ticks.push({
-            kind: "entry",
-            commitment,
-            stamp: stamp(commitment.shippedAt!),
-          });
-    }
-  } else {
-    // Forward, the stamp is the target window as written — "Q4 2026", "H1
-    // 2027" — never normalised to a month. The register records each target at
-    // the precision it actually has, and a lifeline that rendered "Oct 2026"
-    // for a commitment dated "Q4 2026" would invent three months of confidence
-    // nobody offered.
-    if (all.filter((c) => c.state !== "shipped").length < MIN_MILESTONES)
-      return null;
-    const planned = commitments
-      .filter((c) => c.state !== "shipped")
-      .sort((a, b) => a.targetSort - b.targetSort);
-    if (planned.length === 0) return null;
-    for (const commitment of planned)
-      ticks.push({ kind: "entry", commitment, stamp: commitment.target });
-  }
-
-  /**
-   * One rule for both runs: distance from today grows to the right.
-   *
-   * Roadmap reads now → future left to right, which is already chronological.
-   * Shipped reads now → past, which means reversing it — and the pair is more
-   * coherent for it than a single strict left-to-right calendar was. Both open
-   * on the present at the left edge, which is where a reader is standing and
-   * where the register directly beneath them also opens.
-   *
-   * Reading a run of years backwards is legible because every tick carries its
-   * own stamp; it is the same move a changelog makes, and the alternative was
-   * opening Shipped eight years from anything anyone is working on.
-   */
-  if (view === "shipped") ticks.reverse();
-
-  // Drag to pan, with the scrollbar hidden.
-  //
-  // A native bar under a hero strip reads as chrome and only appears on hover
-  // on most desktop setups anyway, so the run looked static and nobody would
-  // think to scroll it. A grab cursor says "this moves" before you touch it.
-  //
-  // Mouse only: touch already pans this natively, and intercepting pointermove
-  // there would fight the browser's own momentum scrolling. `moved` is the
-  // guard that keeps a drag from firing the link it happens to finish over —
-  // without it, panning the row would open whatever source was under the
-  // cursor when you let go.
-  const startDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scroller.current;
-    if (!el || e.pointerType !== "mouse" || e.button !== 0) return;
-    // Catching a moving strip stops it, the way it would if you put a finger
-    // on a spinning record.
-    stopGlide();
-    drag.current = {
-      active: true,
-      captured: false,
-      startX: e.clientX,
-      startLeft: el.scrollLeft,
-      moved: 0,
-      lastX: e.clientX,
-      lastT: e.timeStamp,
-      v: 0,
-    };
-  };
-
-  const moveDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scroller.current;
-    if (!el || !drag.current.active) return;
-    const dx = e.clientX - drag.current.startX;
-    drag.current.moved = Math.max(drag.current.moved, Math.abs(dx));
-    // Velocity as a rolling average, not the last frame alone: a single jittery
-    // sample at the moment of release would otherwise decide the whole throw.
-    const dt = e.timeStamp - drag.current.lastT;
-    if (dt > 0) {
-      const vx = (e.clientX - drag.current.lastX) / dt;
-      drag.current.v = drag.current.v * 0.7 + vx * 0.3;
-      drag.current.lastX = e.clientX;
-      drag.current.lastT = e.timeStamp;
-    }
-    if (drag.current.moved <= DRAG_THRESHOLD) return;
-    // Capture only once this is unambiguously a drag.
-    //
-    // Capturing on pointerdown was the first version and it silently killed
-    // every link on the strip: capture redirects the rest of the sequence to
-    // the capturing element, so pointerup landed on the container and the click
-    // target became their common ancestor — a <div> — instead of the anchor the
-    // press started on. Deferring it means a plain click never enters capture
-    // at all and behaves exactly as if none of this existed.
-    if (!drag.current.captured) {
-      el.setPointerCapture(e.pointerId);
-      el.style.userSelect = "none";
-      drag.current.captured = true;
-    }
-    el.scrollLeft = drag.current.startLeft - dx;
-  };
-
-  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const el = scroller.current;
-    const wasDragging = drag.current.captured;
-    if (wasDragging && el) {
-      if (el.hasPointerCapture(e.pointerId))
-        el.releasePointerCapture(e.pointerId);
-      el.style.userSelect = "";
-    }
-    drag.current.active = false;
-    if (wasDragging) glide(drag.current.v);
-  };
-
-  /**
-   * Let go and it keeps going, slowing down — the reference's behaviour, and
-   * the thing that makes a wide strip feel like an object rather than a
-   * viewport. Without it a run this long takes four deliberate drags to cross.
-   *
-   * Friction is per-frame but applied against real elapsed time, so a dropped
-   * frame shortens the glide rather than extending it. It stops at the ends
-   * instead of grinding against them, and it does not run at all under
-   * prefers-reduced-motion, where decaying movement is exactly the thing being
-   * asked for less of.
-   */
-  const glide = (v0: number) => {
-    const el = scroller.current;
-    if (!el || Math.abs(v0) < 0.05) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let v = Math.max(-GLIDE_MAX, Math.min(GLIDE_MAX, v0));
-    let prev = performance.now();
-    const step = (now: number) => {
-      // Capped so a backgrounded tab does not resume with one enormous jump.
-      const dt = Math.min(now - prev, 32);
-      prev = now;
-      el.scrollLeft -= v * dt;
-      v *= Math.pow(GLIDE_FRICTION, dt / 16.67);
-      const atEnd =
-        el.scrollLeft <= 0 || el.scrollLeft >= el.scrollWidth - el.clientWidth;
-      glideFrame.current =
-        Math.abs(v) > GLIDE_FLOOR && !atEnd
-          ? requestAnimationFrame(step)
-          : null;
-    };
-    glideFrame.current = requestAnimationFrame(step);
-  };
-
   return (
-    <section
-      aria-label={view === "shipped" ? "Shipped, by year" : "Committed work"}
-      // 40px, not 32. The three gaps above this — eyebrow to headline,
-      // headline to lead, lead to here — express three different degrees of
-      // belonging, and at 20/20/32 they were nearly flat: the same 20px sat
-      // under a 13px eyebrow and under a 61px headline, generous below one and
-      // tight below the other. 12/28/40 makes the eyebrow read as attached to
-      // the headline it labels, the lead as a second beat, and this as a new
-      // section.
-      className="mt-10"
+    <div
+      role="tablist"
+      aria-label="Roadmap views"
+      className="sticky top-16 z-20 -mx-2 -ml-5 flex flex-wrap items-center gap-1 bg-background px-2 py-3"
     >
-      {/* The tabs live here, on the lifeline, rather than in the rail.
-            They were a "View" section buried under the search field, which is a
-            quiet home for the control that swaps the entire page — and the
-            label sitting here said "SHIPPED" while doing nothing, occupying the
-            exact spot the control wanted. Now the page reads top to bottom as
-            the choice, the run of work under it, then the register of the same
-            work.
-
-            The cost is that they no longer sit in the sticky rail, so switching
-            view from deep in the register means scrolling back up. The quarter
-            headings are sticky, so the way back is short. */}
-      <div
-        role="tablist"
-        aria-label="Roadmap views"
-        className="-ml-3 flex flex-wrap items-center gap-1"
-      >
-        {/* Each tab carries the size of the run behind it.
-              This is the one place on the page where a count is something a
-              reader acts on rather than reads: the tabs are where the two sets
-              are chosen between, so the number answers "how much is over
-              there" before the click rather than after it. The lead's tally
-              describes the register whole; these two describe the halves, and
-              the three agree.
-
-              Counted off the whole register, not the filtered set — a tab
-              label that shrank as you filtered would be reporting on the
-              filter rather than on the run it switches to. */}
-        {(["roadmap", "shipped"] as const).map((v) => {
-          const n = all.filter((c) =>
-            v === "shipped" ? c.state === "shipped" : c.state !== "shipped"
-          ).length;
-          return (
-            <button
-              key={v}
-              type="button"
-              role="tab"
-              aria-selected={view === v}
-              onClick={() => onViewChange(v)}
-              className={cn(
-                "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                view === v
-                  ? "bg-secondary font-medium text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {v === "roadmap" ? "Roadmap" : "Shipped"}
-              <span
-                className={cn(
-                  "tabular-nums",
-                  view === v ? "text-muted-foreground" : "text-muted-foreground/60"
-                )}
-              >
-                {n}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-      {/* Bleeding to the container edge so the run can reach the edge of the
-            page when it scrolls, rather than stopping short and looking
-            truncated. The padding puts the first tick back on the measure. */}
-      <div
-        ref={scroller}
-        onPointerDown={startDrag}
-        onPointerMove={moveDrag}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        // The native link/image drag is the other thing that hijacks a press
-        // and pull, and it is cancellable without touching the click.
-        onDragStart={(e) => e.preventDefault()}
-        // Capture, so the suppression lands before the anchor sees the click.
-        onClickCapture={(e) => {
-          if (drag.current.moved > DRAG_THRESHOLD) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        }}
-        className="mt-5 -mx-4 cursor-grab overflow-x-auto px-4 [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10"
-      >
-        {/* An axis across the top with a tick hanging off it, not a rule down
-              each column. Full-height rules made every column as tall as the
-              tallest, so a thin entry showed a title above a long empty line. */}
-        <ol className="relative flex min-w-max items-start pt-px">
+      {(["roadmap", "shipped"] as const).map((v) => (
+        <button
+          key={v}
+          type="button"
+          role="tab"
+          aria-selected={view === v}
+          onClick={() => onViewChange(v)}
+          className={cn(
+            "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            view === v
+              ? "bg-secondary font-medium text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {v === "roadmap" ? "Roadmap" : "Shipped"}
           <span
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-px bg-border"
-          />
-          {ticks.map((tick) => (
-            <li
-              key={
-                tick.kind === "entry"
-                  ? tick.commitment.slug
-                  : `quiet-${tick.year}`
-              }
-              className={cn(
-                "relative shrink-0 pt-4 pl-4",
-                tick.kind === "entry" ? "w-60 pr-6" : "w-20"
-              )}
-            >
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "absolute top-0 left-0 w-px",
-                  // The axis stays uniform: one mark per entry, one length.
-                  // The lifeline no longer carries state at all — see the note
-                  // on the heading row.
-                  tick.kind !== "entry"
-                    ? "h-1.5 bg-border"
-                    : "h-2.5 bg-muted-foreground"
-                )}
-              />
-              {tick.kind === "quiet" ? (
-                <p className="text-sm leading-5 text-muted-foreground/50 tabular-nums">
-                  {tick.year}
-                </p>
-              ) : (
-                <>
-                  {/* The stamp repeats when two entries share a window —
-                        which is true, and the alternative is an unlabelled tick
-                        floating free of the run. Looking back it is a month;
-                        looking forward it is the target as the register wrote
-                        it, at whatever precision that actually has. */}
-                  {/* Date and workstream, and deliberately not state.
-                        Marking live work here was tried several ways — a badge
-                        on its own row, the words beside the roster, a longer
-                        green tick, a node on the axis, a pulsing dot before the
-                        date — and each either cost a line on every column or
-                        marked the distinction in a way that had to be decoded
-                        rather than read. The register below states it in words
-                        on every card, which is where a reader who wants it will
-                        look. The strip's job is when, what and who. */}
-                  {/* items-center, not items-baseline. StateMark is itself a
-                        flex row, so its baseline is taken from its first item —
-                        the dot — whose baseline is its bottom edge, because it
-                        holds no text. Aligning that to the date's baseline sat
-                        the entire mark 2px low. Both children are 14px on a
-                        20px line box, so centring lands them on the same
-                        baseline anyway, without routing through the dot. */}
-                  {/* A paragraph, not a heading. These label a column; they
-                        do not open a section, and as h3s they sat directly
-                        under the page h1 with the register's own h2 quarter
-                        bands further down — a reader navigating by heading met
-                        nine phantom sections before the first real one. The
-                        section's aria-label is what names this region. */}
-                  <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm leading-5">
-                    <span className="font-medium tabular-nums">
-                      {tick.stamp}
-                    </span>
-                    <Label>{tick.commitment.workstream}</Label>
-                  </p>
-                    {/* A pinned photograph, tilted, on the few milestones that
-                        have one.
-                        The treatment is measured off the reference: a card at a
-                        few degrees, rounded-xl, a hairline ring and a lifted
-                        shadow, straightening and growing 3% on hover over
-                        200ms. Deliberately sparse — an image on every entry was
-                        a uniform column of thumbnails and read as a spec sheet;
-                        four across fourteen ticks read as punctuation, which is
-                        what the reference is doing.
-
-                        The angle is derived from the slug rather than stored or
-                        randomised. Math.random would differ between the server
-                        render and the client and blow up hydration; a hash is
-                        stable, and it varies enough that the cards look pinned
-                        by hand rather than stamped. */}
-                  <div className="mt-3">
-                    {tick.commitment.image && (
-                      <span
-                        className="group/photo relative mb-4 block w-[8.25rem] rotate-[var(--tilt)] cursor-grab transition-transform duration-200 ease-out hover:z-10 hover:rotate-0 motion-reduce:transition-none"
-                        style={
-                          {
-                            "--tilt": `${tilt(tick.commitment.slug)}deg`,
-                          } as React.CSSProperties
-                        }
-                      >
-                        <span className="block overflow-hidden rounded-xl shadow-xl ring-1 ring-black/10 transition-[transform,box-shadow] duration-200 ease-out group-hover/photo:scale-[1.03] group-hover/photo:shadow-2xl motion-reduce:transition-none dark:ring-white/15">
-                          <Image
-                            src={`/roadmap/milestones/${tick.commitment.image}`}
-                            alt=""
-                            width={480}
-                            height={360}
-                            className="block h-auto w-full object-cover"
-                          />
-                        </span>
-                      </span>
-                    )}
-                    <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-snug">
-                      {/* Each title carries its own source: a track record is
-                          the claim on this page most worth checking.
-
-                          The board item first, because that is where the
-                          commitment is proposed and where its state is kept —
-                          the same link the expanded card leads with. It falls
-                          back to the first related link for records that did
-                          not reach the register through the board, which is
-                          better than a title that goes nowhere. */}
-                      <LinkRow
-                        label={tick.commitment.title}
-                        href={
-                          tick.commitment.source ??
-                          tick.commitment.related[0]!.href
-                        }
-                      />
-                      {tick.commitment.people &&
-                        tick.commitment.people.length > 0 && (
-                          <Faces people={tick.commitment.people} />
-                        )}
-                    </p>
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+            className={cn(
+              "tabular-nums",
+              view === v ? "text-muted-foreground" : "text-muted-foreground/60"
+            )}
+          >
+            {counts[v]}
+          </span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -1448,6 +1029,10 @@ export function Roadmap({
   // The query does not: it changes on every keystroke, and a history entry per
   // character is worse than losing the text on share.
   const view: View = params.get("view") === "shipped" ? "shipped" : "roadmap";
+  // Forward only. Behind us every record shipped, so the flag would filter the
+  // whole view away — and one carried across a tab switch would blank the list
+  // with nothing on screen to explain why.
+  const buildingOnly = view === "roadmap" && params.get("state") === "building";
   const selected = (params.get("workstream") ?? "")
     .split(",")
     .filter((w) => workstreams.includes(w));
@@ -1467,13 +1052,20 @@ export function Roadmap({
     next: Partial<{
       view: View;
       workstream: string[];
+      buildingOnly: boolean;
     }>
   ) => {
     const p = new URLSearchParams(params.toString());
     if (next.view) {
       if (next.view === "roadmap") p.delete("view");
       else p.set("view", next.view);
-      }
+      // Shipped holds nothing that is still being built.
+      if (next.view === "shipped") p.delete("state");
+    }
+    if (next.buildingOnly !== undefined) {
+      if (next.buildingOnly) p.set("state", "building");
+      else p.delete("state");
+    }
     if (next.workstream) {
       if (next.workstream.length === 0) p.delete("workstream");
       else p.set("workstream", next.workstream.join(","));
@@ -1494,8 +1086,26 @@ export function Roadmap({
     return commitments.filter(
       (c) =>
         hit(c) &&
-        (selected.length === 0 || selected.includes(c.workstream))
+        (selected.length === 0 || selected.includes(c.workstream)) &&
+        (!buildingOnly || c.state === "building")
     );
+  }, [commitments, query, selected, buildingOnly]);
+
+  // Counted against the query and the workstream selection but not against
+  // itself — a toggle whose own count fell to 0 the moment you switched it off
+  // would be reporting on its own state rather than on what it would give you.
+  const buildingCount = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return commitments.filter(
+      (c) =>
+        c.state === "building" &&
+        (selected.length === 0 || selected.includes(c.workstream)) &&
+        (!q ||
+          [c.title, c.outcome, c.workstream, ...c.owners]
+            .join(" ")
+            .toLowerCase()
+            .includes(q))
+    ).length;
   }, [commitments, query, selected]);
 
   // Rail counts are scoped to the view and the query but NOT to the workstream
@@ -1525,20 +1135,47 @@ export function Roadmap({
   const next = matches.filter((c) => c.state === "next");
   const shipped = matches.filter((c) => c.state === "shipped");
 
-  // Shipped groups by month, newest first. getCommitments already sorts by
-  // shippedAt, so insertion order carries the ordering.
-  const shippedByPeriod = shipped.reduce<Record<string, Commitment[]>>(
-    (acc, c) => {
-      const period = new Date(c.shippedAt!).toLocaleDateString("en-US", {
+  // Shipped runs on a continuous month axis, newest first — every month
+  // between the newest record and the oldest, including the ones nothing
+  // landed in.
+  //
+  // This is the half of the register where a gap is information. Looking back,
+  // a quiet month is a fact about what happened, and the density of a track
+  // record is most of what a track record says. Looking forward it is not: an
+  // empty future quarter is an absence of commitments rather than evidence of
+  // anything, and drawing it is exactly the padding this page replaces — so
+  // the roadmap view below still renders only the windows that hold work.
+  //
+  // Derived from the records at both ends, so backfilling history just extends
+  // the axis. Capped, because a single mis-typed year would otherwise render
+  // several thousand empty months.
+  const shippedByPeriod: Record<string, Commitment[]> = {};
+  if (shipped.length > 0) {
+    const monthKey = (iso: string) =>
+      new Date(iso).toLocaleDateString("en-US", {
         timeZone: "UTC",
         month: "long",
         year: "numeric",
       });
-      (acc[period] ??= []).push(c);
-      return acc;
-    },
-    {}
-  );
+    const stamps = shipped.map((c) => c.shippedAt!).sort();
+    const oldest = new Date(stamps[0]! + "T00:00:00Z");
+    const newest = new Date(stamps[stamps.length - 1]! + "T00:00:00Z");
+    const cursor = new Date(
+      Date.UTC(newest.getUTCFullYear(), newest.getUTCMonth(), 1)
+    );
+    const floor = Date.UTC(oldest.getUTCFullYear(), oldest.getUTCMonth(), 1);
+    for (let i = 0; cursor.getTime() >= floor && i < 600; i++) {
+      shippedByPeriod[
+        cursor.toLocaleDateString("en-US", {
+          timeZone: "UTC",
+          month: "long",
+          year: "numeric",
+        })
+      ] = [];
+      cursor.setUTCMonth(cursor.getUTCMonth() - 1);
+    }
+    for (const c of shipped) shippedByPeriod[monthKey(c.shippedAt!)]!.push(c);
+  }
 
   // The roadmap runs chronologically by target window, as Stripe's does —
   // "Q3 2026", then "Q4 2026" — rather than splitting into a Building block and
@@ -1579,21 +1216,11 @@ export function Roadmap({
     // pointer across a row of faces fires several popups in a row. Long enough
     // to mean you stopped on one, short enough not to feel gated.
     <TooltipProvider delay={150}>
-      {/* The lifeline reads the view, so it lives inside the component that
-          owns it rather than in the page shell. That puts it behind the same
-          useSearchParams boundary as the register — which costs nothing extra,
-          because the register was already what that boundary defers. */}
-      <Lifeline
-        commitments={matches}
-        all={commitments}
-        view={view}
-        onViewChange={(v) => setParams({ view: v })}
-      />
       {/* The working area: instruments left, work right, both starting on the
           same line. Deliberately no items-start — the rail has to stretch to
           the register's height, because that is the containing block it sticks
           inside. */}
-      <div className="mt-10 lg:mt-12 lg:grid lg:grid-cols-[13rem_1fr] lg:gap-x-20">
+      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[13rem_1fr] lg:gap-x-20">
         {/* The wrapper is the grid item, and the rail sticks inside it.
           Grid items stretch by default, so a sticky element that IS the item
           fills the row and has nowhere to travel — it reports position:sticky
@@ -1601,6 +1228,10 @@ export function Roadmap({
           its own height. */}
         <div>
           <Filters
+            view={view}
+            buildingOnly={buildingOnly}
+            onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
+            buildingCount={buildingCount}
             query={query}
             onQueryChange={setQuery}
             workstreams={workstreams}
@@ -1615,13 +1246,21 @@ export function Roadmap({
             }
             onClear={() => {
               setQuery("");
-              setParams({ workstream: [] });
+              setParams({ workstream: [], buildingOnly: false });
             }}
             suggestionsHref={suggestionsHref}
           />
         </div>
 
         <div className="mt-14 lg:mt-0">
+          <ViewTabs
+            view={view}
+            onViewChange={(v) => setParams({ view: v })}
+            counts={{
+              roadmap: commitments.filter((c) => c.state !== "shipped").length,
+              shipped: commitments.filter((c) => c.state === "shipped").length,
+            }}
+          />
           {/* Announced rather than shown: it changes on every keystroke, and a
             visible tally would compete with the rail's own counts. */}
           <p className="sr-only" role="status" aria-live="polite">

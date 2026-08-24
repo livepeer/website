@@ -181,17 +181,6 @@ export type Commitment = {
    * before launch; `grep -l "placeholder: true" content/roadmap` finds them.
    */
   placeholder?: boolean;
-  /**
-   * A small photograph for the lifeline, as a bare filename under
-   * public/roadmap/milestones.
-   *
-   * Same rule as a person's avatar and for the same reason: this register is
-   * contributor-edited markdown, and a field that accepted a URL would be a
-   * hole in both the CSP and the next.config image allowlist. Optional — a
-   * milestone without one renders as text, which stays the normal state for
-   * anything nobody has made art for.
-   */
-  image?: string;
   /** The record's rendered markdown body — background on the commitment, shown
    *  in the expanded panel as "Context". Distinct from `outcome`, which is the
    *  one-line promise under the title on the closed card. */
@@ -239,18 +228,6 @@ function assertNoRepeats(related: CommitmentLink[], file: string) {
     }
     seen.add(link.href);
   }
-}
-
-function readImage(value: unknown, file: string): string | undefined {
-  if (value === undefined) return undefined;
-  const name = String(value);
-  if (/[/\\:]/.test(name)) {
-    throw new Error(
-      `content/roadmap/${file}: image is "${name}" — it must be a bare filename ` +
-        `in public/roadmap/milestones, not a path or a URL.`
-    );
-  }
-  return name;
 }
 
 function readPeople(value: unknown, file: string): Person[] | undefined {
@@ -413,7 +390,6 @@ function parse(file: string): Commitment {
     issued: data.issued
       ? new Date(data.issued).toISOString().slice(0, 10)
       : undefined,
-    image: readImage(data.image, file),
     placeholder: data.placeholder === true,
     lastVerified: data.lastVerified
       ? new Date(data.lastVerified).toISOString().slice(0, 10)
