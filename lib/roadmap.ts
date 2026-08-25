@@ -161,16 +161,6 @@ export type Commitment = {
   issued?: string;
   /** ISO yyyy-mm-dd — when a human or agent last confirmed it. */
   lastVerified?: string;
-  /**
-   * Illustrative only — not a real commitment.
-   *
-   * Exists so the future-quarter UI can be seen working while the register is
-   * still short. Marked in the interface rather than blended in, because a
-   * roadmap that pads its future with plausible-looking entries is the exact
-   * failure this page was built to end. Every one must be deleted or replaced
-   * before launch; `grep -l "placeholder: true" content/roadmap` finds them.
-   */
-  placeholder?: boolean;
   /** The record's rendered markdown body — background on the commitment, shown
    *  in the expanded panel as "Context". Distinct from `outcome`, which is the
    *  one-line promise under the title on the closed card. */
@@ -331,7 +321,6 @@ function parse(file: string): Commitment {
     issued: data.issued
       ? new Date(data.issued).toISOString().slice(0, 10)
       : undefined,
-    placeholder: data.placeholder === true,
     lastVerified: data.lastVerified
       ? new Date(data.lastVerified).toISOString().slice(0, 10)
       : undefined,

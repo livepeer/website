@@ -1,5 +1,4 @@
 ---
-placeholder: true
 title: Stake-elected validator set
 outcome: Replace the 100-orchestrator cap with a stake-elected validator set and fixed per-node bonds.
 workstream: Protocol

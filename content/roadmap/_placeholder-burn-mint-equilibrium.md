@@ -1,5 +1,4 @@
 ---
-placeholder: true
 title: Burn-Mint Equilibrium
 outcome: Connect LPT issuance to network usage, so rewards follow demand rather than a fixed schedule.
 workstream: Protocol

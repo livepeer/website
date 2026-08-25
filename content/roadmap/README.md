@@ -64,7 +64,7 @@ their own GitHub avatars rather than generated portraits.
 the portraits are generated — they exist so the page can be reviewed with its
 roster in place. `owners` is real; `people` largely is not. Replace it with the
 actual team before launch, or delete the field, the same way the
-`placeholder: true` records go. `validating-livepeer-2-0-upgrades` is the
+the `_placeholder-*` records go. `validating-livepeer-2-0-upgrades` is the
 exception: its roster is real, and carries no portraits.
 
 `related` is the field that makes this checkable — every record names at least
@@ -95,7 +95,7 @@ Where a name differs, this is the mapping a sync has to implement:
 | `user.name` | — | The author, which is not the same as the owner. Do not credit it. |
 | `postCategory.category` | — | `Live Projects` / `NaaP` / `Suggest Ecosystem Projects`. Does not map onto Protocol / Network / Agent. |
 | — | `workstream` | Ours. See above. |
-| — | `lastVerified`, `placeholder`, `image` | Ours. No board equivalent. |
+| — | `lastVerified` | Ours. No board equivalent. |
 
 ## The API
 

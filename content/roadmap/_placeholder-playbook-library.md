@@ -1,5 +1,4 @@
 ---
-placeholder: true
 title: Agent playbook library
 outcome: Publish production-ready multi-step workflows so agents can run a job without assembling it first.
 workstream: Agent

@@ -1,5 +1,4 @@
 ---
-placeholder: true
 title: Non-GPU node capabilities
 outcome: Let nodes serve audio, clipping, captions and overlays, so supply is compute rather than silicon.
 workstream: Network

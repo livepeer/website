@@ -1,5 +1,4 @@
 ---
-placeholder: true
 title: Capability discovery API
 outcome: Let a gateway ask the network what it can do right now, instead of hard-coding a model list.
 workstream: Network

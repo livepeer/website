@@ -343,10 +343,12 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  * A native <details> rather than a drawer or modal: keyboard operable, survives
  * no-JS, needs no focus trap, respects reduced motion for free.
  *
- * A placeholder is drawn as an unfilled card with a dashed edge. That is the
- * one piece of structure on this page doing real work — a roadmap padded with
- * aspirations should look padded, and here it does, without a reader having to
- * parse a badge to find out. The fill is what a real commitment earns.
+ * Every card is filled the same way. Records that are not yet real commitments
+ * used to draw unfilled with a dashed edge, off a `placeholder` flag — a field
+ * whose only job was to let a non-commitment sit on the commitments register
+ * provided it admitted to being one. The register knows which of its own rows
+ * are stand-ins; the page does not need to be told, and a rule enforced by a
+ * checkbox is not enforced.
  *
  * The fill is per-theme, the same split the ecosystem cards make: one value
  * cannot serve both on a pure-black background. Light rests on `muted` — at
@@ -357,12 +359,7 @@ function LinkRow({ label, href }: { label: string; href: string }) {
 function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
   return (
     <details
-      className={cn(
-        "group rounded-lg transition-colors",
-        c.placeholder
-          ? "border border-dashed border-border hover:bg-muted/50 dark:hover:bg-card"
-          : "bg-muted hover:bg-foreground/[0.06] dark:bg-card dark:hover:bg-secondary"
-      )}
+      className="group rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] dark:bg-card dark:hover:bg-secondary"
     >
       <summary className="block cursor-pointer list-none rounded-lg p-6 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-7 [&::-webkit-details-marker]:hidden">
         {/* The index line: what kind of work, and where it stands.
@@ -376,13 +373,6 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
 
             The chevron keeps the far right and a gap-5 between: pressed up
             against the state it read as a control with a label on it. */}
-        {/* Reordered rather than duplicated. At 375px "PROTOCOL" and
-            "Committed next · Placeholder" and the chevron want 349px of a 326px
-            row, so the state broke mid-phrase and left a dangling "·" above an
-            orphaned "Placeholder". Given its own full-width line below the
-            workstream it stays one phrase; order swaps it back in beside the
-            eyebrow at sm, where there is room. One element either way — a
-            second copy behind a `hidden` would be read out twice. */}
         <div className="flex items-center gap-x-5">
           <Label>{c.workstream}</Label>
           {/* 44px touch target on a 20px glyph, and the only moving part. */}
@@ -420,15 +410,7 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             Not the target: the quarter is the heading this card sits under, and
             repeating it is noise. */}
         <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
-          <span className="flex items-center gap-x-2">
-            <StateMark state={c.state} />
-            {c.placeholder && (
-              <>
-                <span aria-hidden="true">·</span>
-                <span>Placeholder</span>
-              </>
-            )}
-          </span>
+          <StateMark state={c.state} />
           <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
             {/* "by", lowercase, rather than an OWNER eyebrow.
                 The uppercase label was the same treatment as the workstream at
