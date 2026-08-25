@@ -20,11 +20,12 @@ people:
     profile: "000000000000000000000003"
     avatar: placeholder-3.jpg
 target: Q3 2026
-source: https://roadmap.livepeer.org/p/validating-livepeer-20-upgrades-and-litepaper
 # Verbatim from the board item, not paraphrased.
 funding: "Funding from Livepeer Inc / Foundation"
 
 related:
+  - label: Roadmap board
+    href: https://roadmap.livepeer.org/p/validating-livepeer-20-upgrades-and-litepaper
   - label: A Path to Livepeer 2.0
     href: https://forum.livepeer.org/t/a-path-to-livepeer-2-0/3291
   - label: Livepeer Forum

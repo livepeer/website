@@ -15,11 +15,12 @@ people:
     profile: "000000000000000000000026"
 target: July 2026
 shippedAt: 2026-07-31
-source: https://roadmap.livepeer.org/p/explorer-permissionless-participation-portal
 # Verbatim from the board item, not paraphrased.
 funding: "Network Engineering SPE, Priority 2 — Explorer: Participation & Observability"
 
 related:
+  - label: Roadmap board
+    href: https://roadmap.livepeer.org/p/explorer-permissionless-participation-portal
   - label: Livepeer Forum
     href: https://forum.livepeer.org
 lastVerified: 2026-08-12

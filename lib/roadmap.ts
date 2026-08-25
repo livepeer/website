@@ -135,16 +135,6 @@ export type Commitment = {
   /** Where this record can be checked and where the work lives. At least one. */
   related: CommitmentLink[];
   /**
-   * The item on roadmap.livepeer.org this record came from — the board is
-   * where a commitment is proposed and where its state is kept, so this is the
-   * record's source of truth rather than one more place it is discussed.
-   *
-   * Optional, and honestly so: not every commitment reaches the register
-   * through the board. A record without one simply shows no Source row, which
-   * is truer than pointing at a page that does not describe it.
-   */
-  source?: string;
-  /**
    * Where the money comes from — the board's "Funding Mechanism".
    *
    * Part of the definition, not a nice-to-have: the requirements doc calls a
@@ -189,18 +179,8 @@ export type Commitment = {
 
 const dir = path.join(process.cwd(), "content", "roadmap");
 
-/**
- * The board's roadmap half is what this page replaces; its suggestions half
- * stays. `related` is for the venues the work happens in — the forum, GitHub,
- * the docs, the explorer — so a board link there would be citing the surface
- * this page supersedes. The board reaches a record through `source` instead,
- * which is a different claim: not where the work lives, but where it was
- * proposed and where its state is kept.
- */
-const RETIRED_HOSTS = ["roadmap.livepeer.org"];
-
-/** `source` must point at the board, and only at the board. */
-const SOURCE_HOST = "roadmap.livepeer.org";
+/** Where a person's profile lives; the card builds the URL from an id. */
+const BOARD_HOST = "roadmap.livepeer.org";
 
 /**
  * One list, and no entry twice in it.
@@ -257,7 +237,7 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
     ) {
       throw new Error(
         `content/roadmap/${file}: people[${i}].profile is "${person.profile}" — ` +
-          `it must be the bare id from a ${SOURCE_HOST}/u/... URL, not the URL ` +
+          `it must be the bare id from a ${BOARD_HOST}/u/... URL, not the URL ` +
           `itself. The card builds the link from it.`
       );
     }
@@ -269,38 +249,6 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
   });
 }
 
-/**
- * A board URL, or nothing.
- *
- * Checked against the host rather than merely required to be a URL: this page
- * exists to be verifiable, and a Source row labelled "the roadmap board" that
- * leads somewhere else is the one kind of wrong link it cannot afford.
- */
-function readSource(value: unknown, file: string): string | undefined {
-  if (value === undefined || value === null) return undefined;
-  if (typeof value !== "string" || value.trim() === "") {
-    throw new Error(
-      `content/roadmap/${file}: source must be a URL on ${SOURCE_HOST}, or be left out.`
-    );
-  }
-  const url = value.trim();
-  let host: string;
-  try {
-    host = new URL(url).hostname;
-  } catch {
-    throw new Error(
-      `content/roadmap/${file}: source ${JSON.stringify(url)} is not a URL.`
-    );
-  }
-  if (host !== SOURCE_HOST) {
-    throw new Error(
-      `content/roadmap/${file}: source points at ${host}. It records where this ` +
-        `commitment was proposed, which is ${SOURCE_HOST} — anything else belongs in related.`
-    );
-  }
-  return url;
-}
-
 function readLinks(value: unknown, file: string, field: string) {
   if (!Array.isArray(value)) return [];
   return value.map((entry, i) => {
@@ -308,12 +256,6 @@ function readLinks(value: unknown, file: string, field: string) {
     if (!link?.label || !link?.href) {
       throw new Error(
         `content/roadmap/${file}: ${field}[${i}] needs both a label and an href.`
-      );
-    }
-    const retired = RETIRED_HOSTS.find((h) => link.href!.includes(h));
-    if (retired) {
-      throw new Error(
-        `content/roadmap/${file}: ${field}[${i}] points at ${retired}, which is being retired — this page replaces it. Link the forum thread, GitHub, or wherever the work actually lives.`
       );
     }
     return { label: link.label, href: link.href };
@@ -385,7 +327,6 @@ function parse(file: string): Commitment {
     targetSort: targetSortKey(String(at("target", data.target)), file),
     shippedAt,
     related,
-    source: readSource(data.source, file),
     funding: data.funding ? String(data.funding) : undefined,
     issued: data.issued
       ? new Date(data.issued).toISOString().slice(0, 10)

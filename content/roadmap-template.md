@@ -40,23 +40,6 @@ target: Q4 2026                # month | quarter | half | year — the real prec
 # Required once state is shipped
 # shippedAt: 2026-07-30
 
-# The item on roadmap.livepeer.org this record came from — the board is where a
-# commitment is proposed and where its state is kept, so this is its source of
-# truth. Rendered as the first row of the expanded card, "Source".
-#
-# Optional, and honestly so: not every commitment reaches the register through
-# the board. Leave it off rather than pointing at a page that does not describe
-# this record — a Source row that leads somewhere else is the one wrong link
-# this page cannot afford. Must be on roadmap.livepeer.org; the build rejects
-# any other host, and rejects board URLs in `related`, which is for the venues
-# the work actually happens in.
-# source: https://roadmap.livepeer.org/...
-#
-# A person's `profile` is the bare id from a roadmap.livepeer.org/u/... URL,
-# and it must be QUOTED. An all-digit id is a number to YAML, which silently
-# strips its leading zeros — "000000000000000000000004" arrives as 4 and the
-# build rejects it.
-
 # Where the money comes from — the board's "Funding Mechanism" (or "Funding
 # path"), verbatim rather than paraphrased. The requirements doc defines a
 # commitment as "a dated, owned undertaking to deliver a named outcome to the
@@ -70,7 +53,8 @@ target: Q4 2026                # month | quarter | half | year — the real prec
 # A target that has moved is only legible as a slip against this.
 # issued: 2026-04-17
 
-# Where this can be checked, and where the work lives — the forum thread, the
+# Where this can be checked, and where the work lives — the board item, the
+# forum thread, the
 # LIP, the repo, the product page, the write-up. At least one, so no claim on
 # this page is unverifiable. One entry per destination: a second label on a URL
 # already listed fails the build, because the card would print the same place

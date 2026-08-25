@@ -477,32 +477,11 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
           track carried 35px that nothing in it ever used and pushed every value
           out to 160px. 6rem clears the longest by 3px. */}
       <dl className="grid gap-x-6 gap-y-1.5 px-6 pb-6 [&>dt:not(:first-of-type)]:mt-5 sm:grid-cols-[6rem_1fr] sm:gap-y-5 sm:px-7 sm:pb-7 sm:[&>dt:not(:first-of-type)]:mt-0">
-        {/* First row, ahead of Context: where this commitment came from.
-            The board is where an idea is proposed and where its state is kept,
-            so it outranks the material the record is assembled from. Related
-            answers "where does this work live"; this answers "what is this a
-            record of", which is the question a reader checking the page asks
-            first.
-
-            Absent on records that did not reach the register through the
-            board, which is truer than linking a page that does not describe
-            them. */}
-        {c.source && (
-          <>
-            <dt>
-              <Label>Source</Label>
-            </dt>
-            <dd className="text-sm">
-              <LinkRow label="View on the roadmap board" href={c.source} />
-            </dd>
-          </>
-        )}
-        {/* Funding, next to Source, because the two together are what make
-            this a commitment rather than an intention. The requirements doc
-            defines one as "a dated, owned undertaking to deliver a named
-            outcome to the network, with its funding source identified" — the
-            card was carrying the owner, the date and the outcome and quietly
-            dropping the fourth.
+        {/* Funding leads the panel: with the owner on the card face and the
+            date in the band above it, this is the fourth thing the requirements
+            doc names in its definition of a commitment — "a dated, owned
+            undertaking to deliver a named outcome to the network, with its
+            funding source identified" — and the card was quietly dropping it.
 
             Free text, as the board's own field is. */}
         {c.funding && (

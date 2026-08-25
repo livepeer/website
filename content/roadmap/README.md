@@ -82,12 +82,13 @@ Where a name differs, this is the mapping a sync has to implement:
 | API field | Record field | Notes |
 | --- | --- | --- |
 | `title` | `title` | |
-| `slug` | `source` | `roadmap.livepeer.org/p/{slug}` |
+| `slug` | first `related` entry | `roadmap.livepeer.org/p/{slug}`, labelled "Roadmap board" |
 | `postStatus.name` / `.type` | `state` | The board's six statuses collapse to our three tenses: `In Progress`/`Now` → `building`, `Next`/`Beyond`/`Under Review` → `next`, `Completed` → `shipped`. The three tenses are deliberate — do not mirror all six. The frontmatter value stays `building`; the interface renders it as **In progress**, matching the board's own wording. |
 | `statusChangedAt` | `shippedAt` | Only meaningful once the status is `Completed`. |
 | `eta` | `target` | ISO instant. The board's own precision is a day; ours is whatever the record states, so a quarter-precision target is a deliberate widening, not a loss. |
 | `date` | `issued` | When the item was created — the board has no separate "Opportunity Issued" field, so this is the closest true equivalent. |
 | `customInputValues` | — | Keyed by field id; the definitions live in `/api/v1/organization` under `customInputFields`. Today the only one is **Phase** (select, required, public). |
+| `Canon source`, `Based On`, `Staging URL` | `related` | One entry each, alongside the board link. |
 | `content` (HTML) → `Owner:` line | `owners` + `people` | **Prose.** The board writes both in one line: "Steph Alinsug, Livepeer Foundation". People go to `people`, parties to `owners`. |
 | `content` (HTML) → `Funding Mechanism:` line | `funding` | **Prose.** Verbatim, never paraphrased. |
 | `content` (HTML) → `1. Purpose` | `outcome` + body | The one-line promise is ours; the body is background. |
@@ -135,19 +136,18 @@ what this register replaces; its **Suggestions Pipeline stays where it is**, and
 this page "links to it rather than absorbing it". So the board is not being
 switched off, and two fields point at it deliberately:
 
-- `source` — the board item this record came from, rendered as the first row of
-  the expanded card. The board is where a commitment is proposed and where its
-  state is kept, so this is the record's source of truth. Optional: not every
-  commitment arrives through the board, and a Source row that leads somewhere
-  not describing this record is the one wrong link this page cannot afford.
+- `related` — the board item goes here, labelled **Roadmap board**, first in the
+  list. It had a field of its own and a row of its own on the card; one list of
+  useful links is simpler, and a reader following a link does not need to be
+  told which category of link they are following. Not every record has one:
+  several predate the board.
 - `SUGGESTIONS_HREF` in `app/roadmap/page.tsx` — the standing way in, shown in
   the rail and again at the foot of the roadmap view.
 
-`related` may **not** cite the board: `lib/roadmap.ts` rejects that host there.
-That field is for the venues the work actually happens in — the forum for
-proposals, RFCs, LIPs and SPE updates; GitHub for code and LIP text; the docs
-and explorer for what shipped. Citing the board there would be citing the
-surface this page supersedes.
+`related` also carries the venues the work happens in — the forum for proposals,
+RFCs, LIPs and SPE updates; GitHub for code and LIP text; the docs and explorer
+for what shipped. One entry per destination: a second label on a URL already
+listed fails the build.
 
 **Unresolved:** which artifact should trigger each state change. Candidates are
 a merged PR for `building → shipped`, an SPE monthly update for target changes,
