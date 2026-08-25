@@ -23,7 +23,7 @@ related:
     href: https://roadmap.livepeer.org/p/explorer-permissionless-participation-portal
   - label: Livepeer Forum
     href: https://forum.livepeer.org
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 All four milestones delivered, followed by a closing retrospective. Issued

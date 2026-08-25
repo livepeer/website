@@ -21,7 +21,7 @@ related:
     href: https://github.com/livepeer/LIPs
   - label: Livepeer Forum
     href: https://forum.livepeer.org
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 Deployed on-chain on 30 July, in the Protocol R&D SPE's highest-volume

@@ -18,7 +18,7 @@ shippedAt: 2026-07-31
 related:
   - label: Livepeer Forum
     href: https://forum.livepeer.org
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 Launched in May as a third funding lane. Five retroactive grants were decided

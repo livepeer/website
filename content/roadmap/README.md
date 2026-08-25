@@ -68,8 +68,8 @@ the `_placeholder-*` records go. `validating-livepeer-2-0-upgrades` is the
 exception: its roster is real, and carries no portraits.
 
 `related` is the field that makes this checkable — every record names at least
-one place its claims can be verified — and `lastVerified` records when that last
-happened. It was two fields, `sources` and `links`, split on where a claim is
+one place its claims can be verified — and `lastUpdated` records when the record
+itself last changed. It was two fields, `sources` and `links`, split on where a claim is
 checked versus where the work lives. That distinction does not survive contact
 with the register: a forum thread is both, a LIP is both, and a shipped product
 page is its own evidence. One list, no duplicates.
@@ -95,7 +95,7 @@ Where a name differs, this is the mapping a sync has to implement:
 | `user.name` | — | The author, which is not the same as the owner. Do not credit it. |
 | `postCategory.category` | — | `Live Projects` / `NaaP` / `Suggest Ecosystem Projects`. Does not map onto Protocol / Network / Agent. |
 | — | `workstream` | Ours. See above. |
-| — | `lastVerified` | Ours. No board equivalent. |
+| `last_edited_time` | `lastUpdated` | Notion sets it; nobody types it. |
 
 ## The API
 
@@ -151,8 +151,9 @@ listed fails the build.
 
 **Unresolved:** which artifact should trigger each state change. Candidates are
 a merged PR for `building → shipped`, an SPE monthly update for target changes,
-and an accepted proposal for `→ next`. Until that is decided, `lastVerified` is the
-honest signal of freshness and should be updated whenever a record is confirmed.
+and an accepted proposal for `→ next`. Until that is decided, `lastUpdated` is the
+only freshness signal, and it is a weak one: it says the record changed, not that
+anyone checked it still held.
 
 **Five records carry a `source`.** Each was matched by fetching the board item
 and checking its title and owner against ours, not by guessing at slugs — one

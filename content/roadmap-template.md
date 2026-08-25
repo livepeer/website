@@ -49,7 +49,7 @@ target: Q4 2026                # month | quarter | half | year — the real prec
 # funding: "Network Engineering SPE, Priority 2"
 
 # The board's "Opportunity Issued" — when the commitment was made, as opposed
-# to `target` (when it lands) or `lastVerified` (when the record was checked).
+# to `target` (when it lands) or `lastUpdated` (when the record last changed).
 # A target that has moved is only legible as a slip against this.
 # issued: 2026-04-17
 
@@ -66,7 +66,7 @@ related:
     href: https://explorer.livepeer.org
 
 # When a human or agent last confirmed this record against those links.
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 Optional body, shown on the expanded record as "Context". Two or three

@@ -154,13 +154,26 @@ export type Commitment = {
   funding?: string;
   /**
    * ISO yyyy-mm-dd — the board's "Opportunity Issued", when this was accepted
-   * onto the roadmap. Distinct from `target` (when it lands) and `lastVerified`
-   * (when someone last checked the record): this is when the commitment was
+   * onto the roadmap. Distinct from `target` (when it lands) and `lastUpdated`
+   * (when the record last changed): this is when the commitment was
    * made, which is what makes a slipped target legible as a slip.
    */
   issued?: string;
-  /** ISO yyyy-mm-dd — when a human or agent last confirmed it. */
-  lastVerified?: string;
+  /**
+   * ISO yyyy-mm-dd — when the record last changed, not when it was last
+   * checked.
+   *
+   * It was `lastVerified`, a date a human was supposed to bump whenever they
+   * confirmed a record still held. Every record carried 2026-08-12: nine
+   * identical dates set in one pass, which is what a field maintained by
+   * remembering looks like after a month. The CMS knows when a row was edited
+   * and never forgets, so this comes from Notion's own last-edited time.
+   *
+   * Named for what it now knows. "Verified" claimed a human re-read the record
+   * and stood behind it; an edit is not a check, and a timestamp that moves on
+   * a typo cannot make that claim.
+   */
+  lastUpdated?: string;
   /** The record's rendered markdown body — background on the commitment, shown
    *  in the expanded panel as "Context". Distinct from `outcome`, which is the
    *  one-line promise under the title on the closed card. */
@@ -321,8 +334,8 @@ function parse(file: string): Commitment {
     issued: data.issued
       ? new Date(data.issued).toISOString().slice(0, 10)
       : undefined,
-    lastVerified: data.lastVerified
-      ? new Date(data.lastVerified).toISOString().slice(0, 10)
+    lastUpdated: data.lastUpdated
+      ? new Date(data.lastUpdated).toISOString().slice(0, 10)
       : undefined,
     detail: content.trim() || undefined,
   };

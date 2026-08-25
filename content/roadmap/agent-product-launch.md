@@ -31,5 +31,5 @@ related:
     href: https://forum.livepeer.org
   - label: Livepeer Agent
     href: /agent
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---

@@ -22,5 +22,5 @@ shippedAt: 2026-05-04
 related:
   - label: Livepeer Docs
     href: https://docs.livepeer.org
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---

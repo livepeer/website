@@ -524,13 +524,19 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             <dd className="text-sm tabular-nums">{formatDate(c.shippedAt!)}</dd>
           </>
         )}
-        {c.lastVerified && (
+        {/* "Last updated", not "last verified".
+            The old label claimed a human had re-read the record and stood
+            behind it, off a date somebody was meant to bump by hand — and every
+            record carried the same one, set in a single pass. This comes from
+            the CMS's own last-edited time, which is a weaker claim and a true
+            one. */}
+        {c.lastUpdated && (
           <>
             <dt>
-              <Label>Last verified</Label>
+              <Label>Last updated</Label>
             </dt>
             <dd className="text-sm text-muted-foreground tabular-nums">
-              {formatDate(c.lastVerified)}
+              {formatDate(c.lastUpdated)}
             </dd>
           </>
         )}

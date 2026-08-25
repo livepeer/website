@@ -32,7 +32,7 @@ related:
     href: https://forum.livepeer.org
   - label: Livepeer 2.0 announcement
     href: /blog/livepeer-2-0-video-agent-platform
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 The 2.0 proposals — a Burn-Mint Equilibrium, a stake-elected validator set and

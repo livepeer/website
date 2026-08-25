@@ -19,7 +19,7 @@ related:
     href: https://roadmap.livepeer.org/p/network-readiness-for-livepeer-agent
   - label: Livepeer Forum
     href: https://forum.livepeer.org
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
 
 Agent reaches the network over MCP, so the network has to answer for every

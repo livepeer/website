@@ -18,5 +18,5 @@ shippedAt: 2026-07-31
 related:
   - label: Livepeer on GitHub
     href: https://github.com/livepeer
-lastVerified: 2026-08-12
+lastUpdated: 2026-08-12
 ---
