@@ -89,13 +89,11 @@ const MONTHS = [
  * each to the first month it could land in, and throws on anything it does not
  * recognise rather than silently sorting it to the top.
  */
-export function targetSortKey(target: string, file = "a commitment"): number {
+export function targetSortKey(target: string, where = "a commitment"): number {
   const t = target.trim();
   const year = Number(t.match(/\b(20\d{2})\b/)?.[1]);
   if (!year) {
-    throw new Error(
-      `content/roadmap/${file}: target ${JSON.stringify(target)} has no year.`
-    );
+    throw new Error(`${where}: target ${JSON.stringify(target)} has no year.`);
   }
   const quarter = t.match(/\bQ([1-4])\b/i)?.[1];
   if (quarter) return year * 100 + (Number(quarter) - 1) * 3 + 1;
@@ -110,7 +108,7 @@ export function targetSortKey(target: string, file = "a commitment"): number {
   if (/^20\d{2}$/.test(t)) return year * 100 + 1;
 
   throw new Error(
-    `content/roadmap/${file}: target ${JSON.stringify(target)} is not a window we can place. Use a month, quarter (Q4 2026), half (H1 2027) or year.`
+    `${where}: target ${JSON.stringify(target)} is not a window we can place. Use a month, quarter (Q4 2026), half (H1 2027) or year.`
   );
 }
 
@@ -327,7 +325,10 @@ function parse(file: string): Commitment {
     owners: owners.map(String),
     people: readPeople(data.people, file),
     target: String(at("target", data.target)),
-    targetSort: targetSortKey(String(at("target", data.target)), file),
+    targetSort: targetSortKey(
+      String(at("target", data.target)),
+      `content/roadmap/${file}`
+    ),
     shippedAt,
     related,
     funding: data.funding ? String(data.funding) : undefined,

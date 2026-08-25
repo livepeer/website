@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
-import { getCommitments, getWorkstreamsInUse } from "@/lib/roadmap";
+import { getRegister } from "@/lib/register";
+import { getWorkstreamsInUse } from "@/lib/roadmap";
 
 /**
  * Named, then claimed.
@@ -84,8 +85,8 @@ function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function RoadmapPage() {
-  const commitments = getCommitments();
+export default async function RoadmapPage() {
+  const commitments = await getRegister();
 
   return (
     <div className="pt-10 pb-32">
