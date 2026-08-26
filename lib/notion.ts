@@ -67,6 +67,11 @@ const PEOPLE_DB =
  * An hour rather than a minute: this is a roadmap. Nothing on it changes
  * faster than a working day, and a shorter window would spend requests to
  * re-confirm the same fourteen rows.
+ *
+ * Nothing runs on this timer. Next regenerates on request, so a quiet site
+ * makes no Notion calls at all — the window is how stale a page a visitor may
+ * be served before it is refreshed behind them, not a polling interval.
+ * An agent that wants its edit live sooner can POST to /api/revalidate.
  */
 const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 3600);
 
