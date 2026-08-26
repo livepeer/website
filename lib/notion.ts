@@ -20,10 +20,14 @@ import {
  * whose state is a week stale is worse than no page at all. Everything else on
  * the site stays in-repo (see CLAUDE.md → Content).
  *
- * Two databases: commitments, and the people credited on them. People are a
+ * Two databases: Roadmap commitments, and Livepeer people. People are a
  * relation rather than repeated text so that a person's name, portrait and
  * profile id are stated once — the markdown register had eight copies of the
  * same person, and they had already drifted.
+ *
+ * People sits beside the register rather than inside it, and is named for
+ * everyone rather than for the roadmap, because the same rows are meant to
+ * credit people elsewhere on the site later.
  *
  * The mapping is deliberately strict. Every rule the markdown reader enforced
  * is enforced here too, and a record that breaks one fails the build rather
@@ -51,7 +55,7 @@ const NOTION_VERSION = "2022-06-28";
 const COMMITMENTS_DB =
   process.env.NOTION_ROADMAP_DB ?? "0a51970884f44514a405f63d6bdb68db";
 const PEOPLE_DB =
-  process.env.NOTION_ROADMAP_PEOPLE_DB ?? "cdaf4aff05034435aed838eb2a8676ab";
+  process.env.NOTION_PEOPLE_DB ?? "cdaf4aff05034435aed838eb2a8676ab";
 
 /**
  * How stale the page may be, in seconds.
@@ -232,10 +236,10 @@ async function readPeople(): Promise<Map<string, Person>> {
   for (const row of rows) {
     const p = props(row);
     const name = text(p.Name);
-    const where = `Roadmap people → ${name || (row.id as string)}`;
+    const where = `Livepeer people → ${name || (row.id as string)}`;
     if (!name) {
       throw new Error(
-        `Roadmap people row ${row.url as string} has no name. A credited face ` +
+        `Livepeer people row ${row.url as string} has no name. A credited face ` +
           `with no name is a face nobody can check.`
       );
     }
@@ -382,7 +386,7 @@ function toCommitment(
     const person = people.get(id);
     if (!person) {
       throw new Error(
-        `${where}: People relates to ${id}, which is not in Roadmap people. ` +
+        `${where}: People relates to ${id}, which is not in Livepeer people. ` +
           `The integration may not be shared with that database.`
       );
     }

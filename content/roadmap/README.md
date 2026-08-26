@@ -1,10 +1,14 @@
 # The commitment register — fallback copy
 
-**The register lives in Notion**, in two databases under *Livepeer.org content*:
-**Roadmap commitments** and **Roadmap people**. That is what `/roadmap` renders,
-and where a commitment is added, edited, or moved to Shipped. Each property
-there carries a description explaining what belongs in it; read those rather
-than this file when you are filling one in.
+**The register lives in Notion**, in **Roadmap commitments** under *Livepeer.org
+content*. That is what `/roadmap` renders, and where a commitment is added,
+edited, or moved to Shipped. Each property there carries a description
+explaining what belongs in it; read those rather than this file when you are
+filling one in.
+
+The people credited on those commitments live in **Livepeer people**, a sibling
+rather than a child: the table is shared, and named for everyone rather than for
+the roadmap, so the same rows can credit people elsewhere on the site later.
 
 Every file beside this one is that register as it stood when Notion took over.
 `lib/register.ts` reads them **only when `NOTION_TOKEN` is absent** — so a clone
