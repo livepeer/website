@@ -177,14 +177,15 @@ function relationIds(prop: Json | undefined): string[] {
 }
 
 /**
- * The three tenses, as the board names them and as the page renders them.
+ * Notion's labels, mapped to the keys the type has always used.
  *
- * Notion's labels are written for someone dragging a card; the page's are
- * written for someone reading one. Mapping here rather than renaming either
- * keeps both audiences addressed in their own words.
+ * The labels and the page's badges now read the same — Committed, In progress,
+ * Shipped. The keys underneath do not, because they predate Notion and are
+ * what the markdown register, the URL's ?state= filter and the component all
+ * spell. Renaming them would be a data migration to win nothing.
  */
 const STATE_BY_NOTION: Record<string, CommitmentState> = {
-  "Committed next": "next",
+  Committed: "next",
   "In progress": "building",
   Shipped: "shipped",
 };

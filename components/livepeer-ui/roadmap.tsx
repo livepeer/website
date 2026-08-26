@@ -80,7 +80,7 @@ function StateMark({ state }: { state: Commitment["state"] }) {
         {building
           ? "In progress"
           : state === "next"
-            ? "Committed next"
+            ? "Committed"
             : "Shipped"}
       </span>
     </span>
