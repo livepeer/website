@@ -77,11 +77,7 @@ function StateMark({ state }: { state: Commitment["state"] }) {
         )}
       />
       <span className={cn(building && "text-foreground")}>
-        {building
-          ? "In progress"
-          : state === "next"
-            ? "Committed"
-            : "Shipped"}
+        {building ? "In progress" : state === "next" ? "Committed" : "Shipped"}
       </span>
     </span>
   );
@@ -305,9 +301,7 @@ function Faces({ people }: { people: Person[] }) {
                 default, and a button around an anchor is invalid and
                 double-focusable. This hands it the element we already have. */}
             <TooltipTrigger render={trigger} />
-            <TooltipContent>
-              {person.name}
-            </TooltipContent>
+            <TooltipContent>{person.name}</TooltipContent>
           </Tooltip>
         );
       })}
@@ -358,9 +352,7 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  */
 function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
   return (
-    <details
-      className="group rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] dark:bg-card dark:hover:bg-secondary"
-    >
+    <details className="group rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] dark:bg-card dark:hover:bg-secondary">
       <summary className="block cursor-pointer list-none rounded-lg p-6 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-7 [&::-webkit-details-marker]:hidden">
         {/* The index line: what kind of work, and where it stands.
             The state used to sit in the footer beside the owner, which put
@@ -759,11 +751,11 @@ function SuggestBlock({
     <div className={cn("border-t border-border pt-5", className)}>
       <Label>Not on the roadmap?</Label>
       <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-        Ideas are proposed and discussed on the roadmap board. They appear here
-        once they are owned and dated.
+        Ideas are proposed and discussed on the forum. They appear here once
+        they are owned and dated.
       </p>
       <p className="mt-3 text-sm">
-        <LinkRow label="Suggest an item" href={href} />
+        <LinkRow label="Go to the forum" href={href} />
       </p>
     </div>
   );
@@ -1281,7 +1273,7 @@ export function Roadmap({
                     Work appears here once it has an owner, a date and a source
                     you can check — not before.{" "}
                     <LinkRow
-                      label="View or submit suggestions"
+                      label="Propose it on the forum"
                       href={suggestionsHref}
                     />
                   </p>
@@ -1289,10 +1281,7 @@ export function Roadmap({
               )}
             </>
           )}
-          <SuggestBlock
-            href={suggestionsHref}
-            className="mt-16 lg:hidden"
-          />
+          <SuggestBlock href={suggestionsHref} className="mt-16 lg:hidden" />
         </div>
       </div>
     </TooltipProvider>

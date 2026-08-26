@@ -23,9 +23,10 @@ recreate the drift that moving to a CMS removed, and a record here that fails
 
 A commitment: **a dated, owned undertaking to deliver a named outcome to the
 Livepeer network, with its funding source identified.** Nothing else. Ideas,
-requests and open questions stay in the suggestions pipeline until they meet
-that bar — a suggestion presented on the canonical register as funded work in
-progress is the exact failure this page exists to prevent.
+requests and open questions are proposed and discussed on the forum, and
+appear here once they are owned and dated — a suggestion presented on the
+canonical register as funded work in progress is the exact failure this page
+exists to prevent.
 
 `/roadmap` renders the register as two views of one dataset — Roadmap and
 Shipped — so the two surfaces can never disagree about the same record. A
@@ -125,10 +126,14 @@ returns the old page while the new one builds behind it, so an editor reloads
 twice either way. Only the webhook fixes that. Once it is live and proven,
 put this back up; it becomes a backstop.
 
-## The suggestions board
+## Where ideas go
 
-`roadmap.livepeer.org` is a separate surface and is not being absorbed: this
-page links to it rather than replacing it. Two things point at it — the board
-item in a record's `related`, labelled **Roadmap board**, and `SUGGESTIONS_HREF`
-in `app/roadmap/page.tsx`, the standing way in shown in the rail and at the foot
-of the roadmap view. Not every record has a board item; several predate it.
+The forum. `SUGGESTIONS_HREF` in `app/roadmap/page.tsx` is the standing way in,
+shown in the rail and at the foot of the roadmap view, and it points at
+`forum.livepeer.org` — where proposals, RFCs, LIPs and SPE updates already
+happen, and where `related` sends people on most records.
+
+`roadmap.livepeer.org` is still referenced in two places that have not been
+decided: the **Roadmap board** entries in four records' `related`, and the
+profile link a credited face builds from `profile`. Both are dead ends if the
+board is switched off.

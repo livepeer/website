@@ -1,8 +1,8 @@
 ---
 # A commitment: a dated, owned undertaking to deliver a named outcome to the
 # Livepeer network, with a source anyone can check. Ideas and suggestions
-# do not belong here — they live in the Suggestions Pipeline until they become
-# owned and dated.
+# do not belong here — they are proposed and discussed on the forum, and
+# appear here once they are owned and dated.
 
 # Required
 title: Name of the outcome

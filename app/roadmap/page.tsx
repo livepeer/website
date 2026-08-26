@@ -64,17 +64,17 @@ export const metadata: Metadata = {
 /**
  * Where ideas live before they are commitments.
  *
- * The requirements doc splits the old subdomain in two: commitments move here,
- * suggestions stay where they are. "Part of livepeer.org, not a subdomain"
- * governs the roadmap surface, and the pipeline is exempted from it by name —
- * it "does that job well", and this page "links to it rather than absorbing
- * it". So this page retires the board's roadmap half only; the Suggestion
- * Proposed → promoted flow keeps running there.
+ * The forum, not the board. This went back and forth: the requirements doc
+ * exempted the suggestions pipeline from "part of livepeer.org, not a
+ * subdomain" on the grounds that it did that job well, so an earlier version
+ * pointed here, then at the board, and now here again — this time because
+ * Featurebase is being retired rather than because of how the doc reads.
  *
- * An earlier version pointed at the forum, on the reasoning that the whole
- * subdomain was going away. It is not.
+ * Proposals, RFCs, LIPs and SPE updates already happen on the forum, and it
+ * is where `related` sends people on most records. Sending someone with an
+ * idea somewhere the discussion is not would be the odd choice.
  */
-const SUGGESTIONS_HREF = "https://roadmap.livepeer.org";
+const SUGGESTIONS_HREF = "https://forum.livepeer.org";
 
 /** The rail and the cards share this label setting; the header borrows it. */
 function Label({ children }: { children: React.ReactNode }) {
