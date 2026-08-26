@@ -17,21 +17,23 @@ state: building                # building | next | shipped
 owners:
   - Name or team
 # The individuals doing the work. Their faces sit beside the team name in the
-# same "Owner" line, so this is one credit, not two. `github` is a BARE
-# username — the card builds the link. Never guess one: a plausible handle
-# resolves to a real stranger's profile, and the obvious fakes are all taken
-# (johnsmith, meitanaka and friends are live accounts). If you do not know it,
-# leave the field off — the face still renders, it just does not link. For
-# placeholder records, invent one and check it 404s first:
-#   curl -sL -o /dev/null -w "%{http_code}\n" https://github.com/HANDLE
-# Names are not printed beside the faces; each face carries its own.
+# same "Owner" line, so this is one credit, not two. Names are not printed
+# beside the faces; each face carries its own.
 #
-# NOTE: most records still carry INVENTED people with generated portraits, so
-# the page could be reviewed with rosters in place. Replace them with real
-# names before launch. `avatar` is a bare
-# filename in public/roadmap/people, never a path or a URL; leave it off and the
-# page falls back to a monogram, which is the right treatment for anyone who
-# would rather not supply a photograph.
+# `profile` is the BARE 24-hex id from a roadmap.livepeer.org/u/... URL, never
+# the URL itself — the card builds the link. Optional, and never guess one: the
+# board exposes no profile links on its public pages, so an id has to be
+# confirmed by hand. Leave it off and the face renders unlinked, which is the
+# honest treatment for the pseudonymous contributors this register credits.
+#
+# `avatar` is a bare filename in public/roadmap/people, never a path or a URL.
+# Leave it off and the face falls back to a monogram, which is right for anyone
+# who would rather not supply a photograph.
+#
+# NOTE: most records here carry INVENTED people with generated portraits and
+# fabricated profile ids, so the page could be reviewed with its rosters in
+# place. These files are the no-credential fallback, not the register — see
+# content/roadmap/README.md.
 people:
   - name: Full name or handle
     avatar: their-file.jpg
