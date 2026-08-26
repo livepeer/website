@@ -60,20 +60,23 @@ const PEOPLE_DB =
 /**
  * How stale the page may be, in seconds.
  *
- * The register is rendered statically and refreshed on a timer, so an editor
- * moving a card to Shipped sees it on the site within the hour without anyone
- * running a deploy. That is the whole reason to accept a CMS here.
- *
- * An hour rather than a minute: this is a roadmap. Nothing on it changes
- * faster than a working day, and a shorter window would spend requests to
- * re-confirm the same fourteen rows.
- *
  * Nothing runs on this timer. Next regenerates on request, so a quiet site
- * makes no Notion calls at all — the window is how stale a page a visitor may
- * be served before it is refreshed behind them, not a polling interval.
- * An agent that wants its edit live sooner can POST to /api/revalidate.
+ * makes no Notion calls at all — this is how stale a page a visitor may be
+ * served before it is refreshed behind them, not a polling interval. Which is
+ * why five minutes costs approximately nothing: the busier the page, the more
+ * it matters, and the quieter it is, the less it runs.
+ *
+ * Five rather than sixty because this is the only mechanism that serves the
+ * people we actually asked to maintain the register. They edit the board in
+ * Notion and then look at the site; an hour of seeing no change reads as a
+ * broken integration, and the habit we want does not survive that.
+ *
+ * The two faster paths both have a reach problem, so neither replaces this:
+ * /api/revalidate needs the caller to hold a secret, and the Notion webhook
+ * needs an admin to subscribe it. Once the webhook is live and proven to fire
+ * on API edits, this becomes a backstop and can go back up.
  */
-const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 3600);
+const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 300);
 
 /** Where a person's profile lives; the card builds the URL from an id. */
 const BOARD_HOST = "roadmap.livepeer.org";

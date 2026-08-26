@@ -79,6 +79,47 @@ Most records still cite a venue root — `forum.livepeer.org` rather than the
 thread — because the detail was read off a changelog rather than the underlying
 posts. Each wants its precise permalink before the field is genuinely useful.
 
+## Getting a change onto the site
+
+Three paths, fastest first. None of them is required — the slowest one always
+runs, so the others are optimisations rather than steps anyone must remember.
+
+**The Notion webhook.** A subscription on the integration, which is not the
+same thing as an automation inside the database: automations perform actions
+and deliberately do not run on API edits, so an agent updating a commitment
+triggers nothing. Webhooks are delivery, and their payload identifies the
+author as `person`, `bot` or `agent` — so they should fire for both. `POST
+/api/notion-webhook` handles it. Setup is an admin job:
+
+1. In the integration's settings → **Webhooks** → **Create a subscription**,
+   pointing at `https://<the live domain>/api/notion-webhook`. It must be the
+   real domain: a preview URL changes with every deployment, and the
+   subscription would go quiet the next time anyone pushes.
+2. Notion immediately POSTs a one-off `verification_token`. The route logs it
+   as `[notion-webhook] verification_token=…` — read it from the deployment
+   logs.
+3. Put that value in the project's environment as `NOTION_WEBHOOK_SECRET`, and
+   paste it back into Notion's Webhooks tab to confirm. It is the signing key
+   for every event afterwards and is not recoverable later; if it is lost,
+   re-subscribe for a new one.
+4. Subscribe to the page and data-source events — created, properties updated,
+   content updated, deleted.
+
+Then test the part the documentation does not answer: make an edit through the
+API and check an event arrives. If bot edits turn out to be silent, the window
+below is what covers them.
+
+**`POST /api/revalidate`**, with `REVALIDATE_SECRET` as a bearer token. For an
+agent that has just written through the API and wants the page now. It only
+reaches whoever holds the secret, so it is a convenience for this repo rather
+than a general mechanism.
+
+**The window.** `NOTION_REVALIDATE`, five minutes by default. This is the one
+that serves the people editing the board, who are not going to call anything.
+Nothing runs on it: Next regenerates on request, so a quiet site makes no
+Notion calls at all. Once the webhook is live and proven, this becomes a
+backstop and can go back up.
+
 ## The suggestions board
 
 `roadmap.livepeer.org` is a separate surface and is not being absorbed: this
