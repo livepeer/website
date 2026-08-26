@@ -13,10 +13,8 @@ owners:
 people:
   - name: Mei Tanaka
     avatar: mei-tanaka.jpg
-    profile: "000000000000000000000015"
   - name: Anjali Raman
     avatar: anjali-raman.jpg
-    profile: "000000000000000000000016"
 target: May 2026
 shippedAt: 2026-05-04
 related:

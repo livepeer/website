@@ -52,7 +52,7 @@ on the closed card: **by**, the owner's name, and the faces beside it. A record
 that credits an organisation and no individuals is normal.
 
 `avatar` is a bare filename in `public/people`, never a path or a URL.
-`profile` is a bare 24-hex id from a `roadmap.livepeer.org/u/…` URL — the card
+`profile` is a bare handle from a `forum.livepeer.org/u/…` URL — the card
 builds the link from it. Both are optional: a face with no portrait falls back
 to a monogram, and one that links nowhere is better than one that links at a
 guess.
@@ -62,10 +62,11 @@ page could be reviewed with its rosters in place. The same invented names were
 carried into Notion. `owners` is real throughout; `people` largely is not, and
 should be replaced with the actual teams before launch.
 
-The markdown records also carry **fabricated `profile` ids** — sequential
-zero-padded numbers, and the same person holds a different one on every record.
-Notion dropped them: only Doug Petkanics has a real board id, and everyone else
-renders unlinked, which is the honest treatment. Never invent one to fill a gap.
+Only Doug Petkanics carries a `profile`, and it is his forum handle. The
+records used to hold fabricated board ids — sequential zero-padded numbers,
+with the same person holding a different one on each record — and those are
+gone. Everyone else renders unlinked, which is the honest treatment. Never
+invent one to fill a gap.
 
 ## `related`
 
@@ -133,7 +134,5 @@ shown in the rail and at the foot of the roadmap view, and it points at
 `forum.livepeer.org` — where proposals, RFCs, LIPs and SPE updates already
 happen, and where `related` sends people on most records.
 
-`roadmap.livepeer.org` is still referenced in two places that have not been
-decided: the **Roadmap board** entries in four records' `related`, and the
-profile link a credited face builds from `profile`. Both are dead ends if the
-board is switched off.
+Nothing points at `roadmap.livepeer.org` any more. The **Roadmap board**
+entries are out of `related`, and a credited face links to the forum.

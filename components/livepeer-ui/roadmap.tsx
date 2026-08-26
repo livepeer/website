@@ -140,7 +140,7 @@ function initials(name: string) {
  * of the edge — which is how "DP" rendered as "DF". Six clears the letters and
  * still reads as a stack, so the photo-less fallback survives the idiom.
  *
- * A face links to the person's page on the roadmap board only when the record
+ * A face links to the person's forum profile only when the record
  * supplies an id. Nothing is inferred from a name: a guessed id is a link to a
  * stranger, and this page exists to be checkable. The board exposes no profile
  * links on its public item pages, so each id has to be confirmed by hand.
@@ -271,7 +271,7 @@ function Faces({ people }: { people: Person[] }) {
         const trigger = person.profile ? (
           <a
             style={toneVars}
-            href={`https://roadmap.livepeer.org/u/${person.profile}`}
+            href={`https://forum.livepeer.org/u/${person.profile}`}
             target="_blank"
             rel="noopener noreferrer"
             // The portrait is decorative — its alt is empty, because the name

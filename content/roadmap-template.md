@@ -20,11 +20,12 @@ owners:
 # same "Owner" line, so this is one credit, not two. Names are not printed
 # beside the faces; each face carries its own.
 #
-# `profile` is the BARE 24-hex id from a roadmap.livepeer.org/u/... URL, never
-# the URL itself — the card builds the link. Optional, and never guess one: the
-# board exposes no profile links on its public pages, so an id has to be
-# confirmed by hand. Leave it off and the face renders unlinked, which is the
-# honest treatment for the pseudonymous contributors this register credits.
+# `profile` is the BARE forum handle from a forum.livepeer.org/u/... URL,
+# never the URL itself — the card builds the link. Optional, and never guess
+# one: a plausible handle resolves to a real stranger. Confirm it first —
+#   curl -s -o /dev/null -w "%{http_code}\n" https://forum.livepeer.org/u/HANDLE.json
+# Leave it off and the face renders unlinked, which is the honest treatment
+# for the pseudonymous contributors this register credits.
 #
 # `avatar` is a bare filename in public/people, never a path or a URL.
 # Leave it off and the face falls back to a monogram, which is right for anyone

@@ -9,10 +9,8 @@ owners:
 people:
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
-    profile: "000000000000000000000017"
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-    profile: "000000000000000000000018"
 target: May 2026
 shippedAt: 2026-05-04
 related:

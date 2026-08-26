@@ -7,10 +7,8 @@ owners:
   - Network Engineering SPE
 people:
   - name: Andre Okafor
-    profile: "000000000000000000000008"
     avatar: andre-okafor.jpg
   - name: Tom Whitfield
-    profile: "000000000000000000000009"
     avatar: tom-whitfield.jpg
 target: Q4 2026
 related:

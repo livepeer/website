@@ -8,15 +8,12 @@ owners:
 people:
   # Stand-in portrait — see the note in agent-product-launch.md.
   - name: Qiang Han
-    profile: "000000000000000000000002"
     avatar: placeholder-2.jpg
 target: Q3 2026
 # Verbatim from the board item, not paraphrased.
 funding: "Livepeer Foundation, Livepeer Inc + Network engineering funding SPE"
 
 related:
-  - label: Roadmap board
-    href: https://roadmap.livepeer.org/p/network-readiness-for-livepeer-agent
   - label: Livepeer Forum
     href: https://forum.livepeer.org
 lastUpdated: 2026-08-12

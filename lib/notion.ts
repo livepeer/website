@@ -88,8 +88,8 @@ const PEOPLE_DB =
  */
 const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 60);
 
-/** Where a person's profile lives; the card builds the URL from an id. */
-const BOARD_HOST = "roadmap.livepeer.org";
+/** Where a person's profile lives; the card builds the URL from a handle. */
+const PROFILE_HOST = "forum.livepeer.org";
 
 /** Portraits are served from the repo, so the filename must resolve to one. */
 const AVATAR_DIR = path.join(process.cwd(), "public", "people");
@@ -281,15 +281,14 @@ async function readPeople(): Promise<Map<string, Person>> {
       );
     }
 
-    const profile = text(p["Profile ID"]) || undefined;
-    // The board's own id shape: 24 hex characters. Enforced so the field
-    // cannot smuggle a path, a protocol or a second host into the href the
-    // card builds from it.
-    if (profile && !/^[a-f0-9]{24}$/.test(profile)) {
+    const profile = text(p["Forum handle"]) || undefined;
+    // A forum handle, not a path or a URL: enforced so the field cannot
+    // smuggle a protocol or a second host into the href the card builds.
+    if (profile && !/^[a-zA-Z0-9_.-]{2,20}$/.test(profile)) {
       throw new Error(
-        `${where}: Profile ID is "${profile}" — it must be the bare id from a ` +
-          `${BOARD_HOST}/u/... URL, not the URL itself. The site builds the ` +
-          `link from it.`
+        `${where}: Profile is "${profile}" — it must be the bare handle from ` +
+          `a ${PROFILE_HOST}/u/... URL, not the URL itself. The site builds ` +
+          `the link from it.`
       );
     }
 

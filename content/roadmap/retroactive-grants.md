@@ -9,10 +9,8 @@ owners:
 people:
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-    profile: "000000000000000000000023"
   - name: Andre Okafor
     avatar: andre-okafor.jpg
-    profile: "000000000000000000000024"
 target: July 2026
 shippedAt: 2026-07-31
 related:

@@ -9,10 +9,8 @@ owners:
 people:
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
-    profile: "000000000000000000000021"
   - name: Andre Okafor
     avatar: andre-okafor.jpg
-    profile: "000000000000000000000022"
 target: Q3 2026
 shippedAt: 2026-07-31
 related:

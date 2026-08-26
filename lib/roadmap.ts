@@ -49,18 +49,20 @@ export type CommitmentLink = { label: string; href: string };
  * It is optional — the card falls back to a monogram, which is the honest
  * treatment for the pseudonymous contributors this register credits.
  *
- * `profile` is the person's id on roadmap.livepeer.org, and the URL is built
- * here rather than accepted whole. A register anyone can open a pull request
- * against should not be able to point a credited face at an arbitrary
- * destination, and the id is the only thing the field actually needs.
+ * `profile` is the person's forum handle, and the URL is built here rather
+ * than accepted whole. A register anyone can open a pull request against
+ * should not be able to point a credited face at an arbitrary destination,
+ * and the handle is the only thing the field actually needs.
  *
- * The board rather than GitHub: it is where a commitment is proposed and
+ * The forum rather than GitHub: it is where a commitment is proposed and
  * discussed, so a profile there is this register's own record of the person,
  * and it holds contributors who write proposals but never open a pull request.
+ * It was the Featurebase board on the same reasoning, until that was retired.
  *
  * Optional, and a face that links nowhere is better than one that links at a
- * guess — the board exposes no profile links on its public pages, so an id has
- * to be confirmed by hand rather than derived.
+ * guess: a plausible handle resolves to a real stranger. Confirm it returns a
+ * profile before writing it down —
+ *   curl -sI https://forum.livepeer.org/u/HANDLE.json
  */
 export type Person = { name: string; avatar?: string; profile?: string };
 
@@ -181,7 +183,7 @@ export type Commitment = {
 const dir = path.join(process.cwd(), "content", "roadmap");
 
 /** Where a person's profile lives; the card builds the URL from an id. */
-const BOARD_HOST = "roadmap.livepeer.org";
+const PROFILE_HOST = "forum.livepeer.org";
 
 /**
  * One list, and no entry twice in it.
@@ -229,17 +231,16 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
           `it must be a bare filename in public/people, not a path or URL.`
       );
     }
-    // The board's own id shape: 24 hex characters. Enforced so the field cannot
-    // smuggle a path, a protocol or a second host into the href the card builds
-    // from it.
+    // A forum handle, not a path or a URL: enforced so the field cannot
+    // smuggle a protocol or a second host into the href the card builds.
     if (
       person.profile !== undefined &&
-      !/^[a-f0-9]{24}$/.test(String(person.profile))
+      !/^[a-zA-Z0-9_.-]{2,20}$/.test(String(person.profile))
     ) {
       throw new Error(
         `content/roadmap/${file}: people[${i}].profile is "${person.profile}" — ` +
-          `it must be the bare id from a ${BOARD_HOST}/u/... URL, not the URL ` +
-          `itself. The card builds the link from it.`
+          `it must be the bare handle from a ${PROFILE_HOST}/u/... URL, not ` +
+          `the URL itself. The card builds the link from it.`
       );
     }
     return {

@@ -18,15 +18,12 @@ people:
   # No `profile` id either: the board exposes no /u/ links on its public pages,
   # so each has to be confirmed by hand rather than guessed.
   - name: Steph Alinsug
-    profile: "000000000000000000000001"
     avatar: placeholder-1.jpg
 target: Q3 2026
 # Verbatim from the board item, not paraphrased.
 funding: "Foundation & Inc funded + go-to-market funding proposal, informed by validation evidence"
 
 related:
-  - label: Roadmap board
-    href: https://roadmap.livepeer.org/p/agent-product-and-gtm
   - label: Livepeer Forum
     href: https://forum.livepeer.org
   - label: Livepeer Agent

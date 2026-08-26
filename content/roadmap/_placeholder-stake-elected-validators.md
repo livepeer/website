@@ -7,10 +7,8 @@ owners:
   - Protocol R&D SPE
 people:
   - name: Peter Lindqvist
-    profile: "000000000000000000000013"
     avatar: peter-lindqvist.jpg
   - name: Anjali Raman
-    profile: "000000000000000000000014"
     avatar: anjali-raman.jpg
 target: Q4 2026
 related:

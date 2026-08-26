@@ -7,10 +7,8 @@ owners:
   - Protocol R&D SPE
 people:
   - name: Peter Lindqvist
-    profile: "000000000000000000000004"
     avatar: peter-lindqvist.jpg
   - name: Elena Vargas
-    profile: "000000000000000000000005"
     avatar: elena-vargas.jpg
 target: Q4 2026
 related:

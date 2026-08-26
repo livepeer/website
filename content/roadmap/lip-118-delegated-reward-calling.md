@@ -10,10 +10,8 @@ owners:
 people:
   - name: Peter Lindqvist
     avatar: peter-lindqvist.jpg
-    profile: "000000000000000000000019"
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-    profile: "000000000000000000000020"
 target: July 2026
 shippedAt: 2026-07-30
 related:
