@@ -66,17 +66,27 @@ const PEOPLE_DB =
  * why five minutes costs approximately nothing: the busier the page, the more
  * it matters, and the quieter it is, the less it runs.
  *
- * Five rather than sixty because this is the only mechanism that serves the
- * people we actually asked to maintain the register. They edit the board in
- * Notion and then look at the site; an hour of seeing no change reads as a
- * broken integration, and the habit we want does not survive that.
+ * A minute, because this is the only mechanism that serves the people we
+ * actually asked to maintain the register. They edit the board in Notion and
+ * then look at the site; a wait long enough to doubt reads as a broken
+ * integration, and the habit we want does not survive that.
  *
- * The two faster paths both have a reach problem, so neither replaces this:
- * /api/revalidate needs the caller to hold a secret, and the Notion webhook
- * needs an admin to subscribe it. Once the webhook is live and proven to fire
- * on API edits, this becomes a backstop and can go back up.
+ * A minute of continuous traffic is around 960 Notion requests an hour, or
+ * 0.27/sec against a limit near 3 — an order of magnitude of headroom, and
+ * far less on a quiet page. Zero is the value that would not work: it makes
+ * every visitor's request fetch the register sixteen times over.
+ *
+ * What no window fixes is the stale serve. The first request after one
+ * expires still gets the old page while the new one builds behind it, so an
+ * editor reloads twice regardless. Only the webhook removes that, because a
+ * purge has no stale phase.
+ *
+ * So this is a stopgap with a known end: the Notion webhook needs the site on
+ * its production domain and an admin to subscribe it, and until then it is
+ * the only thing serving anyone without a secret. Once it is live and proven
+ * to fire on API edits, put this back up — it becomes a backstop.
  */
-const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 300);
+const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 60);
 
 /** Where a person's profile lives; the card builds the URL from an id. */
 const BOARD_HOST = "roadmap.livepeer.org";

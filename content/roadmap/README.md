@@ -114,11 +114,16 @@ agent that has just written through the API and wants the page now. It only
 reaches whoever holds the secret, so it is a convenience for this repo rather
 than a general mechanism.
 
-**The window.** `NOTION_REVALIDATE`, five minutes by default. This is the one
+**The window.** `NOTION_REVALIDATE`, one minute by default. This is the one
 that serves the people editing the board, who are not going to call anything.
 Nothing runs on it: Next regenerates on request, so a quiet site makes no
-Notion calls at all. Once the webhook is live and proven, this becomes a
-backstop and can go back up.
+Notion calls at all, and a busy one stays an order of magnitude inside
+Notion's rate limit.
+
+It does not remove the stale serve — the first request after the window still
+returns the old page while the new one builds behind it, so an editor reloads
+twice either way. Only the webhook fixes that. Once it is live and proven,
+put this back up; it becomes a backstop.
 
 ## The suggestions board
 
