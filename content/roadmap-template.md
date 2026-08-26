@@ -26,7 +26,7 @@ owners:
 # confirmed by hand. Leave it off and the face renders unlinked, which is the
 # honest treatment for the pseudonymous contributors this register credits.
 #
-# `avatar` is a bare filename in public/roadmap/people, never a path or a URL.
+# `avatar` is a bare filename in public/people, never a path or a URL.
 # Leave it off and the face falls back to a monogram, which is right for anyone
 # who would rather not supply a photograph.
 #

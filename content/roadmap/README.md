@@ -50,7 +50,7 @@ the hook. `people` are the individuals doing the work. They render as one credit
 on the closed card: **by**, the owner's name, and the faces beside it. A record
 that credits an organisation and no individuals is normal.
 
-`avatar` is a bare filename in `public/roadmap/people`, never a path or a URL.
+`avatar` is a bare filename in `public/people`, never a path or a URL.
 `profile` is a bare 24-hex id from a `roadmap.livepeer.org/u/…` URL — the card
 builds the link from it. Both are optional: a face with no portrait falls back
 to a monogram, and one that links nowhere is better than one that links at a

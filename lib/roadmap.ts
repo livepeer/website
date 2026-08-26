@@ -43,7 +43,7 @@ export type CommitmentLink = { label: string; href: string };
 /**
  * Someone on the roster behind a commitment.
  *
- * `avatar` is a filename under public/roadmap/people, not a URL: the register
+ * `avatar` is a filename under public/people, not a URL: the register
  * is contributor-edited markdown, and a field that accepted arbitrary remote
  * images would be a hole in both the CSP and the next.config image allowlist.
  * It is optional — the card falls back to a monogram, which is the honest
@@ -226,7 +226,7 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
     if (person.avatar && /[/\\:]/.test(person.avatar)) {
       throw new Error(
         `content/roadmap/${file}: people[${i}].avatar is "${person.avatar}" — ` +
-          `it must be a bare filename in public/roadmap/people, not a path or URL.`
+          `it must be a bare filename in public/people, not a path or URL.`
       );
     }
     // The board's own id shape: 24 hex characters. Enforced so the field cannot

@@ -74,7 +74,7 @@ const REVALIDATE = Number(process.env.NOTION_REVALIDATE ?? 3600);
 const BOARD_HOST = "roadmap.livepeer.org";
 
 /** Portraits are served from the repo, so the filename must resolve to one. */
-const AVATAR_DIR = path.join(process.cwd(), "public", "roadmap", "people");
+const AVATAR_DIR = path.join(process.cwd(), "public", "people");
 
 /** Whether the register can be read from Notion at all. */
 export function hasNotionCredentials(): boolean {
@@ -248,7 +248,7 @@ async function readPeople(): Promise<Map<string, Person>> {
     if (avatar && /[/\\:]/.test(avatar)) {
       throw new Error(
         `${where}: Avatar is "${avatar}" — it must be a bare filename in ` +
-          `public/roadmap/people, not a path or a URL.`
+          `public/people, not a path or a URL.`
       );
     }
     // A filename that resolves to nothing would render a broken image where a
@@ -258,7 +258,7 @@ async function readPeople(): Promise<Map<string, Person>> {
     if (avatar && !fs.existsSync(path.join(AVATAR_DIR, avatar))) {
       throw new Error(
         `${where}: Avatar is "${avatar}", which is not in ` +
-          `public/roadmap/people. Commit the portrait, or clear the field and ` +
+          `public/people. Commit the portrait, or clear the field and ` +
           `the face renders as a monogram.`
       );
     }

@@ -247,7 +247,7 @@ function Faces({ people }: { people: Person[] }) {
       {people.map((person) => {
         const inner = person.avatar ? (
           <Image
-            src={`/roadmap/people/${person.avatar}`}
+            src={`/people/${person.avatar}`}
             alt=""
             width={64}
             height={64}
