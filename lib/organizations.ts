@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import type { Person } from "./roadmap";
 
 /**
  * The bodies the register credits.
@@ -39,8 +40,10 @@ export type Organization = {
   slug: string;
   name: string;
   /**
-   * One sentence, ~140 chars. The card line on the index and the page's share
-   * description — so it has to read away from the page it belongs to.
+   * One sentence, ~140 chars. Metadata, not page copy: this is the description
+   * a search result and a link unfurl carry, so it has to read away from the
+   * page entirely. The record does not print it — the body says the same thing
+   * at length to anyone who has arrived.
    *
    * Named to match the rest of the site: blog posts and ecosystem projects
    * carry a `description` doing exactly this job, and all three feed the same
@@ -69,6 +72,15 @@ export type Organization = {
    * copy. Optional — a body with no logo renders its name.
    */
   logo?: string;
+  /**
+   * The people associated with this body — `Affiliated` in Notion.
+   *
+   * Association, not accountability. Someone can be affiliated with an
+   * organisation that owns none of the work they do, and a commitment names
+   * its own contributors; neither is inferred from the other. Optional, and
+   * empty for most: five of the seven name nobody.
+   */
+  people?: Person[];
   /** The banner, as Notion sets it — an absolute URL on the image CDN. */
   cover?: string;
   /** The write-up, as HTML, from whichever source produced it. */
@@ -87,6 +99,7 @@ export function slugify(title: string): string {
 /** Covers come from one host, which is the only one next/image allows. */
 const IMAGE_HOST = "cdn.sanity.io";
 const LOGO_DIR = path.join(process.cwd(), "public", "organizations");
+const AVATAR_DIR = path.join(process.cwd(), "public", "people");
 const dir = path.join(process.cwd(), "content", "organizations");
 
 function readCover(value: unknown, file: string): string | undefined {
@@ -107,6 +120,39 @@ function readCover(value: unknown, file: string): string | undefined {
     );
   }
   return url;
+}
+
+/**
+ * The roster, in the register's own shape.
+ *
+ * A portrait is a bare filename in public/people — the same rule a commitment's
+ * contributors keep, and enforced here for the same reason: a link to a file
+ * that is not committed renders as a hole rather than an error.
+ */
+function readPeople(value: unknown, file: string): Person[] | undefined {
+  if (!value) return undefined;
+  if (!Array.isArray(value)) {
+    throw new Error(`content/organizations/${file}: people is not a list.`);
+  }
+  const people = value.map((entry) => {
+    const p = entry as { name?: unknown; avatar?: unknown; profile?: unknown };
+    if (!p.name) {
+      throw new Error(`content/organizations/${file}: a person has no name.`);
+    }
+    const avatar = p.avatar ? String(p.avatar) : undefined;
+    if (avatar && !fs.existsSync(path.join(AVATAR_DIR, avatar))) {
+      throw new Error(
+        `content/organizations/${file}: avatar ${JSON.stringify(avatar)} is ` +
+          `not in public/people.`
+      );
+    }
+    return {
+      name: String(p.name),
+      avatar,
+      profile: p.profile ? String(p.profile) : undefined,
+    };
+  });
+  return people.length > 0 ? people : undefined;
 }
 
 /**
@@ -164,6 +210,7 @@ function parse(file: string): Organization {
     description: String(at("description", data.description)),
     type,
     link: data.link ? String(data.link) : undefined,
+    people: readPeople(data.people, file),
     logo,
     cover: readCover(data.cover, file),
     detail: content.trim() || undefined,

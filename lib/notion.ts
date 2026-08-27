@@ -596,7 +596,9 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
  * cannot disagree.
  */
 export async function getNotionOrganizations(): Promise<Organization[]> {
-  const rows = await queryAll(ORGS_DB);
+  // The people table too, because Affiliated is a relation into it — the same
+  // read the register does for contributors, so a face is described once.
+  const [rows, people] = await Promise.all([queryAll(ORGS_DB), readPeople()]);
 
   const orgs = await Promise.all(
     rows.map(async (row): Promise<Organization> => {
@@ -647,6 +649,12 @@ export async function getNotionOrganizations(): Promise<Organization[]> {
         description,
         type,
         link: (p.Link?.url as string | undefined) || undefined,
+        people: (() => {
+          const roster = relationIds(p.Affiliated)
+            .map((id) => people.get(id))
+            .filter((person) => person !== undefined);
+          return roster.length > 0 ? roster : undefined;
+        })(),
         logo,
         cover:
           coverProp?.type === "external" ? coverProp.external?.url : undefined,

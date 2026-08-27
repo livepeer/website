@@ -1,6 +1,11 @@
 import Image from "next/image";
 import type { AlignLeft } from "lucide-react";
 
+import type { Person } from "@/lib/roadmap";
+
+/** Where a credited face links; the record builds the URL from a handle. */
+const PROFILE_HOST = "forum.livepeer.org";
+
 /**
  * The furniture a record page is built from.
  *
@@ -71,5 +76,54 @@ export function RecordRow({
       </dt>
       <dd className="text-sm leading-relaxed">{children}</dd>
     </div>
+  );
+}
+
+/**
+ * A credited person: portrait, then name.
+ *
+ * The card shows faces alone and identifies them on hover, which is right
+ * where the space is tight. Here there is room for both, and a record that
+ * made you hover to learn who worked on something would be worse than the
+ * plain list of names it replaced — recognition and identification at once,
+ * no interaction required.
+ *
+ * A monogram where there is no portrait, so a roster does not become a ragged
+ * mix of pictures and bare text.
+ */
+export function RecordCredit({ person }: { person: Person }) {
+  const name = (
+    <span className="flex items-center gap-2">
+      {person.avatar ? (
+        <Image
+          src={`/people/${person.avatar}`}
+          alt=""
+          width={20}
+          height={20}
+          className="size-5 shrink-0 rounded-full object-cover"
+        />
+      ) : (
+        <span
+          aria-hidden
+          className="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-[0.625rem] font-medium text-muted-foreground"
+        >
+          {person.name.charAt(0)}
+        </span>
+      )}
+      {person.name}
+    </span>
+  );
+
+  return person.profile ? (
+    <a
+      href={`https://${PROFILE_HOST}/u/${person.profile}`}
+      target="_blank"
+      rel="noreferrer"
+      className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {name}
+    </a>
+  ) : (
+    name
   );
 }

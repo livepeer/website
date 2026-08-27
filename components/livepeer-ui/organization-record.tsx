@@ -1,7 +1,10 @@
 import { ArrowUpRight, CircleChevronDown, Link2 } from "lucide-react";
 import Link from "next/link";
 
-import { RecordRow as Row } from "@/components/livepeer-ui/record-parts";
+import {
+  RecordCredit as Credit,
+  RecordRow as Row,
+} from "@/components/livepeer-ui/record-parts";
 import type { Organization } from "@/lib/organizations";
 import { shippedPeriod, type Commitment } from "@/lib/roadmap";
 
@@ -13,6 +16,11 @@ import { shippedPeriod, type Commitment } from "@/lib/roadmap";
  * point of doing the overlay that way round — a drawer with its own copy of
  * the layout is two things to keep in step, and they drift the first time one
  * of them changes.
+ *
+ * `description` is deliberately not rendered. It is the share line — the
+ * sentence a link unfurls with, written to be read away from the page — and
+ * the body below says the same thing at length to anyone standing on it.
+ * Printing both puts the summary directly above the thing it summarises.
  *
  * The commitments are passed in rather than fetched here, because both routes
  * already hold the register: they derive them by filtering it on `ownerSlug`,
@@ -59,6 +67,45 @@ function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
   );
 }
 
+/** Our own host, so a link home is not dressed up as a trip somewhere else. */
+const SITE_HOST = "livepeer.org";
+
+/**
+ * Where to read about them — which is not always somewhere else.
+ *
+ * The Foundation's official page is livepeer.org/foundation: this site. Sent
+ * through the external treatment it opened a new tab back to where the reader
+ * already was, over a label naming the host they were already on. An internal
+ * destination is a normal link to a path, and says which page it is.
+ */
+function LinkRow({ href }: { href: string }) {
+  const url = new URL(href);
+  const internal = url.host.replace(/^www\./, "") === SITE_HOST;
+
+  return (
+    <Row icon={Link2} label={internal ? "Read more" : "Website"}>
+      {internal ? (
+        <Link
+          href={url.pathname}
+          className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        >
+          {url.pathname}
+        </Link>
+      ) : (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        >
+          {url.host.replace(/^www\./, "")}
+          <ArrowUpRight className="size-3.5 shrink-0" aria-hidden />
+        </a>
+      )}
+    </Row>
+  );
+}
+
 export function OrganizationRecord({
   organization: org,
   owned,
@@ -87,15 +134,6 @@ export function OrganizationRecord({
         {org.name}
       </h1>
 
-      {/* The lead, not a property row.
-          On a commitment the equivalent — Outcome — is a row because it is one
-          fact among nine. Here it would be one of two, and it is the sentence
-          that says what the body below is about. It reads at 18px under the
-          title; it does not read in an 11rem grid. */}
-      <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-        {org.description}
-      </p>
-
       {/* The facts, set exactly as a commitment sets its own.
           The two records swap places in one panel when a reader follows an
           owner's name, so a different treatment on each side reads as two
@@ -109,17 +147,16 @@ export function OrganizationRecord({
         <Row icon={CircleChevronDown} label="Type">
           {org.type}
         </Row>
-        {org.link && (
-          <Row icon={Link2} label="Website">
-            <a
-              href={org.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-            >
-              {new URL(org.link).host.replace(/^www\./, "")}
-              <ArrowUpRight className="size-3.5 shrink-0" aria-hidden />
-            </a>
+        {org.link && <LinkRow href={org.link} />}
+        {org.people && org.people.length > 0 && (
+          <Row icon={ArrowUpRight} label="People">
+            <ul className="flex flex-wrap gap-x-5 gap-y-2">
+              {org.people.map((person) => (
+                <li key={person.name}>
+                  <Credit person={person} />
+                </li>
+              ))}
+            </ul>
           </Row>
         )}
       </dl>
