@@ -71,18 +71,27 @@ export default async function CommitmentPage({
   if (!c) notFound();
 
   return (
-    // Full-bleed banner, reading column either side of it. A commitment, an
-    // organisation and a person are three views of one kind of record, and
-    // they had drifted to two banner treatments between them.
+    // Banner first, flush to the header, then everything else in the reading
+    // column — the same shape a person and an organisation now have.
     <article className="pb-28">
-      {/* Above the cover, with an arrow, and not the word "back".
-          It read as a caption when it sat under the banner saying only
-          "Roadmap". But "Back to roadmap" was wrong in the other direction:
-          most people reach a record from a shared link and have never seen
-          the register, so "back" describes a journey they did not make.
-          Naming the destination is true either way, and tells a first-time
-          reader what they would get. */}
-      <div className="mx-auto w-full max-w-[46rem] px-6 pt-20 sm:px-8">
+      {c.cover && <RecordCover src={c.cover} alt={`${c.title} cover image`} />}
+
+      <div
+        className={`mx-auto w-full max-w-[46rem] px-6 sm:px-8 ${
+          c.cover ? "pt-8" : "pt-20"
+        }`}
+      >
+        {/* Below the banner now, not above it. It was the only thing between
+            the header and the cover, and the gap it left there was the whole
+            reason this page looked unlike the other two.
+
+            Under the banner it once read as a caption — but that was when it
+            said "Roadmap". "All commitments" behind a left arrow is plainly a
+            way out, not a label for the picture above it.
+
+            Named rather than called "back": most people reach a record from a
+            shared link and have never seen the register, so "back" describes a
+            journey they did not make. */}
         <Link
           href="/roadmap"
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -93,20 +102,10 @@ export default async function CommitmentPage({
           />
           All commitments
         </Link>
-      </div>
 
-      {c.cover && (
-        <div className="mt-6 mb-10">
-          <RecordCover src={c.cover} alt={`${c.title} cover image`} />
+        <div className="mt-8">
+          <CommitmentRecord commitment={c} />
         </div>
-      )}
-
-      <div
-        className={`mx-auto w-full max-w-[46rem] px-6 sm:px-8 ${
-          c.cover ? "" : "pt-10"
-        }`}
-      >
-        <CommitmentRecord commitment={c} />
       </div>
     </article>
   );
