@@ -4,7 +4,7 @@ outcome: Connect LPT issuance to network usage, so rewards follow demand rather 
 workstream: Protocol
 state: next
 owner: Protocol R&D SPE
-people:
+contributors:
   - name: Peter Lindqvist
     avatar: peter-lindqvist.jpg
   - name: Elena Vargas

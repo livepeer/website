@@ -4,7 +4,7 @@ outcome: Let a gateway ask the network what it can do right now, instead of hard
 workstream: Network
 state: next
 owner: Network Engineering SPE
-people:
+contributors:
   - name: Andre Okafor
     avatar: andre-okafor.jpg
   - name: Mei Tanaka

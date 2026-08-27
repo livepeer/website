@@ -4,7 +4,7 @@ outcome: Publish production-ready multi-step workflows so agents can run a job w
 workstream: Agent
 state: next
 owner: Livepeer Foundation
-people:
+contributors:
   - name: Mei Tanaka
     avatar: mei-tanaka.jpg
   - name: Tom Whitfield

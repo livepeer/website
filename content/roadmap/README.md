@@ -49,10 +49,16 @@ in either source — the state and the date — and it moves views on its own.
 `owner` is the one party answerable for delivering — a company, foundation,
 SPE, collective or funded programme. In Notion it is a relation to the
 **Organizations** table rather than free text, so an owner is a record with a
-type and a link and cannot be typed into existence twice. `people` are the
-individuals doing the work — **Contributors** in Notion, where "People" had
-become ambiguous beside `Accountable` and the Livepeer people table it points
-at. They
+type and a link and cannot be typed into existence twice. `contributors` are the individuals doing the work — **Contributors** in Notion
+too, since "People" said what was on the other end of the relation rather than
+what it meant, and three fields there now point at people.
+
+`accountable` is the individual to ask about a commitment, rendered in the
+expanded panel as **Contact** and linked to their forum profile where there is
+a handle. One person or none: an organisation cannot answer "when will this
+actually land", and until this existed a reader with that question had nowhere
+to take it. Absent rather than placeheld when nobody is named — inventing a
+contact sends someone to a person who has not agreed to be asked. They
 render as one credit on the closed card: **by**, the owner's name, and the
 faces beside it. A record that credits an organisation and no individuals is
 normal.
@@ -83,14 +89,6 @@ records used to hold fabricated board ids — sequential zero-padded numbers,
 with the same person holding a different one on each record — and those are
 gone. Everyone else renders unlinked, which is the honest treatment. Never
 invent one to fill a gap.
-
-Notion also carries an **Accountable** person per commitment, which the site
-deliberately does not read. Every project-management convention puts a human
-in that role — RACI's single A, PRINCE2's Executive, a single-threaded owner —
-and internally that is what you want. Publicly the card names the
-organisation, because a named colleague against an institutional promise is a
-heavier claim than the page is making, and whoever is named collects the
-questions.
 
 ## `related`
 

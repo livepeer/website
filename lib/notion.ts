@@ -29,11 +29,10 @@ import {
  * everyone rather than for the roadmap, because the same rows are meant to be
  * pointed at from elsewhere on the site later.
  *
- * The register also holds an `Accountable` person, which is deliberately not
- * read here. Internally the single accountable owner is a human, as every
- * project-management convention says it should be; publicly the card names the
- * organisation, because putting a colleague's name against an institutional
- * promise is a different and heavier claim than the page is making.
+ * `Accountable` is the person to ask, rendered in the expanded panel as
+ * "Contact". The card face still names the organisation, because that is who
+ * committed — but a reader whose date has moved needs a human, and an
+ * organisation cannot answer a question.
  *
  * The mapping is deliberately strict. Every rule the markdown reader enforced
  * is enforced here too, and a record that breaks one fails the build rather
@@ -453,6 +452,25 @@ function toCommitment(
     return person;
   });
 
+  // At most one: "who do I ask" has one answer or none. Two would be the
+  // same diffusion the single-owner rule exists to prevent, one layer down.
+  const accountableIds = relationIds(p.Accountable);
+  if (accountableIds.length > 1) {
+    throw new Error(
+      `${where}: Accountable names ${accountableIds.length} people. One at ` +
+        `most — the others belong in Contributors.`
+    );
+  }
+  const accountable = accountableIds[0]
+    ? people.get(accountableIds[0])
+    : undefined;
+  if (accountableIds[0] && !accountable) {
+    throw new Error(
+      `${where}: Accountable relates to ${accountableIds[0]}, which is not ` +
+        `in Livepeer people.`
+    );
+  }
+
   return {
     slug: slugify(title),
     title,
@@ -460,7 +478,8 @@ function toCommitment(
     workstream,
     state,
     owner,
-    people: roster.length > 0 ? roster : undefined,
+    contributors: roster.length > 0 ? roster : undefined,
+    accountable,
     target,
     targetSort: targetSortKey(target, where),
     shippedAt,

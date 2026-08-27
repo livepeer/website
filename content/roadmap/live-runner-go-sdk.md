@@ -4,8 +4,8 @@ outcome: Ship the Live Runner alongside a Go SDK so services can drive the netwo
 workstream: Network
 state: shipped
 owner: Livepeer Foundation
+contributors:
   # Placeholder cast — see documentation-v2.md.
-people:
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
   - name: Andre Okafor

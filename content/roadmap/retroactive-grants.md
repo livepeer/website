@@ -4,8 +4,8 @@ outcome: Fund work already delivered to the network, so contributors are paid wi
 workstream: Network
 state: shipped
 owner: Network Engineering SPE
+contributors:
   # Placeholder cast — see documentation-v2.md.
-people:
   - name: Elena Vargas
     avatar: elena-vargas.jpg
   - name: Andre Okafor

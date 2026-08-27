@@ -4,11 +4,7 @@ outcome: Take Livepeer Agent to market — the connector, the console, and the r
 workstream: Agent
 state: building
 owner: Livepeer Foundation
-people:
-  # Stand-in profile ids, all zeros but the last digit — the board 404s
-  # them, and no real id looks like this. They exist so the avatar link
-  # and hover can be seen working while real ids are collected by hand.
-  #   grep -rn "profile: 0\{20\}" content/roadmap
+contributors:
   # From the board item's "Owned By". The portrait is a stand-in, not this
   # person — `placeholder-*.jpg` is a generated face assigned in record order,
   # picked to resemble nobody. Swap in a real photograph, or delete the

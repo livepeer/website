@@ -4,7 +4,7 @@ outcome: Get the network able to serve Agent's workloads reliably — capacity, 
 workstream: Network
 state: building
 owner: Livepeer Foundation
-people:
+contributors:
   # Stand-in portrait — see the note in agent-product-launch.md.
   - name: Qiang Han
     avatar: placeholder-2.jpg

@@ -4,8 +4,8 @@ outcome: Keep the Livepeer Explorer current and supported through a defined main
 workstream: Protocol
 state: shipped
 owner: RaidGuild
+contributors:
   # Placeholder cast — see documentation-v2.md.
-people:
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
   - name: Elena Vargas

@@ -129,14 +129,28 @@ export type Commitment = {
    * to ask. Contributors are `people`; joint funding is `funding`.
    */
   owner: string;
-  /** The people behind the accountable party, shown as faces beside its name
-   *  in the card's "Owner" line. Optional: many records name an
-   *  organisation and no individuals, and an empty roster is a normal state. */
-  people?: Person[];
+  /** The people doing the work, shown as faces beside the owner's name in the
+   *  card's "by" line — `Contributors` in Notion. Optional: many records name
+   *  an organisation and no individuals, and an empty roster is normal. */
+  contributors?: Person[];
   /** The real precision — "Q4 2026", "July 2026", "H1 2027", "2027". */
   target: string;
   /** Derived from target, so the roadmap can run in chronological order. */
   targetSort: number;
+  /**
+   * The individual to ask about this — shown in the expanded panel as
+   * "Contact".
+   *
+   * Distinct from `owner`, which is the organisation answerable for
+   * delivering, and from `people`, who are doing the work. A reader whose
+   * question is "when will this actually land" needs a person, and an
+   * organisation cannot answer a question.
+   *
+   * Optional. A record with nobody named renders no row rather than a
+   * placeholder, because inventing a contact is worse than admitting there
+   * isn't one.
+   */
+  accountable?: Person;
   /** ISO yyyy-mm-dd. Present only when shipped. */
   shippedAt?: string;
   /** Where this record can be checked and where the work lives. At least one. */
@@ -224,17 +238,19 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
   if (value === undefined) return undefined;
   if (!Array.isArray(value)) {
     throw new Error(
-      `content/roadmap/${file}: people must be a list. See content/roadmap-template.md.`
+      `content/roadmap/${file}: contributors must be a list. See content/roadmap-template.md.`
     );
   }
   return value.map((entry, i) => {
     const person = entry as Partial<Person>;
     if (!person?.name) {
-      throw new Error(`content/roadmap/${file}: people[${i}] needs a name.`);
+      throw new Error(
+        `content/roadmap/${file}: contributors[${i}] needs a name.`
+      );
     }
     if (person.avatar && /[/\\:]/.test(person.avatar)) {
       throw new Error(
-        `content/roadmap/${file}: people[${i}].avatar is "${person.avatar}" — ` +
+        `content/roadmap/${file}: contributors[${i}].avatar is "${person.avatar}" — ` +
           `it must be a bare filename in public/people, not a path or URL.`
       );
     }
@@ -245,7 +261,7 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
       !/^[a-zA-Z0-9_.-]{2,20}$/.test(String(person.profile))
     ) {
       throw new Error(
-        `content/roadmap/${file}: people[${i}].profile is "${person.profile}" — ` +
+        `content/roadmap/${file}: contributors[${i}].profile is "${person.profile}" — ` +
           `it must be the bare handle from a ${PROFILE_HOST}/u/... URL, not ` +
           `the URL itself. The card builds the link from it.`
       );
@@ -335,7 +351,11 @@ function parse(file: string): Commitment {
     workstream,
     state: declared,
     owner,
-    people: readPeople(data.people, file),
+    contributors: readPeople(data.contributors, file),
+    accountable: readPeople(
+      data.accountable ? [data.accountable] : undefined,
+      file
+    )?.[0],
     target: String(at("target", data.target)),
     targetSort: targetSortKey(
       String(at("target", data.target)),

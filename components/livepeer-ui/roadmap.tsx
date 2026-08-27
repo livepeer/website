@@ -419,7 +419,9 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
                 it was set at the same weight as the word introducing it. */}
             <span className="shrink-0">by</span>
             <span className="text-foreground">{c.owner}</span>
-            {c.people && c.people.length > 0 && <Faces people={c.people} />}
+            {c.contributors && c.contributors.length > 0 && (
+              <Faces people={c.contributors} />
+            )}
           </span>
         </div>
       </summary>
@@ -495,6 +497,33 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             <LinkRow key={link.href} {...link} />
           ))}
         </dd>
+        {/* Who to ask, next to where to check.
+            The card face names the organisation, because that is who committed
+            — but "when will this actually land" is a question no organisation
+            can answer, and until this row existed a reader with that question
+            had nowhere to take it. Linked to a forum profile where there is a
+            handle, since a name you cannot reach is only half an answer.
+
+            Absent rather than placeheld when nobody is named: inventing a
+            contact would send someone to a person who has not agreed to be
+            asked. */}
+        {c.accountable && (
+          <>
+            <dt>
+              <Label>Contact</Label>
+            </dt>
+            <dd className="text-sm">
+              {c.accountable.profile ? (
+                <LinkRow
+                  label={c.accountable.name}
+                  href={`https://forum.livepeer.org/u/${c.accountable.profile}`}
+                />
+              ) : (
+                c.accountable.name
+              )}
+            </dd>
+          </>
+        )}
         {/* When the commitment was made, not when it lands.
             A target that has moved says nothing on its own; a target that has
             moved since a known commitment date is a slip a reader can see. */}

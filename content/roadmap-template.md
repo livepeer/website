@@ -17,7 +17,15 @@ state: building                # building | next | shipped
 # holds, and a reader whose question is "who do I ask about that date" needs a
 # single answer. Contributors go under people; joint funding goes in funding.
 owner: Name or team
-# The individuals doing the work. Their faces sit beside the team name in the
+# The individual to ask about this — shown on the expanded card as "Contact".
+# Optional, and one person: "who do I ask" has one answer or none. Distinct
+# from owner, which is the organisation answerable for delivering. Same shape
+# as a contributor.
+# accountable:
+#   name: Full name or handle
+#   avatar: their-file.jpg
+
+# The individuals doing the work — Contributors in Notion. Their faces sit beside the team name in the
 # same "Owner" line, so this is one credit, not two. Names are not printed
 # beside the faces; each face carries its own.
 #
@@ -36,7 +44,7 @@ owner: Name or team
 # fabricated profile ids, so the page could be reviewed with its rosters in
 # place. These files are the no-credential fallback, not the register — see
 # content/roadmap/README.md.
-people:
+contributors:
   - name: Full name or handle
     avatar: their-file.jpg
 target: Q4 2026                # month | quarter | half | year — the real precision, no more

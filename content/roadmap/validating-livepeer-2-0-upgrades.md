@@ -4,7 +4,7 @@ outcome: Pressure-test the proposed 2.0 protocol and network changes with delega
 workstream: Protocol
 state: building
 owner: Livepeer Foundation
-people:
+contributors:
   - name: Doug Petkanics
     avatar: doug-petkanics.jpg
     profile: dob
