@@ -363,6 +363,11 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             "read more". */}
         <Link
           href={`/roadmap/${c.slug}`}
+          // The register stays where it was. Next scrolls to the top of a new
+          // route by default, which is right for a page and wrong for a panel
+          // opening over the list you are reading — it threw the index to the
+          // top on every click, and threw it back on close.
+          scroll={false}
           className="rounded-lg outline-none before:absolute before:inset-0 before:rounded-lg focus-visible:ring-2 focus-visible:ring-ring"
         >
           {c.title}

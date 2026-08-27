@@ -2,7 +2,7 @@
 
 import { Maximize2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Sheet,
@@ -38,9 +38,17 @@ export function CommitmentSheet({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  // Held open, then closed on dismissal so the exit animation runs before the
-  // history entry goes. Navigating straight away unmounts it mid-transition.
-  const [open, setOpen] = useState(true);
+  // Mounted closed, opened on the next tick.
+  //
+  // Not a flourish: a dialog whose first render is already open has no state
+  // change to transition from, so Base UI skips the enter animation and the
+  // panel simply appears. Rendering closed and flipping in an effect gives it
+  // a false-to-true edge, which is what makes it slide.
+  //
+  // Closing sets state first and navigates after, so the exit animation runs
+  // before the history entry goes rather than unmounting mid-transition.
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(true), []);
 
   return (
     <Sheet
