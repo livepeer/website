@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
+import { renderMarkdown } from "./blog";
+
 /**
  * The canonical commitment register.
  *
@@ -195,9 +197,17 @@ export type Commitment = {
    * a typo cannot make that claim.
    */
   lastUpdated?: string;
-  /** The record's rendered markdown body — background on the commitment, shown
-   *  in the expanded panel as "Context". Distinct from `outcome`, which is the
-   *  one-line promise under the title on the closed card. */
+  /**
+   * The commitment's write-up, as **HTML** — the long-form explanation behind
+   * it, shown on its own page under the facts.
+   *
+   * HTML rather than markdown because the two sources disagree about what
+   * they hold: the markdown register keeps a body, Notion keeps blocks.
+   * Rendering in each reader means the page takes one thing and the
+   * difference stops existing above this line.
+   *
+   * Distinct from `outcome`, which is the one-line promise on the card.
+   */
   detail?: string;
 };
 
@@ -370,19 +380,27 @@ function parse(file: string): Commitment {
     lastUpdated: data.lastUpdated
       ? new Date(data.lastUpdated).toISOString().slice(0, 10)
       : undefined,
-    detail: content.trim() || undefined,
+    detail: content.trim() || undefined, // raw markdown; rendered in getCommitments
   };
 }
 
-export function getCommitments(): Commitment[] {
+export async function getCommitments(): Promise<Commitment[]> {
   if (!fs.existsSync(dir)) return [];
-  return (
-    fs
-      .readdirSync(dir)
-      // README.md documents the register; it is not a record in it.
-      .filter((f) => f.endsWith(".md") && f !== "README.md")
-      .map(parse)
-      .sort((a, b) => (b.shippedAt ?? "").localeCompare(a.shippedAt ?? ""))
+  const records = fs
+    .readdirSync(dir)
+    // README.md documents the register; it is not a record in it.
+    .filter((f) => f.endsWith(".md") && f !== "README.md")
+    .map(parse)
+    .sort((a, b) => (b.shippedAt ?? "").localeCompare(a.shippedAt ?? ""));
+
+  // `detail` is HTML by the time it leaves here, matching what the Notion
+  // reader produces, so nothing downstream has to know which source it came
+  // from.
+  return Promise.all(
+    records.map(async (c) => ({
+      ...c,
+      detail: c.detail ? await renderMarkdown(c.detail) : undefined,
+    }))
   );
 }
 

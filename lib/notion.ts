@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { blocksToHtml } from "./notion-blocks";
 import {
   WORKSTREAMS,
   targetSortKey,
@@ -322,23 +323,32 @@ async function readPeople(): Promise<Map<string, Person>> {
   return people;
 }
 
+/** Every child of a block, following the cursor — bodies run past one page. */
+async function childrenOf(blockId: string): Promise<Json[]> {
+  const blocks: Json[] = [];
+  let cursor: string | undefined;
+  do {
+    const page = await notion(
+      `/blocks/${blockId}/children?page_size=100` +
+        (cursor ? `&start_cursor=${cursor}` : "")
+    );
+    blocks.push(...((page.results as Json[]) ?? []));
+    cursor = page.has_more ? (page.next_cursor as string) : undefined;
+  } while (cursor);
+  return blocks;
+}
+
 /**
- * The record's body, which the expanded card shows as "Context".
+ * The record's body, as HTML — the long-form write-up behind a commitment.
  *
- * Paragraphs only, joined as plain text, because that is exactly what the card
- * renders — it prints the string, so anything richer would arrive as markup in
- * a text node. Notion pages that grow headings or lists will lose that
- * structure here, which is the honest trade for a field that is two or three
- * sentences of background by design.
+ * Converted from Notion's blocks rather than fetched as markdown, because
+ * markdown is not what Notion stores. See lib/notion-blocks.ts.
  */
 async function readDetail(pageId: string): Promise<string | undefined> {
-  const page = await notion(`/blocks/${pageId}/children?page_size=100`);
-  const paragraphs = ((page.results as Json[]) ?? []).flatMap((block) => {
-    if (block.type !== "paragraph") return [];
-    const body = text(block.paragraph as Json);
-    return body ? [body] : [];
-  });
-  return paragraphs.join("\n\n") || undefined;
+  const html = await blocksToHtml(await childrenOf(pageId), (block) =>
+    childrenOf(block.id as string)
+  );
+  return html || undefined;
 }
 
 /**

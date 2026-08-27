@@ -90,6 +90,30 @@ with the same person holding a different one on each record — and those are
 gone. Everyone else renders unlinked, which is the honest treatment. Never
 invent one to fill a gap.
 
+## The write-up
+
+A commitment's body is its long-form explanation, and it has its own page at
+`/roadmap/<slug>`. The card carries the facts and links through; several
+hundred words in a definition list beside a 6rem label is not a layout.
+
+A real page rather than a panel, because the reason to write at length is to
+be read elsewhere: an address, an unfurl and a place in search are things a
+drawer does not have. Notion's slide-over can still be layered on later with
+an intercepting route, which renders this same page over the index while the
+URL changes — that way round only, since the overlay is cheap once the page
+exists.
+
+Both sources hand the page **HTML**, so nothing downstream knows where a body
+came from. The markdown register renders through the blog's remark pipeline;
+Notion's blocks go through `lib/notion-blocks.ts`, because Notion does not
+store markdown — a body is a tree of typed blocks, and the markdown you see
+reading a page through an MCP client is that client converting for display.
+
+Supported: headings, both list types with nesting, quotes, code, dividers,
+links, bold, italic, inline code, strikethrough. Not images — a Notion-hosted
+image is a signed URL that expires within the hour, the same reason portraits
+are committed to the repo.
+
 ## `related`
 
 The field that makes a record checkable: every one names at least one place its

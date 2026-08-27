@@ -470,20 +470,6 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             </dd>
           </>
         )}
-        {/* Context, not Outcome. This row renders the record's markdown body,
-            while the field actually called `outcome` is the sentence under the
-            title on the closed card — so the page had two different things
-            labelled Outcome, showing different text, one of them not even the
-            field of that name. What the bodies hold is background: how the work
-            was funded, what has landed so far, what it is downstream of. */}
-        {c.detail && (
-          <>
-            <dt>
-              <Label>Context</Label>
-            </dt>
-            <dd className="max-w-[58ch] text-sm leading-relaxed">{c.detail}</dd>
-          </>
-        )}
         {/* One row, because it was always one idea. Source of truth and
             Related asked a reader to hold a distinction the register itself
             could not keep: the forum thread that proves a commitment is also
@@ -551,6 +537,24 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             record carried the same one, set in a single pass. This comes from
             the CMS's own last-edited time, which is a weaker claim and a true
             one. */}
+        {/* The write-up lives on its own page.
+            It used to render here as a "Context" row, which worked while the
+            bodies were two or three sentences and stops working the moment
+            they are not: a definition list is for short facts, and several
+            hundred words in a `dd` beside a 6rem label is not one.
+
+            Only shown when there is something to read, so this is never a link
+            to a page holding nothing the card did not already say. */}
+        {c.detail && (
+          <>
+            <dt>
+              <Label>Read</Label>
+            </dt>
+            <dd className="text-sm">
+              <LinkRow label="The full record" href={`/roadmap/${c.slug}`} />
+            </dd>
+          </>
+        )}
         {c.lastUpdated && (
           <>
             <dt>
