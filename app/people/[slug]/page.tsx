@@ -66,7 +66,18 @@ export default async function PersonPage({
   );
 
   return (
-    <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
+    // No top padding under a banner. The 20 was the room a back link sat in,
+    // and these pages do not have one — a person is not a child of the roadmap
+    // — so it was leaving 80px of nothing between the header and the cover.
+    // The header is sticky and stays in flow, so the banner can meet it.
+    // Without a cover the padding stays, or the title butts into the header.
+    <article
+      className={
+        person.cover
+          ? "mx-auto w-full max-w-[46rem] pb-28"
+          : "mx-auto w-full max-w-[46rem] pt-20 pb-28"
+      }
+    >
       {person.cover && (
         <div>
           <RecordCover src={person.cover} alt={`${person.name} cover image`} />

@@ -66,7 +66,18 @@ export default async function OrganizationPage({
   const owned = commitments.filter((c) => c.ownerSlug === org.slug);
 
   return (
-    <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
+    // No top padding under a banner. The 20 was the room a back link sat in,
+    // and these pages do not have one — a person is not a child of the roadmap
+    // — so it was leaving 80px of nothing between the header and the cover.
+    // The header is sticky and stays in flow, so the banner can meet it.
+    // Without a cover the padding stays, or the title butts into the header.
+    <article
+      className={
+        org.cover
+          ? "mx-auto w-full max-w-[46rem] pb-28"
+          : "mx-auto w-full max-w-[46rem] pt-20 pb-28"
+      }
+    >
       {/* No back link. A commitment lives at /roadmap/<slug> and the register
           really is its parent, so naming it is true there. An organisation is
           a sibling route that happens to be reached from a card, and a link
