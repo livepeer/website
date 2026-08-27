@@ -419,7 +419,12 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
           a face still goes to its own profile. */}
         <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
           <StateMark state={c.state} />
-          <span className="relative z-10 flex flex-wrap items-center gap-x-3 gap-y-2">
+          {/* z-[1], not z-10. This only has to clear the stretched link's
+              ::before, which carries no z-index of its own — at z-10 it tied
+              with the sticky quarter band above and won on document order,
+              so a card's credit painted over the heading as it scrolled
+              under. */}
+          <span className="relative z-[1] flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="shrink-0">by</span>
             <span className="text-foreground">{c.owner}</span>
             {c.contributors && c.contributors.length > 0 && (
