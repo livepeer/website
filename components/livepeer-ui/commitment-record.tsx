@@ -150,7 +150,7 @@ function Row({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-cols-1 items-start gap-x-3 gap-y-1 rounded-md px-2 py-1.5 transition-colors hover:bg-foreground/[0.04] sm:grid-cols-[11rem_1fr]">
+    <div className="grid grid-cols-1 items-start gap-x-3 gap-y-1 px-2 py-1.5 sm:grid-cols-[11rem_1fr]">
       <dt className="flex items-center gap-2 text-sm text-muted-foreground">
         <Icon className="size-4 shrink-0" aria-hidden />
         {label}
