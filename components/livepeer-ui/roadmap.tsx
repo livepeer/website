@@ -2,12 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  SearchIcon,
-  XIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon, SearchIcon, XIcon } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -82,22 +77,6 @@ function StateMark({ state }: { state: Commitment["state"] }) {
       </span>
     </span>
   );
-}
-
-/**
- * One date format across the page.
- *
- * The register stores ISO, which read as a deliberate stamp while the page had
- * a monospace face to set it in. Without one it just looks unformatted, and it
- * disagreed with the masthead's own "last verified" date two lines away.
- */
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 }
 
 /**
@@ -362,221 +341,63 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  */
 function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
   return (
-    <details className="group rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] dark:bg-card dark:hover:bg-secondary">
-      <summary className="block cursor-pointer list-none rounded-lg p-6 outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-7 [&::-webkit-details-marker]:hidden">
-        {/* The index line: what kind of work, and where it stands.
-            The state used to sit in the footer beside the owner, which put
-            three unlike things on one line — a status, a party and a roster —
-            and left the top of the card as an eyebrow with an empty right half.
-            Workstream and state are the two attributes you sort and filter by,
-            so they belong together and they belong first; the footer is then
-            free to be about people only. It also rhymes with the quarter band
-            above, which is already label-left, count-right.
-
-            The chevron keeps the far right and a gap-5 between: pressed up
-            against the state it read as a control with a label on it. */}
-        <div className="flex items-center gap-x-5">
-          <Label>{c.workstream}</Label>
-          {/* 44px touch target on a 20px glyph, and the only moving part. */}
-          <span className="-m-3 ml-auto flex size-11 shrink-0 items-center justify-center p-3 text-muted-foreground transition-colors group-hover:text-foreground">
-            <ChevronDownIcon className="size-5 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none" />
-          </span>
-        </div>
-        {/* Bigger than the 16px it was. The quarter heading above is 24px, so
-            at 16 the register's actual content was set smaller than the
-            scaffolding holding it — the title is what anyone scans for, and it
-            should outrank everything inside the card. */}
-        <h3 className="mt-3 text-lg font-medium tracking-[-0.015em]">
+    <div className="group relative rounded-lg bg-muted p-6 transition-colors hover:bg-foreground/[0.06] sm:p-7 dark:bg-card dark:hover:bg-secondary">
+      {/* The index line: what kind of work, and where it stands.
+          The state used to sit in the footer beside the owner, which put three
+          unlike things on one line — a status, a party and a roster — and left
+          the top of the card as an eyebrow with an empty right half. */}
+      <div className="flex items-center gap-x-5">
+        <Label>{c.workstream}</Label>
+        {/* Pointing right, not down. The card used to expand in place, and a
+            chevron that rotated was the honest sign of it; now it opens a
+            record over the register, so the affordance points the way the
+            content arrives from. */}
+        <span className="-m-3 ml-auto flex size-11 shrink-0 items-center justify-center p-3 text-muted-foreground transition-colors group-hover:text-foreground">
+          <ArrowUpRightIcon className="size-5" />
+        </span>
+      </div>
+      {/* Bigger than the 16px it was. The quarter heading above is 24px, so at
+          16 the register's actual content was set smaller than the scaffolding
+          holding it — the title is what anyone scans for. */}
+      <h3 className="mt-3 text-lg font-medium tracking-[-0.015em]">
+        {/* The stretched link.
+            A sibling that covers the card rather than a wrapper around it, so
+            the faces below keep their own links without anchors nesting inside
+            an anchor. It hangs off the title because that is what the record
+            is called — a screen reader announces the heading as the link, not
+            "read more". */}
+        <Link
+          href={`/roadmap/${c.slug}`}
+          className="rounded-lg outline-none before:absolute before:inset-0 before:rounded-lg focus-visible:ring-2 focus-visible:ring-ring"
+        >
           {c.title}
-        </h3>
-        <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
-          {c.outcome}
-        </p>
-        {/* The card's two corners, carrying its two registers: where the work
-            stands on the left, who is behind it on the right.
+        </Link>
+      </h3>
+      <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
+        {c.outcome}
+      </p>
+      {/* The card's two corners, carrying its two registers: where the work
+          stands on the left, who is behind it on the right.
 
-            The state used to ride the index line at the top and the credit sat
-            alone at the bottom left, which left the footer half empty and put a
-            status in the same row as a taxonomy label. Down here the pair reads
-            as a caption on the record — one glance answers "is this live?" and
-            "whose is it?" without either question borrowing the other's row.
+          justify-between rather than an auto margin, because both ends wrap: at
+          375px the credit drops to its own line and each end keeps its own left
+          edge, which is what an auto margin would not do.
 
-            justify-between rather than an auto margin, because both ends wrap:
-            at 375px the credit drops to its own line and each end keeps its own
-            left edge, which is what an auto margin would not do.
-
-            The faces are optional and genuinely so — a register that credits
-            foundations, SPEs and pseudonymous contributors should not imply a
-            roster exists when it does not.
-
-            Not the target: the quarter is the heading this card sits under, and
-            repeating it is noise. */}
-        <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
-          <StateMark state={c.state} />
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            {/* "by", lowercase, rather than an OWNER eyebrow.
-                The uppercase label was the same treatment as the workstream at
-                the top of the card, which made one visual language mean two
-                things: a value up there, a field name down here. Uppercase now
-                marks a value and nothing else.
-
-                A party name sitting beside portraits does not need announcing —
-                "by" is enough to make it a credit, and unlike "Built by" it
-                carries no tense, which matters when two thirds of this register
-                has not happened yet.
-
-                The party takes foreground. It is the fact in this row; at muted
-                it was set at the same weight as the word introducing it. */}
-            <span className="shrink-0">by</span>
-            <span className="text-foreground">{c.owner}</span>
-            {c.contributors && c.contributors.length > 0 && (
-              <Faces people={c.contributors} />
-            )}
-          </span>
-        </div>
-      </summary>
-
-      {/* Only what the card does not already say. State, workstream, the
-          accountable party, the roster and the quarter are all in the summary,
-          so repeating any of them made opening a card feel like it revealed
-          nothing. Sources lead: they are why this page can call itself
-          canonical. */}
-      {/* 8rem, not the 10 it was: that was widened for a "Built and funded by"
-          label that no longer exists, and left 70px of dead column beside every
-          remaining one.
-
-          Below sm this collapses to one column, where gap-y-5 spaced a label
-          from its own value exactly as far as from the next pair — so the list
-          read as disconnected blocks rather than pairs. Tight to its value,
-          loose to the next.
-
-          The sm reset repeats the :not() rather than targeting bare dt: the
-          selectors would otherwise differ in specificity, the reset would lose,
-          and every desktop label would sit 20px below the value it names. */}
-      {/* px-6/sm:px-7, matching the summary's own p-6/sm:p-7. At px-5/sm:px-6
-          every label in the panel started 4px left of "Owner" directly above
-          it — small enough to look like a rendering fault rather than a
-          decision. The panel is a continuation of the summary's last row, so it
-          keeps its measure. */}
-      {/* 6rem and a 1.5rem gutter, down from 8rem and 2rem. Measured, the
-          longest label in this list — LAST VERIFIED — is 92.6px, so an 8rem
-          track carried 35px that nothing in it ever used and pushed every value
-          out to 160px. 6rem clears the longest by 3px. */}
-      <dl className="grid gap-x-6 gap-y-1.5 px-6 pb-6 [&>dt:not(:first-of-type)]:mt-5 sm:grid-cols-[6rem_1fr] sm:gap-y-5 sm:px-7 sm:pb-7 sm:[&>dt:not(:first-of-type)]:mt-0">
-        {/* Funding leads the panel: with the owner on the card face and the
-            date in the band above it, this is the fourth thing the requirements
-            doc names in its definition of a commitment — "a dated, owned
-            undertaking to deliver a named outcome to the network, with its
-            funding source identified" — and the card was quietly dropping it.
-
-            Free text, as the board's own field is. */}
-        {c.funding && (
-          <>
-            <dt>
-              <Label>Funding</Label>
-            </dt>
-            <dd className="max-w-[58ch] text-sm leading-relaxed">
-              {c.funding}
-            </dd>
-          </>
-        )}
-        {/* One row, because it was always one idea. Source of truth and
-            Related asked a reader to hold a distinction the register itself
-            could not keep: the forum thread that proves a commitment is also
-            where the work is happening. Every record carries at least one, so
-            this row is never absent — the evidence is the point of the page. */}
-        <dt>
-          <Label>Related</Label>
-        </dt>
-        <dd className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-          {c.related.map((link) => (
-            <LinkRow key={link.href} {...link} />
-          ))}
-        </dd>
-        {/* Who to ask, next to where to check.
-            The card face names the organisation, because that is who committed
-            — but "when will this actually land" is a question no organisation
-            can answer, and until this row existed a reader with that question
-            had nowhere to take it. Linked to a forum profile where there is a
-            handle, since a name you cannot reach is only half an answer.
-
-            Absent rather than placeheld when nobody is named: inventing a
-            contact would send someone to a person who has not agreed to be
-            asked. */}
-        {c.accountable && (
-          <>
-            <dt>
-              <Label>Contact</Label>
-            </dt>
-            <dd className="text-sm">
-              {c.accountable.profile ? (
-                <LinkRow
-                  label={c.accountable.name}
-                  href={`https://forum.livepeer.org/u/${c.accountable.profile}`}
-                />
-              ) : (
-                c.accountable.name
-              )}
-            </dd>
-          </>
-        )}
-        {/* When the commitment was made, not when it lands.
-            A target that has moved says nothing on its own; a target that has
-            moved since a known commitment date is a slip a reader can see. */}
-        {c.issued && (
-          <>
-            <dt>
-              <Label>Committed</Label>
-            </dt>
-            <dd className="text-sm tabular-nums">{formatDate(c.issued)}</dd>
-          </>
-        )}
-        {/* Shipped keeps its date: the summary drops the target for shipped
-            work, so this is the one place it appears. */}
-        {c.state === "shipped" && (
-          <>
-            <dt>
-              <Label>Shipped</Label>
-            </dt>
-            <dd className="text-sm tabular-nums">{formatDate(c.shippedAt!)}</dd>
-          </>
-        )}
-        {/* "Last updated", not "last verified".
-            The old label claimed a human had re-read the record and stood
-            behind it, off a date somebody was meant to bump by hand — and every
-            record carried the same one, set in a single pass. This comes from
-            the CMS's own last-edited time, which is a weaker claim and a true
-            one. */}
-        {/* The write-up lives on its own page.
-            It used to render here as a "Context" row, which worked while the
-            bodies were two or three sentences and stops working the moment
-            they are not: a definition list is for short facts, and several
-            hundred words in a `dd` beside a 6rem label is not one.
-
-            Only shown when there is something to read, so this is never a link
-            to a page holding nothing the card did not already say. */}
-        {c.detail && (
-          <>
-            <dt>
-              <Label>Read</Label>
-            </dt>
-            <dd className="text-sm">
-              <LinkRow label="The full record" href={`/roadmap/${c.slug}`} />
-            </dd>
-          </>
-        )}
-        {c.lastUpdated && (
-          <>
-            <dt>
-              <Label>Last updated</Label>
-            </dt>
-            <dd className="text-sm text-muted-foreground tabular-nums">
-              {formatDate(c.lastUpdated)}
-            </dd>
-          </>
-        )}
-      </dl>
-    </details>
+          The faces are optional and genuinely so — a register that credits
+          foundations, SPEs and pseudonymous contributors should not imply a
+          roster exists when it does not. They sit above the stretched link so
+          a face still goes to its own profile. */}
+      <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
+        <StateMark state={c.state} />
+        <span className="relative z-10 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span className="shrink-0">by</span>
+          <span className="text-foreground">{c.owner}</span>
+          {c.contributors && c.contributors.length > 0 && (
+            <Faces people={c.contributors} />
+          )}
+        </span>
+      </div>
+    </div>
   );
 }
 
