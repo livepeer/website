@@ -3,7 +3,9 @@ title: Documentation v2
 outcome: Restructure the docs so builders can find the network's capabilities without reading the source.
 workstream: Agent
 state: shipped
-owner: Documentation Restructure RFP
+owner: Livepeer Foundation
+# The RFP is how the work was paid for, not who was answerable for it.
+funding: Documentation Restructure RFP
 contributors:
   # Placeholder cast — invented people on real shipped work, restored so the
   # card's credit line is not half empty while real rosters are collected.
