@@ -464,6 +464,8 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
                 stretched link. */}
             <Link
               href={`/organizations/${c.ownerSlug}`}
+              // The register stays where it was, same as the card link above.
+              scroll={false}
               className="pointer-events-auto text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
             >
               {c.owner}

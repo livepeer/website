@@ -28,6 +28,28 @@ import {
  * trapping, scroll locking, Esc, and the backdrop are all things that look
  * easy and are not, and the repo already had the primitive.
  */
+/**
+ * Whether a panel is already on screen when the next one mounts.
+ *
+ * A swap is not an entrance. Following an owner's name out of an open
+ * commitment replaces one record with another in the same surface, and sliding
+ * the panel in again would animate something that never left. But the two
+ * routes are different components in different files, so React unmounts one
+ * and mounts the other — there is no state between them to read. This is
+ * module scope for that reason.
+ *
+ * Counted rather than flagged: the incoming sheet renders before the outgoing
+ * one's cleanup runs, so the count is still 1 when the new one asks. The
+ * timestamp covers the other order, where the old one has already gone.
+ */
+let mountedSheets = 0;
+let lastUnmountedAt = 0;
+const SWAP_WINDOW_MS = 200;
+
+function replacingAnOpenSheet(): boolean {
+  return mountedSheets > 0 || Date.now() - lastUnmountedAt < SWAP_WINDOW_MS;
+}
+
 export function RecordSheet({
   href,
   title,
@@ -50,8 +72,15 @@ export function RecordSheet({
   //
   // Closing sets state first and navigates after, so the exit animation runs
   // before the history entry goes rather than unmounting mid-transition.
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(true), []);
+  const [open, setOpen] = useState(replacingAnOpenSheet);
+  useEffect(() => {
+    mountedSheets++;
+    setOpen(true);
+    return () => {
+      mountedSheets--;
+      lastUnmountedAt = Date.now();
+    };
+  }, []);
 
   // Over a cover the controls need to carry their own contrast. Muted
   // foreground on a photograph is legible over the dark half of an image and

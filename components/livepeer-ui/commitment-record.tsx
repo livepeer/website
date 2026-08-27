@@ -181,6 +181,7 @@ export function CommitmentRecord({
         <Row icon={ArrowUpRight} label="Owner">
           <Link
             href={`/organizations/${c.ownerSlug}`}
+            scroll={false}
             className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
           >
             {c.owner}

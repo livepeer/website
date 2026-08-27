@@ -41,6 +41,7 @@ function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
         <h3 className="text-sm font-medium">
           <Link
             href={`/roadmap/${c.slug}`}
+            scroll={false}
             className="rounded-sm outline-none before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
           >
             {c.title}
