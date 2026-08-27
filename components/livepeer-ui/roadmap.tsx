@@ -346,16 +346,11 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
           The state used to sit in the footer beside the owner, which put three
           unlike things on one line — a status, a party and a roster — and left
           the top of the card as an eyebrow with an empty right half. */}
-      <div className="flex items-center gap-x-5">
-        <Label>{c.workstream}</Label>
-        {/* Pointing right, not down. The card used to expand in place, and a
-            chevron that rotated was the honest sign of it; now it opens a
-            record over the register, so the affordance points the way the
-            content arrives from. */}
-        <span className="-m-3 ml-auto flex size-11 shrink-0 items-center justify-center p-3 text-muted-foreground transition-colors group-hover:text-foreground">
-          <ArrowUpRightIcon className="size-5" />
-        </span>
-      </div>
+      {/* No affordance glyph. The whole card is the target and its surface
+          shifts on hover, which says "this opens" without an icon claiming a
+          corner — the arrow was left over from the accordion's chevron, and
+          indicated nothing the card did not already. */}
+      <Label>{c.workstream}</Label>
       {/* Bigger than the 16px it was. The quarter heading above is 24px, so at
           16 the register's actual content was set smaller than the scaffolding
           holding it — the title is what anyone scans for. */}

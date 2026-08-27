@@ -57,13 +57,22 @@ export function CommitmentSheet({
         // Above the site header, which sits at z-80. At the sheet's default
         // z-50 the header painted over the panel and its menu button sat on
         // top of this one's close control — a modal you cannot close.
-        overlayClassName="z-[90]"
-        // Full width below sm, then a reading column. Both overrides are
-        // written with the same data-[side=right] prefix as the defaults they
-        // replace — a bare w-full loses to the variant-scoped w-3/4, which is
-        // how this first rendered as a 281px strip of prose on a phone with a
-        // dead margin beside it.
-        className="z-[90] gap-0 overflow-y-auto data-[side=right]:w-full data-[side=right]:sm:max-w-[42rem]"
+        //
+        // No blur. The default backdrop frosts the whole page, which reads as
+        // a heavy modal state; this is a record opening beside the register,
+        // and the register should stay legible behind it. A plain scrim is
+        // also cheaper — a full-viewport backdrop-filter is the sort of thing
+        // that costs frames on a mid-range laptop.
+        overlayClassName="z-[90] bg-black/40 supports-backdrop-filter:backdrop-blur-none"
+        // Full width below sm, then a reading column. Every override carries
+        // the same data-[side=right] prefix as the default it replaces — a
+        // bare w-full loses to the variant-scoped w-3/4, which is how this
+        // first rendered as a 281px strip of prose on a phone.
+        //
+        // translate-x-full, not the sheet's default 2.5rem: that nudge plus a
+        // fade reads as a dialog appearing, and the thing being asked for is
+        // Notion's panel arriving from off-screen.
+        className="z-[90] gap-0 overflow-y-auto data-[side=right]:w-full data-[side=right]:duration-300 data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full data-[side=right]:sm:max-w-[46rem]"
       >
         {/* Named for assistive tech; the record renders its own visible
             heading, so this one is not shown twice. */}

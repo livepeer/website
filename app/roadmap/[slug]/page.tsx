@@ -80,7 +80,7 @@ export default async function CommitmentPage({
       >
         Roadmap
       </Link>
-      <div className="mt-10">
+      <div className="mt-12">
         <CommitmentRecord commitment={c} />
       </div>
     </article>

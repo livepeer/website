@@ -1,3 +1,12 @@
+import {
+  AlignLeft,
+  ArrowUpRight,
+  CalendarDays,
+  CircleChevronDown,
+  Clock,
+  Link2,
+} from "lucide-react";
+
 import type { Commitment } from "@/lib/roadmap";
 import { shippedPeriod } from "@/lib/roadmap";
 
@@ -8,7 +17,26 @@ import { shippedPeriod } from "@/lib/roadmap";
  * route that slides it over the index. Sharing the body is the point of doing
  * the overlay that way round — a drawer with its own copy of the layout is two
  * things to keep in step, and they drift the first time one of them changes.
+ *
+ * Laid out the way Notion lays out a database page, because that is where
+ * these records are written and it is a good pattern for the shape: a title,
+ * then properties as icon-label-value rows, then the body below them.
+ *
+ * The properties are deliberately quiet — small, muted, no rules between, no
+ * uppercase. They are the metadata around a write-up rather than the content,
+ * and the earlier treatment set them at the same weight as the prose they were
+ * introducing.
  */
+
+/** "2026-08-27" → "August 27, 2026". UTC, so the date does not shift by zone. */
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
 const STATE_LABEL: Record<Commitment["state"], string> = {
   next: "Committed",
@@ -16,20 +44,29 @@ const STATE_LABEL: Record<Commitment["state"], string> = {
   shipped: "Shipped",
 };
 
-function Fact({
+/**
+ * A property row.
+ *
+ * `<div>` inside `<dl>` is valid and is what lets a label and its value share
+ * a hover target and a grid cell without a wrapper element per column.
+ */
+function Row({
+  icon: Icon,
   label,
   children,
 }: {
+  icon: typeof AlignLeft;
   label: string;
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <dt className="text-xs tracking-[0.08em] text-muted-foreground uppercase">
+    <div className="grid grid-cols-1 items-start gap-x-3 gap-y-1 rounded-md px-2 py-1.5 transition-colors hover:bg-foreground/[0.04] sm:grid-cols-[11rem_1fr]">
+      <dt className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Icon className="size-4 shrink-0" aria-hidden />
         {label}
       </dt>
-      <dd className="mb-5 text-sm sm:mb-0">{children}</dd>
-    </>
+      <dd className="text-sm leading-relaxed">{children}</dd>
+    </div>
   );
 }
 
@@ -40,45 +77,61 @@ export function CommitmentRecord({
 }) {
   return (
     <>
-      <p className="text-xs tracking-[0.08em] text-muted-foreground uppercase">
-        {c.workstream}
-      </p>
-      <h1 className="mt-3 text-page-title text-balance">{c.title}</h1>
-      <p className="mt-5 max-w-[52ch] text-reading-body text-muted-foreground">
-        {c.outcome}
-      </p>
+      {/* Notion's page title: heavy, tight, and the largest thing on the
+          record by a clear margin. */}
+      <h1 className="text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
+        {c.title}
+      </h1>
 
-      <dl className="mt-12 grid gap-x-8 border-t border-border pt-8 sm:grid-cols-[7rem_1fr] sm:gap-y-5">
-        <Fact label="State">{STATE_LABEL[c.state]}</Fact>
-        <Fact label="By">{c.owner}</Fact>
+      <dl className="mt-8 space-y-0.5">
+        <Row icon={CircleChevronDown} label="State">
+          {STATE_LABEL[c.state]}
+        </Row>
+        <Row icon={ArrowUpRight} label="Owner">
+          {c.owner}
+        </Row>
         {c.state === "shipped" ? (
-          <Fact label="Shipped">{shippedPeriod(c.shippedAt!)}</Fact>
+          <Row icon={CalendarDays} label="Shipped on">
+            {shippedPeriod(c.shippedAt!)}
+          </Row>
         ) : (
-          <Fact label="Target">{c.target}</Fact>
+          <Row icon={AlignLeft} label="Target">
+            {c.target}
+          </Row>
         )}
-        {c.funding && <Fact label="Funding">{c.funding}</Fact>}
+        <Row icon={CircleChevronDown} label="Workstream">
+          {c.workstream}
+        </Row>
+        <Row icon={AlignLeft} label="Outcome">
+          {c.outcome}
+        </Row>
+        {c.funding && (
+          <Row icon={AlignLeft} label="Funding">
+            {c.funding}
+          </Row>
+        )}
         {c.accountable && (
-          <Fact label="Contact">
+          <Row icon={ArrowUpRight} label="Contact">
             {c.accountable.profile ? (
               <a
                 href={`https://forum.livepeer.org/u/${c.accountable.profile}`}
                 target="_blank"
                 rel="noreferrer"
-                className="underline underline-offset-4"
+                className="underline decoration-border underline-offset-4 hover:decoration-foreground"
               >
                 {c.accountable.name}
               </a>
             ) : (
               c.accountable.name
             )}
-          </Fact>
+          </Row>
         )}
         {c.contributors && c.contributors.length > 0 && (
-          <Fact label="Contributors">
+          <Row icon={ArrowUpRight} label="Contributors">
             {c.contributors.map((p) => p.name).join(", ")}
-          </Fact>
+          </Row>
         )}
-        <Fact label="Related">
+        <Row icon={Link2} label="Links">
           <ul className="space-y-1">
             {c.related.map((link) => (
               <li key={link.href}>
@@ -86,33 +139,41 @@ export function CommitmentRecord({
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="underline underline-offset-4"
+                  className="underline decoration-border underline-offset-4 hover:decoration-foreground"
                 >
                   {link.label}
                 </a>
               </li>
             ))}
           </ul>
-        </Fact>
+        </Row>
+        {c.lastUpdated && (
+          <Row icon={Clock} label="Last updated">
+            <span className="text-muted-foreground">
+              {formatDate(c.lastUpdated)}
+            </span>
+          </Row>
+        )}
       </dl>
 
-      {/* The write-up, unlabelled.
-          On the card it needed the word "Context" to say why a paragraph was
-          sitting among facts. Here it is the body and the facts are the aside,
-          so a label would be announcing the obvious.
+      {/* The write-up, unlabelled and below a rule, exactly where Notion puts
+          a page body. On the card it needed the word "Context" to explain why
+          a paragraph sat among facts; here it is the content and the
+          properties are the aside.
 
           HTML from either source: the markdown register renders through the
           blog's pipeline, Notion's blocks through lib/notion-blocks.ts. */}
-      {c.detail && (
+      {c.detail ? (
         <div
-          className="reading-prose mt-14 border-t border-border pt-10"
+          className="reading-prose mt-10 border-t border-border pt-10"
           dangerouslySetInnerHTML={{ __html: c.detail }}
         />
-      )}
-
-      {c.lastUpdated && (
-        <p className="mt-16 text-xs text-muted-foreground">
-          Last updated {c.lastUpdated}
+      ) : (
+        // Said plainly rather than left blank. Every commitment should carry a
+        // write-up, and an empty record is a prompt to write one rather than
+        // evidence that there is nothing to say.
+        <p className="mt-10 border-t border-border pt-10 text-sm text-muted-foreground">
+          No write-up yet.
         </p>
       )}
     </>
