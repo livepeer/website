@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 
-import {
-  RecordCover,
-  CommitmentRecord,
-} from "@/components/livepeer-ui/commitment-record";
+import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
+import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { RecordSheet } from "@/components/livepeer-ui/record-sheet";
 import { getRegister } from "@/lib/register";
 

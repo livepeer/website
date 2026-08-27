@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { RecordCover } from "@/components/livepeer-ui/commitment-record";
+import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { OrganizationRecord } from "@/components/livepeer-ui/organization-record";
 import { RecordSheet } from "@/components/livepeer-ui/record-sheet";
 import { getOrganizationRegister, getRegister } from "@/lib/register";

@@ -1,6 +1,7 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CircleChevronDown, Link2 } from "lucide-react";
 import Link from "next/link";
 
+import { RecordRow as Row } from "@/components/livepeer-ui/record-parts";
 import type { Organization } from "@/lib/organizations";
 import { shippedPeriod, type Commitment } from "@/lib/roadmap";
 
@@ -67,42 +68,61 @@ export function OrganizationRecord({
 }) {
   return (
     <>
-      <div className="flex items-center gap-4">
-        {org.logo && (
-          // A raw <img>: these are SVGs served straight from public/, and
-          // next/image needs dangerouslyAllowSVG to touch them — a global
-          // loosening to render files the repo itself controls.
-          <img
-            src={`/organizations/${org.logo}`}
-            alt=""
-            className="size-12 shrink-0 rounded-md object-contain"
-          />
-        )}
-        <span className="font-mono text-xs text-muted-foreground">
-          {org.type}
-        </span>
-      </div>
+      {/* The mark alone. The type used to sit beside it and is a property row
+          now, which is where a commitment states the same kind of fact. */}
+      {org.logo && (
+        // A raw <img>: these are SVGs served straight from public/, and
+        // next/image needs dangerouslyAllowSVG to touch them — a global
+        // loosening to render files the repo itself controls.
+        <img
+          src={`/organizations/${org.logo}`}
+          alt=""
+          className="size-12 shrink-0 rounded-md object-contain"
+        />
+      )}
 
       {/* The same page title the commitment record sets: heavy, tight, and the
           largest thing on the record by a clear margin. */}
       <h1 className="mt-4 text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
         {org.name}
       </h1>
+
+      {/* The lead, not a property row.
+          On a commitment the equivalent — Outcome — is a row because it is one
+          fact among nine. Here it would be one of two, and it is the sentence
+          that says what the body below is about. It reads at 18px under the
+          title; it does not read in an 11rem grid. */}
       <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
         {org.description}
       </p>
 
-      {org.link && (
-        <a
-          href={org.link}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-flex items-center gap-1.5 text-sm underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-        >
-          {new URL(org.link).host.replace(/^www\./, "")}
-          <ArrowUpRight className="size-3.5" aria-hidden />
-        </a>
-      )}
+      {/* The facts, set exactly as a commitment sets its own.
+          The two records swap places in one panel when a reader follows an
+          owner's name, so a different treatment on each side reads as two
+          unrelated pages rather than two records of the same kind.
+
+          Two rows, not nine. An organisation has fewer facts than a
+          commitment, and inventing rows to fill the table would be scaffolding
+          rather than content — Affiliated is the one that will earn a third,
+          once the placeholder people are replaced. */}
+      <dl className="mt-8 space-y-0.5">
+        <Row icon={CircleChevronDown} label="Type">
+          {org.type}
+        </Row>
+        {org.link && (
+          <Row icon={Link2} label="Website">
+            <a
+              href={org.link}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              {new URL(org.link).host.replace(/^www\./, "")}
+              <ArrowUpRight className="size-3.5 shrink-0" aria-hidden />
+            </a>
+          </Row>
+        )}
+      </dl>
 
       {org.detail && (
         <div

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { RecordCover } from "@/components/livepeer-ui/commitment-record";
+import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { OrganizationRecord } from "@/components/livepeer-ui/organization-record";
 import type { Organization } from "@/lib/organizations";
 import { getOrganizationRegister, getRegister } from "@/lib/register";

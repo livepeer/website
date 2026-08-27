@@ -3,10 +3,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import {
-  RecordCover,
-  CommitmentRecord,
-} from "@/components/livepeer-ui/commitment-record";
+import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
+import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { getRegister } from "@/lib/register";
 import { type Commitment } from "@/lib/roadmap";
 
