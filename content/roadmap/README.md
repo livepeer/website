@@ -50,7 +50,9 @@ in either source — the state and the date — and it moves views on its own.
 SPE, collective or funded programme. In Notion it is a relation to the
 **Organizations** table rather than free text, so an owner is a record with a
 type and a link and cannot be typed into existence twice. `people` are the
-individuals doing the work. They
+individuals doing the work — **Contributors** in Notion, where "People" had
+become ambiguous beside `Accountable` and the Livepeer people table it points
+at. They
 render as one credit on the closed card: **by**, the owner's name, and the
 faces beside it. A record that credits an organisation and no individuals is
 normal.

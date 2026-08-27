@@ -441,11 +441,12 @@ function toCommitment(
     );
   }
 
-  const roster = relationIds(p.People).map((id) => {
+  const roster = relationIds(p.Contributors).map((id) => {
     const person = people.get(id);
     if (!person) {
       throw new Error(
-        `${where}: People relates to ${id}, which is not in Livepeer people. ` +
+        `${where}: Contributors relates to ${id}, which is not in Livepeer ` +
+          `people. ` +
           `The integration may not be shared with that database.`
       );
     }
