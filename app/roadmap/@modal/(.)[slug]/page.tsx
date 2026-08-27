@@ -28,6 +28,7 @@ export default async function InterceptedCommitment({
   return (
     <RecordSheet
       href={`/roadmap/${slug}`}
+      closeTo="/roadmap"
       title={commitment.title}
       cover={
         commitment.cover && (

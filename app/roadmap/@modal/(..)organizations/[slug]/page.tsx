@@ -35,6 +35,7 @@ export default async function InterceptedOrganization({
   return (
     <RecordSheet
       href={`/organizations/${slug}`}
+      closeTo="/roadmap"
       title={org.name}
       cover={
         org.cover && (
