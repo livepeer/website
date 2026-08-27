@@ -266,6 +266,38 @@ async function readOrganizations(): Promise<Map<string, string>> {
 }
 
 /**
+ * The filename off the end of a Portrait link.
+ *
+ * The property is a Files entry holding an external URL, which is the only
+ * shape that does two things at once: Notion previews the image in the
+ * property, and the API returns the link verbatim rather than as a signed URL
+ * that expires within the hour.
+ *
+ * The site does not load that URL. It takes the last path segment and serves
+ * the copy committed to public/people — so production never depends on the
+ * host the link points at, and next/image needs no extra allowlist entry.
+ * The link is how Notion shows a face; the repo is where the face comes from.
+ *
+ * An uploaded file is ignored: those come back signed and expiring, and the
+ * name alone is not enough to trust that the same image is in the repo.
+ */
+function portraitFilename(prop: Json | undefined): string | undefined {
+  const files = prop?.files as
+    | { type?: string; external?: { url?: string } }[]
+    | undefined;
+  const url = files?.find((f) => f.type === "external")?.external?.url;
+  if (!url) return undefined;
+  try {
+    const name = decodeURIComponent(
+      new URL(url).pathname.split("/").pop() ?? ""
+    );
+    return name || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * The people register, read once and shared.
  *
  * Every commitment relates to two or three people and the same handful recur,
@@ -287,11 +319,11 @@ async function readPeople(): Promise<Map<string, Person>> {
       );
     }
 
-    const avatar = text(p.Avatar) || undefined;
+    const avatar = portraitFilename(p.Portrait);
     if (avatar && /[/\\:]/.test(avatar)) {
       throw new Error(
-        `${where}: Avatar is "${avatar}" — it must be a bare filename in ` +
-          `public/people, not a path or a URL.`
+        `${where}: Portrait resolves to "${avatar}", which is not a plain ` +
+          `filename. Link straight to the file in public/people.`
       );
     }
     // A filename that resolves to nothing would render a broken image where a
@@ -300,9 +332,9 @@ async function readPeople(): Promise<Map<string, Person>> {
     // Notion-hosted one is a signed URL that expires within the hour.
     if (avatar && !fs.existsSync(path.join(AVATAR_DIR, avatar))) {
       throw new Error(
-        `${where}: Avatar is "${avatar}", which is not in ` +
-          `public/people. Commit the portrait, or clear the field and ` +
-          `the face renders as a monogram.`
+        `${where}: Portrait points at "${avatar}", which is not in ` +
+          `public/people. Commit the portrait, or clear the field and the ` +
+          `face renders as a monogram.`
       );
     }
 

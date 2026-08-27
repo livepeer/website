@@ -73,7 +73,14 @@ two-owner records resolved that way: 2.0 validation is Foundation-owned with
 Inc named in `funding`, and LIP-118 is SPE-owned with rickstaa credited under
 `people`.
 
-`avatar` is a bare filename in `public/people`, never a path or a URL.
+`avatar` is a bare filename in `public/people`, never a path or a URL. In
+Notion it is the **Portrait** property: a Files entry holding an external link
+to the same file in the repo. That shape does two things at once — Notion
+previews the face in the property and in every relation chip, and the API
+returns the link verbatim rather than as a signed URL that expires within the
+hour. The site does not load that link; it takes the filename off the end and
+serves the committed copy, so production never depends on the host it points
+at and no extra image host is allowlisted.
 `profile` is a bare handle from a `forum.livepeer.org/u/…` URL — the card
 builds the link from it. Both are optional: a face with no portrait falls back
 to a monogram, and one that links nowhere is better than one that links at a
