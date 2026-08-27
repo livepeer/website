@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -72,29 +73,35 @@ export default async function CommitmentPage({
   if (!c) notFound();
 
   return (
-    <article className="mx-auto w-full max-w-[46rem] pb-28">
-      {/* Above the padding, so the banner runs to the column's edges the way
-          Notion's does. Sits under the site header rather than starting below
-          it, which is what makes it read as the page's own image. */}
+    <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
+      {/* Above the cover, with an arrow, and not the word "back".
+          It read as a caption when it sat under the banner saying only
+          "Roadmap". But "Back to roadmap" was wrong in the other direction:
+          most people reach a record from a shared link and have never seen
+          the register, so "back" describes a journey they did not make.
+          Naming the destination is true either way, and tells a first-time
+          reader what they would get. */}
+      <div className="px-6 sm:px-8">
+        <Link
+          href="/roadmap"
+          className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft
+            className="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none"
+            aria-hidden
+          />
+          All commitments
+        </Link>
+      </div>
+
       {c.cover && (
-        <div className="mt-20 mb-10">
+        <div className="mt-6 mb-10">
           <CommitmentCover src={c.cover} alt={`${c.title} cover image`} />
         </div>
       )}
-      <div className={c.cover ? "px-6 sm:px-8" : "px-6 pt-24 sm:px-8"}>
-        {/* Back to the list, not to the site. Someone arriving from a shared
-          link has no history to go back to, so this is the only way onward
-          into the rest of the register. Absent from the overlay, which has the
-          register behind it already. */}
-        <Link
-          href="/roadmap"
-          className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-        >
-          Roadmap
-        </Link>
-        <div className="mt-12">
-          <CommitmentRecord commitment={c} />
-        </div>
+
+      <div className={c.cover ? "px-6 sm:px-8" : "px-6 pt-10 sm:px-8"}>
+        <CommitmentRecord commitment={c} />
       </div>
     </article>
   );
