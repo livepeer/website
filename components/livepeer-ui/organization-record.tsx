@@ -130,20 +130,32 @@ export function OrganizationRecord({
     <>
       {/* The mark alone. The type used to sit beside it and is a property row
           now, which is where a commitment states the same kind of fact. */}
+      {/* The mark, at the size a person's portrait sits, and lifted over the
+          banner the same way.
+
+          Square rather than a circle: these are logos, and a round crop takes
+          the corners off artwork that was drawn to have them. `relative` is
+          load-bearing — RecordCover is positioned and this is not, so without
+          it the banner paints over the lift and crops the mark.
+
+          A background behind it, because a logo with transparency would
+          otherwise sit on whatever slice of photograph it happens to overlap. */}
       {org.logo && (
-        // A raw <img>: these are SVGs served straight from public/, and
-        // next/image needs dangerouslyAllowSVG to touch them — a global
-        // loosening to render files the repo itself controls.
-        <img
-          src={`/organizations/${org.logo}`}
-          alt=""
-          className="size-12 shrink-0 rounded-md object-contain"
-        />
+        <div className={org.cover ? "relative -mt-16 sm:-mt-20" : "relative"}>
+          {/* A raw <img>: these are SVGs served straight from public/, and
+              next/image needs dangerouslyAllowSVG to touch them — a global
+              loosening to render files the repo itself controls. */}
+          <img
+            src={`/organizations/${org.logo}`}
+            alt=""
+            className="size-28 shrink-0 rounded-xl bg-background object-contain p-3 ring-4 ring-background sm:size-32"
+          />
+        </div>
       )}
 
       {/* The same page title the commitment record sets: heavy, tight, and the
           largest thing on the record by a clear margin. */}
-      <h1 className="mt-4 text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
+      <h1 className="mt-5 text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
         {org.name}
       </h1>
 

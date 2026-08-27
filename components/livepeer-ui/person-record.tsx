@@ -1,4 +1,4 @@
-import { ArrowUpRight, Link2, MessageSquare } from "lucide-react";
+import { ArrowUpRight, AtSign, Link2, Mail, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -59,27 +59,41 @@ export function PersonRecordView({
 }) {
   return (
     <>
-      {/* The portrait, at the size the logo sits on an organisation's record.
-          A monogram where there is none, so a page without a photograph is a
-          quieter page rather than a broken one. */}
-      {person.avatar ? (
-        <Image
-          src={`/people/${person.avatar}`}
-          alt=""
-          width={96}
-          height={96}
-          className="size-12 shrink-0 rounded-full object-cover"
-        />
-      ) : (
-        <span
-          aria-hidden
-          className="flex size-12 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground"
-        >
-          {person.name.charAt(0)}
-        </span>
-      )}
+      {/* The face is the page's image, so it is the size of one.
+          An organisation leads with a stock banner because it has no face; a
+          person has one, and leading with landscape photography over a 48px
+          circle had it the wrong way round. The covers were chosen for exactly
+          this — soft-focus rooms with nobody in them, so the banner does not
+          compete with the portrait sitting on it.
 
-      <h1 className="mt-4 text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
+          Lifted over the banner's lower edge where there is one, with a ring
+          in the page colour so it reads as separated from the image rather
+          than pasted onto it. */}
+      {/* relative is load-bearing: RecordCover is positioned and this is not,
+          so the banner painted over the lifted portrait and cropped its top
+          half. A positioned sibling paints above a static one whatever the
+          document order says. */}
+      <div className={person.cover ? "relative -mt-16 sm:-mt-20" : "relative"}>
+        {person.avatar ? (
+          <Image
+            src={`/people/${person.avatar}`}
+            alt={person.name}
+            width={224}
+            height={224}
+            priority
+            className="size-28 shrink-0 rounded-full object-cover ring-4 ring-background sm:size-32"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="flex size-28 shrink-0 items-center justify-center rounded-full bg-muted text-2xl font-medium text-muted-foreground ring-4 ring-background sm:size-32"
+          >
+            {person.name.charAt(0)}
+          </span>
+        )}
+      </div>
+
+      <h1 className="mt-5 text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
         {person.name}
       </h1>
 
@@ -96,6 +110,29 @@ export function PersonRecordView({
             >
               {person.affiliation.name}
             </Link>
+          </Row>
+        )}
+        {person.x && (
+          <Row icon={AtSign} label="X">
+            <a
+              href={`https://x.com/${person.x}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              @{person.x}
+              <ArrowUpRight className="size-3.5 shrink-0" aria-hidden />
+            </a>
+          </Row>
+        )}
+        {person.email && (
+          <Row icon={Mail} label="Email">
+            <a
+              href={`mailto:${person.email}`}
+              className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              {person.email}
+            </a>
           </Row>
         )}
         {person.profile && (

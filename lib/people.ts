@@ -29,6 +29,23 @@ export type PersonRecord = Person & {
    * real people, and a wrong sentence here is published under their face.
    */
   detail?: string;
+  /**
+   * The bare handle from an x.com URL — never the URL, and no leading @.
+   *
+   * The site builds the link, which is why the field is validated: it cannot
+   * smuggle a protocol or a second host into an href. Optional, and never
+   * guessed — a plausible handle belongs to a real stranger.
+   */
+  x?: string;
+  /**
+   * A public contact address, where one has been offered.
+   *
+   * Rendered as a mailto, so it is only ever set for someone who has agreed to
+   * be reachable at it in public. A handle is an identity a person chose to
+   * publish; an address is not, and one on a public page is scraped within
+   * days. Empty is the default and needs no reason.
+   */
+  email?: string;
   /** The banner, as Notion sets it — an absolute URL on the image CDN. */
   cover?: string;
   /**
@@ -45,6 +62,8 @@ const IMAGE_HOST = "cdn.sanity.io";
 const AVATAR_DIR = path.join(process.cwd(), "public", "people");
 const dir = path.join(process.cwd(), "content", "people");
 const PROFILE_HANDLE = /^[a-zA-Z0-9_.-]{2,20}$/;
+// X caps handles at 15, letters, digits and underscore.
+const X_HANDLE = /^[A-Za-z0-9_]{1,15}$/;
 
 function readCover(value: unknown, file: string): string | undefined {
   if (!value) return undefined;
@@ -108,6 +127,24 @@ function parse(file: string): PersonRecord {
     );
   }
 
+  const x = data.x ? String(data.x).replace(/^@/, "") : undefined;
+  if (x && !X_HANDLE.test(x)) {
+    throw new Error(
+      `content/people/${file}: x ${JSON.stringify(x)} must be the bare handle ` +
+        `from an x.com/... URL — up to 15 letters, digits or underscores.`
+    );
+  }
+
+  const email = data.email ? String(data.email) : undefined;
+  // Shape only — an address that is not one would render a mailto nobody can
+  // use, and the field is typed as an email in Notion for the same reason.
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error(
+      `content/people/${file}: email ${JSON.stringify(email)} is not an ` +
+        `address.`
+    );
+  }
+
   const affiliation = data.affiliation
     ? {
         name: String(data.affiliation),
@@ -120,6 +157,8 @@ function parse(file: string): PersonRecord {
     name,
     avatar,
     profile,
+    x,
+    email,
     affiliation,
     cover: readCover(data.cover, file),
     detail: content.trim() || undefined,

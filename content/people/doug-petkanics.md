@@ -2,6 +2,7 @@
 name: Doug Petkanics
 avatar: doug-petkanics.jpg
 profile: dob
+x: petkanics
 affiliation: Livepeer Inc
 cover: https://cdn.sanity.io/images/l36s876e/production/bee153307efedc0bc25965d051c3e81ee956a0cf-1456x816.png
 ---

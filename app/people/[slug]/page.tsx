@@ -68,7 +68,7 @@ export default async function PersonPage({
   return (
     <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
       {person.cover && (
-        <div className="mb-10">
+        <div>
           <RecordCover src={person.cover} alt={`${person.name} cover image`} />
         </div>
       )}

@@ -794,6 +794,8 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
         name,
         avatar: portraitFilename(p.Portrait),
         profile: text(p["Forum handle"]) || undefined,
+        x: text(p["X handle"]).replace(/^@/, "") || undefined,
+        email: (p.Email?.email as string | undefined) || undefined,
         affiliation: affiliationName
           ? { name: affiliationName, slug: slugify(affiliationName) }
           : undefined,

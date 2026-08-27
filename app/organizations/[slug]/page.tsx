@@ -77,12 +77,20 @@ export default async function OrganizationPage({
           from this page where that is honest, on every row of "On the
           roadmap". */}
       {org.cover && (
-        <div className="mt-6 mb-10">
+        <div>
           <RecordCover src={org.cover} alt={`${org.name} cover image`} />
         </div>
       )}
 
-      <div className={org.cover ? "px-6 sm:px-8" : "px-6 pt-10 sm:px-8"}>
+      <div
+        className={
+          org.cover
+            ? org.logo
+              ? "px-6 sm:px-8"
+              : "px-6 pt-10 sm:px-8"
+            : "px-6 pt-10 sm:px-8"
+        }
+      >
         <OrganizationRecord organization={org} owned={owned} />
       </div>
     </article>
