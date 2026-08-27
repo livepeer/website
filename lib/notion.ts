@@ -391,11 +391,11 @@ function toCommitment(
     );
   }
 
-  const stateName = selectName(p.State);
+  const stateName = selectName(p.Status);
   const state = stateName ? STATE_BY_NOTION[stateName] : undefined;
   if (!state) {
     throw new Error(
-      `${where}: State is ${JSON.stringify(stateName ?? null)}, not one of ` +
+      `${where}: Status is ${JSON.stringify(stateName ?? null)}, not one of ` +
         `${Object.keys(STATE_BY_NOTION).join(", ")}.`
     );
   }
@@ -408,7 +408,7 @@ function toCommitment(
   // the card and forgot the date.
   if ((state === "shipped") !== Boolean(shippedAt)) {
     throw new Error(
-      `${where}: State is "${stateName}" but Shipped on is ` +
+      `${where}: Status is "${stateName}" but Shipped on is ` +
         `${shippedAt ?? "empty"}. A shipped commitment needs a date, and a ` +
         `dated one is shipped.`
     );

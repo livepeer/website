@@ -8,8 +8,11 @@ import {
   Link2,
 } from "lucide-react";
 
-import type { Commitment } from "@/lib/roadmap";
+import type { Commitment, Person } from "@/lib/roadmap";
 import { shippedPeriod } from "@/lib/roadmap";
+
+/** Where a credited face links; the record builds the URL from a handle. */
+const PROFILE_HOST = "forum.livepeer.org";
 
 /**
  * One commitment, rendered once.
@@ -72,6 +75,55 @@ function formatDate(iso: string): string {
   });
 }
 
+/**
+ * A credited person: portrait, then name.
+ *
+ * The card shows faces alone and identifies them on hover, which is right
+ * where the space is tight. Here there is room for both, and a record that
+ * made you hover to learn who worked on something would be worse than the
+ * plain list of names it replaced — recognition and identification at once,
+ * no interaction required.
+ *
+ * A monogram where there is no portrait, so a roster does not become a ragged
+ * mix of pictures and bare text.
+ */
+function Credit({ person }: { person: Person }) {
+  const name = (
+    <span className="flex items-center gap-2">
+      {person.avatar ? (
+        <Image
+          src={`/people/${person.avatar}`}
+          alt=""
+          width={20}
+          height={20}
+          className="size-5 shrink-0 rounded-full object-cover"
+        />
+      ) : (
+        <span
+          aria-hidden
+          className="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-[0.625rem] font-medium text-muted-foreground"
+        >
+          {person.name.charAt(0)}
+        </span>
+      )}
+      {person.name}
+    </span>
+  );
+
+  return person.profile ? (
+    <a
+      href={`https://${PROFILE_HOST}/u/${person.profile}`}
+      target="_blank"
+      rel="noreferrer"
+      className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {name}
+    </a>
+  ) : (
+    name
+  );
+}
+
 const STATE_LABEL: Record<Commitment["state"], string> = {
   next: "Committed",
   building: "In progress",
@@ -81,8 +133,12 @@ const STATE_LABEL: Record<Commitment["state"], string> = {
 /**
  * A property row.
  *
- * `<div>` inside `<dl>` is valid and is what lets a label and its value share
- * a hover target and a grid cell without a wrapper element per column.
+ * `<div>` inside `<dl>` is valid and is what keeps a label and its value in
+ * one grid row without a wrapper element per column.
+ *
+ * No hover state. Notion highlights a property row because clicking it edits
+ * the value; here the record is read-only, so the same highlight would be
+ * promising an interaction that does not exist.
  */
 function Row({
   icon: Icon,
@@ -118,7 +174,7 @@ export function CommitmentRecord({
       </h1>
 
       <dl className="mt-8 space-y-0.5">
-        <Row icon={CircleChevronDown} label="State">
+        <Row icon={CircleChevronDown} label="Status">
           {STATE_LABEL[c.state]}
         </Row>
         <Row icon={ArrowUpRight} label="Owner">
@@ -146,23 +202,18 @@ export function CommitmentRecord({
         )}
         {c.accountable && (
           <Row icon={ArrowUpRight} label="Contact">
-            {c.accountable.profile ? (
-              <a
-                href={`https://forum.livepeer.org/u/${c.accountable.profile}`}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-border underline-offset-4 hover:decoration-foreground"
-              >
-                {c.accountable.name}
-              </a>
-            ) : (
-              c.accountable.name
-            )}
+            <Credit person={c.accountable} />
           </Row>
         )}
         {c.contributors && c.contributors.length > 0 && (
           <Row icon={ArrowUpRight} label="Contributors">
-            {c.contributors.map((p) => p.name).join(", ")}
+            <ul className="flex flex-wrap gap-x-5 gap-y-2">
+              {c.contributors.map((p) => (
+                <li key={p.name}>
+                  <Credit person={p} />
+                </li>
+              ))}
+            </ul>
           </Row>
         )}
         <Row icon={Link2} label="Links">

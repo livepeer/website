@@ -52,6 +52,16 @@ export function CommitmentSheet({
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(true), []);
 
+  // Over a cover the controls need to carry their own contrast. Muted
+  // foreground on a photograph is legible over the dark half of an image and
+  // invisible over the bright half, and these images have both. A dark scrim
+  // with a white glyph reads on either, and on either theme — the panel body
+  // is white in light mode, so a treatment tuned to the dark surface would
+  // fail there too.
+  const control = cover
+    ? "rounded-md bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+    : "rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
+
   return (
     <Sheet
       open={open}
@@ -106,14 +116,11 @@ export function CommitmentSheet({
           <a
             href={`/roadmap/${slug}`}
             aria-label="Open as full page"
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
+            className={control}
           >
             <Maximize2 className="size-4" aria-hidden />
           </a>
-          <SheetClose
-            aria-label="Close"
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-          >
+          <SheetClose aria-label="Close" className={control}>
             <X className="size-4" aria-hidden />
           </SheetClose>
         </div>
