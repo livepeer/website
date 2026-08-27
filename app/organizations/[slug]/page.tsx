@@ -103,19 +103,21 @@ export default async function OrganizationPage({
 
   return (
     <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
-      {/* Names the destination rather than saying "back": most readers reach
-          this from a roadmap card or a shared link, and have never seen the
-          index. */}
+      {/* Back to the register, not to an index of organisations — there
+          isn't one. These pages are reached from an owner's name on a roadmap
+          card, so the roadmap is both where a reader came from and the only
+          place that links here. Named rather than called "back", because a
+          shared link lands people here having seen neither. */}
       <div className="px-6 sm:px-8">
         <Link
-          href="/organizations"
+          href="/roadmap"
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft
             className="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none"
             aria-hidden
           />
-          All organizations
+          All commitments
         </Link>
       </div>
 

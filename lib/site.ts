@@ -31,7 +31,6 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Livepeer Token", href: "/token" },
         { label: "Delegate LPT", href: "https://explorer.livepeer.org" },
         { label: "Roadmap", href: "/roadmap" },
-        { label: "Organizations", href: "/organizations" },
       ],
     },
     {
