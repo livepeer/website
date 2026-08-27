@@ -49,6 +49,7 @@ export default async function InterceptedOrganization({
     >
       <OrganizationRecord
         organization={org}
+        overlay
         owned={commitments.filter((c) => c.ownerSlug === org.slug)}
       />
     </RecordSheet>

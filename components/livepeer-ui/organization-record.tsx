@@ -63,7 +63,13 @@ function initials(name: string) {
 }
 
 /** A commitment, at the size a supporting list wants. */
-function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
+function CommitmentRow({
+  commitment: c,
+  overlay,
+}: {
+  commitment: Commitment;
+  overlay: boolean;
+}) {
   return (
     // The whole row is the target, so the whole row answers the pointer. The
     // tint bleeds past the text column by the same 12px it is padded, which is
@@ -79,7 +85,7 @@ function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
         <h3 className="text-sm font-medium">
           <Link
             href={`/roadmap/${c.slug}`}
-            scroll={false}
+            scroll={!overlay}
             className="rounded-sm underline decoration-transparent underline-offset-4 outline-none transition-colors group-hover:decoration-border before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
           >
             {c.title}
@@ -142,9 +148,20 @@ function LinkRow({ href }: { href: string }) {
 export function OrganizationRecord({
   organization: org,
   owned,
+  overlay = false,
 }: {
   organization: Organization;
   owned: Commitment[];
+  /**
+   * Whether this is the panel over the register rather than a page.
+   *
+   * It decides one thing: whether a link out of here keeps the scroll
+   * position. In the panel it must — the register behind it is what the reader
+   * was in the middle of, and the link swaps the panel's contents rather than
+   * going anywhere. On a page it must not, or the destination opens at
+   * whatever offset the reader happened to be at when they clicked.
+   */
+  overlay?: boolean;
 }) {
   return (
     <>
@@ -249,7 +266,11 @@ export function OrganizationRecord({
                 <h3 className="text-sm font-medium">{label}</h3>
                 <ul className="mt-2">
                   {rows.map((c) => (
-                    <CommitmentRow key={c.slug} commitment={c} />
+                    <CommitmentRow
+                      key={c.slug}
+                      commitment={c}
+                      overlay={overlay}
+                    />
                   ))}
                 </ul>
               </div>

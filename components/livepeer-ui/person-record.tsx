@@ -24,14 +24,20 @@ import { shippedPeriod, type Commitment } from "@/lib/roadmap";
 const PROFILE_HOST = "forum.livepeer.org";
 
 /** A commitment, at the size a supporting list wants. */
-function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
+function CommitmentRow({
+  commitment: c,
+  overlay,
+}: {
+  commitment: Commitment;
+  overlay: boolean;
+}) {
   return (
     <li className="group relative -mx-3 rounded-md border-t border-border px-3 py-4 transition-colors hover:bg-accent">
       <div className="flex items-baseline justify-between gap-6">
         <h3 className="text-sm font-medium">
           <Link
             href={`/roadmap/${c.slug}`}
-            scroll={false}
+            scroll={!overlay}
             className="rounded-sm underline decoration-transparent underline-offset-4 outline-none transition-colors group-hover:decoration-border before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
           >
             {c.title}
@@ -52,10 +58,21 @@ export function PersonRecordView({
   person,
   contributed,
   accountableFor,
+  overlay = false,
 }: {
   person: PersonRecord;
   contributed: Commitment[];
   accountableFor: Commitment[];
+  /**
+   * Whether this is the panel over the register rather than a page.
+   *
+   * It decides one thing: whether a link out of here keeps the scroll
+   * position. In the panel it must — the register behind it is what the reader
+   * was in the middle of, and the link swaps the panel's contents rather than
+   * going anywhere. On a page it must not, or the destination opens at
+   * whatever offset the reader happened to be at when they clicked.
+   */
+  overlay?: boolean;
 }) {
   return (
     <>
@@ -105,7 +122,7 @@ export function PersonRecordView({
           <Row icon={Link2} label="Affiliation">
             <Link
               href={`/organizations/${person.affiliation.slug}`}
-              scroll={false}
+              scroll={!overlay}
               className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
             >
               {person.affiliation.name}
@@ -175,7 +192,7 @@ export function PersonRecordView({
           </h2>
           <ul className="mt-2">
             {accountableFor.map((c) => (
-              <CommitmentRow key={c.slug} commitment={c} />
+              <CommitmentRow key={c.slug} commitment={c} overlay={overlay} />
             ))}
           </ul>
         </section>
@@ -188,7 +205,7 @@ export function PersonRecordView({
           </h2>
           <ul className="mt-2">
             {contributed.map((c) => (
-              <CommitmentRow key={c.slug} commitment={c} />
+              <CommitmentRow key={c.slug} commitment={c} overlay={overlay} />
             ))}
           </ul>
         </section>

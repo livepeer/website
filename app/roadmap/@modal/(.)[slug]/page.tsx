@@ -40,7 +40,7 @@ export default async function InterceptedCommitment({
         )
       }
     >
-      <CommitmentRecord commitment={commitment} />
+      <CommitmentRecord commitment={commitment} overlay />
     </RecordSheet>
   );
 }

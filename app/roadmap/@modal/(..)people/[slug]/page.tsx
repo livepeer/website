@@ -43,6 +43,7 @@ export default async function InterceptedPerson({
     >
       <PersonRecordView
         person={person}
+        overlay
         contributed={commitments.filter((c) =>
           c.contributors?.some((p) => p.slug === person.slug)
         )}

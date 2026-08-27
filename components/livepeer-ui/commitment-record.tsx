@@ -51,8 +51,19 @@ const STATE_LABEL: Record<Commitment["state"], string> = {
 
 export function CommitmentRecord({
   commitment: c,
+  overlay = false,
 }: {
   commitment: Commitment;
+  /**
+   * Whether this is the panel over the register rather than a page.
+   *
+   * It decides one thing: whether a link out of here keeps the scroll
+   * position. In the panel it must — the register behind it is what the reader
+   * was in the middle of, and the link swaps the panel's contents rather than
+   * going anywhere. On a page it must not, or the destination opens at
+   * whatever offset the reader happened to be at when they clicked.
+   */
+  overlay?: boolean;
 }) {
   return (
     <>
@@ -69,7 +80,7 @@ export function CommitmentRecord({
         <Row icon={ArrowUpRight} label="Owner">
           <Link
             href={`/organizations/${c.ownerSlug}`}
-            scroll={false}
+            scroll={!overlay}
             className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
           >
             {c.owner}
