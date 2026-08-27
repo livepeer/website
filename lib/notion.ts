@@ -20,14 +20,20 @@ import {
  * whose state is a week stale is worse than no page at all. Everything else on
  * the site stays in-repo (see CLAUDE.md → Content).
  *
- * Two databases: Roadmap commitments, and Livepeer people. People are a
- * relation rather than repeated text so that a person's name, portrait and
- * profile id are stated once — the markdown register had eight copies of the
- * same person, and they had already drifted.
+ * Three databases: Roadmap commitments, Livepeer people, and Organizations.
+ * People and owners are relations rather than repeated text so that a name,
+ * portrait or handle is stated once — the markdown register had eight copies
+ * of the same person, and they had already drifted.
  *
- * People sits beside the register rather than inside it, and is named for
- * everyone rather than for the roadmap, because the same rows are meant to
- * credit people elsewhere on the site later.
+ * Both sit beside the register rather than inside it, and are named for
+ * everyone rather than for the roadmap, because the same rows are meant to be
+ * pointed at from elsewhere on the site later.
+ *
+ * The register also holds an `Accountable` person, which is deliberately not
+ * read here. Internally the single accountable owner is a human, as every
+ * project-management convention says it should be; publicly the card names the
+ * organisation, because putting a colleague's name against an institutional
+ * promise is a different and heavier claim than the page is making.
  *
  * The mapping is deliberately strict. Every rule the markdown reader enforced
  * is enforced here too, and a record that breaks one fails the build rather
@@ -45,7 +51,7 @@ const API = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
 
 /**
- * The two databases, overridable for a staging copy.
+ * The three databases, overridable for a staging copy.
  *
  * Defaulted rather than required: the ids are not secret — they appear in
  * every Notion URL — and a required env var for a constant that changes once
@@ -56,6 +62,8 @@ const COMMITMENTS_DB =
   process.env.NOTION_ROADMAP_DB ?? "0a51970884f44514a405f63d6bdb68db";
 const PEOPLE_DB =
   process.env.NOTION_PEOPLE_DB ?? "cdaf4aff05034435aed838eb2a8676ab";
+const ORGS_DB =
+  process.env.NOTION_ORGS_DB ?? "728d4f42db6d4ba4925ae177c08b1d70";
 
 /**
  * How stale the page may be, in seconds.
@@ -234,6 +242,30 @@ function readLinks(prop: Json | undefined, where: string): CommitmentLink[] {
 }
 
 /**
+ * The organisations, by id, so an owner relation resolves to a name.
+ *
+ * A relation rather than the select it replaced: an owner is now a record with
+ * a type and a link, which is what lets the same organisation be pointed at
+ * from anywhere else on the site later. The cost is this lookup, and the
+ * benefit is that "RaidGuild" cannot be typed into existence twice.
+ */
+async function readOrganizations(): Promise<Map<string, string>> {
+  const rows = await queryAll(ORGS_DB);
+  const orgs = new Map<string, string>();
+  for (const row of rows) {
+    const name = text(props(row).Name);
+    if (!name) {
+      throw new Error(
+        `Organizations row ${row.url as string} has no name. An owner with no ` +
+          `name is not a party anyone can be referred to.`
+      );
+    }
+    orgs.set(row.id as string, name);
+  }
+  return orgs;
+}
+
+/**
  * The people register, read once and shared.
  *
  * Every commitment relates to two or three people and the same handful recur,
@@ -329,6 +361,7 @@ function slugify(title: string): string {
 function toCommitment(
   row: Json,
   people: Map<string, Person>,
+  orgs: Map<string, string>,
   detail: string | undefined
 ): Commitment {
   const p = props(row);
@@ -372,11 +405,27 @@ function toCommitment(
     );
   }
 
-  const owner = selectName(p.Owner);
-  if (!owner) {
+  const ownerIds = relationIds(p.Owner);
+  if (ownerIds.length === 0) {
     throw new Error(
       `${where}: Owner is empty. Nothing reaches the page without one party ` +
         `answerable for it.`
+    );
+  }
+  // Notion cannot cap a relation at one, so the rule is enforced here rather
+  // than by the field. Two owners is the state this register exists to avoid:
+  // a reader whose date has moved would have nobody in particular to ask.
+  if (ownerIds.length > 1) {
+    throw new Error(
+      `${where}: Owner names ${ownerIds.length} parties. Exactly one is ` +
+        `answerable — put joint funding in Funding and contributors in People.`
+    );
+  }
+  const owner = orgs.get(ownerIds[0]!);
+  if (!owner) {
+    throw new Error(
+      `${where}: Owner relates to ${ownerIds[0]}, which is not in ` +
+        `Organizations. The integration may not be shared with that database.`
     );
   }
 
@@ -426,9 +475,10 @@ function toCommitment(
 
 /** The register, read from Notion. Throws rather than degrading. */
 export async function getNotionCommitments(): Promise<Commitment[]> {
-  const [rows, people] = await Promise.all([
+  const [rows, people, orgs] = await Promise.all([
     queryAll(COMMITMENTS_DB),
     readPeople(),
+    readOrganizations(),
   ]);
 
   // One body per row, in parallel: fourteen small requests that would
@@ -438,7 +488,7 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
   );
 
   const commitments = rows.map((row, i) =>
-    toCommitment(row, people, details[i])
+    toCommitment(row, people, orgs, details[i])
   );
 
   const seen = new Map<string, string>();

@@ -46,14 +46,19 @@ in either source — the state and the date — and it moves views on its own.
 
 ## Owners and people
 
-`owner` is the one party answerable for delivering — a team, company,
-foundation, SPE or RFP. `people` are the individuals doing the work. They
+`owner` is the one party answerable for delivering — a company, foundation,
+SPE, collective or funded programme. In Notion it is a relation to the
+**Organizations** table rather than free text, so an owner is a record with a
+type and a link and cannot be typed into existence twice. `people` are the
+individuals doing the work. They
 render as one credit on the closed card: **by**, the owner's name, and the
 faces beside it. A record that credits an organisation and no individuals is
 normal.
 
 Exactly one owner, on the convention that accountability cannot be split: two
-parties equally answerable means each can assume the other has it. Where work
+parties equally answerable means each can assume the other has it. Notion
+cannot cap a relation at one, so `lib/notion.ts` enforces it and fails the
+build on a second. Where work
 is genuinely shared, name the lead and put the rest where it belongs —
 `funding` for joint money, `people` for the individuals. Both of the register's
 two-owner records resolved that way: 2.0 validation is Foundation-owned with
@@ -76,6 +81,14 @@ records used to hold fabricated board ids — sequential zero-padded numbers,
 with the same person holding a different one on each record — and those are
 gone. Everyone else renders unlinked, which is the honest treatment. Never
 invent one to fill a gap.
+
+Notion also carries an **Accountable** person per commitment, which the site
+deliberately does not read. Every project-management convention puts a human
+in that role — RACI's single A, PRINCE2's Executive, a single-threaded owner —
+and internally that is what you want. Publicly the card names the
+organisation, because a named colleague against an institutional promise is a
+heavier claim than the page is making, and whoever is named collects the
+questions.
 
 ## `related`
 
