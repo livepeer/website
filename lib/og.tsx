@@ -122,6 +122,10 @@ export const ogArt = {
   // drift — but they are seen in different places by different readers, and
   // only the card had a reason to change. /blog and /brand differ the same way.
   roadmap: `${CDN}/236781e57df9491a4aa1b5d9cc7d71d6a8270c0c-1456x816.png`,
+  // The frame the Organizations database carries in Notion, so the card and
+  // the table a contributor edits show the same picture. Unused elsewhere —
+  // no two pages share a frame.
+  organizations: `${CDN}/4ac4787dd83522e28d270d96554f26b487ee7d66-1456x816.png`,
 } as const;
 
 /**

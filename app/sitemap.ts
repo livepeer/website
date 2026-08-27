@@ -33,6 +33,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/blog`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/compute`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/roadmap`, changeFrequency: "weekly", priority: 0.7 },
+    {
+      url: `${BASE_URL}/organizations`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     { url: `${BASE_URL}/primer`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/token`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/foundation`, changeFrequency: "monthly", priority: 0.5 },

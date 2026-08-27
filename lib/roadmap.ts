@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import { slugify } from "./organizations";
 
 /**
  * The canonical commitment register.
@@ -131,6 +132,15 @@ export type Commitment = {
    * to ask. Contributors are `people`; joint funding is `funding`.
    */
   owner: string;
+  /**
+   * The owner's page, as a slug — derived from the name by the one slugify, so
+   * a card's link and the page it points at cannot disagree.
+   *
+   * Derived rather than stored: the register names an owner, the Organizations
+   * table describes it, and nothing has to keep a second copy of the link in
+   * step.
+   */
+  ownerSlug: string;
   /** The people doing the work, shown as faces beside the owner's name in the
    *  card's "by" line — `Contributors` in Notion. Optional: many records name
    *  an organisation and no individuals, and an empty roster is normal. */
@@ -403,6 +413,7 @@ function parse(file: string): Commitment {
     workstream,
     state: declared,
     owner,
+    ownerSlug: slugify(owner),
     contributors: readPeople(data.contributors, file),
     accountable: readPeople(
       data.accountable ? [data.accountable] : undefined,

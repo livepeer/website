@@ -11,6 +11,12 @@ import {
   type Person,
   type Workstream,
 } from "./roadmap";
+import {
+  ORG_TYPES,
+  slugify,
+  type Organization,
+  type OrgType,
+} from "./organizations";
 
 /**
  * The commitment register, read from Notion.
@@ -101,6 +107,7 @@ const PROFILE_HOST = "forum.livepeer.org";
 
 /** Portraits are served from the repo, so the filename must resolve to one. */
 const AVATAR_DIR = path.join(process.cwd(), "public", "people");
+const LOGO_DIR = path.join(process.cwd(), "public", "organizations");
 
 /** Whether the register can be read from Notion at all. */
 export function hasNotionCredentials(): boolean {
@@ -391,13 +398,6 @@ async function readDetail(pageId: string): Promise<string | undefined> {
  * records are named 3c766022-2d08-813d is one nobody can link to by hand.
  * Titles change rarely and this is not a URL, so the trade is worth it.
  */
-function slugify(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[’'"]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 function toCommitment(
   row: Json,
@@ -532,6 +532,7 @@ function toCommitment(
     workstream,
     state,
     owner,
+    ownerSlug: slugify(owner),
     contributors: roster.length > 0 ? roster : undefined,
     accountable,
     target,
@@ -580,4 +581,91 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
   return commitments.sort((a, b) =>
     (b.shippedAt ?? "").localeCompare(a.shippedAt ?? "")
   );
+}
+
+/**
+ * The organisations, in full.
+ *
+ * A second pass over the same table `readOrganizations` reads for owner names —
+ * that one resolves a relation and needs nothing but the name, this one builds
+ * the pages. Kept separate rather than merged so the register does not pay for
+ * the bodies it never renders.
+ *
+ * What each organisation owns is not read here. A commitment names its own
+ * owner, and the pages derive the list by filtering the register, so the two
+ * cannot disagree.
+ */
+export async function getNotionOrganizations(): Promise<Organization[]> {
+  const rows = await queryAll(ORGS_DB);
+
+  const orgs = await Promise.all(
+    rows.map(async (row): Promise<Organization> => {
+      const p = props(row);
+      const name = text(p.Name);
+      const where = `Organizations row ${row.url as string}`;
+      if (!name) {
+        throw new Error(
+          `${where} has no name. A body with no name is not one anyone can be ` +
+            `referred to.`
+        );
+      }
+
+      const type = selectName(p.Type) as OrgType | undefined;
+      if (!type || !ORG_TYPES.includes(type)) {
+        throw new Error(
+          `${where} (${name}): Type is ${type ?? "empty"}, not one of ` +
+            `${ORG_TYPES.join(", ")}.`
+        );
+      }
+
+      const description = text(p.Description);
+      if (!description) {
+        throw new Error(
+          `${where} (${name}): Description is empty. It is the card line and ` +
+            `the page's share description, so a body without one reaches the ` +
+            `site unreadable away from its own page.`
+        );
+      }
+
+      // Same treatment as a portrait: the link is how Notion previews the
+      // mark, and the repo is where the site serves it from.
+      const logo = portraitFilename(p.Logo);
+      if (logo && !fs.existsSync(path.join(LOGO_DIR, logo))) {
+        throw new Error(
+          `${where} (${name}): Logo names ${logo}, which is not committed to ` +
+            `public/organizations. Commit the file before linking it.`
+        );
+      }
+
+      const coverProp = row.cover as
+        | { type?: string; external?: { url?: string } }
+        | undefined;
+
+      return {
+        slug: slugify(name),
+        name,
+        description,
+        type,
+        link: (p.Link?.url as string | undefined) || undefined,
+        logo,
+        cover:
+          coverProp?.type === "external" ? coverProp.external?.url : undefined,
+        detail: await readDetail(row.id as string),
+      };
+    })
+  );
+
+  const seen = new Map<string, string>();
+  for (const o of orgs) {
+    const first = seen.get(o.slug);
+    if (first) {
+      throw new Error(
+        `Organizations: "${first}" and "${o.name}" both reduce to the id ` +
+          `"${o.slug}". Two bodies cannot share one.`
+      );
+    }
+    seen.set(o.slug, o.name);
+  }
+
+  return orgs.sort((a, b) => a.name.localeCompare(b.name));
 }

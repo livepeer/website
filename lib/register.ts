@@ -1,4 +1,9 @@
-import { getNotionCommitments, hasNotionCredentials } from "./notion";
+import {
+  getNotionCommitments,
+  getNotionOrganizations,
+  hasNotionCredentials,
+} from "./notion";
+import { getOrganizations, type Organization } from "./organizations";
 import { getCommitments, type Commitment } from "./roadmap";
 
 /**
@@ -19,4 +24,16 @@ import { getCommitments, type Commitment } from "./roadmap";
  */
 export async function getRegister(): Promise<Commitment[]> {
   return hasNotionCredentials() ? getNotionCommitments() : getCommitments();
+}
+
+/**
+ * The organisations, from whichever source the register came from.
+ *
+ * Chosen on the same token, deliberately: a page that read commitments from
+ * Notion and their owners from markdown could credit a body the register has
+ * never heard of, and the owner link would 404 against a page built from the
+ * other half.
+ */
+export async function getOrganizationRegister(): Promise<Organization[]> {
+  return hasNotionCredentials() ? getNotionOrganizations() : getOrganizations();
 }

@@ -37,7 +37,7 @@ pnpm dlx shadcn@latest add @livepeer-ui/button @livepeer-ui/card
 
 ## Information architecture (redesign)
 
-Eight linked pages, all designed in the mockup set (`/docs/public-beta/livepeer-org`), plus the primer kept intact but unlinked.
+Ten linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
 
 | Page | Route | Notes |
 | --- | --- | --- |
@@ -49,18 +49,20 @@ Eight linked pages, all designed in the mockup set (`/docs/public-beta/livepeer-
 | Foundation | `/foundation` | |
 | Latest (blog) | `/blog` | nav labels it "Latest"; URL stays `/blog` |
 | Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
+| Roadmap | `/roadmap` (`/[slug]`) | **no mockup** — built from the requirements doc. Notion-backed; records have their own pages, and an intercepting route slides one over the register |
+| Organizations | `/organizations` (`/[slug]`) | **no mockup**. Notion-backed. The bodies the register credits — a commitment's owner links here. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |
 | Primer | `/primer` | **keep intact, unlinked** — its own scoped legacy CSS; only consumer of `lib/subgraph.ts` |
 
 Redirect changes live in `next.config.ts`: `/network` & `/orchestrate` → `/compute`; the five `/use-cases/*` → `/agent` (transcoding one → `/compute`); `/delegate` stays external (explorer). Keep existing blog host + slug redirects.
 
-## Content — deliberate: in-repo, with one exception
+## Content — split on shape and update frequency
 
 Content lives in the repo and is edited in-repo (with Claude Code), not through a CMS. This is a considered decision, not an inherited rule: the registry is Sanity-native (its `contracts.ts` is a full Sanity content schema, and the header ships a `sanity/` client), but we don't want a CMS dependency — copy is easy to update in-repo.
 
-The **roadmap register** is the one exception, and a deliberate one: it is edited by people across several organisations who do not open pull requests, and a commitment whose state is a week stale is worse than no page at all. See below.
+**Templated content that gets updated frequently** goes to Notion instead — many records sharing one shape, maintained by people on their own schedule. The **roadmap register** is the first: it is edited by people across several organisations who do not open pull requests, and a commitment whose state is a week stale is worse than no page at all. **The blog is planned next.** Scope is those two for now — this is not a general migration of the site into a CMS, and bespoke page copy stays here. See below.
 
 - **Page content:** author static, typed objects that match the registry's content contracts in `components/livepeer-ui/contracts.ts` (e.g. `LivepeerOrgSite`, `LivepeerOrgPage`). `lib/site.ts` is the pattern. This uses registry components exactly as designed — they just take a content object — and keeps a clean seam to adopt Sanity later if that ever changes.
-- **Sanity is stubbed, not used:** `sanity/lib/livepeer-org-navigation.ts` is a static, no-CMS replacement (returns no images). Don't install `next-sanity` or wire a real Sanity client.
+- **Sanity is stubbed, not used:** `sanity/lib/livepeer-org-navigation.ts` is a static, no-CMS replacement — a plain module of 11 hard-coded `cdn.sanity.io` URLs for the nav dropdown thumbnails, no client and no query. It is **load-bearing**: `app/layout.tsx` imports the value and two registry header components import its type, so it cannot be deleted. It lives under `sanity/` only because that is the import path the registry components expect. Don't install `next-sanity` or wire a real Sanity client.
 - **Blog + ecosystem:** local **markdown** + YAML frontmatter (`content/blog/*`, `content/ecosystem/*`), rendered via gray-matter + unified/remark/rehype in `lib/blog.ts` / `lib/ecosystem.ts`. `content/ecosystem-template.md` is the live contributor schema.
 - **Roadmap: Notion.** Three databases under *Livepeer.org content* in the Livepeer Foundation workspace — *Roadmap commitments* (`0a51970884f44514a405f63d6bdb68db`), *Livepeer people* (`cdaf4aff05034435aed838eb2a8676ab`) and *Organizations* (`728d4f42db6d4ba4925ae177c08b1d70`), the last two related so a person's name, portrait and profile id, and an owner's name and type, are each stated once. Both sit beside the register rather than under it, and are named for everyone rather than the roadmap, because the same rows are meant to credit people and organisations elsewhere on the site later. `lib/notion.ts` reads them over plain `fetch` (no `@notionhq/client`) and maps them onto the same `Commitment` type the markdown reader produces, enforcing every rule the markdown reader enforced. `lib/register.ts` picks the source: Notion when `NOTION_TOKEN` is set, `content/roadmap/*.md` when it is not, so a clone with no workspace credential still runs. A Notion failure *with* a token throws — a build that quietly served stale markdown would publish a roadmap that looks current and is not. ISR at one minute (`NOTION_REVALIDATE`), so a card moved to Shipped reaches the site without a deploy.
   - Portraits stay in `public/people`; Notion's **Portrait** property holds a Files entry linking to that same committed file, so Notion can preview the face while the site serves the repo copy. The site takes the filename off the end of that link and never loads it.
@@ -107,5 +109,5 @@ with their own frontmatter art.
 - **`next/image`:** registry components use it (with `cdn.sanity.io` allowed in `next.config.ts`) — that's fine. The legacy exception still holds: keep raw `<img>` for `ImageMask`/canvas/WebGL components and primer SVGs, which depend on direct CSS filter/stacking that `next/image` breaks.
 - **No second token layer**, no one-off color/spacing/radius values outside the registry roles.
 - **No global state** — local `useState` only.
-- **No CMS except the roadmap register** (deliberate — see Content). Author page content as typed objects matching the registry contracts; keep the Sanity client stubbed. Don't add `next-sanity`.
+- **No CMS for page copy** — author it as typed objects matching the registry contracts. This rule is scoped to copy that changes with its design; it is *not* an argument against the roadmap and blog living in Notion (see Content). Equally, don't propose moving other surfaces there unasked. Keep the Sanity client stubbed and don't add `next-sanity`.
 - **Green is never an interactive/affordance color.**

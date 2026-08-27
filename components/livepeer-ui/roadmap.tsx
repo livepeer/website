@@ -458,7 +458,16 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
               tooltip if not for a link. */}
           <span className="pointer-events-none relative z-[1] flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="shrink-0">by</span>
-            <span className="text-foreground">{c.owner}</span>
+            {/* The owner goes somewhere now. pointer-events-auto because the
+                row around it is off, so the card keeps the rest of the strip;
+                z-[1] is inherited from that wrapper, which already clears the
+                stretched link. */}
+            <Link
+              href={`/organizations/${c.ownerSlug}`}
+              className="pointer-events-auto text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+            >
+              {c.owner}
+            </Link>
             {c.contributors && c.contributors.length > 0 && (
               <Faces people={c.contributors} href={href} />
             )}

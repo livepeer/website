@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   AlignLeft,
   ArrowUpRight,
@@ -178,7 +179,12 @@ export function CommitmentRecord({
           {STATE_LABEL[c.state]}
         </Row>
         <Row icon={ArrowUpRight} label="Owner">
-          {c.owner}
+          <Link
+            href={`/organizations/${c.ownerSlug}`}
+            className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+          >
+            {c.owner}
+          </Link>
         </Row>
         {c.state === "shipped" ? (
           <Row icon={CalendarDays} label="Shipped on">
