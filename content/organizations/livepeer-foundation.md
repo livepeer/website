@@ -6,7 +6,7 @@ link: https://livepeer.org/foundation
 cover: https://cdn.sanity.io/images/l36s876e/production/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png
 people:
   - name: Rich O'Grady
-    avatar: placeholder-3.jpg
+    avatar: rich-ogrady.jpg
   - name: Steph Alinsug
     avatar: placeholder-1.jpg
 ---

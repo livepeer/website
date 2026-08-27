@@ -12,7 +12,7 @@ contributors:
   # The handle this once carried was a name match on GitHub with nothing tying
   # it to Livepeer — so it and its portrait are gone until someone confirms it.
   - name: Rich O'Grady
-    avatar: placeholder-3.jpg
+    avatar: rich-ogrady.jpg
 target: Q3 2026
 # Verbatim from the board item, not paraphrased.
 funding: "Funding from Livepeer Inc / Foundation"
