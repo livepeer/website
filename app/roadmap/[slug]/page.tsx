@@ -71,7 +71,10 @@ export default async function CommitmentPage({
   if (!c) notFound();
 
   return (
-    <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
+    // Full-bleed banner, reading column either side of it. A commitment, an
+    // organisation and a person are three views of one kind of record, and
+    // they had drifted to two banner treatments between them.
+    <article className="pb-28">
       {/* Above the cover, with an arrow, and not the word "back".
           It read as a caption when it sat under the banner saying only
           "Roadmap". But "Back to roadmap" was wrong in the other direction:
@@ -79,7 +82,7 @@ export default async function CommitmentPage({
           the register, so "back" describes a journey they did not make.
           Naming the destination is true either way, and tells a first-time
           reader what they would get. */}
-      <div className="px-6 sm:px-8">
+      <div className="mx-auto w-full max-w-[46rem] px-6 pt-20 sm:px-8">
         <Link
           href="/roadmap"
           className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -98,7 +101,11 @@ export default async function CommitmentPage({
         </div>
       )}
 
-      <div className={c.cover ? "px-6 sm:px-8" : "px-6 pt-10 sm:px-8"}>
+      <div
+        className={`mx-auto w-full max-w-[46rem] px-6 sm:px-8 ${
+          c.cover ? "" : "pt-10"
+        }`}
+      >
         <CommitmentRecord commitment={c} />
       </div>
     </article>

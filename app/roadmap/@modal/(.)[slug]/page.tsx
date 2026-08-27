@@ -33,6 +33,7 @@ export default async function InterceptedCommitment({
       cover={
         commitment.cover && (
           <RecordCover
+            sizes="(max-width: 46rem) 100vw, 46rem"
             src={commitment.cover}
             alt={`${commitment.title} cover image`}
           />

@@ -26,19 +26,38 @@ import type { Person } from "@/lib/roadmap";
  * like different templates. Priority, because it is the largest thing above
  * the fold on a page whose whole point is to be read.
  */
-export function RecordCover({ src, alt }: { src: string; alt: string }) {
+export function RecordCover({
+  src,
+  alt,
+  /**
+   * What width this will actually occupy.
+   *
+   * Full-bleed on a page and the panel's own width in a sheet, so one value
+   * cannot serve both: left at 46rem the browser fetched a 736px file for a
+   * 2560px banner, and set to 100vw it fetches a viewport-wide one for a 736px
+   * panel. The caller knows which it is.
+   */
+  sizes = "100vw",
+}: {
+  src: string;
+  alt: string;
+  sizes?: string;
+}) {
   return (
     // shrink-0 is load-bearing. The sheet is a flex column, so a child with a
     // fixed height still shrinks when the content overflows — which collapsed
     // this to 0px and made the banner render as nothing at all while every
     // measurement said it was present and positioned correctly.
-    <div className="relative h-40 w-full shrink-0 overflow-hidden sm:h-56">
+    // Taller as the viewport widens. The art is 1456x816, and a fixed 224px
+    // band stretched across a wide display crops a 16:9 composition to a
+    // letterbox — growing the height keeps the crop near what was framed.
+    <div className="relative h-40 w-full shrink-0 overflow-hidden sm:h-56 lg:h-64 xl:h-72">
       <Image
         src={src}
         alt=""
         aria-hidden
         fill
-        sizes="(max-width: 46rem) 100vw, 46rem"
+        sizes={sizes}
         className="object-cover"
         priority
       />

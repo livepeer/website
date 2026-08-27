@@ -39,7 +39,11 @@ export default async function InterceptedOrganization({
       title={org.name}
       cover={
         org.cover && (
-          <RecordCover src={org.cover} alt={`${org.name} cover image`} />
+          <RecordCover
+            src={org.cover}
+            alt={`${org.name} cover image`}
+            sizes="(max-width: 46rem) 100vw, 46rem"
+          />
         )
       }
     >

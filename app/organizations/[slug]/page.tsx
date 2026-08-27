@@ -66,41 +66,14 @@ export default async function OrganizationPage({
   const owned = commitments.filter((c) => c.ownerSlug === org.slug);
 
   return (
-    // No top padding under a banner. The 20 was the room a back link sat in,
-    // and these pages do not have one — a person is not a child of the roadmap
-    // — so it was leaving 80px of nothing between the header and the cover.
-    // The header is sticky and stays in flow, so the banner can meet it.
-    // Without a cover the padding stays, or the title butts into the header.
-    <article
-      className={
-        org.cover
-          ? "mx-auto w-full max-w-[46rem] pb-28"
-          : "mx-auto w-full max-w-[46rem] pt-20 pb-28"
-      }
-    >
-      {/* No back link. A commitment lives at /roadmap/<slug> and the register
-          really is its parent, so naming it is true there. An organisation is
-          a sibling route that happens to be reached from a card, and a link
-          home to the roadmap would claim an ancestry it does not have.
-
-          Nothing is lost by dropping it: this only ever renders on the full
-          page — the overlay has a close control — and the roadmap is linked
-          from this page where that is honest, on every row of "On the
-          roadmap". */}
+    // Full-bleed banner, reading column beneath it — see the person page.
+    <article className="pb-28">
       {org.cover && (
-        <div>
-          <RecordCover src={org.cover} alt={`${org.name} cover image`} />
-        </div>
+        <RecordCover src={org.cover} alt={`${org.name} cover image`} />
       )}
 
       <div
-        className={
-          org.cover
-            ? org.logo
-              ? "px-6 sm:px-8"
-              : "px-6 pt-10 sm:px-8"
-            : "px-6 pt-10 sm:px-8"
-        }
+        className={`${"mx-auto w-full max-w-[46rem]"} px-6 sm:px-8 ${org.cover ? "" : "pt-20"}`}
       >
         <OrganizationRecord organization={org} owned={owned} />
       </div>

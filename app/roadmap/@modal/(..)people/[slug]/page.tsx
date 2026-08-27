@@ -33,7 +33,11 @@ export default async function InterceptedPerson({
       title={person.name}
       cover={
         person.cover && (
-          <RecordCover src={person.cover} alt={`${person.name} cover image`} />
+          <RecordCover
+            src={person.cover}
+            alt={`${person.name} cover image`}
+            sizes="(max-width: 46rem) 100vw, 46rem"
+          />
         )
       }
     >

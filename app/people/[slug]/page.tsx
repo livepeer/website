@@ -66,25 +66,21 @@ export default async function PersonPage({
   );
 
   return (
-    // No top padding under a banner. The 20 was the room a back link sat in,
-    // and these pages do not have one — a person is not a child of the roadmap
-    // — so it was leaving 80px of nothing between the header and the cover.
-    // The header is sticky and stays in flow, so the banner can meet it.
-    // Without a cover the padding stays, or the title butts into the header.
-    <article
-      className={
-        person.cover
-          ? "mx-auto w-full max-w-[46rem] pb-28"
-          : "mx-auto w-full max-w-[46rem] pt-20 pb-28"
-      }
-    >
+    // The banner spans the page; the record keeps the reading column.
+    //
+    // The same cover is edge-to-edge in the slide-over, so an inset one here
+    // made the page the odd one out against its own overlay — expand a record
+    // and the banner shrank into a rectangle floating in the margin. The
+    // portrait still lifts from the column's left edge, which is where a
+    // profile puts it.
+    <article className="pb-28">
       {person.cover && (
-        <div>
-          <RecordCover src={person.cover} alt={`${person.name} cover image`} />
-        </div>
+        <RecordCover src={person.cover} alt={`${person.name} cover image`} />
       )}
 
-      <div className={person.cover ? "px-6 sm:px-8" : "px-6 pt-10 sm:px-8"}>
+      <div
+        className={`${"mx-auto w-full max-w-[46rem]"} px-6 sm:px-8 ${person.cover ? "" : "pt-20"}`}
+      >
         <PersonRecordView
           person={person}
           contributed={contributed}

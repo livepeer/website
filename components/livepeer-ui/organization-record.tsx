@@ -42,6 +42,26 @@ const SECTIONS: { state: Commitment["state"]; label: string }[] = [
   { state: "shipped", label: "Shipped" },
 ];
 
+/**
+ * First and last initial, not the first letter.
+ *
+ * Three of these bodies begin with "Livepeer", so a single letter drew the
+ * same "L" on the Foundation, Inc and the Treasury — which is the whole
+ * failure a monogram is supposed to avoid.
+ */
+function initials(name: string) {
+  const words = name
+    .replace(/\(.*?\)/g, "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length === 0) return "?";
+  if (words.length === 1) return words[0]!.charAt(0).toUpperCase();
+  return (
+    words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)
+  ).toUpperCase();
+}
+
 /** A commitment, at the size a supporting list wants. */
 function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
   return (
@@ -133,6 +153,11 @@ export function OrganizationRecord({
       {/* The mark, at the size a person's portrait sits, and lifted over the
           banner the same way.
 
+          Always something. Six of the seven bodies have no logo committed, and
+          rendering nothing for them left a title floating under a banner while
+          the one with a mark looked like a different template. A monogram is
+          what a person with no portrait gets, for the same reason.
+
           Square rather than a circle: these are logos, and a round crop takes
           the corners off artwork that was drawn to have them. `relative` is
           load-bearing — RecordCover is positioned and this is not, so without
@@ -140,18 +165,25 @@ export function OrganizationRecord({
 
           A background behind it, because a logo with transparency would
           otherwise sit on whatever slice of photograph it happens to overlap. */}
-      {org.logo && (
-        <div className={org.cover ? "relative -mt-16 sm:-mt-20" : "relative"}>
-          {/* A raw <img>: these are SVGs served straight from public/, and
-              next/image needs dangerouslyAllowSVG to touch them — a global
-              loosening to render files the repo itself controls. */}
+      <div className={org.cover ? "relative -mt-16 sm:-mt-20" : "relative"}>
+        {org.logo ? (
+          /* A raw <img>: these are SVGs served straight from public/, and
+             next/image needs dangerouslyAllowSVG to touch them — a global
+             loosening to render files the repo itself controls. */
           <img
             src={`/organizations/${org.logo}`}
             alt=""
             className="size-28 shrink-0 rounded-xl bg-background object-contain p-3 ring-4 ring-background sm:size-32"
           />
-        </div>
-      )}
+        ) : (
+          <span
+            aria-hidden
+            className="flex size-28 shrink-0 items-center justify-center rounded-xl bg-muted text-2xl font-medium text-muted-foreground ring-4 ring-background sm:size-32"
+          >
+            {initials(org.name)}
+          </span>
+        )}
+      </div>
 
       {/* The same page title the commitment record sets: heavy, tight, and the
           largest thing on the record by a clear margin. */}
