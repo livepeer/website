@@ -36,6 +36,14 @@ function normalize(value: unknown): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+// Tina's image field writes a full public path (e.g. /ecosystem/foo.svg).
+// Older entries store just the filename. Return the full URL path for both.
+function normalizeLogo(value: unknown): string | undefined {
+  const v = normalize(value);
+  if (!v) return undefined;
+  return v.startsWith("/") ? v : `/ecosystem/${v}`;
+}
+
 export function getAppSlugs(): string[] {
   return fs
     .readdirSync(ECOSYSTEM_DIR)
@@ -63,7 +71,7 @@ export function getAppBySlug(slug: string): EcosystemApp {
     hostname,
     description: data.description ?? "",
     categories: Array.isArray(data.categories) ? data.categories : [],
-    logo: normalize(data.logo),
+    logo: normalizeLogo(data.logo),
     logoBg: normalize(data.logoBg),
     madeBy: normalize(data.madeBy),
     twitter: normalize(data.twitter),

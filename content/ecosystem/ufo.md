@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Music
   - Community
-logo: ufo-fm.svg
+logo: /ecosystem/ufo-fm.svg
 order: 12
 madeBy:
 twitter:

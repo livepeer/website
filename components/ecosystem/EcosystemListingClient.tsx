@@ -239,7 +239,7 @@ export default function EcosystemListingClient({
                         <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-foreground/[0.06]">
                           {app.logo ? (
                             <img
-                              src={`/ecosystem/${app.logo}`}
+                              src={app.logo}
                               alt={`${app.name} logo`}
                               className="h-10 w-10 rounded-lg object-contain"
                               style={

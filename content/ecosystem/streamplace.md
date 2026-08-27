@@ -6,7 +6,7 @@ categories:
   - Streaming
   - Decentralized
   - API
-logo: stream-place.png
+logo: /ecosystem/stream-place.png
 order: 3
 madeBy: Aquareum Inc
 twitter:
