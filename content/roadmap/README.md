@@ -96,12 +96,24 @@ A commitment's body is its long-form explanation, and it has its own page at
 `/roadmap/<slug>`. The card carries the facts and links through; several
 hundred words in a definition list beside a 6rem label is not a layout.
 
-A real page rather than a panel, because the reason to write at length is to
-be read elsewhere: an address, an unfurl and a place in search are things a
-drawer does not have. Notion's slide-over can still be layered on later with
-an intercepting route, which renders this same page over the index while the
-URL changes — that way round only, since the overlay is cheap once the page
-exists.
+A real page rather than only a panel, because the reason to write at length is
+to be read elsewhere: an address, an unfurl and a place in search are things a
+drawer does not have.
+
+Clicking from the index still slides it in from the right, Notion-style. That
+is an intercepting route — `app/roadmap/@modal/(.)[slug]` — rendering the same
+`CommitmentRecord` over the register, with the URL becoming the real one, so
+it is shareable and the back button closes it. A direct visit or a refresh
+bypasses the overlay and lands on the page. Building the page first is what
+made the overlay cheap: it is presentation over a route that already works,
+not a second rendering path with no address behind it.
+
+Two things it has to get right, both found by testing rather than by reading:
+the sheet sits above the site header's `z-80`, or the header paints over the
+panel and its menu button covers the close control; and its width overrides
+are written with the same `data-[side=right]` prefix as the defaults they
+replace, or a bare `w-full` loses to `w-3/4` and a phone gets a 281px column
+of prose.
 
 Both sources hand the page **HTML**, so nothing downstream knows where a body
 came from. The markdown register renders through the blog's remark pipeline;

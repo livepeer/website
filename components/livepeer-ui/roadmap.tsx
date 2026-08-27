@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -309,10 +310,19 @@ function Faces({ people }: { people: Person[] }) {
   );
 }
 
+/**
+ * Internal links go through next/link, external ones do not.
+ *
+ * Not only a nicety: a plain anchor is a full navigation, and a full
+ * navigation cannot be intercepted — the commitment link would load the page
+ * directly instead of sliding it over the register, and the parallel route
+ * would never render. Nothing external wants client-side routing anyway.
+ */
 function LinkRow({ label, href }: { label: string; href: string }) {
   const external = href.startsWith("http");
+  const Tag = external ? "a" : Link;
   return (
-    <a
+    <Tag
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
@@ -327,7 +337,7 @@ function LinkRow({ label, href }: { label: string; href: string }) {
       {external && (
         <ArrowUpRightIcon className="ml-1 inline size-3.5 -translate-y-px align-middle text-muted-foreground" />
       )}
-    </a>
+    </Tag>
   );
 }
 
