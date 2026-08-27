@@ -73,7 +73,11 @@ const SITE_HOST = "livepeer.org";
 /**
  * Where to read about them — which is not always somewhere else.
  *
- * The Foundation's official page is livepeer.org/foundation: this site. Sent
+ * Labelled "Link", not "Website", because only one of these four is one: the
+ * others are a forum thread, a page on the Explorer, and a page on this site.
+ * "Link" is true of all of them, and is what the field is called in Notion.
+ *
+ * The Foundation's official page is livepeer.org/foundation: here. Sent
  * through the external treatment it opened a new tab back to where the reader
  * already was, over a label naming the host they were already on. An internal
  * destination is a normal link to a path, and says which page it is.
@@ -83,7 +87,7 @@ function LinkRow({ href }: { href: string }) {
   const internal = url.host.replace(/^www\./, "") === SITE_HOST;
 
   return (
-    <Row icon={Link2} label={internal ? "Read more" : "Website"}>
+    <Row icon={Link2} label="Link">
       {internal ? (
         <Link
           href={url.pathname}
