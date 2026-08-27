@@ -50,7 +50,7 @@ Nine linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`)
 | Latest (blog) | `/blog` | nav labels it "Latest"; URL stays `/blog` |
 | Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
 | Roadmap | `/roadmap` (`/[slug]`) | **no mockup** — built from the requirements doc. Notion-backed; records have their own pages, and an intercepting route slides one over the register |
-| Organizations | `/organizations/[slug]` | **no mockup**. Notion-backed, and **no index** — with one logo and three bodies owning nothing, seven cards read thin. Reached only from an owner's name on a roadmap card. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |
+| Organizations | `/organizations/[slug]` | **no mockup**. Notion-backed, rendered like a roadmap record and slid over the register by an intercepting route (`app/roadmap/@modal/(..)organizations`), and **no index** — with one logo and three bodies owning nothing, seven cards read thin. Reached only from an owner's name on a roadmap card. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |
 | Primer | `/primer` | **keep intact, unlinked** — its own scoped legacy CSS; only consumer of `lib/subgraph.ts` |
 
 Redirect changes live in `next.config.ts`: `/network` & `/orchestrate` → `/compute`; the five `/use-cases/*` → `/agent` (transcoding one → `/compute`); `/delegate` stays external (explorer). Keep existing blog host + slug redirects.

@@ -45,7 +45,7 @@ const PROFILE_HOST = "forum.livepeer.org";
  * like different templates. Priority, because it is the largest thing above
  * the fold on a page whose whole point is to be read.
  */
-export function CommitmentCover({ src, alt }: { src: string; alt: string }) {
+export function RecordCover({ src, alt }: { src: string; alt: string }) {
   return (
     // shrink-0 is load-bearing. The sheet is a flex column, so a child with a
     // fixed height still shrinks when the content overflows — which collapsed

@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 
 import {
-  CommitmentCover,
+  RecordCover,
   CommitmentRecord,
 } from "@/components/livepeer-ui/commitment-record";
-import { CommitmentSheet } from "@/components/livepeer-ui/commitment-sheet";
+import { RecordSheet } from "@/components/livepeer-ui/record-sheet";
 import { getRegister } from "@/lib/register";
 
 /**
@@ -28,12 +28,12 @@ export default async function InterceptedCommitment({
   if (!commitment) notFound();
 
   return (
-    <CommitmentSheet
-      slug={slug}
+    <RecordSheet
+      href={`/roadmap/${slug}`}
       title={commitment.title}
       cover={
         commitment.cover && (
-          <CommitmentCover
+          <RecordCover
             src={commitment.cover}
             alt={`${commitment.title} cover image`}
           />
@@ -41,6 +41,6 @@ export default async function InterceptedCommitment({
       }
     >
       <CommitmentRecord commitment={commitment} />
-    </CommitmentSheet>
+    </RecordSheet>
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import {
-  CommitmentCover,
+  RecordCover,
   CommitmentRecord,
 } from "@/components/livepeer-ui/commitment-record";
 import { getRegister } from "@/lib/register";
@@ -96,7 +96,7 @@ export default async function CommitmentPage({
 
       {c.cover && (
         <div className="mt-6 mb-10">
-          <CommitmentCover src={c.cover} alt={`${c.title} cover image`} />
+          <RecordCover src={c.cover} alt={`${c.title} cover image`} />
         </div>
       )}
 

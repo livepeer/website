@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sheet";
 
 /**
- * The commitment, slid over the register.
+ * A record, slid over the page behind it.
  *
  * Rendered by an intercepting route, so this is what a click from the index
  * gets while the URL becomes /roadmap/<slug>. A direct visit or a refresh
@@ -28,13 +28,14 @@ import {
  * trapping, scroll locking, Esc, and the backdrop are all things that look
  * easy and are not, and the repo already had the primitive.
  */
-export function CommitmentSheet({
-  slug,
+export function RecordSheet({
+  href,
   title,
   cover,
   children,
 }: {
-  slug: string;
+  /** Where "open as full page" goes — this serves more than one record type. */
+  href: string;
   title: string;
   cover?: React.ReactNode;
   children: React.ReactNode;
@@ -119,11 +120,7 @@ export function CommitmentSheet({
           {/* Notion's other affordance: take it full-screen. A plain anchor
               rather than a Link — the point is to leave the overlay and land
               on the page itself, which is what a full navigation does. */}
-          <a
-            href={`/roadmap/${slug}`}
-            aria-label="Open as full page"
-            className={control}
-          >
+          <a href={href} aria-label="Open as full page" className={control}>
             <Maximize2 className="size-4" aria-hidden />
           </a>
           <SheetClose aria-label="Close" className={control}>
