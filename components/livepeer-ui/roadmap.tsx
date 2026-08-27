@@ -181,7 +181,8 @@ function faceTone(name: string) {
   return FACE_TONES[h % FACE_TONES.length]!;
 }
 
-function Faces({ people }: { people: Person[] }) {
+function Faces({ people, href }: { people: Person[]; href: string }) {
+  const router = useRouter();
   // The lift and the grow ride on the outer element, not the portrait: it is
   // what clips to a circle, so scaling the image inside it would crop the face
   // rather than enlarge the mark.
@@ -208,7 +209,7 @@ function Faces({ people }: { people: Person[] }) {
     // CLAUDE.md rules out.
     //
     // Ink is drawn from the same palette, so the pairing cannot drift from it.
-    "relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--face)] text-[0.625rem] font-medium text-[var(--face-ink)] ring-2 ring-muted outline-none dark:ring-card",
+    "pointer-events-auto relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--face)] text-[0.625rem] font-medium text-[var(--face-ink)] ring-2 ring-muted outline-none dark:ring-card",
     "transition duration-200 motion-reduce:transition-none"
   );
   // The lift belongs to the ones that go somewhere. Giving it to all of them
@@ -271,7 +272,18 @@ function Faces({ people }: { people: Person[] }) {
           // nowhere, and putting it in the tab order would make a keyboard
           // reader stop at something that does nothing. The name still reaches
           // them — it is in the sentence the row is built from.
-          <span style={toneVars} className={face}>
+          <span
+            style={toneVars}
+            // Not focusable, so this adds nothing to the tab order — a
+            // keyboard reader already has the title link, and N faces all
+            // pointing at the same record would be noise. This is the mouse
+            // affordance only: the face sits above the stretched link so its
+            // tooltip can fire, which also means it swallows the click that
+            // the rest of the card surface would have handled. Sending it to
+            // the same place puts that back.
+            onClick={() => router.push(href, { scroll: false })}
+            className={cn(face, "cursor-pointer")}
+          >
             {inner}
           </span>
         );
@@ -340,6 +352,19 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  * hover has to go somewhere. Dark rests on `card` and steps to `secondary`.
  */
 function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
+  // The record's URL carries the register's current query.
+  //
+  // View and workstream live in the search params, and the overlay renders
+  // over whatever /roadmap resolves to underneath. A bare /roadmap/<slug>
+  // dropped them, so opening a shipped record from the Shipped tab rebuilt the
+  // register behind it on the default view — the sheet slid over a list that
+  // had silently switched back to Roadmap, and closing it left you there.
+  //
+  // The search text is deliberately not in the URL, so it is not carried and
+  // does not need to be.
+  const cardParams = useSearchParams();
+  const cardQuery = cardParams.toString();
+  const href = `/roadmap/${c.slug}${cardQuery ? `?${cardQuery}` : ""}`;
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] sm:flex-row dark:bg-card dark:hover:bg-secondary">
       {/* The record's own cover, in miniature.
@@ -392,7 +417,7 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
             is called — a screen reader announces the heading as the link, not
             "read more". */}
           <Link
-            href={`/roadmap/${c.slug}`}
+            href={href}
             // The register stays where it was. Next scrolls to the top of a new
             // route by default, which is right for a page and wrong for a panel
             // opening over the list you are reading — it threw the index to the
@@ -423,12 +448,19 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
               ::before, which carries no z-index of its own — at z-10 it tied
               with the sticky quarter band above and won on document order,
               so a card's credit painted over the heading as it scrolled
-              under. */}
-          <span className="relative z-[1] flex flex-wrap items-center gap-x-3 gap-y-2">
+              under.
+
+              pointer-events-none, because raising the whole row put a dead
+              strip over the card: "by" and the owner name are plain text and
+              never had anything to click, so they only blocked the stretched
+              link underneath. The faces opt back in individually — they are
+              the one thing here that genuinely needs the pointer, for a
+              tooltip if not for a link. */}
+          <span className="pointer-events-none relative z-[1] flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="shrink-0">by</span>
             <span className="text-foreground">{c.owner}</span>
             {c.contributors && c.contributors.length > 0 && (
-              <Faces people={c.contributors} />
+              <Faces people={c.contributors} href={href} />
             )}
           </span>
         </div>
