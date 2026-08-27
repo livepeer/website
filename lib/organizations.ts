@@ -148,6 +148,7 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
     }
     return {
       name: String(p.name),
+      slug: slugify(String(p.name)),
       avatar,
       profile: p.profile ? String(p.profile) : undefined,
     };

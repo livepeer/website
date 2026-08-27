@@ -1,9 +1,11 @@
 import {
   getNotionCommitments,
   getNotionOrganizations,
+  getNotionPeople,
   hasNotionCredentials,
 } from "./notion";
 import { getOrganizations, type Organization } from "./organizations";
+import { getPeople, type PersonRecord } from "./people";
 import { getCommitments, type Commitment } from "./roadmap";
 
 /**
@@ -36,4 +38,9 @@ export async function getRegister(): Promise<Commitment[]> {
  */
 export async function getOrganizationRegister(): Promise<Organization[]> {
   return hasNotionCredentials() ? getNotionOrganizations() : getOrganizations();
+}
+
+/** The people, from the same source the register came from. */
+export async function getPeopleRegister(): Promise<PersonRecord[]> {
+  return hasNotionCredentials() ? getNotionPeople() : getPeople();
 }

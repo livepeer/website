@@ -17,6 +17,7 @@ import {
   type Organization,
   type OrgType,
 } from "./organizations";
+import type { PersonRecord } from "./people";
 
 /**
  * The commitment register, read from Notion.
@@ -414,7 +415,12 @@ async function readPeople(): Promise<Map<string, Person>> {
       );
     }
 
-    people.set(row.id as string, { name, avatar, profile });
+    people.set(row.id as string, {
+      name,
+      slug: slugify(name),
+      avatar,
+      profile,
+    });
   }
 
   return people;
@@ -734,4 +740,81 @@ export async function getNotionOrganizations(): Promise<Organization[]> {
   }
 
   return orgs.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * The people, as pages.
+ *
+ * A second pass over the table `readPeople` reads for credited faces: that one
+ * resolves a relation and needs a name, a portrait and a handle, this one adds
+ * the bio, the banner and the affiliation a page shows. Kept apart so the
+ * register does not fetch a body for every contributor it renders as a face.
+ *
+ * What each person has worked on is not read here. Commitments name their own
+ * contributors, and the page derives the list by filtering the register.
+ */
+export async function getNotionPeople(): Promise<PersonRecord[]> {
+  const [rows, orgs] = await Promise.all([
+    queryAll(PEOPLE_DB),
+    readOrganizations(),
+  ]);
+
+  const people = await Promise.all(
+    rows.map(async (row): Promise<PersonRecord> => {
+      const p = props(row);
+      const name = text(p.Name);
+      const where = `Livepeer people row ${row.url as string}`;
+      if (!name) {
+        throw new Error(
+          `${where} has no name. A credited face with no name is a face ` +
+            `nobody can check.`
+        );
+      }
+
+      // One affiliation or none. Two would make "who are they with" a question
+      // with no answer, which is the shape the owner relation already rejects.
+      const affiliations = relationIds(p.Affiliation);
+      if (affiliations.length > 1) {
+        throw new Error(
+          `${where} (${name}): Affiliation names ${affiliations.length} ` +
+            `organizations. One or none — association is singular here, and ` +
+            `work is credited through a commitment's own Owner.`
+        );
+      }
+      const affiliationName = affiliations[0]
+        ? orgs.get(affiliations[0])
+        : undefined;
+
+      const coverProp = row.cover as
+        | { type?: string; external?: { url?: string } }
+        | undefined;
+
+      return {
+        slug: slugify(name),
+        name,
+        avatar: portraitFilename(p.Portrait),
+        profile: text(p["Forum handle"]) || undefined,
+        affiliation: affiliationName
+          ? { name: affiliationName, slug: slugify(affiliationName) }
+          : undefined,
+        cover:
+          coverProp?.type === "external" ? coverProp.external?.url : undefined,
+        detail: await readDetail(row.id as string),
+      };
+    })
+  );
+
+  const seen = new Map<string, string>();
+  for (const person of people) {
+    const first = seen.get(person.slug);
+    if (first) {
+      throw new Error(
+        `Livepeer people: "${first}" and "${person.name}" both reduce to the ` +
+          `id "${person.slug}". Two people cannot share one.`
+      );
+    }
+    seen.set(person.slug, person.name);
+  }
+
+  return people.sort((a, b) => a.name.localeCompare(b.name));
 }

@@ -67,7 +67,13 @@ export type CommitmentLink = { label: string; href: string };
  * profile before writing it down —
  *   curl -sI https://forum.livepeer.org/u/HANDLE.json
  */
-export type Person = { name: string; avatar?: string; profile?: string };
+export type Person = {
+  name: string;
+  /** Their page, derived from the name by the one slugify. */
+  slug: string;
+  avatar?: string;
+  profile?: string;
+};
 
 const MONTHS = [
   "january",
@@ -303,6 +309,7 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
     }
     return {
       name: String(person.name),
+      slug: slugify(String(person.name)),
       avatar: person.avatar,
       profile: person.profile ? String(person.profile) : undefined,
     };

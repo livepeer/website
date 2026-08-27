@@ -37,7 +37,7 @@ pnpm dlx shadcn@latest add @livepeer-ui/button @livepeer-ui/card
 
 ## Information architecture (redesign)
 
-Nine linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
+Ten linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
 
 | Page | Route | Notes |
 | --- | --- | --- |
@@ -51,6 +51,7 @@ Nine linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`)
 | Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
 | Roadmap | `/roadmap` (`/[slug]`) | **no mockup** — built from the requirements doc. Notion-backed; records have their own pages, and an intercepting route slides one over the register |
 | Organizations | `/organizations/[slug]` | **no mockup**. Notion-backed, rendered like a roadmap record and slid over the register by an intercepting route (`app/roadmap/@modal/(..)organizations`), and **no index** — with one logo and three bodies owning nothing, seven cards read thin. Reached only from an owner's name on a roadmap card. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |
+| People | `/people/[slug]` | **no mockup**. Notion-backed, same record/sheet treatment, **no index**. Reached from a credited face on a roadmap card. A bio is the page body and is optional — a person with none renders "No bio yet" rather than an invented one. What they worked on is derived from the register |
 | Primer | `/primer` | **keep intact, unlinked** — its own scoped legacy CSS; only consumer of `lib/subgraph.ts` |
 
 Redirect changes live in `next.config.ts`: `/network` & `/orchestrate` → `/compute`; the five `/use-cases/*` → `/agent` (transcoding one → `/compute`); `/delegate` stays external (explorer). Keep existing blog host + slug redirects.

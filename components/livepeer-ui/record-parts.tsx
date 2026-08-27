@@ -1,10 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { AlignLeft } from "lucide-react";
 
 import type { Person } from "@/lib/roadmap";
-
-/** Where a credited face links; the record builds the URL from a handle. */
-const PROFILE_HOST = "forum.livepeer.org";
 
 /**
  * The furniture a record page is built from.
@@ -114,16 +112,20 @@ export function RecordCredit({ person }: { person: Person }) {
     </span>
   );
 
-  return person.profile ? (
-    <a
-      href={`https://${PROFILE_HOST}/u/${person.profile}`}
-      target="_blank"
-      rel="noreferrer"
+  // Their page, not their forum profile.
+  //
+  // The face used to go straight to the forum where a handle existed and
+  // nowhere at all where one did not — so nine of ten credited people were
+  // dead text. Every person has a page now, and the forum handle is a row on
+  // it, which is also where it belongs: an outbound link is a fact about them
+  // rather than the only thing their name could do.
+  return (
+    <Link
+      href={`/people/${person.slug}`}
+      scroll={false}
       className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
     >
       {name}
-    </a>
-  ) : (
-    name
+    </Link>
   );
 }

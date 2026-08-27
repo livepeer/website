@@ -187,8 +187,7 @@ function faceTone(name: string) {
   return FACE_TONES[h % FACE_TONES.length]!;
 }
 
-function Faces({ people, href }: { people: Person[]; href: string }) {
-  const router = useRouter();
+function Faces({ people }: { people: Person[] }) {
   // The lift and the grow ride on the outer element, not the portrait: it is
   // what clips to a circle, so scaling the image inside it would crop the face
   // rather than enlarge the mark.
@@ -255,12 +254,22 @@ function Faces({ people, href }: { people: Person[]; href: string }) {
           "--face": tone.bg,
           "--face-ink": tone.ink,
         } as React.CSSProperties;
-        const trigger = person.profile ? (
-          <a
+        // Every face goes to that person's page.
+        //
+        // It used to go to the forum where a handle existed and nowhere at all
+        // where one did not, which left nine of ten credited people as dead
+        // text — and the one that went somewhere left the site entirely. The
+        // page is ours, always exists, and carries the forum handle as a row
+        // for the people who have one.
+        //
+        // scroll={false} and the intercepting route make this open over the
+        // register, so a reader checking who someone is does not lose the list
+        // they were reading.
+        const trigger = (
+          <Link
             style={toneVars}
-            href={`https://forum.livepeer.org/u/${person.profile}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/people/${person.slug}`}
+            scroll={false}
             // The portrait is decorative — its alt is empty, because the name
             // beside it is the content — so without this the anchor has no
             // accessible name at all and a screen reader reads out "link" once
@@ -272,26 +281,7 @@ function Faces({ people, href }: { people: Person[]; href: string }) {
             className={cn(face, linked)}
           >
             {inner}
-          </a>
-        ) : (
-          // Not a button, and not focusable: a face with no profile goes
-          // nowhere, and putting it in the tab order would make a keyboard
-          // reader stop at something that does nothing. The name still reaches
-          // them — it is in the sentence the row is built from.
-          <span
-            style={toneVars}
-            // Not focusable, so this adds nothing to the tab order — a
-            // keyboard reader already has the title link, and N faces all
-            // pointing at the same record would be noise. This is the mouse
-            // affordance only: the face sits above the stretched link so its
-            // tooltip can fire, which also means it swallows the click that
-            // the rest of the card surface would have handled. Sending it to
-            // the same place puts that back.
-            onClick={() => router.push(href, { scroll: false })}
-            className={cn(face, "cursor-pointer")}
-          >
-            {inner}
-          </span>
+          </Link>
         );
         return (
           <Tooltip key={person.name}>
@@ -477,7 +467,7 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
               {c.owner}
             </Link>
             {c.contributors && c.contributors.length > 0 && (
-              <Faces people={c.contributors} href={href} />
+              <Faces people={c.contributors} />
             )}
           </span>
         </div>
