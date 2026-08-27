@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { PersonRecordView } from "@/components/livepeer-ui/person-record";
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
+import { StartAtTop } from "@/components/livepeer-ui/start-at-top";
 import type { PersonRecord } from "@/lib/people";
 import { getPeopleRegister, getRegister } from "@/lib/register";
 
@@ -74,6 +75,8 @@ export default async function PersonPage({
     // portrait still lifts from the column's left edge, which is where a
     // profile puts it.
     <article className="pb-28">
+      <StartAtTop />
+
       {person.cover && (
         <RecordCover src={person.cover} alt={`${person.name} cover image`} />
       )}

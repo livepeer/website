@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
+import { StartAtTop } from "@/components/livepeer-ui/start-at-top";
 import { getRegister } from "@/lib/register";
 import { type Commitment } from "@/lib/roadmap";
 
@@ -74,6 +75,8 @@ export default async function CommitmentPage({
     // Banner first, flush to the header, then everything else in the reading
     // column — the same shape a person and an organisation now have.
     <article className="pb-28">
+      <StartAtTop />
+
       {c.cover && <RecordCover src={c.cover} alt={`${c.title} cover image`} />}
 
       <div

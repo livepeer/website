@@ -48,10 +48,15 @@ export function RecordCover({
     // fixed height still shrinks when the content overflows — which collapsed
     // this to 0px and made the banner render as nothing at all while every
     // measurement said it was present and positioned correctly.
-    // Taller as the viewport widens. The art is 1456x816, and a fixed 224px
+    // Taller as the viewport widens, because the art is 1456x816 and a fixed
     // band stretched across a wide display crops a 16:9 composition to a
     // letterbox — growing the height keeps the crop near what was framed.
-    <div className="relative h-40 w-full shrink-0 overflow-hidden sm:h-56 lg:h-64 xl:h-72">
+    //
+    // The scale is Notion's, since these are Notion page covers and that is
+    // the reference: measured off one, its cover runs about 0.165 of the
+    // viewport width. The previous steps sat at 0.206 and read as a banner
+    // rather than a page's header.
+    <div className="relative h-32 w-full shrink-0 overflow-hidden sm:h-40 lg:h-48 xl:h-56">
       <Image
         src={src}
         alt=""

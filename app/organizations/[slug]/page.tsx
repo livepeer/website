@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
+import { StartAtTop } from "@/components/livepeer-ui/start-at-top";
 import { OrganizationRecord } from "@/components/livepeer-ui/organization-record";
 import type { Organization } from "@/lib/organizations";
 import { getOrganizationRegister, getRegister } from "@/lib/register";
@@ -68,6 +69,8 @@ export default async function OrganizationPage({
   return (
     // Full-bleed banner, reading column beneath it — see the person page.
     <article className="pb-28">
+      <StartAtTop />
+
       {org.cover && (
         <RecordCover src={org.cover} alt={`${org.name} cover image`} />
       )}
