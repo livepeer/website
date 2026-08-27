@@ -341,42 +341,72 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  */
 function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
   return (
-    <div className="group relative rounded-lg bg-muted p-6 transition-colors hover:bg-foreground/[0.06] sm:p-7 dark:bg-card dark:hover:bg-secondary">
-      {/* The index line: what kind of work, and where it stands.
+    <div className="group relative flex flex-col overflow-hidden rounded-lg bg-muted transition-colors hover:bg-foreground/[0.06] sm:flex-row dark:bg-card dark:hover:bg-secondary">
+      {/* The record's own cover, in miniature.
+          The same image the record opens with, so following a card feels
+          continuous rather than like arriving somewhere else — and it is what
+          stops a register of grey cards reading as a spreadsheet.
+
+          A rail rather than a banner. Across the top it pushed the title down
+          and made every card start with a picture; on the left the title
+          keeps the top-left corner, which is where the eye starts and what
+          anyone is actually scanning for. It also stays the same height as
+          the text beside it, so the list does not grow.
+
+          Stacked below sm, where a rail and a paragraph in 390px would leave
+          both too narrow to be worth having.
+
+          Scaled slightly on hover, clipped by the card's overflow — the
+          surface tint alone is easy to miss on the darkest theme, and this
+          gives the whole card one motion instead of two. */}
+      {c.cover && (
+        <div className="relative h-24 w-full shrink-0 overflow-hidden sm:h-auto sm:w-44 lg:w-52">
+          <Image
+            src={c.cover}
+            alt=""
+            aria-hidden
+            fill
+            sizes="(max-width: 40rem) 100vw, 13rem"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
+          />
+        </div>
+      )}
+      <div className="min-w-0 flex-1 p-6 sm:p-7">
+        {/* The index line: what kind of work, and where it stands.
           The state used to sit in the footer beside the owner, which put three
           unlike things on one line — a status, a party and a roster — and left
           the top of the card as an eyebrow with an empty right half. */}
-      {/* No affordance glyph. The whole card is the target and its surface
+        {/* No affordance glyph. The whole card is the target and its surface
           shifts on hover, which says "this opens" without an icon claiming a
           corner — the arrow was left over from the accordion's chevron, and
           indicated nothing the card did not already. */}
-      <Label>{c.workstream}</Label>
-      {/* Bigger than the 16px it was. The quarter heading above is 24px, so at
+        <Label>{c.workstream}</Label>
+        {/* Bigger than the 16px it was. The quarter heading above is 24px, so at
           16 the register's actual content was set smaller than the scaffolding
           holding it — the title is what anyone scans for. */}
-      <h3 className="mt-3 text-lg font-medium tracking-[-0.015em]">
-        {/* The stretched link.
+        <h3 className="mt-3 text-lg font-medium tracking-[-0.015em]">
+          {/* The stretched link.
             A sibling that covers the card rather than a wrapper around it, so
             the faces below keep their own links without anchors nesting inside
             an anchor. It hangs off the title because that is what the record
             is called — a screen reader announces the heading as the link, not
             "read more". */}
-        <Link
-          href={`/roadmap/${c.slug}`}
-          // The register stays where it was. Next scrolls to the top of a new
-          // route by default, which is right for a page and wrong for a panel
-          // opening over the list you are reading — it threw the index to the
-          // top on every click, and threw it back on close.
-          scroll={false}
-          className="rounded-lg outline-none before:absolute before:inset-0 before:rounded-lg focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {c.title}
-        </Link>
-      </h3>
-      <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
-        {c.outcome}
-      </p>
-      {/* The card's two corners, carrying its two registers: where the work
+          <Link
+            href={`/roadmap/${c.slug}`}
+            // The register stays where it was. Next scrolls to the top of a new
+            // route by default, which is right for a page and wrong for a panel
+            // opening over the list you are reading — it threw the index to the
+            // top on every click, and threw it back on close.
+            scroll={false}
+            className="rounded-lg outline-none before:absolute before:inset-0 before:rounded-lg focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {c.title}
+          </Link>
+        </h3>
+        <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
+          {c.outcome}
+        </p>
+        {/* The card's two corners, carrying its two registers: where the work
           stands on the left, who is behind it on the right.
 
           justify-between rather than an auto margin, because both ends wrap: at
@@ -387,15 +417,16 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
           foundations, SPEs and pseudonymous contributors should not imply a
           roster exists when it does not. They sit above the stretched link so
           a face still goes to its own profile. */}
-      <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
-        <StateMark state={c.state} />
-        <span className="relative z-10 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="shrink-0">by</span>
-          <span className="text-foreground">{c.owner}</span>
-          {c.contributors && c.contributors.length > 0 && (
-            <Faces people={c.contributors} />
-          )}
-        </span>
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
+          <StateMark state={c.state} />
+          <span className="relative z-10 flex flex-wrap items-center gap-x-3 gap-y-2">
+            <span className="shrink-0">by</span>
+            <span className="text-foreground">{c.owner}</span>
+            {c.contributors && c.contributors.length > 0 && (
+              <Faces people={c.contributors} />
+            )}
+          </span>
+        </div>
       </div>
     </div>
   );
