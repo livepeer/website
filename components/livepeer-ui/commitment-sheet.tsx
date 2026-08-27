@@ -58,9 +58,15 @@ export function CommitmentSheet({
   // with a white glyph reads on either, and on either theme — the panel body
   // is white in light mode, so a treatment tuned to the dark surface would
   // fail there too.
+  //
+  // cursor-pointer is explicit because these two are different elements: the
+  // expand control is an anchor and gets it from the browser, while SheetClose
+  // renders a button, and Tailwind v4 dropped the preflight rule that used to
+  // give buttons a pointer. Identical-looking controls sat side by side with
+  // different cursors.
   const control = cover
-    ? "rounded-md bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
-    : "rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
+    ? "cursor-pointer rounded-md bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+    : "cursor-pointer rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
 
   return (
     <Sheet
