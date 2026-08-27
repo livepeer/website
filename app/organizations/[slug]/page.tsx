@@ -175,23 +175,23 @@ export default async function OrganizationPage({
           />
         )}
 
-        {/* What they are answerable for. Rendered from the register, so this
-            cannot drift from the roadmap. */}
-        <section className="mt-14 border-t border-border pt-10">
-          <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-            On the roadmap
-          </h2>
+        {/* What they are answerable for — only when there is something.
+            Rendered from the register, so it cannot drift from the roadmap.
 
-          {owned.length === 0 ? (
-            // Said plainly. Three of these bodies own nothing — they fund work,
-            // or govern it — and an empty section with no explanation reads as
-            // a page that failed to load.
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              No commitments on the register. {org.name} appears on the roadmap
-              through the work it funds rather than as an owner.
-            </p>
-          ) : (
-            SECTIONS.map(({ state, label }) => {
+            No empty state. A body that owns nothing is not a page missing a
+            section: the Treasury is every delegator and orchestrator voting on
+            proposals and governance LIPs, and will never own an initiative.
+            The sentence that used to stand here — that they appear through the
+            work they fund — was true of Livepeer Inc and false of the other
+            two. Each page's own copy says what that body does, which is the
+            place for it. */}
+        {owned.length > 0 && (
+          <section className="mt-14 border-t border-border pt-10">
+            <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+              On the roadmap
+            </h2>
+
+            {SECTIONS.map(({ state, label }) => {
               const rows = owned.filter((c) => c.state === state);
               if (rows.length === 0) return null;
               return (
@@ -204,9 +204,9 @@ export default async function OrganizationPage({
                   </ul>
                 </div>
               );
-            })
-          )}
-        </section>
+            })}
+          </section>
+        )}
       </div>
     </article>
   );
