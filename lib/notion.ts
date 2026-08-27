@@ -116,6 +116,60 @@ export function hasNotionCredentials(): boolean {
 
 type Json = Record<string, unknown>;
 
+/**
+ * A build reads Notion two dozen times — three database queries and a body for
+ * every commitment and organisation — and until this, any one of them failing
+ * failed the deploy. That is what happened: a single ETIMEDOUT prerendering
+ * /roadmap, with nothing wrong at either end but the connection.
+ *
+ * Retried, then. Failing loudly on a Notion outage is deliberate and stays —
+ * a build that quietly served month-old markdown would publish a roadmap that
+ * looks current and is not — but one flaky socket is not an outage, and the
+ * register was not stale.
+ *
+ * Only what a retry can fix: a transport error, a 429, a 5xx. A 401 or a
+ * "Could not find database" is a configuration mistake, and repeating it three
+ * times only delays the message that says so.
+ */
+const ATTEMPTS = 3;
+const REQUEST_TIMEOUT_MS = 15_000;
+const BACKOFF_MS = [500, 1500];
+
+function retryable(res: Response): boolean {
+  return res.status === 429 || res.status >= 500;
+}
+
+async function withRetries(
+  endpoint: string,
+  send: () => Promise<Response>
+): Promise<Response> {
+  let last: unknown;
+
+  for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
+    if (attempt > 0) {
+      await new Promise((r) =>
+        setTimeout(r, BACKOFF_MS[attempt - 1] ?? BACKOFF_MS.at(-1))
+      );
+    }
+    try {
+      const res = await send();
+      if (!retryable(res) || attempt === ATTEMPTS - 1) return res;
+      last = new Error(`Notion ${res.status} on ${endpoint}`);
+    } catch (err) {
+      // Network-level: a timeout, a reset, a DNS blip. Nothing to read.
+      last = err;
+    }
+  }
+
+  throw new Error(
+    `Notion request to ${endpoint} failed ${ATTEMPTS} times. The register is ` +
+      `read from Notion and the build fails rather than serving the stale ` +
+      `markdown fallback, which would publish a roadmap that looks current ` +
+      `and is not.`,
+    { cause: last }
+  );
+}
+
 async function notion(endpoint: string, init?: RequestInit): Promise<Json> {
   const token = process.env.NOTION_TOKEN;
   if (!token) {
@@ -125,16 +179,20 @@ async function notion(endpoint: string, init?: RequestInit): Promise<Json> {
     );
   }
 
-  const res = await fetch(`${API}${endpoint}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Notion-Version": NOTION_VERSION,
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-    next: { revalidate: REVALIDATE },
-  });
+  const res = await withRetries(endpoint, () =>
+    fetch(`${API}${endpoint}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Notion-Version": NOTION_VERSION,
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+      // Without this a hung connection hangs the build rather than failing it.
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      next: { revalidate: REVALIDATE },
+    })
+  );
 
   if (!res.ok) {
     // Notion's own message is the useful part — "Could not find database with
