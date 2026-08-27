@@ -45,13 +45,22 @@ const SECTIONS: { state: Commitment["state"]; label: string }[] = [
 /** A commitment, at the size a supporting list wants. */
 function CommitmentRow({ commitment: c }: { commitment: Commitment }) {
   return (
-    <li className="group relative border-t border-border py-4">
+    // The whole row is the target, so the whole row answers the pointer. The
+    // tint bleeds past the text column by the same 12px it is padded, which is
+    // what stops it reading as a box drawn around the title.
+    //
+    // Full accent, not the /40 the cards use. Those sit on `card` inside a
+    // bordered box; this sits on the page, and 0.97 at 40% over white measured
+    // a 1% shift — present in the computed style and invisible to anyone. The
+    // title takes the underline as well, because that is what the pointer is
+    // actually aimed at.
+    <li className="group relative -mx-3 rounded-md border-t border-border px-3 py-4 transition-colors hover:bg-accent">
       <div className="flex items-baseline justify-between gap-6">
         <h3 className="text-sm font-medium">
           <Link
             href={`/roadmap/${c.slug}`}
             scroll={false}
-            className="rounded-sm outline-none before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
+            className="rounded-sm underline decoration-transparent underline-offset-4 outline-none transition-colors group-hover:decoration-border before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
           >
             {c.title}
           </Link>

@@ -1,6 +1,4 @@
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
@@ -69,24 +67,15 @@ export default async function OrganizationPage({
 
   return (
     <article className="mx-auto w-full max-w-[46rem] pt-20 pb-28">
-      {/* Back to the register, not to an index of organisations — there
-          isn't one. These pages are reached from an owner's name on a roadmap
-          card, so the roadmap is both where a reader came from and the only
-          place that links here. Named rather than called "back", because a
-          shared link lands people here having seen neither. */}
-      <div className="px-6 sm:px-8">
-        <Link
-          href="/roadmap"
-          className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft
-            className="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none"
-            aria-hidden
-          />
-          All commitments
-        </Link>
-      </div>
+      {/* No back link. A commitment lives at /roadmap/<slug> and the register
+          really is its parent, so naming it is true there. An organisation is
+          a sibling route that happens to be reached from a card, and a link
+          home to the roadmap would claim an ancestry it does not have.
 
+          Nothing is lost by dropping it: this only ever renders on the full
+          page — the overlay has a close control — and the roadmap is linked
+          from this page where that is honest, on every row of "On the
+          roadmap". */}
       {org.cover && (
         <div className="mt-6 mb-10">
           <RecordCover src={org.cover} alt={`${org.name} cover image`} />
