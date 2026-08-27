@@ -5,13 +5,9 @@ workstream: Agent
 state: building
 owner: Livepeer Foundation
 contributors:
-  # From the board item's "Owned By". The portrait is a stand-in, not this
-  # person — `placeholder-*.jpg` is a generated face assigned in record order,
-  # picked to resemble nobody. Swap in a real photograph, or delete the
-  # `avatar` line and let the monogram stand, before launch:
-  #   grep -rn "placeholder-.\.jpg" content/roadmap
-  # No `profile` id either: the board exposes no /u/ links on its public pages,
-  # so each has to be confirmed by hand rather than guessed.
+  # From the board item's "Owned By". No `profile` id: the board exposes no
+  # /u/ links on its public pages, so each has to be confirmed by hand rather
+  # than guessed.
   - name: Steph Alinsug
     avatar: placeholder-1.jpg
 target: Q3 2026

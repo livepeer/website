@@ -5,7 +5,6 @@ workstream: Network
 state: shipped
 owner: Network Engineering SPE
 contributors:
-  # Placeholder cast — see documentation-v2.md.
   - name: Elena Vargas
     avatar: elena-vargas.jpg
   - name: Andre Okafor

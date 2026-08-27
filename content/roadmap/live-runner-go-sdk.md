@@ -5,7 +5,6 @@ workstream: Network
 state: shipped
 owner: Livepeer Foundation
 contributors:
-  # Placeholder cast — see documentation-v2.md.
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
   - name: Andre Okafor

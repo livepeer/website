@@ -4,12 +4,10 @@ outcome: Establish how self-custody staking compares with custodial staking for 
 workstream: Protocol
 state: shipped
 owner: RaidGuild
-# Placeholder, like the roster below — replaced when real people land.
 accountable:
   name: Anjali Raman
   avatar: anjali-raman.jpg
 contributors:
-  # Placeholder cast — see documentation-v2.md.
   - name: Anjali Raman
     avatar: anjali-raman.jpg
   - name: Tom Whitfield

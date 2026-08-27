@@ -7,11 +7,6 @@ owner: Livepeer Foundation
 # The RFP is how the work was paid for, not who was answerable for it.
 funding: Documentation Restructure RFP
 contributors:
-  # Placeholder cast — invented people on real shipped work, restored so the
-  # card's credit line is not half empty while real rosters are collected.
-  # Same set the _placeholder-* records use. Names, portraits and profile
-  # ids are all stand-ins; replace or delete before launch:
-  #   grep -rn "profile: \"0" content/roadmap
   - name: Mei Tanaka
     avatar: mei-tanaka.jpg
   - name: Anjali Raman

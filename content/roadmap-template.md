@@ -40,10 +40,9 @@ owner: Name or team
 # Leave it off and the face falls back to a monogram, which is right for anyone
 # who would rather not supply a photograph.
 #
-# NOTE: most records here carry INVENTED people with generated portraits and
-# fabricated profile ids, so the page could be reviewed with its rosters in
-# place. These files are the no-credential fallback, not the register — see
-# content/roadmap/README.md.
+# NOTE: these files are the no-credential fallback, not the register — the
+# live one is in Notion. See content/roadmap/README.md. Never guess a roster:
+# an empty one is honest, a wrong one credits people for work they did not do.
 contributors:
   - name: Full name or handle
     avatar: their-file.jpg

@@ -11,9 +11,6 @@ contributors:
   # Named by the Foundation, not by the board item, which credits Doug alone.
   # The handle this once carried was a name match on GitHub with nothing tying
   # it to Livepeer — so it and its portrait are gone until someone confirms it.
-  # Stand-in portrait — see the note in agent-product-launch.md. The one this
-  # record used to carry was taken from a GitHub profile that was a name match
-  # and nothing more, which is worse than an obvious placeholder.
   - name: Rich O'Grady
     avatar: placeholder-3.jpg
 target: Q3 2026

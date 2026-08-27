@@ -5,7 +5,6 @@ workstream: Protocol
 state: shipped
 owner: RaidGuild
 contributors:
-  # Placeholder cast — see documentation-v2.md.
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
   - name: Elena Vargas

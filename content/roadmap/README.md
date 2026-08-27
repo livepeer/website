@@ -86,16 +86,12 @@ builds the link from it. Both are optional: a face with no portrait falls back
 to a monogram, and one that links nowhere is better than one that links at a
 guess.
 
-**Most `people` entries here are invented**, with generated portraits, so the
-page could be reviewed with its rosters in place. The same invented names were
-carried into Notion. `owners` is real throughout; `people` largely is not, and
-should be replaced with the actual teams before launch.
-
-Only Doug Petkanics carries a `profile`, and it is his forum handle. The
-records used to hold fabricated board ids — sequential zero-padded numbers,
-with the same person holding a different one on each record — and those are
-gone. Everyone else renders unlinked, which is the honest treatment. Never
-invent one to fill a gap.
+Only Doug Petkanics carries a `profile`, and it is his forum handle. Everyone
+else renders unlinked, which is the honest treatment. Never invent one to fill
+a gap: a plausible handle resolves to a real stranger's profile. The same holds
+for the rosters themselves — where you do not know who worked on something,
+leave `people` out. An empty roster is honest; a wrong one credits people for
+work they did not do.
 
 ## Covers
 

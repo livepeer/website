@@ -5,7 +5,6 @@ workstream: Protocol
 state: shipped
 owner: Protocol R&D SPE
 contributors:
-  # Placeholder cast — see documentation-v2.md.
   - name: Peter Lindqvist
     avatar: peter-lindqvist.jpg
   - name: Elena Vargas
