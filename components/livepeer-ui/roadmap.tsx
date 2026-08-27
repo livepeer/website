@@ -2,7 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowUpRightIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  ChevronDownIcon,
+  SearchIcon,
+  SlidersHorizontalIcon,
+  XIcon,
+} from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -745,34 +751,79 @@ function Filters({
   suggestionsHref: string;
 }) {
   const filtering = selected.length > 0 || query.length > 0 || buildingOnly;
+  const active =
+    selected.length + (buildingOnly ? 1 : 0) + (query.length > 0 ? 1 : 0);
+
+  // Collapsed on a phone, open from lg up where the rail has its own column.
+  //
+  // The rail is four controls and a heading, and on a phone it sat between the
+  // headline and the first card — a screen of instruments before anything they
+  // operate on. It is one line now until asked for.
+  //
+  // Open on arrival when something is already filtering, which happens when a
+  // filtered URL is shared: a short register under a collapsed panel reads as
+  // a short register, and the reason for it should not be one tap away.
+  const [open, setOpen] = useState(filtering);
+
   return (
     // The margins live here rather than on a wrapper. A sticky element only
     // travels within its parent's box, so wrapping this in a div sized to its
     // own height pinned it nowhere — the rail has to be a direct child of the
     // column that stretches to the register's height.
     <div className="lg:sticky lg:top-16 lg:pt-5">
-      {/* Search first, where a search field goes.
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="roadmap-filters"
+        className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-border px-4 py-2.5 text-sm transition-colors outline-none hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+      >
+        <span className="flex items-center gap-2">
+          <SlidersHorizontalIcon className="size-4" aria-hidden="true" />
+          Filters
+          {/* The count, so a collapsed panel never hides a filter that is
+              shortening the register without saying so. */}
+          {active > 0 && (
+            <span className="font-mono text-xs text-muted-foreground">
+              {active}
+            </span>
+          )}
+        </span>
+        <ChevronDownIcon
+          className={cn(
+            "size-4 text-muted-foreground transition-transform motion-reduce:transition-none",
+            open && "rotate-180"
+          )}
+          aria-hidden="true"
+        />
+      </button>
+
+      <div
+        id="roadmap-filters"
+        className={cn("mt-4 lg:mt-0 lg:block", !open && "hidden")}
+      >
+        {/* Search first, where a search field goes.
           It was moved to the foot on the argument that fourteen records are
           scanned rather than searched. True, and beside the point: a reader
           who wants to type a name looks top-left for the box, and finding it
           under the filters costs them more than its position saved. */}
-      <div className="relative">
-        <SearchIcon
-          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          type="search"
-          value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Search"
-          aria-label="Search commitments"
-          className="pl-9"
-        />
-      </div>
+        <div className="relative">
+          <SearchIcon
+            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            type="search"
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            placeholder="Search"
+            aria-label="Search commitments"
+            className="pl-9"
+          />
+        </div>
 
-      {view === "roadmap" && (
-        /* The bare state name, which a checkbox can carry where a list row
+        {view === "roadmap" && (
+          /* The bare state name, which a checkbox can carry where a list row
            could not: "In progress" beside a box is unambiguous, while the same
            words as a row in a list read as a category with one member.
 
@@ -781,38 +832,38 @@ function Filters({
            In Progress, Now, Next, Beyond, Under Review, and a page that renames
            the one it shows makes the two surfaces disagree in the vocabulary a
            reader carries between them. */
-        <div className="mt-3 lg:mt-4">
-          <FilterRow
-            label="In progress"
-            count={buildingCount}
-            active={buildingOnly}
-            onChange={onBuildingOnlyChange}
-          />
-        </div>
-      )}
+          <div className="mt-3 lg:mt-4">
+            <FilterRow
+              label="In progress"
+              count={buildingCount}
+              active={buildingOnly}
+              onChange={onBuildingOnlyChange}
+            />
+          </div>
+        )}
 
-      {/* Broad, then narrow. "In progress" cuts the whole register in half and
+        {/* Broad, then narrow. "In progress" cuts the whole register in half and
           the workstreams divide what is left, so it is read first — and it
           hangs off the search field with a tighter gap than the one below it,
           which is what keeps it from reading as part of this heading. */}
-      <div className="mt-6 lg:mt-8">
-        <div className="mb-1.5">
-          <Label>Workstream</Label>
+        <div className="mt-6 lg:mt-8">
+          <div className="mb-1.5">
+            <Label>Workstream</Label>
+          </div>
+          <div role="group" aria-label="Filter by workstream">
+            {workstreams.map((w) => (
+              <FilterRow
+                key={w}
+                label={w}
+                count={counts[w] ?? 0}
+                active={selected.includes(w)}
+                onChange={() => onToggle(w)}
+              />
+            ))}
+          </div>
         </div>
-        <div role="group" aria-label="Filter by workstream">
-          {workstreams.map((w) => (
-            <FilterRow
-              key={w}
-              label={w}
-              count={counts[w] ?? 0}
-              active={selected.includes(w)}
-              onChange={() => onToggle(w)}
-            />
-          ))}
-        </div>
-      </div>
 
-      {/* A checkbox, because this is one yes-or-no question.
+        {/* A checkbox, because this is one yes-or-no question.
           It spent two passes as a row in the workstream list and as a facet
           under its own heading, and both made a binary look like a list with
           one item missing — a list implies siblings. Nobody expects a checkbox
@@ -821,21 +872,22 @@ function Filters({
 
           Roadmap only. Behind us every record shipped, so it would filter the
           view away. */}
-      {/* One reset, at the foot of everything it resets, and only when there is
+        {/* One reset, at the foot of everything it resets, and only when there is
           something to undo. It used to sit in the Workstream heading, naming
           one facet while operating on three. */}
-      {filtering && (
-        <button
-          type="button"
-          onClick={onClear}
-          className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-6"
-        >
-          <XIcon className="size-3.5" aria-hidden="true" />
-          Clear filters
-        </button>
-      )}
+        {filtering && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-6"
+          >
+            <XIcon className="size-3.5" aria-hidden="true" />
+            Clear filters
+          </button>
+        )}
 
-      <SuggestBlock href={suggestionsHref} className="mt-8 hidden lg:block" />
+        <SuggestBlock href={suggestionsHref} className="mt-8 hidden lg:block" />
+      </div>
     </div>
   );
 }
