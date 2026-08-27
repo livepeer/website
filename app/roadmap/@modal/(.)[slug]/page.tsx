@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
+import {
+  CommitmentCover,
+  CommitmentRecord,
+} from "@/components/livepeer-ui/commitment-record";
 import { CommitmentSheet } from "@/components/livepeer-ui/commitment-sheet";
 import { getRegister } from "@/lib/register";
 
@@ -25,7 +28,18 @@ export default async function InterceptedCommitment({
   if (!commitment) notFound();
 
   return (
-    <CommitmentSheet slug={slug} title={commitment.title}>
+    <CommitmentSheet
+      slug={slug}
+      title={commitment.title}
+      cover={
+        commitment.cover && (
+          <CommitmentCover
+            src={commitment.cover}
+            alt={`${commitment.title} cover image`}
+          />
+        )
+      }
+    >
       <CommitmentRecord commitment={commitment} />
     </CommitmentSheet>
   );

@@ -49,6 +49,14 @@ contributors:
     avatar: their-file.jpg
 target: Q4 2026                # month | quarter | half | year — the real precision, no more
 
+# The banner at the top of the record, from Peace Node's stock library:
+#   https://livepeer.peaceno.de/marketing/stock-images
+# Must be on cdn.sanity.io — next/image is configured for that host and
+# nothing else, and a URL anywhere else fails the build rather than rendering
+# broken. In Notion this is the page cover, set as an external image: an
+# uploaded one comes back as a signed URL that expires within the hour.
+# cover: https://cdn.sanity.io/images/l36s876e/production/....png
+
 # Required once state is shipped
 # shippedAt: 2026-07-30
 

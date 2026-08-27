@@ -90,6 +90,24 @@ with the same person holding a different one on each record — and those are
 gone. Everyone else renders unlinked, which is the honest treatment. Never
 invent one to fill a gap.
 
+## Covers
+
+Each record carries a banner, shown at the top of its page and its panel the
+way Notion shows a page cover. In Notion it is the page cover itself; in the
+markdown fallback it is a `cover:` URL.
+
+It must be **external**, on `cdn.sanity.io`. Notion returns an uploaded image
+as a signed URL that expires within the hour, so a page built at noon would
+show a broken banner by one — the same reason portraits are committed to the
+repo. An external cover comes back verbatim. The reader ignores uploads
+rather than baking one in, and the markdown reader fails the build on any
+other host, since `next.config.ts` allows that one and no other.
+
+Images come from Peace Node's stock library. Fourteen distinct ones are in
+use, matched to subject where there was an obvious fit — the agent images on
+the Agent records, the GPU one on non-GPU node capabilities — and filled from
+the abstract set otherwise.
+
 ## The write-up
 
 A commitment's body is its long-form explanation, and it has its own page at

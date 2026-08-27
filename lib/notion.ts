@@ -481,8 +481,20 @@ function toCommitment(
     );
   }
 
+  // Notion returns an external cover as the URL that was set and an uploaded
+  // one as a signed URL that expires within the hour. Only the first is worth
+  // rendering, so an upload is ignored rather than baked into a page that
+  // would break by lunchtime.
+  const coverProp = row.cover as
+    | { type?: string; external?: { url?: string } }
+    | null
+    | undefined;
+  const cover =
+    coverProp?.type === "external" ? coverProp.external?.url : undefined;
+
   return {
     slug: slugify(title),
+    cover,
     title,
     outcome: text(p.Outcome),
     workstream,

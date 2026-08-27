@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
+import {
+  CommitmentCover,
+  CommitmentRecord,
+} from "@/components/livepeer-ui/commitment-record";
 import { getRegister } from "@/lib/register";
 import { type Commitment } from "@/lib/roadmap";
 
@@ -69,19 +72,29 @@ export default async function CommitmentPage({
   if (!c) notFound();
 
   return (
-    <article className="mx-auto w-full max-w-[46rem] px-6 pt-24 pb-28 sm:px-8">
-      {/* Back to the list, not to the site. Someone arriving from a shared
+    <article className="mx-auto w-full max-w-[46rem] pb-28">
+      {/* Above the padding, so the banner runs to the column's edges the way
+          Notion's does. Sits under the site header rather than starting below
+          it, which is what makes it read as the page's own image. */}
+      {c.cover && (
+        <div className="mt-20 mb-10">
+          <CommitmentCover src={c.cover} alt={`${c.title} cover image`} />
+        </div>
+      )}
+      <div className={c.cover ? "px-6 sm:px-8" : "px-6 pt-24 sm:px-8"}>
+        {/* Back to the list, not to the site. Someone arriving from a shared
           link has no history to go back to, so this is the only way onward
           into the rest of the register. Absent from the overlay, which has the
           register behind it already. */}
-      <Link
-        href="/roadmap"
-        className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-      >
-        Roadmap
-      </Link>
-      <div className="mt-12">
-        <CommitmentRecord commitment={c} />
+        <Link
+          href="/roadmap"
+          className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+        >
+          Roadmap
+        </Link>
+        <div className="mt-12">
+          <CommitmentRecord commitment={c} />
+        </div>
       </div>
     </article>
   );

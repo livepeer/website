@@ -31,10 +31,12 @@ import {
 export function CommitmentSheet({
   slug,
   title,
+  cover,
   children,
 }: {
   slug: string;
   title: string;
+  cover?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const router = useRouter();
@@ -86,7 +88,18 @@ export function CommitmentSheet({
             heading, so this one is not shown twice. */}
         <SheetTitle className="sr-only">{title}</SheetTitle>
 
-        <div className="sticky top-0 z-10 flex items-center justify-end gap-1 bg-popover/80 px-4 py-3 backdrop-blur">
+        {/* The controls float over the banner rather than sitting above it,
+            so the image starts at the top edge of the panel the way Notion's
+            cover does. Absolute, not sticky, when there is a cover: a sticky
+            bar with a translucent background over a photograph reads as a
+            smear as it scrolls. */}
+        <div
+          className={
+            cover
+              ? "absolute top-0 right-0 z-10 flex items-center justify-end gap-1 p-3"
+              : "sticky top-0 z-10 flex items-center justify-end gap-1 bg-popover/80 px-4 py-3 backdrop-blur"
+          }
+        >
           {/* Notion's other affordance: take it full-screen. A plain anchor
               rather than a Link — the point is to leave the overlay and land
               on the page itself, which is what a full navigation does. */}
@@ -105,7 +118,14 @@ export function CommitmentSheet({
           </SheetClose>
         </div>
 
-        <div className="px-6 pt-4 pb-20 sm:px-10">{children}</div>
+        {cover}
+        <div
+          className={
+            cover ? "px-6 pt-10 pb-20 sm:px-10" : "px-6 pt-4 pb-20 sm:px-10"
+          }
+        >
+          {children}
+        </div>
       </SheetContent>
     </Sheet>
   );

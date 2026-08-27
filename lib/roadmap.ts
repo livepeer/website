@@ -153,6 +153,18 @@ export type Commitment = {
    * isn't one.
    */
   accountable?: Person;
+  /**
+   * The record's banner, as Notion sets it — an absolute URL on the image CDN.
+   *
+   * External rather than uploaded, which is the whole reason it can be used at
+   * all: Notion hands back an uploaded image as a signed URL that expires
+   * within the hour, and a page built at noon would show a broken banner by
+   * one. An external cover comes back verbatim and keeps working.
+   *
+   * Optional. A record without one starts at its title, which is a quieter
+   * page rather than a broken one.
+   */
+  cover?: string;
   /** ISO yyyy-mm-dd. Present only when shipped. */
   shippedAt?: string;
   /** Where this record can be checked and where the work lives. At least one. */
@@ -213,7 +225,10 @@ export type Commitment = {
 
 const dir = path.join(process.cwd(), "content", "roadmap");
 
-/** Where a person's profile lives; the card builds the URL from an id. */
+/** The only image host next/image is configured for; see next.config.ts. */
+const IMAGE_HOST = "cdn.sanity.io";
+
+/** Where a person's profile lives; the card builds the URL from a handle. */
 const PROFILE_HOST = "forum.livepeer.org";
 
 /**
@@ -282,6 +297,33 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
       profile: person.profile ? String(person.profile) : undefined,
     };
   });
+}
+
+/**
+ * A cover must be on the one host next/image is configured to load.
+ *
+ * next.config.ts allows cdn.sanity.io and nothing else, so any other host
+ * would render as a broken image at runtime rather than failing here. This
+ * turns that into a build error naming the record.
+ */
+function readCover(value: unknown, file: string): string | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  const url = String(value);
+  let host: string;
+  try {
+    host = new URL(url).hostname;
+  } catch {
+    throw new Error(
+      `content/roadmap/${file}: cover ${JSON.stringify(url)} is not a URL.`
+    );
+  }
+  if (host !== IMAGE_HOST) {
+    throw new Error(
+      `content/roadmap/${file}: cover is on ${host}, and next/image is only ` +
+        `configured for ${IMAGE_HOST}. Use an image from the stock library.`
+    );
+  }
+  return url;
 }
 
 function readLinks(value: unknown, file: string, field: string) {
@@ -380,6 +422,7 @@ function parse(file: string): Commitment {
     lastUpdated: data.lastUpdated
       ? new Date(data.lastUpdated).toISOString().slice(0, 10)
       : undefined,
+    cover: readCover(data.cover, file),
     detail: content.trim() || undefined, // raw markdown; rendered in getCommitments
   };
 }
