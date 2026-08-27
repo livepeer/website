@@ -3,8 +3,7 @@ title: Retroactive grants
 outcome: Fund work already delivered to the network, so contributors are paid without needing to ask first.
 workstream: Network
 state: shipped
-owners:
-  - Network Engineering SPE
+owner: Network Engineering SPE
   # Placeholder cast — see documentation-v2.md.
 people:
   - name: Elena Vargas

@@ -3,8 +3,7 @@ title: Non-GPU node capabilities
 outcome: Let nodes serve audio, clipping, captions and overlays, so supply is compute rather than silicon.
 workstream: Network
 state: next
-owners:
-  - Network Engineering SPE
+owner: Network Engineering SPE
 people:
   - name: Andre Okafor
     avatar: andre-okafor.jpg

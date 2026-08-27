@@ -3,8 +3,7 @@ title: Network readiness for Livepeer Agent
 outcome: Get the network able to serve Agent's workloads reliably — capacity, capability coverage and routing.
 workstream: Network
 state: building
-owners:
-  - Livepeer Foundation
+owner: Livepeer Foundation
 people:
   # Stand-in portrait — see the note in agent-product-launch.md.
   - name: Qiang Han

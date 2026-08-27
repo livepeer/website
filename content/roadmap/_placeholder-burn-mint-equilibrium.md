@@ -3,8 +3,7 @@ title: Burn-Mint Equilibrium
 outcome: Connect LPT issuance to network usage, so rewards follow demand rather than a fixed schedule.
 workstream: Protocol
 state: next
-owners:
-  - Protocol R&D SPE
+owner: Protocol R&D SPE
 people:
   - name: Peter Lindqvist
     avatar: peter-lindqvist.jpg

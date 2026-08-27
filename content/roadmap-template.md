@@ -12,10 +12,11 @@ title: Name of the outcome
 outcome: One sentence, max ~140 chars — what lands, in plain terms.
 workstream: Network            # Protocol | Network | Agent
 state: building                # building | next | shipped
-# The accountable party — the team, company or foundation on the hook. Shown on
-# the closed card as "Owner" ("Owners" when there is more than one).
-owners:
-  - Name or team
+# The one party answerable for delivering this, shown on the closed card as
+# "by". Exactly one: accountability that is shared is accountability nobody
+# holds, and a reader whose question is "who do I ask about that date" needs a
+# single answer. Contributors go under people; joint funding goes in funding.
+owner: Name or team
 # The individuals doing the work. Their faces sit beside the team name in the
 # same "Owner" line, so this is one credit, not two. Names are not printed
 # beside the faces; each face carries its own.

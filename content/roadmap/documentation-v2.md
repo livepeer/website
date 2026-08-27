@@ -3,8 +3,7 @@ title: Documentation v2
 outcome: Restructure the docs so builders can find the network's capabilities without reading the source.
 workstream: Agent
 state: shipped
-owners:
-  - Documentation Restructure RFP
+owner: Documentation Restructure RFP
   # Placeholder cast — invented people on real shipped work, restored so the
   # card's credit line is not half empty while real rosters are collected.
   # Same set the _placeholder-* records use. Names, portraits and profile

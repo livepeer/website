@@ -3,8 +3,7 @@ title: Stake-elected validator set
 outcome: Replace the 100-orchestrator cap with a stake-elected validator set and fixed per-node bonds.
 workstream: Protocol
 state: next
-owners:
-  - Protocol R&D SPE
+owner: Protocol R&D SPE
 people:
   - name: Peter Lindqvist
     avatar: peter-lindqvist.jpg

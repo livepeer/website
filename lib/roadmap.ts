@@ -120,8 +120,15 @@ export type Commitment = {
   outcome: string;
   workstream: Workstream;
   state: CommitmentState;
-  /** The accountable party — the card's "Owner". At least one. */
-  owners: string[];
+  /**
+   * The one party answerable for delivering this — the card's "by".
+   *
+   * Exactly one, on the project-management convention that accountability
+   * cannot be shared: two parties equally answerable means each can assume the
+   * other has it, and a reader with a question about a slipped date has nobody
+   * to ask. Contributors are `people`; joint funding is `funding`.
+   */
+  owner: string;
   /** The people behind the accountable party, shown as faces beside its name
    *  in the card's "Owner" line. Optional: many records name an
    *  organisation and no individuals, and an empty roster is a normal state. */
@@ -305,9 +312,13 @@ function parse(file: string): Commitment {
     );
   }
 
-  const owners = at("owners", data.owners) as string[];
-  if (!Array.isArray(owners) || owners.length === 0) {
-    throw new Error(`content/roadmap/${file}: owners must list at least one.`);
+  const owner = String(at("owner", data.owner));
+  if (Array.isArray(data.owner)) {
+    throw new Error(
+      `content/roadmap/${file}: owner is a list. Exactly one party is ` +
+        `answerable — credit the others under people, or state joint funding ` +
+        `in funding.`
+    );
   }
   const related = readLinks(at("related", data.related), file, "related");
   if (related.length === 0) {
@@ -323,7 +334,7 @@ function parse(file: string): Commitment {
     outcome: String(at("outcome", data.outcome)),
     workstream,
     state: declared,
-    owners: owners.map(String),
+    owner,
     people: readPeople(data.people, file),
     target: String(at("target", data.target)),
     targetSort: targetSortKey(

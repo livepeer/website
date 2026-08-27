@@ -37,8 +37,8 @@ commitment is never copied when it lands: it gains a ship date and changes view.
 Copy `content/roadmap-template.md`, fill the frontmatter, save it as
 `content/roadmap/<slug>.md`. `lib/roadmap.ts` validates at build time and fails
 loudly rather than rendering a half-record: an unknown workstream, a missing
-owner, no checkable link, an unparseable target, or a `state`/`shippedAt`
-disagreement all stop the build.
+owner, a list where one owner belongs, no checkable link, an unparseable
+target, or a `state`/`shippedAt` disagreement all stop the build.
 
 `lib/notion.ts` enforces the same rules against the Notion rows, so the two
 readers cannot accept different things. Marking something shipped is two edits
@@ -46,10 +46,19 @@ in either source — the state and the date — and it moves views on its own.
 
 ## Owners and people
 
-`owners` is the accountable party — the team, company, foundation, SPE or RFP on
-the hook. `people` are the individuals doing the work. They render as one credit
-on the closed card: **by**, the owner's name, and the faces beside it. A record
-that credits an organisation and no individuals is normal.
+`owner` is the one party answerable for delivering — a team, company,
+foundation, SPE or RFP. `people` are the individuals doing the work. They
+render as one credit on the closed card: **by**, the owner's name, and the
+faces beside it. A record that credits an organisation and no individuals is
+normal.
+
+Exactly one owner, on the convention that accountability cannot be split: two
+parties equally answerable means each can assume the other has it. Where work
+is genuinely shared, name the lead and put the rest where it belongs —
+`funding` for joint money, `people` for the individuals. Both of the register's
+two-owner records resolved that way: 2.0 validation is Foundation-owned with
+Inc named in `funding`, and LIP-118 is SPE-owned with rickstaa credited under
+`people`.
 
 `avatar` is a bare filename in `public/people`, never a path or a URL.
 `profile` is a bare handle from a `forum.livepeer.org/u/…` URL — the card

@@ -3,8 +3,7 @@ title: Agent product launch and GTM
 outcome: Take Livepeer Agent to market — the connector, the console, and the route in for builders.
 workstream: Agent
 state: building
-owners:
-  - Livepeer Foundation
+owner: Livepeer Foundation
 people:
   # Stand-in profile ids, all zeros but the last digit — the board 404s
   # them, and no real id looks like this. They exist so the avatar link

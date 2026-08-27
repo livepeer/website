@@ -3,9 +3,7 @@ title: LIP-118 — Delegated reward calling
 outcome: Let orchestrators delegate the reward call, removing a standing operational chore from running a node.
 workstream: Protocol
 state: shipped
-owners:
-  - rickstaa
-  - Protocol R&D SPE
+owner: Protocol R&D SPE
   # Placeholder cast — see documentation-v2.md.
 people:
   - name: Peter Lindqvist

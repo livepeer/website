@@ -3,8 +3,7 @@ title: Explorer maintenance
 outcome: Keep the Livepeer Explorer current and supported through a defined maintenance engagement.
 workstream: Protocol
 state: shipped
-owners:
-  - RaidGuild
+owner: RaidGuild
   # Placeholder cast — see documentation-v2.md.
 people:
   - name: Tom Whitfield

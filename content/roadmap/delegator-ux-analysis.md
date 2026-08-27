@@ -3,8 +3,7 @@ title: Delegator UX analysis
 outcome: Establish how self-custody staking compares with custodial staking for delegators, and what that implies for the protocol.
 workstream: Protocol
 state: shipped
-owners:
-  - RaidGuild
+owner: RaidGuild
   # Placeholder cast — see documentation-v2.md.
 people:
   - name: Anjali Raman

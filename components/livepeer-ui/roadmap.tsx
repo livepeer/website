@@ -418,7 +418,7 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
                 The party takes foreground. It is the fact in this row; at muted
                 it was set at the same weight as the word introducing it. */}
             <span className="shrink-0">by</span>
-            <span className="text-foreground">{c.owners.join(", ")}</span>
+            <span className="text-foreground">{c.owner}</span>
             {c.people && c.people.length > 0 && <Faces people={c.people} />}
           </span>
         </div>
@@ -1024,7 +1024,7 @@ export function Roadmap({
     const q = query.trim().toLowerCase();
     const hit = (c: Commitment) =>
       !q ||
-      [c.title, c.outcome, c.workstream, ...c.owners]
+      [c.title, c.outcome, c.workstream, c.owner]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -1046,7 +1046,7 @@ export function Roadmap({
         c.state === "building" &&
         (selected.length === 0 || selected.includes(c.workstream)) &&
         (!q ||
-          [c.title, c.outcome, c.workstream, ...c.owners]
+          [c.title, c.outcome, c.workstream, c.owner]
             .join(" ")
             .toLowerCase()
             .includes(q))
@@ -1072,7 +1072,7 @@ export function Roadmap({
       if (buildingOnly && c.state !== "building") continue;
       if (
         q &&
-        ![c.title, c.outcome, c.workstream, ...c.owners]
+        ![c.title, c.outcome, c.workstream, c.owner]
           .join(" ")
           .toLowerCase()
           .includes(q)

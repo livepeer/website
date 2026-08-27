@@ -3,9 +3,7 @@ title: Validating Livepeer 2.0 upgrades and litepaper
 outcome: Pressure-test the proposed 2.0 protocol and network changes with delegators, node operators and validators before they go on-chain.
 workstream: Protocol
 state: building
-owners:
-  - Livepeer Inc
-  - Livepeer Foundation
+owner: Livepeer Foundation
 people:
   - name: Doug Petkanics
     avatar: doug-petkanics.jpg

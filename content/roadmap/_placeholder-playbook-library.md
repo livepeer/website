@@ -3,8 +3,7 @@ title: Agent playbook library
 outcome: Publish production-ready multi-step workflows so agents can run a job without assembling it first.
 workstream: Agent
 state: next
-owners:
-  - Livepeer Foundation
+owner: Livepeer Foundation
 people:
   - name: Mei Tanaka
     avatar: mei-tanaka.jpg

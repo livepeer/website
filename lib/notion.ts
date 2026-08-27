@@ -181,13 +181,6 @@ function selectName(prop: Json | undefined): string | undefined {
   return value?.name;
 }
 
-function multiSelectNames(prop: Json | undefined): string[] {
-  const value = prop?.multi_select as { name?: string }[] | undefined;
-  return Array.isArray(value)
-    ? value.flatMap((o) => (o.name ? [o.name] : []))
-    : [];
-}
-
 function dateStart(prop: Json | undefined): string | undefined {
   const value = prop?.date as { start?: string } | null | undefined;
   return value?.start ? value.start.slice(0, 10) : undefined;
@@ -379,11 +372,11 @@ function toCommitment(
     );
   }
 
-  const owners = multiSelectNames(p.Owners);
-  if (owners.length === 0) {
+  const owner = selectName(p.Owner);
+  if (!owner) {
     throw new Error(
-      `${where}: Owners is empty. Nothing reaches the page without an ` +
-        `accountable party.`
+      `${where}: Owner is empty. Nothing reaches the page without one party ` +
+        `answerable for it.`
     );
   }
 
@@ -416,7 +409,7 @@ function toCommitment(
     outcome: text(p.Outcome),
     workstream,
     state,
-    owners,
+    owner,
     people: roster.length > 0 ? roster : undefined,
     target,
     targetSort: targetSortKey(target, where),

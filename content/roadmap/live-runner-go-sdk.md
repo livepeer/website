@@ -3,8 +3,7 @@ title: Live Runner and Go SDK
 outcome: Ship the Live Runner alongside a Go SDK so services can drive the network from their own stack.
 workstream: Network
 state: shipped
-owners:
-  - Livepeer Foundation
+owner: Livepeer Foundation
   # Placeholder cast — see documentation-v2.md.
 people:
   - name: Tom Whitfield
