@@ -16,19 +16,40 @@ import { useEffect } from "react";
  * drops the reader into the middle of it. The same happens on any entry
  * reached that way: a refresh, a restored tab, a link opened from history.
  *
- * Twice, a frame apart, because scroll restoration is not guaranteed to have
- * finished when effects run — the browser may restore after layout settles,
- * which would land after a single call and undo it. The second is a no-op
- * whenever the first already won.
+ * Scrolling to the top is not enough on its own, which is what an earlier
+ * version of this got wrong. Restoration is not something that has already
+ * happened by the time effects run — the browser holds it until the document
+ * is tall enough to honour it, which on these pages means after hydration and
+ * after the cover loads. So it lands *after* the correction and undoes it.
+ * Turning restoration off is the part that actually decides the outcome; the
+ * scroll then only has to clean up the case where it had already fired.
+ *
+ * Off for as long as this page is mounted, and back on when it goes. The flag
+ * is global rather than per-page, and the register behind it is a list whose
+ * position is worth keeping — leaving it manual on the way out would take
+ * that away from every entry after this one.
+ *
+ * Instant, because the app scrolls smoothly by default and a record arriving
+ * at the wrong offset should never have been at that offset to animate from.
  *
  * Only the page does this. The intercepting routes render the panel instead
  * and never mount it, which is what keeps the register still while it is open.
  */
 export function StartAtTop() {
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const frame = requestAnimationFrame(() => window.scrollTo(0, 0));
-    return () => cancelAnimationFrame(frame);
+    const previous = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+
+    const top = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    top();
+    // A frame later as well: a restoration already queued for this frame can
+    // still land after the call above, and manual is read when it runs.
+    const frame = requestAnimationFrame(top);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      history.scrollRestoration = previous;
+    };
   }, []);
 
   return null;
