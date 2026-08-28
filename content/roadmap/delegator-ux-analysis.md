@@ -4,7 +4,7 @@ outcome: Establish how self-custody staking compares with custodial staking for 
 workstream: Protocol
 state: shipped
 owner: RaidGuild
-accountable:
+lead:
   name: Anjali Raman
   avatar: anjali-raman.jpg
 contributors:

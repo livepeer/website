@@ -57,12 +57,12 @@ function CommitmentRow({
 export function PersonRecordView({
   person,
   contributed,
-  accountableFor,
+  leading,
   overlay = false,
 }: {
   person: PersonRecord;
   contributed: Commitment[];
-  accountableFor: Commitment[];
+  leading: Commitment[];
   /**
    * Whether this is the panel over the register rather than a page.
    *
@@ -185,13 +185,13 @@ export function PersonRecordView({
           Accountable is listed apart from contributed because they are
           different claims: one is the person to ask, the other is the people
           doing the work. */}
-      {accountableFor.length > 0 && (
+      {leading.length > 0 && (
         <section className="mt-14 border-t border-border pt-10">
           <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-            Contact for
+            Leading
           </h2>
           <ul className="mt-2">
-            {accountableFor.map((c) => (
+            {leading.map((c) => (
               <CommitmentRow key={c.slug} commitment={c} overlay={overlay} />
             ))}
           </ul>

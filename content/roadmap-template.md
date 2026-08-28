@@ -17,11 +17,11 @@ state: building                # building | next | shipped
 # holds, and a reader whose question is "who do I ask about that date" needs a
 # single answer. Contributors go under people; joint funding goes in funding.
 owner: Name or team
-# The individual to ask about this — shown on the expanded card as "Contact".
+# The person leading this — accountable for it, and the one to ask about it.
 # Optional, and one person: "who do I ask" has one answer or none. Distinct
 # from owner, which is the organisation answerable for delivering. Same shape
 # as a contributor.
-# accountable:
+# lead:
 #   name: Full name or handle
 #   avatar: their-file.jpg
 

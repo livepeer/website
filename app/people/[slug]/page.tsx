@@ -62,8 +62,8 @@ export default async function PersonPage({
   const contributed = commitments.filter((c) =>
     c.contributors?.some((p) => p.slug === person.slug)
   );
-  const accountableFor = commitments.filter(
-    (c) => c.accountable?.slug === person.slug
+  const leading = commitments.filter(
+    (c) => c.lead?.slug === person.slug
   );
 
   return (
@@ -87,7 +87,7 @@ export default async function PersonPage({
         <PersonRecordView
           person={person}
           contributed={contributed}
-          accountableFor={accountableFor}
+          leading={leading}
         />
       </div>
     </article>

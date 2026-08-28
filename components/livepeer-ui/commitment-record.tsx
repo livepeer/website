@@ -106,9 +106,12 @@ export function CommitmentRecord({
             {c.funding}
           </Row>
         )}
-        {c.accountable && (
-          <Row icon={ArrowUpRight} label="Contact">
-            <Credit person={c.accountable} />
+        {/* The one person to ask. It rendered as "Contact" while the field
+            was called something else, so a reader who wanted to find it in the
+            register could not. */}
+        {c.lead && (
+          <Row icon={ArrowUpRight} label="Lead">
+            <Credit person={c.lead} />
           </Row>
         )}
         {c.contributors && c.contributors.length > 0 && (

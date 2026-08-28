@@ -38,7 +38,7 @@ import type { PersonRecord } from "./people";
  * pointed at from elsewhere on the site later.
  *
  * `Accountable` is the person to ask, rendered in the expanded panel as
- * "Contact". The card face still names the organisation, because that is who
+ * "Lead". The card face still names the organisation, because that is who
  * committed — but a reader whose date has moved needs a human, and an
  * organisation cannot answer a question.
  *
@@ -560,19 +560,19 @@ function toCommitment(
 
   // At most one: "who do I ask" has one answer or none. Two would be the
   // same diffusion the single-owner rule exists to prevent, one layer down.
-  const accountableIds = relationIds(p.Accountable);
-  if (accountableIds.length > 1) {
+  const leadIds = relationIds(p.Lead);
+  if (leadIds.length > 1) {
     throw new Error(
-      `${where}: Accountable names ${accountableIds.length} people. One at ` +
+      `${where}: Lead names ${leadIds.length} people. One at ` +
         `most — the others belong in Contributors.`
     );
   }
-  const accountable = accountableIds[0]
-    ? people.get(accountableIds[0])
+  const lead = leadIds[0]
+    ? people.get(leadIds[0])
     : undefined;
-  if (accountableIds[0] && !accountable) {
+  if (leadIds[0] && !lead) {
     throw new Error(
-      `${where}: Accountable relates to ${accountableIds[0]}, which is not ` +
+      `${where}: Lead relates to ${leadIds[0]}, which is not ` +
         `in Livepeer people.`
     );
   }
@@ -598,7 +598,7 @@ function toCommitment(
     owner,
     ownerSlug: slugify(owner),
     contributors: roster.length > 0 ? roster : undefined,
-    accountable,
+    lead,
     target,
     targetSort: targetSortKey(target, where),
     shippedAt,

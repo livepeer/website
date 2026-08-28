@@ -157,7 +157,7 @@ export type Commitment = {
   targetSort: number;
   /**
    * The individual to ask about this — shown in the expanded panel as
-   * "Contact".
+   * "Lead".
    *
    * Distinct from `owner`, which is the organisation answerable for
    * delivering, and from `people`, who are doing the work. A reader whose
@@ -168,7 +168,7 @@ export type Commitment = {
    * placeholder, because inventing a contact is worse than admitting there
    * isn't one.
    */
-  accountable?: Person;
+  lead?: Person;
   /**
    * The record's banner, as Notion sets it — an absolute URL on the image CDN.
    *
@@ -422,8 +422,8 @@ function parse(file: string): Commitment {
     owner,
     ownerSlug: slugify(owner),
     contributors: readPeople(data.contributors, file),
-    accountable: readPeople(
-      data.accountable ? [data.accountable] : undefined,
+    lead: readPeople(
+      data.lead ? [data.lead] : undefined,
       file
     )?.[0],
     target: String(at("target", data.target)),

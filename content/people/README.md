@@ -36,6 +36,6 @@ not the body a contributor belongs to. `cover` must be on `cdn.sanity.io`.
 ## What is deliberately not here
 
 **What each person worked on.** Commitments name their own contributors, and
-the page derives both lists — contributed, and accountable for — by filtering
+the page derives both lists — contributed to, and leading — by filtering
 the register. A second copy would disagree with it the first time a roster
 changed.

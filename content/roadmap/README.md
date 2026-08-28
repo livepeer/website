@@ -53,8 +53,9 @@ type and a link and cannot be typed into existence twice. `contributors` are the
 too, since "People" said what was on the other end of the relation rather than
 what it meant, and three fields there now point at people.
 
-`accountable` is the individual to ask about a commitment, rendered in the
-expanded panel as **Contact** and linked to their forum profile where there is
+`lead` is the person leading a commitment — accountable for it, and the one
+to ask about it — rendered in the
+record as **Lead** and linked to their forum profile where there is
 a handle. One person or none: an organisation cannot answer "when will this
 actually land", and until this existed a reader with that question had nowhere
 to take it. Absent rather than placeheld when nobody is named — inventing a
