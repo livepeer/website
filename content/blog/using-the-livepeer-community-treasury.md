@@ -5,7 +5,6 @@ date: "2023-11-07"
 category: "Proposals"
 tags: ["governance", "treasury", "community", "grants"]
 image: "https://cdn.sanity.io/images/l36s876e/production/d20446b7a982e3bd955481a32e8c4fb78435ac97-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/d20446b7a982e3bd955481a32e8c4fb78435ac97-1456x816.png?fm=webp&q=82"
 imageAlt: "Front-facing metallic vault structure in dark blue light"
 draft: false
 author:

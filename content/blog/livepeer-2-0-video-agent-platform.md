@@ -14,7 +14,6 @@ tags:
     "Decentralized Compute",
   ]
 image: "https://cdn.sanity.io/images/l36s876e/production/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png?fm=webp&q=82"
 imageAlt: "Abstract light glass forms connected across a white field"
 draft: false
 ---

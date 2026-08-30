@@ -4,7 +4,7 @@ import path from "node:path";
 import readingTime from "reading-time";
 
 import { blocksToHtml } from "./notion-blocks";
-import { resolveMediaUrl } from "./notion-media";
+import { resolveMediaSource } from "./notion-media";
 import {
   assertCategory,
   byNewest,
@@ -840,11 +840,6 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
   return people.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** A URL property's value. Not rich text, so `text` reads it as empty. */
-function urlOf(prop: Json | undefined): string {
-  return (prop as { url?: string | null } | undefined)?.url ?? "";
-}
-
 /**
  * A multi-select property as the names it holds, in the order Notion has them.
  */
@@ -907,14 +902,20 @@ function toSummary(row: Json, people: Map<string, Person>): BlogSummary {
     );
   }
 
-  const image = urlOf(p["Card image"]);
-  if (!image) {
+  // The page cover, not a property — the same place a commitment keeps its
+  // banner. Art held in a property as well as a cover is two visible copies of
+  // one fact: change the cover, and the site would go on serving the property.
+  const cover = row.cover as
+    | { type?: string; external?: { url?: string }; file?: { url?: string } }
+    | null
+    | undefined;
+  if (!cover) {
     throw new Error(
-      `${where}: no card image. The index card and the share image are both ` +
-        `built on it, and neither has a fallback.`
+      `${where}: no cover. The index card, the post's header and the share ` +
+        `image are all built on it, and none of them has a fallback. Add one ` +
+        `at the top of the page.`
     );
   }
-  const hero = urlOf(p["Hero image"]);
 
   const authors = relationIds(p.Author);
   if (authors.length > 1) {
@@ -940,10 +941,9 @@ function toSummary(row: Json, people: Map<string, Person>): BlogSummary {
       : undefined,
     category: assertCategory(selectName(p.Category), where),
     tags: multiSelectNames(p.Tags),
-    // Checked here rather than where they are rendered, so a bad address
-    // fails the build with the post's name attached to it.
-    image: resolveMediaUrl(image, `${where} → Card image`),
-    heroImage: hero ? resolveMediaUrl(hero, `${where} → Hero image`) : "",
+    // Checked here rather than where it is rendered, so a bad address fails
+    // the build with the post's name attached to it.
+    image: resolveMediaSource(cover, `${where} → cover`),
     imageAlt: text(p["Image alt"]),
     draft: status === "Draft",
   };

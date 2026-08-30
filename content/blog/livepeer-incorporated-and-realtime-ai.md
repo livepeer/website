@@ -7,7 +7,6 @@ author:
 category: "Network"
 tags: ["livepeer-inc", "strategy", "realtime-ai", "announcement"]
 image: "https://cdn.sanity.io/images/l36s876e/production/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png?fm=webp&q=82"
 imageAlt: "Glass figure moving across a dark green field"
 draft: false
 ---

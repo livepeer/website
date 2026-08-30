@@ -5,7 +5,6 @@ date: "2025-08-14"
 category: "Community"
 tags: ["onchain-builders", "streamplace", "SPE", "decentralized-social"]
 image: "https://cdn.sanity.io/images/l36s876e/production/c8bd525d1e15ddb91109450269e3d6eb484817ba-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/c8bd525d1e15ddb91109450269e3d6eb484817ba-1456x816.png?fm=webp&q=82"
 imageAlt: "Soft-focus office with colorful lights by a bright window"
 draft: false
 ---

@@ -5,7 +5,6 @@ date: "2026-06-19"
 category: "Community"
 tags: ["builder-spotlight", "blueclaw", "cloud-spe", "ai-inference"]
 image: "https://cdn.sanity.io/images/l36s876e/production/ea1131fb562c5322741c0fa39629afab3e532279-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/ea1131fb562c5322741c0fa39629afab3e532279-1456x816.png?fm=webp&q=82"
 imageAlt: "Soft overlapping light orbs in pale blue and orange"
 draft: false
 ---

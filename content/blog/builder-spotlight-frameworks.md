@@ -5,7 +5,6 @@ date: "2026-05-29"
 category: "Community"
 tags: ["builder-spotlight", "frameworks", "SPE", "live-streaming"]
 image: "https://cdn.sanity.io/images/l36s876e/production/35e86eef94b247cae09883e48f991ba54b439c33-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/35e86eef94b247cae09883e48f991ba54b439c33-1456x816.png?fm=webp&q=82"
 imageAlt: "Blue and orange light moving across an atmospheric field"
 draft: false
 ---

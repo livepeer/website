@@ -5,7 +5,6 @@ date: "2025-07-24"
 category: "Community"
 tags: ["delegation", "staking", "tokenomics", "network"]
 image: "https://cdn.sanity.io/images/l36s876e/production/7bd4492abf0c18ac08045592a5987d56e11e3e91-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/7bd4492abf0c18ac08045592a5987d56e11e3e91-1456x816.png?fm=webp&q=82"
 imageAlt: "Close view of green blades in soft light"
 draft: false
 ---

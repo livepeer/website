@@ -57,10 +57,13 @@ export type BlogSummary = {
   author?: BlogAuthor;
   category: BlogCategory;
   tags: string[];
-  /** The index card's art, and the base of the share image. */
+  /**
+   * The one piece of art: the index card, the post's header and the base of
+   * the share image are all built from it. In Notion it is the page cover —
+   * the same place a roadmap commitment keeps its banner, rather than a
+   * property beside a cover that would be a second visible copy of it.
+   */
   image: string;
-  /** The wide art at the top of the post; the card's art if there is none. */
-  heroImage: string;
   imageAlt: string;
   draft: boolean;
 };
@@ -149,7 +152,6 @@ function readFile(slug: string): { summary: BlogSummary; body: string } {
       category: assertCategory(data.category, where),
       tags: data.tags ?? [],
       image: data.image ?? "",
-      heroImage: data.heroImage ?? "",
       imageAlt: data.imageAlt ?? "",
       draft: data.draft ?? false,
     },

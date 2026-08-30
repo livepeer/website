@@ -6,7 +6,6 @@ category: "Network"
 tags: ["Messari", "Network Stats", "Real-time AI Video", "Q1 2026"]
 image: "https://cdn.sanity.io/images/l36s876e/production/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png?fm=webp&q=82"
 imageAlt: "Abstract cyan and orange system diagram on black"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png?fm=webp&q=82"
 draft: false
 ---
 

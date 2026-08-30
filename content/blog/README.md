@@ -23,13 +23,17 @@ recreate the drift that moving to a CMS removed, and a post here that fails
 
 ## What is still served from here
 
-The art is the exception, and it is not a fallback. Every image and video inside
-a post is a file committed under `public/images/blog/` and `public/videos/`, and
+The body art is the exception, and it is not a fallback. Every image and video
+inside a post is a file committed under `public/images/blog/` and `public/videos/`, and
 Notion links to it by its `https://livepeer.org/...` address — Notion previews it
 from the live site, and the site rewrites the address back to the repo copy it
 already has. Notion never holds the file, because an upload comes back from the
 API as a link that expires within the hour.
 
-So adding art to a post is still a pull request: commit the file, then paste its
-livepeer.org address into the page. The build fails on an address that does not
-resolve to something in `public/`.
+So adding art *inside* a post is still a pull request: commit the file, then
+paste its livepeer.org address into the page. The build fails on an address that
+does not resolve to something in `public/`.
+
+A post's own art — the index card, the header, the share image — is the Notion
+**page cover**, and needs no pull request at all: the covers are stock images on
+`cdn.sanity.io`. Here in the fallback that is the `image` frontmatter key.

@@ -24,7 +24,7 @@ export default async function BlogPage() {
     description: post.description,
     category: post.category,
     date: post.date,
-    image: post.image || undefined,
+    image: post.image,
     imageAlt: post.imageAlt || undefined,
   }));
 

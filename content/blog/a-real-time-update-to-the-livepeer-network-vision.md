@@ -5,7 +5,6 @@ date: "2025-11-13"
 category: "Network"
 tags: ["vision", "network", "realtime-ai", "roadmap"]
 image: "https://cdn.sanity.io/images/l36s876e/production/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png?fm=webp&q=82"
 imageAlt: "Repeating blue and red network signals on black"
 draft: false
 ---

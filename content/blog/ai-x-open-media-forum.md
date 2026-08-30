@@ -5,7 +5,6 @@ date: "2025-12-29"
 category: "Community"
 tags: ["events", "ai", "open-media", "creativity", "devconnect"]
 image: "https://cdn.sanity.io/images/l36s876e/production/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png?fm=webp&q=82"
-heroImage: "https://cdn.sanity.io/images/l36s876e/production/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png?fm=webp&q=82"
 imageAlt: "People gathering in a bright green-lit workspace"
 draft: false
 ---

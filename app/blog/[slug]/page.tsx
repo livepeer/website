@@ -54,10 +54,8 @@ export default async function BlogPostPage({ params }: Props) {
         category: post.category,
         date: post.date,
         readingTime: post.readingTime,
-        // heroImage is the wide 16:9 art; image is the square card cover. Fall
-        // back to the cover so a post that only ships one still opens on
-        // something rather than a bare panel.
-        heroImage: post.heroImage || post.image || undefined,
+        // One image serves the card and the header; the component crops it.
+        heroImage: post.image,
         imageAlt: post.imageAlt || undefined,
       }}
       html={post.html}
