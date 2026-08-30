@@ -15,10 +15,11 @@
  * Deliberately not `notion-to-md`: that is a dependency to walk a tree we
  * already fetch, and the site keeps Notion at plain `fetch` on purpose.
  *
- * Images are not supported. A Notion-hosted image is a signed URL that expires
- * within the hour, which is the same reason portraits are committed to the
- * repo — a page built at noon would show broken images by one.
+ * Images and video are supported, but only as links — never as files dragged
+ * into the page. lib/notion-media.ts has the reasoning and does the checking.
  */
+
+import { resolveMediaSource } from "./notion-media";
 
 type Json = Record<string, unknown>;
 
@@ -98,7 +99,9 @@ export type BlockChildren = (block: Json) => Promise<Json[]>;
  */
 export async function blocksToHtml(
   blocks: Json[],
-  children: BlockChildren
+  children: BlockChildren,
+  /** The record this body belongs to, so a rejected image names its page. */
+  where: string
 ): Promise<string> {
   const html: string[] = [];
   let i = 0;
@@ -115,7 +118,7 @@ export async function blocksToHtml(
         let inner = inline(runsOf(item, type));
         // A nested list is the item's own children, not a sibling.
         if (item.has_children) {
-          inner += await blocksToHtml(await children(item), children);
+          inner += await blocksToHtml(await children(item), children, where);
         }
         items.push(`<li>${inner}</li>`);
         i += 1;
@@ -168,8 +171,39 @@ export async function blocksToHtml(
         html.push(`<p>${done ? "☑" : "☐"} ${inline(runsOf(block, type))}</p>`);
         break;
       }
+      case "image":
+      case "video": {
+        const source = block[type] as {
+          type?: string;
+          external?: { url?: string };
+          file?: { url?: string };
+          caption?: RichText[];
+        };
+        const runs = source.caption ?? [];
+        const src = escape(resolveMediaSource(source, where));
+        const caption = inline(runs);
+        // Notion has no alt text separate from the caption, so the caption is
+        // both — shown under the figure and read out in place of it. Built
+        // from the runs rather than from the caption's HTML, which is already
+        // escaped and would escape a second time. An uncaptioned image gets
+        // alt="", which is how you tell a screen reader to skip decoration
+        // rather than announce a filename.
+        const alt = escape(runs.map((run) => run.plain_text ?? "").join(""));
+        const media =
+          type === "image"
+            ? `<img src="${src}" alt="${alt}" />`
+            : `<video src="${src}" controls playsinline preload="metadata"></video>`;
+        html.push(
+          caption
+            ? `<figure>${media}<figcaption>${caption}</figcaption></figure>`
+            : type === "image"
+              ? media
+              : `<figure>${media}</figure>`
+        );
+        break;
+      }
       default:
-        // Unknown or unsupported — an image, a database view, an embed.
+        // Unknown or unsupported — a database view, an embed, a synced block.
         // Skipped rather than half-rendered: a broken figure on a published
         // page is worse than an absent one, and the body is prose by design.
         break;

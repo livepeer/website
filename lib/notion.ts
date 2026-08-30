@@ -1,7 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import readingTime from "reading-time";
+
 import { blocksToHtml } from "./notion-blocks";
+import { resolveMediaUrl } from "./notion-media";
+import {
+  assertCategory,
+  byNewest,
+  SLUG,
+  type BlogPost,
+  type BlogSummary,
+} from "./blog";
 import {
   WORKSTREAMS,
   targetSortKey,
@@ -71,6 +81,8 @@ const PEOPLE_DB =
   process.env.NOTION_PEOPLE_DB ?? "cdaf4aff05034435aed838eb2a8676ab";
 const ORGS_DB =
   process.env.NOTION_ORGS_DB ?? "728d4f42db6d4ba4925ae177c08b1d70";
+const BLOG_DB =
+  process.env.NOTION_BLOG_DB ?? "ed74ac33f630497d8c3cf23599de462b";
 
 /**
  * How stale the page may be, in seconds.
@@ -447,9 +459,14 @@ async function childrenOf(blockId: string): Promise<Json[]> {
  * Converted from Notion's blocks rather than fetched as markdown, because
  * markdown is not what Notion stores. See lib/notion-blocks.ts.
  */
-async function readDetail(pageId: string): Promise<string | undefined> {
-  const html = await blocksToHtml(await childrenOf(pageId), (block) =>
-    childrenOf(block.id as string)
+async function readDetail(
+  pageId: string,
+  where: string
+): Promise<string | undefined> {
+  const html = await blocksToHtml(
+    await childrenOf(pageId),
+    (block) => childrenOf(block.id as string),
+    where
   );
   return html || undefined;
 }
@@ -623,7 +640,9 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
   // One body per row, in parallel: fourteen small requests that would
   // otherwise run end to end.
   const details = await Promise.all(
-    rows.map((row) => readDetail(row.id as string))
+    rows.map((row) =>
+      readDetail(row.id as string, `Roadmap commitments → ${text(props(row).Name)}`)
+    )
   );
 
   const commitments = rows.map((row, i) =>
@@ -722,7 +741,7 @@ export async function getNotionOrganizations(): Promise<Organization[]> {
         logo,
         cover:
           coverProp?.type === "external" ? coverProp.external?.url : undefined,
-        detail: await readDetail(row.id as string),
+        detail: await readDetail(row.id as string, where),
       };
     })
   );
@@ -801,7 +820,7 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
           : undefined,
         cover:
           coverProp?.type === "external" ? coverProp.external?.url : undefined,
-        detail: await readDetail(row.id as string),
+        detail: await readDetail(row.id as string, where),
       };
     })
   );
@@ -819,4 +838,166 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
   }
 
   return people.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** A URL property's value. Not rich text, so `text` reads it as empty. */
+function urlOf(prop: Json | undefined): string {
+  return (prop as { url?: string | null } | undefined)?.url ?? "";
+}
+
+/**
+ * A multi-select property as the names it holds, in the order Notion has them.
+ */
+function multiSelectNames(prop: Json | undefined): string[] {
+  const options = (prop as { multi_select?: { name?: string }[] } | undefined)
+    ?.multi_select;
+  return (options ?? []).map((option) => option.name ?? "").filter(Boolean);
+}
+
+/**
+ * One row of the blog table, without its body.
+ *
+ * Everything the index and the metadata need, and nothing that costs another
+ * request — see BlogSummary. The body is fetched only by getNotionPost, for
+ * the one post being read.
+ */
+function toSummary(row: Json, people: Map<string, Person>): BlogSummary {
+  const p = props(row);
+  const title = text(p.Name);
+  const where = `Blog posts → ${title || (row.url as string)}`;
+
+  if (!title) {
+    throw new Error(
+      `Blog posts row ${row.url as string} has no headline. Every other field ` +
+        `describes a post that does not exist yet.`
+    );
+  }
+
+  // Not derived from the title, unlike the register's ids. A post's URL is
+  // published the day it goes out and quoted back by everyone who links to it,
+  // while its headline gets edited — deriving one from the other would mean a
+  // copy fix silently breaking every inbound link.
+  const slug = text(p.Slug);
+  if (!slug) {
+    throw new Error(
+      `${where}: no slug. It is the post's URL, so it has to be chosen rather ` +
+        `than guessed.`
+    );
+  }
+  if (!SLUG.test(slug)) {
+    throw new Error(
+      `${where}: slug is "${slug}". Lowercase words joined by single hyphens — ` +
+        `it goes straight into livepeer.org/blog/.`
+    );
+  }
+
+  const date = dateStart(p["Published on"]);
+  if (!date) {
+    throw new Error(
+      `${where}: no publication date. The index is ordered by it, so a post ` +
+        `without one has nowhere to sit.`
+    );
+  }
+
+  const status = selectName(p.Status);
+  if (status !== "Draft" && status !== "Published") {
+    throw new Error(
+      `${where}: Status is ${JSON.stringify(status)}. It must be Draft or ` +
+        `Published.`
+    );
+  }
+
+  const image = urlOf(p["Card image"]);
+  if (!image) {
+    throw new Error(
+      `${where}: no card image. The index card and the share image are both ` +
+        `built on it, and neither has a fallback.`
+    );
+  }
+  const hero = urlOf(p["Hero image"]);
+
+  const authors = relationIds(p.Author);
+  if (authors.length > 1) {
+    throw new Error(
+      `${where}: Author names ${authors.length} people. A byline is one name ` +
+        `or none.`
+    );
+  }
+  const author = authors[0] ? people.get(authors[0]) : undefined;
+  if (authors[0] && !author) {
+    throw new Error(
+      `${where}: the author is a page that is not in Livepeer people.`
+    );
+  }
+
+  return {
+    slug,
+    title,
+    description: text(p.Description),
+    date,
+    author: author
+      ? { name: author.name, slug: author.slug, avatar: author.avatar }
+      : undefined,
+    category: assertCategory(selectName(p.Category), where),
+    tags: multiSelectNames(p.Tags),
+    // Checked here rather than where they are rendered, so a bad address
+    // fails the build with the post's name attached to it.
+    image: resolveMediaUrl(image, `${where} → Card image`),
+    heroImage: hero ? resolveMediaUrl(hero, `${where} → Hero image`) : "",
+    imageAlt: text(p["Image alt"]),
+    draft: status === "Draft",
+  };
+}
+
+/** The index, read from Notion. Throws rather than degrading. */
+export async function getNotionPosts(): Promise<BlogSummary[]> {
+  const [rows, people] = await Promise.all([queryAll(BLOG_DB), readPeople()]);
+  const posts = byNewest(rows.map((row) => toSummary(row, people)));
+
+  const seen = new Map<string, string>();
+  for (const post of posts) {
+    const first = seen.get(post.slug);
+    if (first) {
+      throw new Error(
+        `Blog posts: "${first}" and "${post.title}" are both at ` +
+          `/blog/${post.slug}. Two posts cannot share a URL.`
+      );
+    }
+    seen.set(post.slug, post.title);
+  }
+
+  return posts;
+}
+
+/**
+ * One post, with its body.
+ *
+ * The table is queried again rather than threaded down from the index: the
+ * post page is its own route and may be built without the index ever being
+ * rendered. Next dedupes the request inside a render and caches it for
+ * NOTION_REVALIDATE across them, so the second read is not a second call.
+ */
+export async function getNotionPost(slug: string): Promise<BlogPost | null> {
+  const [rows, people] = await Promise.all([queryAll(BLOG_DB), readPeople()]);
+
+  const row = rows.find((candidate) => text(props(candidate).Slug) === slug);
+  if (!row) return null;
+
+  const summary = toSummary(row, people);
+  const html =
+    (await readDetail(row.id as string, `Blog posts → ${summary.title}`)) ?? "";
+  if (!html) {
+    throw new Error(
+      `Blog posts → ${summary.title}: the page is empty. The post is the page ` +
+        `body — write it in Notion, under the properties.`
+    );
+  }
+
+  return {
+    ...summary,
+    // From the rendered text rather than the blocks, so the count matches what
+    // is actually on the page: captions in, property values out.
+    readingTime: readingTime(html.replace(/<[^>]*>/g, " ")).text,
+    html,
+  };
 }

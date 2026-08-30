@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog";
+import { getBlogRegister } from "@/lib/register";
 import { getAppSlugs } from "@/lib/ecosystem";
 
 const BASE_URL = "https://livepeer.org";
@@ -11,8 +11,9 @@ const BASE_URL = "https://livepeer.org";
  * /agent and /compute now, and listing a redirect asks a crawler to discover
  * the destination the long way round. Their replacements are listed directly.
  */
-export default function sitemap(): MetadataRoute.Sitemap {
-  const blogEntries: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getBlogRegister();
+  const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly",
