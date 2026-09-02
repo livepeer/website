@@ -68,23 +68,39 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * A separate surface from this marketing site: accounts, API keys and the
  * playbook library all live there. Centralised here because /agent links to it
  * four times and the host is the one thing about those links that is not yet
- * settled — `livepeer.peaceno.de` is where the Agent app currently runs, and it
- * should be repointed here, in one place, before launch.
+ * settled — this is the Vercel preview of the console, not its final address,
+ * so there is still one edit to make before launch.
+ *
+ * It replaced `livepeer.peaceno.de`, which was the registry's mockup rather
+ * than a deployment. The paths below moved with it and are the real ones the
+ * console serves: signing out lands on /login, and the three that used to be
+ * guessed at (/sign-in, /sign-up, /api) had never existed on the old host.
  *
  * The MCP endpoint is different: it is served from livepeer.org itself and is
  * the address users paste into their agent, so it is a real published value
  * rather than a link target.
  */
-const agentAppOrigin = "https://livepeer.peaceno.de";
+const agentAppOrigin = "https://livepeer-console.vercel.app";
 
 /**
  * Where "Use Livepeer", "Try Livepeer Agent", and "Agent Console" all point.
  *
- * Interim: the registry's Agent console mockup, not a real deployment. It is a
- * single constant precisely so the three prominent CTAs that use it cannot
- * drift apart, and so repointing at launch is one edit.
+ * The console's own root, which sends a signed-out visitor to its login — the
+ * right landing for a CTA that means "go and use the thing". A single constant
+ * precisely so the three prominent CTAs that use it cannot drift apart, and so
+ * repointing at launch is one edit.
  */
-const agentConsoleHref = `${agentAppOrigin}/mockups/livepeer-agent`;
+const agentConsoleHref = agentAppOrigin;
+
+/**
+ * The playbook library, which the console does not have yet.
+ *
+ * Left on the registry's mockup deliberately. Every other link here moved to
+ * the console because the console answers it; this one would 404 there, and a
+ * dead link is worse than an honest mockup. Move it when the console grows the
+ * page.
+ */
+const playbooksHref = "https://livepeer.peaceno.de/mockups/livepeer-agent/playbooks";
 
 /**
  * What sits behind "Log in".
@@ -103,10 +119,8 @@ export const agentApp = {
   mcpServerUrl: "https://livepeer.org/api/mcp",
   /** The signed-in surface behind the header's "Log in" menu. */
   console: agentConsoleHref,
-  signIn: `${agentAppOrigin}/sign-in`,
-  createAccount: `${agentAppOrigin}/sign-up`,
-  apiKeys: `${agentAppOrigin}/api`,
-  // Scoped under the console, matching the mockup — the playbook library is a
-  // surface inside the Agent app, not a sibling of it.
-  playbooks: `${agentConsoleHref}/playbooks`,
+  signIn: `${agentAppOrigin}/login`,
+  createAccount: `${agentAppOrigin}/signup`,
+  apiKeys: `${agentAppOrigin}/keys`,
+  playbooks: playbooksHref,
 } as const;
