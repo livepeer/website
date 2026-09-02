@@ -25,8 +25,9 @@ support: https://discord.gg/livepeer
 
 Livepeer Agent is the network's own agent surface: one MCP server that gives any
 agent harness the ability to generate, edit, and finish moving image and audio.
-Point your agent's connector settings at `https://livepeer.org/api/mcp` and the
-tools appear alongside whatever else it already has.
+Point your agent's connector settings at `https://agent.livepeer.org/api/mcp`
+and the tools appear alongside whatever else it already has. There is no key to
+provision: the first connection opens a browser and signs you in.
 
 It is aimed at people who are already working in an agent — in an editor, a
 chat harness, or their own product — rather than at a separate web app to switch
@@ -39,13 +40,13 @@ user gaining another tab.
 - **Generation across media** — image, video, audio, and 3D from a single connector, without wiring up a model provider per modality
 - **Editing and finishing** — background removal, colour grading, overlays, subtitle burn-in, concatenation, and muxing, exposed as tools the agent can call in sequence
 - **Playbooks** — production-ready multi-step workflows that run in the Agent Console rather than being reassembled from scratch each time
-- **Agent capabilities in your own product** — an API key adds the same image and video workflows to an app you already ship
+- **Agent capabilities in your own product** — point an app you already ship at the same server and it gains the same image and video workflows
 
 ## Developer surface
 
-- **How it runs** — a hosted MCP server; add the URL to any agent harness that speaks the protocol, no SDK to install
+- **How it runs** — a hosted MCP server; add the URL to any agent harness that speaks the protocol, no SDK to install and no key to provision
 - **What ships with it** — hundreds of capabilities spanning generation, editing, rendering, CAD, and speech, all callable as MCP tools
-- **How to extend it** — API keys for embedding the workflows in your own product, and a playbook library for packaging repeatable multi-step jobs
+- **How to extend it** — the same connector embeds the workflows in your own product, and a playbook library packages repeatable multi-step jobs
 
 ## Powered by Livepeer
 

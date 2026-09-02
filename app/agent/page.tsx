@@ -19,7 +19,11 @@ type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>;
 const agent: AgentContent = {
   hero: {
     heading: "Create and edit images and video with your agent.",
-    description: "In your agent's MCP / connector settings, add this server:",
+    // The absence of a key is the story, so it is said here rather than left
+    // to be discovered: there is nothing to provision, and the first call
+    // signs you in through the browser the way any other connector does.
+    description:
+      "Add this server in your agent's MCP / connector settings. There is no API key to provision — the first connection opens your browser and signs you in.",
     serverUrl: agentApp.mcpServerUrl,
     signInCta: { label: "Sign in", href: agentApp.signIn },
     createAccountCta: { label: "Create account", href: agentApp.createAccount },
@@ -27,7 +31,7 @@ const agent: AgentContent = {
   access: {
     heading: "Install Livepeer Agent in your app today",
     description:
-      "Create an API key to add Livepeer Agent's image and video workflows to your own product.",
+      "Point your product's agent runtime at the same MCP server and Livepeer Agent's image and video workflows are available inside it. Nothing to provision, no SDK to install.",
     // No CTA. The band is a statement about what the Agent can do inside
     // someone else's product, and the console is one click away in the header.
   },

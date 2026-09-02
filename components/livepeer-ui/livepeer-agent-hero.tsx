@@ -44,7 +44,10 @@ export function LivepeerAgentHero({
             {content.heading}
           </h1>
           <div className="flex max-w-full flex-col items-center">
-            <p className="mb-7 text-sm text-muted-foreground">
+            {/* Measured, and balanced across its lines. Unconstrained it ran
+                wider than the headline above it once this stopped being a
+                single short instruction. */}
+            <p className="mb-7 max-w-2xl text-sm text-balance text-muted-foreground">
               {content.description}
             </p>
             <div className="inline-flex max-w-full items-center gap-4 rounded-sm bg-secondary px-5 py-4 text-left text-secondary-foreground">

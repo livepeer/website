@@ -65,9 +65,9 @@ export const livepeerOrgSite: LivepeerOrgSite = {
 /**
  * The Livepeer Agent product app.
  *
- * A separate surface from this marketing site: accounts, API keys and the
- * playbook library all live there. Centralised here because /agent links to it
- * four times and the host is the one thing about those links that is not yet
+ * A separate surface from this marketing site: accounts and the playbook
+ * library live there. Centralised here because /agent links to it several
+ * times and the host is the one thing about those links that is not yet
  * settled — this is the Vercel preview of the console, not its final address,
  * so there is still one edit to make before launch.
  *
@@ -76,9 +76,10 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * console serves: signing out lands on /login, and the three that used to be
  * guessed at (/sign-in, /sign-up, /api) had never existed on the old host.
  *
- * The MCP endpoint is different: it is served from livepeer.org itself and is
- * the address users paste into their agent, so it is a real published value
- * rather than a link target.
+ * The MCP endpoint is different in kind: it is not a link, it is the address
+ * users paste into their own agent, so it has to be exactly right. It lives on
+ * `agent.livepeer.org`, its own host — this said `livepeer.org/api/mcp` for a
+ * while, which 404s, and nothing on a marketing page can catch that.
  */
 const agentAppOrigin = "https://livepeer-console.vercel.app";
 
@@ -116,7 +117,7 @@ export const loginLinks = [
 ] as const;
 
 export const agentApp = {
-  mcpServerUrl: "https://livepeer.org/api/mcp",
+  mcpServerUrl: "https://agent.livepeer.org/api/mcp",
   /** The signed-in surface behind the header's "Log in" menu. */
   console: agentConsoleHref,
   signIn: `${agentAppOrigin}/login`,

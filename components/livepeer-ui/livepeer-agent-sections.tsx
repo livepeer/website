@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button"
 type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>
 
 /**
- * The split band: compatible clients on an inverted panel, the API-key pitch on
- * a dark one. Two square halves that stack below md, as in the mockup.
+ * The split band: compatible clients on an inverted panel, the embed-it-in-
+ * your-own-product pitch on a dark one. Two square halves that stack below md,
+ * as in the mockup.
  *
  * Marked [data-header-solid], not [data-header-invert]. Invert flips the header
  * to light tokens, which is right for a full-width white band but wrong here —
