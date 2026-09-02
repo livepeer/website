@@ -26,8 +26,8 @@ support: https://discord.gg/livepeer
 Livepeer Agent is the network's own agent surface: one MCP server that gives any
 agent harness the ability to generate, edit, and finish moving image and audio.
 Point your agent's connector settings at `https://agent.livepeer.org/api/mcp`
-and the tools appear alongside whatever else it already has. There is no key to
-provision: the first connection opens a browser and signs you in.
+and the tools appear alongside whatever else it already has. The first
+connection opens a browser and signs you in.
 
 It is aimed at people who are already working in an agent — in an editor, a
 chat harness, or their own product — rather than at a separate web app to switch
@@ -44,7 +44,7 @@ user gaining another tab.
 
 ## Developer surface
 
-- **How it runs** — a hosted MCP server; add the URL to any agent harness that speaks the protocol, no SDK to install and no key to provision
+- **How it runs** — a hosted MCP server; add the URL to any agent harness that speaks the protocol, no SDK to install
 - **What ships with it** — hundreds of capabilities spanning generation, editing, rendering, CAD, and speech, all callable as MCP tools
 - **How to extend it** — the same connector embeds the workflows in your own product, and a playbook library packages repeatable multi-step jobs
 
