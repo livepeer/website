@@ -121,6 +121,5 @@ export const agentApp = {
   console: agentConsoleHref,
   signIn: `${agentAppOrigin}/login`,
   createAccount: `${agentAppOrigin}/signup`,
-  apiKeys: `${agentAppOrigin}/keys`,
   playbooks: playbooksHref,
 } as const;

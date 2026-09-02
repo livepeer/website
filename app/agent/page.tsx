@@ -28,7 +28,8 @@ const agent: AgentContent = {
     heading: "Install Livepeer Agent in your app today",
     description:
       "Create an API key to add Livepeer Agent's image and video workflows to your own product.",
-    cta: { label: "Create an API key", href: agentApp.apiKeys },
+    // No CTA. The band is a statement about what the Agent can do inside
+    // someone else's product, and the console is one click away in the header.
   },
   capabilities: {
     heading:

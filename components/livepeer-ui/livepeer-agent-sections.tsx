@@ -42,15 +42,19 @@ export function AgentAccessSection({
         <p className="mt-3 max-w-lg text-sm leading-relaxed text-balance text-muted-foreground">
           {content.description}
         </p>
-        <Button
-          size="lg"
-          nativeButton={false}
-          render={<Link href={content.cta.href} />}
-          className="mt-8 h-12 rounded-sm px-5"
-        >
-          {content.cta.label}
-          <ArrowRightIcon className="size-4" aria-hidden="true" />
-        </Button>
+        {/* Optional: the band still says what it has to say without a button,
+            and an empty one would be an arrow pointing at nothing. */}
+        {content.cta && (
+          <Button
+            size="lg"
+            nativeButton={false}
+            render={<Link href={content.cta.href} />}
+            className="mt-8 h-12 rounded-sm px-5"
+          >
+            {content.cta.label}
+            <ArrowRightIcon className="size-4" aria-hidden="true" />
+          </Button>
+        )}
       </div>
     </section>
   )
