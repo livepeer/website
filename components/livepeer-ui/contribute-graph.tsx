@@ -32,7 +32,11 @@ const CELL = 11;
 
 /** A day with nothing on it: the foreground at a whisper. */
 const EMPTY_ALPHA = 0.055;
-/** Where the loop and the reduced-motion still frame both start from. */
+/**
+ * Where the loop and the reduced-motion still frame both start from. A whole
+ * number of the shader's ten-second weeks, so the drift is a whole number of
+ * columns and the grid lands exactly on the CSS fallback's cells.
+ */
 const STILL_TIME = 40;
 
 const EMPTY_CSS = `color-mix(in oklab, var(--foreground) ${EMPTY_ALPHA * 100}%, transparent)`;

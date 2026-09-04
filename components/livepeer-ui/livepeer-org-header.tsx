@@ -257,10 +257,14 @@ export function LivepeerOrgHeader({
           //
           // Measured on /blog, whose grid of arbitrary photographic covers is
           // the worst case the header has to survive.
+          // Thinner from rest than after a scroll: at rest the glass sits on
+          // a hero that asked for it, and what is underneath should read.
           glassUp
             ? solid
               ? "bg-background"
-              : "bg-background/80 backdrop-blur-xl"
+              : scrolled
+                ? "bg-background/80 backdrop-blur-xl"
+                : "bg-background/60 backdrop-blur-xl"
             : "bg-transparent"
         )}
       >
@@ -286,7 +290,9 @@ export function LivepeerOrgHeader({
           <div
             className={cn(
               "flex h-16 items-center justify-between gap-2 border-b transition-colors duration-200 sm:gap-6",
-              glassUp
+              // The hairline waits for a scroll even when the glass is up from
+              // rest: over a hero's ground it read as the ground being cut.
+              scrolled && !desktopMenuOpen
                 ? "border-border dark:border-[color-mix(in_srgb,var(--foreground)_15%,var(--background))]"
                 : "border-transparent"
             )}
