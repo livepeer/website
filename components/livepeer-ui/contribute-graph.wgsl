@@ -38,7 +38,7 @@ const RADIUS: f32 = 2.0;
 
 const WEEK: f32 = 10.0;     // seconds for the grid to drift one column
 const SLOT: f32 = 6.0;      // seconds per chance of a commit landing
-const RELEASE: f32 = 45.0;  // seconds between release waves
+const RELEASE: f32 = 70.0;  // seconds between release waves
 const SWEEP: f32 = 6.0;     // seconds a wave takes to cross the canvas
 
 fn hash(p: vec2f) -> f32 {
@@ -112,7 +112,7 @@ fn landing(t: f32, at: f32) -> vec2f {
   // in a busy stretch, and higher along a row where someone has a habit —
   // the same weekday, for a run of weeks.
   let habit = step(hash(vec2f(cid.y, floor(cid.x / 8.0)) + 3.0), 0.12);
-  let chance = 0.003 + 0.02 * smoothstep(0.45, 0.8, cluster) + 0.03 * habit;
+  let chance = 0.002 + 0.012 * smoothstep(0.45, 0.8, cluster) + 0.02 * habit;
 
   // Landings in this slot and the three before it, which is as far back as
   // a glow reaches.
@@ -135,15 +135,16 @@ fn landing(t: f32, at: f32) -> vec2f {
   let wave = floor(t / RELEASE);
   for (var j = 0.0; j < 2.0; j = j + 1.0) {
     let w = wave - j;
-    if (hash3(vec3f(cid, w + 500.0)) < 0.3) {
+    if (hash3(vec3f(cid, w + 500.0)) < 0.15) {
       let l = landing(t, w * RELEASE + across * SWEEP);
       flare = max(flare, l.x);
       glow = max(glow, l.y);
     }
   }
-  n = n + flare * 0.25 + glow * 0.12;
+  n = n + flare * 0.2 + glow * 0.1;
 
-  // Four levels of green, as the real one has, set so most days are empty.
+  // Four levels of green, as the real one has, set so about one day in
+  // eight is lit: the graph is the gaps.
   // Each threshold is a short ramp rather than a step, so a cell eases into
   // its next colour instead of popping. Mixed premultiplied: an empty cell
   // is the ink at 5% alpha, and halfway to an opaque green in straight alpha
@@ -151,9 +152,9 @@ fn landing(t: f32, at: f32) -> vec2f {
   // resolved for the theme (see the component).
   const W: f32 = 0.012;
   var colour = pm(params.empty);
-  colour = mix(colour, pm(params.level1), smoothstep(0.60 - W, 0.60 + W, n));
-  colour = mix(colour, pm(params.level2), smoothstep(0.67 - W, 0.67 + W, n));
-  colour = mix(colour, pm(params.level3), smoothstep(0.73 - W, 0.73 + W, n));
-  colour = mix(colour, pm(params.level4), smoothstep(0.79 - W, 0.79 + W, n));
+  colour = mix(colour, pm(params.level1), smoothstep(0.64 - W, 0.64 + W, n));
+  colour = mix(colour, pm(params.level2), smoothstep(0.71 - W, 0.71 + W, n));
+  colour = mix(colour, pm(params.level3), smoothstep(0.77 - W, 0.77 + W, n));
+  colour = mix(colour, pm(params.level4), smoothstep(0.83 - W, 0.83 + W, n));
   return colour * coverage;
 }

@@ -31,7 +31,7 @@ const PITCH = 14;
 const CELL = 11;
 
 /** A day with nothing on it: the foreground at a whisper. */
-const EMPTY_ALPHA = 0.055;
+const EMPTY_ALPHA = 0.04;
 /**
  * Where the loop and the reduced-motion still frame both start from. A whole
  * number of the shader's ten-second weeks, so the drift is a whole number of
@@ -59,7 +59,9 @@ const fallback: React.CSSProperties = {
 /**
  * The clearing. An ellipse over the text block — sized in pixels, so on a
  * phone it spans the width and the grid survives only above the eyebrow —
- * intersected with a fade toward the bottom, where the buttons are. Wide,
+ * intersected with a fade toward the bottom, where the buttons are, and a
+ * fade at either side, so the field thins out before the viewport edge
+ * rather than being cut by it. Wide,
  * with a long falloff: the whole block from eyebrow to buttons should sit on
  * faded ground, not just the headline, or the description reads over cells.
  * The radii are CSS variables set by responsive classes on the canvas, since
@@ -71,6 +73,7 @@ const clearing: React.CSSProperties = {
   maskImage: [
     "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 56%, transparent 35%, black 100%)",
     "linear-gradient(to bottom, black 62%, transparent 98%)",
+    "linear-gradient(to right, transparent, black 14%, black 86%, transparent)",
   ].join(", "),
   maskComposite: "intersect",
   WebkitMaskComposite: "source-in",
@@ -103,12 +106,13 @@ const GREEN_HUE = 157.5;
  *
  * What makes the real graph's ramp read is that each step is more colourful
  * as well as lighter or darker. Over a dark ground the green's alpha does
- * that on its own — lightness and chroma climb together from L 0.28 to 0.69
- * — so dark's levels are the green at four opacities over the background.
+ * that on its own — lightness and chroma climb together — so dark's levels
+ * are the green at four opacities over the background, topping out well
+ * short of the full green: this is a ground, and a ground stays quiet.
  * Over a light ground alpha only pales it, and mixing toward black bleeds
  * chroma so the top level goes dull, so light's levels are stated directly
  * in OKLCH at the green's hue, darker and more saturated with each step —
- * but never below L 0.68: a dark green tile on white reads as a stain, not
+ * but never below L 0.74: a dark green tile on white reads as a stain, not
  * a light, and the range is narrower than dark's on purpose.
  * Which ground it is comes from the background token's luminance, not the
  * class on <html>, so a third theme would sort itself. The browser resolves
@@ -120,14 +124,14 @@ function colours(probe: CanvasRenderingContext2D) {
   const [r, g, b] = rgbOf(background, probe);
   const dark = 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.5;
   const levels = dark
-    ? [26, 46, 70, 95].map(
+    ? [20, 36, 54, 72].map(
         (pct) => `color-mix(in srgb, ${green} ${pct}%, ${background})`
       )
     : [
-        [0.9, 0.07],
-        [0.83, 0.11],
-        [0.76, 0.14],
-        [0.68, 0.155],
+        [0.92, 0.06],
+        [0.86, 0.09],
+        [0.8, 0.115],
+        [0.74, 0.13],
       ].map(([l, c]) => `oklch(${l} ${c} ${GREEN_HUE})`);
   const [level1, level2, level3, level4] = levels.map((css) => [
     ...rgbOf(css, probe),
