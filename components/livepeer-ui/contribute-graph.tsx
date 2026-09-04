@@ -9,15 +9,17 @@ import { getCanvasThemePalette } from "@/components/canvas-theme";
 import shader from "./contribute-graph.wgsl";
 
 /**
- * A contribution graph above the contribute hero, rendered with WebGPU
- * through vgpu.
+ * A contribution graph as the ground of the contribute hero, rendered with
+ * WebGPU through vgpu.
  *
- * The band has its own height rather than sitting behind the text: a graph
- * reads as a graph only with hard edges and its own strip. The empty grid is
- * painted in CSS behind the canvas, so a browser with no WebGPU — or an
- * adapter that will not come up — shows a graph with nothing on it rather
- * than a blank gap, and the page never shifts. Once the GPU is up the shader
- * draws every cell and the CSS grid is dropped, so nothing is drawn twice.
+ * It fills the hero and runs up under the nav, and the text sits in a
+ * clearing: a CSS mask on the canvas fades the grid out around the headline
+ * and toward the bottom, so the ground is loud at the edges and quiet where
+ * the words are. The mask is CSS rather than shader because it has to shape
+ * two things the same way — the empty grid painted in CSS behind the canvas,
+ * which is what a browser with no WebGPU sees, and the shader's output. Once
+ * the GPU is up the shader draws every cell and the CSS grid is dropped, so
+ * nothing is drawn twice.
  *
  * The same three conventions the site's canvas pieces follow are kept:
  * colour comes from the theme tokens and follows a theme flip, reduced
@@ -27,8 +29,6 @@ import shader from "./contribute-graph.wgsl";
 /** CSS pixels. The shader holds the same numbers; change both. */
 const PITCH = 14;
 const CELL = 11;
-const ROWS = 7;
-const HEIGHT = ROWS * PITCH - (PITCH - CELL);
 
 /** A day with nothing on it: the foreground at a whisper. */
 const EMPTY_ALPHA = 0.07;
@@ -50,6 +50,20 @@ const fallback: React.CSSProperties = {
   ].join(", "),
   backgroundSize: `${PITCH}px ${PITCH}px`,
   backgroundPosition: "center top",
+};
+
+/**
+ * The clearing. An ellipse over the text block — sized in pixels, so on a
+ * phone it spans the width and the grid survives only above the eyebrow —
+ * intersected with a fade toward the bottom, where the buttons are.
+ */
+const clearing: React.CSSProperties = {
+  maskImage: [
+    "radial-gradient(ellipse 420px 210px at 50% 62%, transparent 45%, black 100%)",
+    "linear-gradient(to bottom, black 45%, transparent 96%)",
+  ].join(", "),
+  maskComposite: "intersect",
+  WebkitMaskComposite: "source-in",
 };
 
 /**
@@ -171,7 +185,7 @@ export function ContributeGraph() {
         loop = undefined;
       };
 
-      // Animate only while on screen and while the tab is visible — a graph
+      // Animate only while on screen and while the tab is visible — a ground
       // scrolled past should cost nothing.
       const seen = new IntersectionObserver(([entry]) => {
         if (entry?.isIntersecting && !document.hidden) start();
@@ -201,11 +215,16 @@ export function ContributeGraph() {
   }, []);
 
   return (
+    // -top-16 reaches up through the page's top padding to the nav, so the
+    // field has room above the eyebrow; the height adds those 4rem back.
+    // Width and height are explicit because an absolutely positioned canvas
+    // with `width: auto` takes its intrinsic size and ignores `right` — and
+    // the surface then sizes the canvas to the element, which is a loop.
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none block w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
-      style={{ ...fallback, height: HEIGHT }}
+      className="pointer-events-none absolute inset-x-0 -top-16 h-[calc(100%+4rem)] w-full"
+      style={{ ...fallback, ...clearing }}
     />
   );
 }

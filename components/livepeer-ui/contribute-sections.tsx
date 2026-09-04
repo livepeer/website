@@ -62,12 +62,13 @@ function Ref({
  * it. One sentence, and the one thing to do — a real button, because the
  * action really is "go and say hello", and the two quieter doors beside it.
  *
- * Above it, a contribution graph: the picture of people doing work in the
- * open, which is what the page is asking the reader to join. It takes its
- * own strip rather than washing behind the text — a graph reads as a graph
- * only with hard edges — and it is 95px tall, which is the height the hero
- * moves down. A cover was tried here once and pushed the answer below the
- * fold; this does not. Full-bleed, faded at both sides.
+ * Behind it, a contribution graph as the ground: the picture of people
+ * doing work in the open, which is what the page is asking the reader to
+ * join. It costs no height — a cover above the title was tried once and
+ * pushed the answer below the fold, and a strip above the eyebrow read as a
+ * widget — and the text sits in a clearing the canvas's mask cuts for it.
+ * Full-bleed, so the section is the positioning box rather than the padded
+ * column; the header is `relative` so it paints over the canvas.
  */
 export function ContributeHero({
   eyebrow,
@@ -83,9 +84,9 @@ export function ContributeHero({
   secondary: Ref[];
 }) {
   return (
-    <section>
+    <section className="relative">
       <ContributeGraph />
-      <header className="mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
+      <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
       <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
         {eyebrow}
       </p>
