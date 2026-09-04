@@ -691,12 +691,11 @@ function SuggestBlock({
     <div className={cn("border-t border-border pt-5", className)}>
       <Label>Not on the roadmap?</Label>
       <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-        Ideas are proposed on the forum and appear here once they are owned
-        and dated. Want to work on one yourself? The contribute page says who
-        to talk to and how work gets funded.
+        Ideas are proposed and discussed on the forum. They appear here once
+        they are owned and dated.
       </p>
       <p className="mt-3 text-sm">
-        <LinkRow label="How to get involved" href={href} />
+        <LinkRow label="How to contribute" href={href} />
       </p>
     </div>
   );
