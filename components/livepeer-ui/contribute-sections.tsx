@@ -22,11 +22,7 @@ export type Ref = { label: string; href: string };
  * make it mean nothing. The arrow is inline, not a flex item, so a label that
  * wraps keeps it after the last word.
  */
-function Ref({
-  label,
-  href,
-  className = "",
-}: Ref & { className?: string }) {
+function Ref({ label, href, className = "" }: Ref & { className?: string }) {
   const external = !href.startsWith("/");
   const base =
     "underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
@@ -95,37 +91,37 @@ export function ContributeHero({
     <section className="relative -mt-16 pt-32" data-header-glass="">
       <ContributeGraph />
       <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
-      <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
-        {eyebrow}
-      </p>
-      <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
-        {heading}
-      </h1>
-      <p className="mx-auto mt-5 max-w-[46ch] text-reading-body text-balance text-muted-foreground">
-        {description}
-      </p>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-        <Button
-          size="lg"
-          nativeButton={false}
-          render={
-            <a
-              href={primary.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-          }
-          className="h-12 rounded-sm px-5"
-        >
-          {primary.label}
-          <ArrowUpRightIcon className="size-4" aria-hidden="true" />
-        </Button>
-        <p className="flex items-center gap-x-5 text-sm">
-          {secondary.map((ref) => (
-            <Ref key={ref.href} {...ref} />
-          ))}
+        <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
+          {eyebrow}
         </p>
-      </div>
+        <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
+          {heading}
+        </h1>
+        <p className="mx-auto mt-5 max-w-[46ch] text-reading-body text-balance text-muted-foreground">
+          {description}
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+          <Button
+            size="lg"
+            nativeButton={false}
+            render={
+              <a
+                href={primary.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+            className="h-12 rounded-sm px-5"
+          >
+            {primary.label}
+            <ArrowUpRightIcon className="size-4" aria-hidden="true" />
+          </Button>
+          <p className="flex items-center gap-x-5 text-sm">
+            {secondary.map((ref) => (
+              <Ref key={ref.href} {...ref} />
+            ))}
+          </p>
+        </div>
       </header>
     </section>
   );
@@ -169,7 +165,8 @@ export function ContributeContributors({ count, spotlight }: ContributorSet) {
   return (
     <section className="mt-20 sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 border-t border-border pt-12 sm:pt-16">
+        {/* The rule spans the page, as the ladder's does. */}
+        <div className="flex flex-col items-center gap-4 border-t border-border pt-12 sm:pt-16">
           <div className="flex -space-x-2">
             {spotlight.map((c, i) => (
               <a
@@ -307,123 +304,135 @@ export function ContributeLadder({
     // and the rule are one seam rather than a fade, dead air, and a rule.
     <section className="mt-12 sm:mt-16">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        {/* 4xl, not 3xl: the "best for" column needs ~470px for every rung to
-            stay on one line, and one line per rung is the whole point. The
-            rule sits on this column, not the page, so it is as wide as what
-            it introduces. */}
-        <div className="mx-auto max-w-4xl border-t border-border pt-12 sm:pt-16">
-          {/* Page-title size at every width, not display: at display size
-              this sat a few hundred pixels under a headline of nearly the
-              same scale, and two headlines read as two pages. The hero is
-              the page's one big statement; this is a section of it. */}
-          <h2 className="text-page-title text-balance">{title}</h2>
-          <p
-            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
-          >
-            {intro}
-          </p>
+        {/* The page is one canvas used three ways: the hero centred on it,
+            this section as a grid across it, the contributors strip centred
+            on it again. It was a narrower column pasted in — a document under
+            a poster — and no amount of work on the seam fixed that. From lg
+            the head sits in a left rail beside the ladder rather than above
+            it, so it introduces the table instead of reading as a second
+            title under the first, and stays put while the table scrolls. The
+            rule spans the page, as the strip's does, so the lines agree.
+            Below lg it stacks, which is what it was. */}
+        <div className="border-t border-border pt-12 sm:pt-16 lg:grid lg:grid-cols-12 lg:gap-x-12">
+          <div className="lg:sticky lg:top-24 lg:col-span-4 lg:self-start">
+            {/* Page-title size at every width, not display: at display size
+                this sat a few hundred pixels under a headline of nearly the
+                same scale, and two headlines read as two pages. The hero is
+                the page's one big statement; this is a section of it. */}
+            <h2 className="text-page-title text-balance">{title}</h2>
+            <p
+              className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
+            >
+              {intro}
+            </p>
+          </div>
 
-          <table role="table" className="mt-6 w-full border-collapse text-sm">
-            <caption className="sr-only">{title}</caption>
-            <thead role="rowgroup" className="sr-only">
-              <tr role="row">
-                <th role="columnheader" scope="col">
-                  Path
-                </th>
-                <th role="columnheader" scope="col">
-                  Best for
-                </th>
-                <th role="columnheader" scope="col">
-                  Ceiling
-                </th>
-                <th role="columnheader" scope="col">
-                  Apply
-                </th>
-              </tr>
-            </thead>
-            {groups.map((group) => (
-              <tbody key={group.body.slug} role="rowgroup">
-                <tr role="row" className="block sm:table-row">
-                  <th
-                    role="rowheader"
-                    scope="rowgroup"
-                    colSpan={4}
-                    className="block pt-8 pb-3 text-left font-mono text-ui-caption font-normal tracking-wide text-muted-foreground uppercase sm:table-cell"
-                  >
-                    <Link
-                      href={`/organizations/${group.body.slug}`}
-                      className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                    >
-                      {group.body.name}
-                    </Link>
+          <div className="lg:col-span-8">
+            <table
+              role="table"
+              className="mt-6 w-full border-collapse text-sm lg:mt-0"
+            >
+              <caption className="sr-only">{title}</caption>
+              <thead role="rowgroup" className="sr-only">
+                <tr role="row">
+                  <th role="columnheader" scope="col">
+                    Path
+                  </th>
+                  <th role="columnheader" scope="col">
+                    Best for
+                  </th>
+                  <th role="columnheader" scope="col">
+                    Ceiling
+                  </th>
+                  <th role="columnheader" scope="col">
+                    Apply
                   </th>
                 </tr>
-                {group.rungs.map((rung) => (
-                  <tr
-                    key={rung.name}
-                    role="row"
-                    className="block border-t border-border py-4 sm:table-row sm:py-0"
-                  >
+              </thead>
+              {groups.map((group) => (
+                <tbody key={group.body.slug} role="rowgroup">
+                  <tr role="row" className="block sm:table-row">
                     <th
                       role="rowheader"
-                      scope="row"
-                      className={`${cell} pr-6 text-left font-medium sm:w-[12rem]`}
+                      scope="rowgroup"
+                      colSpan={4}
+                      className="block pt-8 pb-3 text-left font-mono text-ui-caption font-normal tracking-wide text-muted-foreground uppercase sm:table-cell"
                     >
-                      {/* The rung's height on the ladder, counted across
+                      <Link
+                        href={`/organizations/${group.body.slug}`}
+                        className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                      >
+                        {group.body.name}
+                      </Link>
+                    </th>
+                  </tr>
+                  {group.rungs.map((rung) => (
+                    <tr
+                      key={rung.name}
+                      role="row"
+                      className="block border-t border-border py-4 sm:table-row sm:py-0"
+                    >
+                      <th
+                        role="rowheader"
+                        scope="row"
+                        className={`${cell} pr-6 text-left font-medium sm:w-[12rem]`}
+                      >
+                        {/* The rung's height on the ladder, counted across
                           groups. Not an icon: it is the Order field, rendered,
                           and it makes the climb literal. Hidden from readers
                           who would otherwise hear "one Bounties". */}
-                      <span
-                        aria-hidden="true"
-                        className="mr-3 inline-block w-4 font-mono text-xs text-muted-foreground tabular-nums"
+                        <span
+                          aria-hidden="true"
+                          className="mr-3 inline-block w-4 font-mono text-xs text-muted-foreground tabular-nums"
+                        >
+                          {active.indexOf(rung) + 1}
+                        </span>
+                        {rung.name}
+                      </th>
+                      <td
+                        role="cell"
+                        className={`${cell} mt-1 pr-6 text-muted-foreground sm:mt-0`}
                       >
-                        {active.indexOf(rung) + 1}
-                      </span>
-                      {rung.name}
-                    </th>
-                    <td
-                      role="cell"
-                      className={`${cell} mt-1 pr-6 text-muted-foreground sm:mt-0`}
-                    >
-                      {rung.bestFor}
-                    </td>
-                    {/* Stacked, the ceiling and the link share a line — a
+                        {rung.bestFor}
+                      </td>
+                      {/* Stacked, the ceiling and the link share a line — a
                         rung is three lines on a phone, not four. */}
-                    <td
-                      role="cell"
-                      className="mt-3 inline-block font-mono whitespace-nowrap sm:mt-0 sm:table-cell sm:w-[9rem] sm:py-5 sm:pr-6 sm:text-right sm:align-baseline"
-                    >
-                      {rung.ceiling}
-                    </td>
-                    <td
-                      role="cell"
-                      className="mt-3 ml-5 inline-block sm:mt-0 sm:ml-0 sm:table-cell sm:w-[5rem] sm:py-5 sm:text-right sm:align-baseline"
-                    >
-                      <Ref
-                        label={rung.linkLabel}
-                        href={rung.link}
-                        className="text-foreground"
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            ))}
-          </table>
+                      <td
+                        role="cell"
+                        className="mt-3 inline-block font-mono whitespace-nowrap sm:mt-0 sm:table-cell sm:w-[9rem] sm:py-5 sm:pr-6 sm:text-right sm:align-baseline"
+                      >
+                        {rung.ceiling}
+                      </td>
+                      <td
+                        role="cell"
+                        className="mt-3 ml-5 inline-block sm:mt-0 sm:ml-0 sm:table-cell sm:w-[5rem] sm:py-5 sm:text-right sm:align-baseline"
+                      >
+                        <Ref
+                          label={rung.linkLabel}
+                          href={rung.link}
+                          className="text-foreground"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              ))}
+            </table>
 
-          {/* Small, and not a section: a rule and a heading would promise
+            {/* Small, and not a section: a rule and a heading would promise
               more than two lines deliver. */}
-          <div
-            className={`mt-8 grid max-w-[60ch] gap-2 text-xs leading-relaxed text-muted-foreground ${prose}`}
-          >
-            <p>{note}</p>
-            {retired.length > 0 && (
-              <p>
-                <RetiredNames paths={retired} />{" "}
-                {retired.length === 1 ? "no longer takes" : "no longer take"}{" "}
-                requests.
-              </p>
-            )}
+            <div
+              className={`mt-8 grid max-w-[60ch] gap-2 text-xs leading-relaxed text-muted-foreground ${prose}`}
+            >
+              <p>{note}</p>
+              {retired.length > 0 && (
+                <p>
+                  <RetiredNames paths={retired} />{" "}
+                  {retired.length === 1 ? "no longer takes" : "no longer take"}{" "}
+                  requests.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
