@@ -247,8 +247,18 @@ export function ContributeLadder({
                     <th
                       role="rowheader"
                       scope="row"
-                      className={`${cell} pr-6 text-left font-medium sm:w-[11rem]`}
+                      className={`${cell} pr-6 text-left font-medium sm:w-[12rem]`}
                     >
+                      {/* The rung's height on the ladder, counted across
+                          groups. Not an icon: it is the Order field, rendered,
+                          and it makes the climb literal. Hidden from readers
+                          who would otherwise hear "one Bounties". */}
+                      <span
+                        aria-hidden="true"
+                        className="mr-3 inline-block w-4 font-mono text-xs text-muted-foreground tabular-nums"
+                      >
+                        {active.indexOf(rung) + 1}
+                      </span>
                       {rung.name}
                     </th>
                     <td
