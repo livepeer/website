@@ -65,8 +65,8 @@ const fallback: React.CSSProperties = {
  */
 const clearing: React.CSSProperties = {
   maskImage: [
-    "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 66%, transparent 35%, black 100%)",
-    "linear-gradient(to bottom, black 53%, transparent 97%)",
+    "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 56%, transparent 35%, black 100%)",
+    "linear-gradient(to bottom, black 62%, transparent 98%)",
   ].join(", "),
   maskComposite: "intersect",
   WebkitMaskComposite: "source-in",
@@ -89,22 +89,50 @@ function rgbOf(
 }
 
 /**
- * The palette, and the ramp the theme needs. Over a dark ground the green's
- * alpha alone makes four distinct levels; over a light one it only pales, so
- * light runs stronger alphas and leans the top levels toward the ink. Which
- * ground it is comes from the background token's luminance, not the class on
- * <html>, so a third theme would sort itself.
+ * The brand green's hue in OKLCH, so light's ramp can be written as
+ * lightness and chroma at that hue rather than derived by mixing.
+ */
+const GREEN_HUE = 157.5;
+
+/**
+ * The palette, and the ramp the theme needs.
+ *
+ * What makes the real graph's ramp read is that each step is more colourful
+ * as well as lighter or darker. Over a dark ground the green's alpha does
+ * that on its own — lightness and chroma climb together from L 0.28 to 0.69
+ * — so dark's levels are the green at four opacities over the background.
+ * Over a light ground alpha only pales it, and mixing toward black bleeds
+ * chroma so the top level goes dull, so light's levels are stated directly
+ * in OKLCH at the green's hue, darker and more saturated with each step.
+ * Which ground it is comes from the background token's luminance, not the
+ * class on <html>, so a third theme would sort itself. The browser resolves
+ * every colour, including gamut, through the probe.
  */
 function colours(probe: CanvasRenderingContext2D) {
   const [foreground, , , , green] = getCanvasThemePalette();
   const [background] = getCanvasThemePalette(true);
   const [r, g, b] = rgbOf(background, probe);
   const dark = 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.5;
+  const levels = dark
+    ? [26, 46, 70, 95].map(
+        (pct) => `color-mix(in srgb, ${green} ${pct}%, ${background})`
+      )
+    : [
+        [0.88, 0.09],
+        [0.78, 0.14],
+        [0.67, 0.165],
+        [0.55, 0.16],
+      ].map(([l, c]) => `oklch(${l} ${c} ${GREEN_HUE})`);
+  const [level1, level2, level3, level4] = levels.map((css) => [
+    ...rgbOf(css, probe),
+    1,
+  ]);
   return {
-    green: [...rgbOf(green, probe), 1],
     empty: [...rgbOf(foreground, probe), EMPTY_ALPHA],
-    levels: dark ? [0.26, 0.46, 0.7, 0.95] : [0.4, 0.65, 0.88, 1],
-    shade: dark ? 0 : 0.45,
+    level1,
+    level2,
+    level3,
+    level4,
   };
 }
 
@@ -236,10 +264,13 @@ export function ContributeGraph() {
     // Width and height are explicit because an absolutely positioned canvas
     // with `width: auto` takes its intrinsic size and ignores `right` — and
     // the surface then sizes the canvas to the element, which is a loop.
+    // The height reaches 5rem past the section, into the gap above the
+    // ladder, so the ground does not stop dead under the buttons; the mask
+    // has it gone before the ladder's rule.
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
+      className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%+5rem)] w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
       style={{ ...fallback, ...clearing }}
     />
   );
