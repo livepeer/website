@@ -29,14 +29,17 @@ import shader from "./contribute-graph.wgsl";
 /** CSS pixels. The shader holds the same numbers; change both. */
 const PITCH = 14;
 const CELL = 11;
+/**
+ * Rows are phased so a gap falls on the site header's bottom edge, 64px from
+ * the top of the window, where the canvas starts. Otherwise the header's
+ * glass slices a row and leaves a sliver of every cell showing under it.
+ */
+const HEADER = 64;
+const ROW_OFFSET = (HEADER + (PITCH - CELL) / 2) % PITCH;
 
 /** A day with nothing on it: the foreground at a whisper. */
 const EMPTY_ALPHA = 0.04;
-/**
- * Where the loop and the reduced-motion still frame both start from. A whole
- * number of the shader's ten-second weeks, so the drift is a whole number of
- * columns and the grid lands exactly on the CSS fallback's cells.
- */
+/** Where the loop and the reduced-motion still frame both start from. */
 const STILL_TIME = 40;
 
 const EMPTY_CSS = `color-mix(in oklab, var(--foreground) ${EMPTY_ALPHA * 100}%, transparent)`;
@@ -53,7 +56,7 @@ const fallback: React.CSSProperties = {
     `linear-gradient(${EMPTY_CSS}, ${EMPTY_CSS})`,
   ].join(", "),
   backgroundSize: `${PITCH}px ${PITCH}px`,
-  backgroundPosition: "center top",
+  backgroundPosition: `center ${ROW_OFFSET}px`,
 };
 
 /**
