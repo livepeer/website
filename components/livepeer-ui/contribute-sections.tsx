@@ -213,21 +213,34 @@ export function ContributeLadder({
     // relative: the hero's canvas bleeds down behind this section's rule,
     // heading and intro, and a positioned sibling later in the tree paints
     // over it — unpositioned, the text would sit under the tiles.
-    <section className="relative mt-20 sm:mt-24">
+    // overflow-x-clip: the clearing below bleeds past the column on both
+    // sides, which on a phone is past the viewport.
+    <section className="relative mt-20 overflow-x-clip sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         {/* 4xl, not 3xl: the "best for" column needs ~470px for every rung to
             stay on one line, and one line per rung is the whole point. The
             rule sits on this column, not the page, so it is as wide as what
             it introduces. */}
         <div className="mx-auto max-w-4xl border-t border-border pt-12 sm:pt-16">
-          <h2 className="text-page-title text-balance sm:text-display-sm">
-            {title}
-          </h2>
-          <p
-            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
-          >
-            {intro}
-          </p>
+          {/* The ground goes around this block the way it goes around the
+              hero's text — but from the text's side: a soft wash of the page
+              background painted behind the heading and intro, bleeding past
+              them so it is gone before any edge shows. Anchored to the words,
+              so it lands on them at every width and hero height, which a
+              second mask on the canvas could not promise. The ellipse is
+              inscribed in the padded box (50% radii), so its edge midpoints
+              and corners are all transparent; solid to 62%, which is where
+              the text ends. */}
+          <div className="relative -mx-32 -mt-14 -mb-8 px-32 pt-14 pb-8 [background:radial-gradient(ellipse_50%_50%_at_center,var(--background)_62%,transparent_100%)]">
+            <h2 className="text-page-title text-balance sm:text-display-sm">
+              {title}
+            </h2>
+            <p
+              className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
+            >
+              {intro}
+            </p>
+          </div>
 
           <table role="table" className="mt-6 w-full border-collapse text-sm">
             <caption className="sr-only">{title}</caption>
