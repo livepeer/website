@@ -152,10 +152,12 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
  * Retired programmes are not rungs: they render as one line at the foot, for
  * the reader who followed an old link and would otherwise wait on a dead end.
  *
- * On a muted band so it reads as a reference card, distinct from the prose
- * above it. Below sm the rows stack; the header goes to screen readers. The
- * display change strips table semantics in Chrome and Safari, so the roles
- * are set explicitly and survive the reflow.
+ * A rule and space above it, not a tinted band. A band was tried: it is the
+ * most generic device a page can reach for, and in dark it vanished against
+ * the page anyway. The h2, the captions and the ruled rows are what set this
+ * apart, and they work in both themes. Below sm the rows stack; the header
+ * goes to screen readers. The display change strips table semantics in
+ * Chrome and Safari, so the roles are set explicitly and survive the reflow.
  */
 export function ContributeLadder({
   title,
@@ -189,11 +191,13 @@ export function ContributeLadder({
     "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
   return (
-    <section className="mt-20 bg-muted py-16 sm:mt-24 sm:py-20">
+    <section className="mt-20 sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         {/* 4xl, not 3xl: the "best for" column needs ~470px for every rung to
-            stay on one line, and one line per rung is the whole point. */}
-        <div className="mx-auto max-w-4xl">
+            stay on one line, and one line per rung is the whole point. The
+            rule sits on this column, not the page, so it is as wide as what
+            it introduces. */}
+        <div className="mx-auto max-w-4xl border-t border-border pt-12 sm:pt-16">
           <h2 className="text-page-title text-balance sm:text-display-sm">
             {title}
           </h2>

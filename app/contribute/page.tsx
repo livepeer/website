@@ -29,7 +29,7 @@ const hero = {
   eyebrow: "Contribute",
   heading: "How to get involved.",
   description:
-    "Livepeer is built by independent teams, not one company's employees. Say what you want to work on and someone will point you at the work.",
+    "Livepeer is built by independent teams, not by one company. Say what you want to work on and someone will point you at the work.",
   primary: { label: "Join the Discord", href: "https://discord.gg/livepeer" },
   secondary: [
     { label: "Forum", href: "https://forum.livepeer.org" },
@@ -67,9 +67,10 @@ export default async function ContributePage() {
         title="How work gets funded"
         intro={
           <>
-            Check <Link href="/roadmap">the roadmap</Link> first. A proposal
-            that lines up with what is already committed is a much stronger
-            one.
+            Check <Link href="/roadmap">the roadmap</Link> first. Everything
+            below exists to fund work that moves it forward. A proposal should
+            say where your work fits on it, what success looks like, and why
+            it matters to the network.
           </>
         }
         paths={paths}
