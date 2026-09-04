@@ -4,11 +4,7 @@ import Link from "next/link";
 import { ContributeGraph } from "@/components/livepeer-ui/contribute-graph";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  isActive,
-  type ActiveFundingPath,
-  type FundingPath,
-} from "@/lib/contribute";
+import { isActive, type FundingPath } from "@/lib/contribute";
 import type { ContributorSet } from "@/lib/contributors";
 
 /* ------------------------------------------------------------------ *
@@ -253,11 +249,9 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
  * is behind the link on the row, where it is read by the one person who has
  * already chosen that path.
  *
- * Grouped by the body that decides, each group placed by its lowest rung, so
- * the ladder climbs across groups as well as within them and needs no third
- * axis. The caption is that body's name, linked to its page in Organizations
- * — "who is the Network Engineering SPE" is a fair question to have here.
- * Each group is a grid of cells rather than rows of a table; see below.
+ * One flat grid in ladder order. It was grouped under the body that decides,
+ * with a mono caption per group; the captions read as one more device and
+ * went, and the body is a quiet line in each cell instead — see below.
  * Retired programmes are not rungs: they render as one line at the foot, for
  * the reader who followed an old link and would otherwise wait on a dead end.
  *
@@ -282,19 +276,6 @@ export function ContributeLadder({
 }) {
   const active = paths.filter(isActive);
   const retired = paths.filter((p) => p.retired);
-  // Paths arrive sorted by order, so the first rung seen for a body is its
-  // lowest, and groups fall into ladder order by being created as they are
-  // met.
-  const groups: {
-    body: ActiveFundingPath["decidedBy"];
-    rungs: ActiveFundingPath[];
-  }[] = [];
-  for (const rung of active) {
-    const group = groups.find((g) => g.body.slug === rung.decidedBy.slug);
-    if (group) group.rungs.push(rung);
-    else groups.push({ body: rung.decidedBy, rungs: [rung] });
-  }
-
   const prose =
     "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
@@ -327,64 +308,60 @@ export function ContributeLadder({
               thing", and the ladder climbs from a bounty to a treasury vote —
               but five rows of four columns spent a lot of typography on five
               facts. A cell gives each path its own ground: the name, who it
-              is for, and a foot line with the ceiling in mono and where to
-              go. Reading order is the ladder, left to right and down, so the
-              numbers went with the rows. The body that decides is one caption
-              above its group, linked to its page in Organizations; the
-              treasury is its own group and its own row, the top rung, so it
-              spans the width.
+              is for, who decides, and a foot line with the ceiling in mono
+              and where to go. Reading order is the ladder, left to right and
+              down, so the numbers went with the rows; the treasury, the top
+              rung, spans the width. The body that decides was a mono caption
+              over each group first, and read as one more device; it is a
+              quiet line in the cell now, linked to its page in Organizations
+              — "who is the Network Engineering SPE" is a fair question here.
 
               The rules are Compute's requirements-grid logic: border-b on
-              every cell but a group's last row, a vertical rule carried by
-              the left cell of each pair, no outer rules, so the block reads
-              as structure rather than as cards. */}
-          <div className="mt-8">
-            {groups.map((group) => {
-              const n = group.rungs.length;
+              every cell but the last row, a vertical rule carried by the
+              left cell of each pair, no outer rules, so the block reads as
+              structure rather than as cards. */}
+          <div className="mt-8 grid sm:grid-cols-2">
+            {active.map((rung, i) => {
+              const n = active.length;
               const odd = n % 2 === 1;
               const lastRowStart = odd ? n - 1 : n - 2;
+              const spans = odd && i === n - 1;
+              const left = !spans && i % 2 === 0;
               return (
-                <div key={group.body.slug} className="pt-8 first:pt-0">
-                  <Link
-                    href={`/organizations/${group.body.slug}`}
-                    className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                  >
-                    {group.body.name}
-                  </Link>
-                  <div className="mt-2 grid sm:grid-cols-2">
-                    {group.rungs.map((rung, i) => {
-                      const spans = odd && i === n - 1;
-                      const left = !spans && i % 2 === 0;
-                      return (
-                        <div
-                          key={rung.name}
-                          className={cn(
-                            "py-6",
-                            i < n - 1 && "border-b border-border",
-                            i >= lastRowStart && i < n - 1 && "sm:border-b-0",
-                            spans
-                              ? "sm:col-span-2"
-                              : left
-                                ? "sm:border-r sm:border-border sm:pr-7"
-                                : "sm:pl-7"
-                          )}
-                        >
-                          <h3 className="text-lg font-light">{rung.name}</h3>
-                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                            {rung.bestFor}
-                          </p>
-                          <p className="mt-4 flex items-baseline justify-between gap-4 text-sm">
-                            <span className="font-mono">{rung.ceiling}</span>
-                            <Ref
-                              label={rung.linkLabel}
-                              href={rung.link}
-                              className="text-foreground"
-                            />
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div
+                  key={rung.name}
+                  className={cn(
+                    "py-6",
+                    i < n - 1 && "border-b border-border",
+                    i >= lastRowStart && i < n - 1 && "sm:border-b-0",
+                    spans
+                      ? "sm:col-span-2"
+                      : left
+                        ? "sm:border-r sm:border-border sm:pr-7"
+                        : "sm:pl-7"
+                  )}
+                >
+                  <h3 className="text-lg font-light">{rung.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {rung.bestFor}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Decided by{" "}
+                    <Link
+                      href={`/organizations/${rung.decidedBy.slug}`}
+                      className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+                    >
+                      {rung.decidedBy.name}
+                    </Link>
+                  </p>
+                  <p className="mt-4 flex items-baseline justify-between gap-4 text-sm">
+                    <span className="font-mono">{rung.ceiling}</span>
+                    <Ref
+                      label={rung.linkLabel}
+                      href={rung.link}
+                      className="text-foreground"
+                    />
+                  </p>
                 </div>
               );
             })}
