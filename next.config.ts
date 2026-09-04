@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
     // Registry landing sections reference static brand imagery on Sanity's CDN.
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
+  // `.wgsl` shaders (the contribute hero) go through vgpu's loader, which
+  // resolves their import graph at build time and hands the effect one
+  // finished source. Both bundlers are told: `next dev` and `next build` both
+  // run webpack in this repo, but `next dev --turbopack` reads only the block
+  // below, so the rule is stated for each. Neither validates the WGSL — that
+  // is `vgpu check`, run by hand.
+  turbopack: {
+    rules: {
+      "*.wgsl": {
+        loaders: ["@vgpu/wgsl/loader-webpack"],
+        as: "*.js",
+      },
+    },
+  },
   webpack: (config) => {
     // Additional Webpack-specific watch tweaks for git worktree symlinks
     // (only takes effect when Turbopack is disabled).
@@ -20,6 +34,10 @@ const nextConfig: NextConfig = {
       poll: 1000,
       aggregateTimeout: 300,
     };
+    config.module.rules.push({
+      test: /\.wgsl$/,
+      loader: "@vgpu/wgsl/loader-webpack",
+    });
     return config;
   },
   async redirects() {
