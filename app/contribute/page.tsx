@@ -5,8 +5,6 @@ import {
   ContributeHero,
   ContributeLadder,
 } from "@/components/livepeer-ui/contribute-sections";
-import { RecordCover } from "@/components/livepeer-ui/record-parts";
-import { ogArt } from "@/lib/og";
 import { getFundingPaths } from "@/lib/register";
 
 /**
@@ -60,15 +58,10 @@ export default async function ContributePage() {
   const paths = await getFundingPaths();
 
   return (
-    // Full-bleed cover first, the header over it, the way every record page
-    // opens — the same frame as this page's share card, chosen for meaning
-    // it: many strands running together. No top offset on the wrapper for
-    // that reason; the hero carries its own.
-    <div className="pb-24">
-      <RecordCover
-        src={ogArt.contribute}
-        alt="Strands of coloured light running together"
-      />
+    // No cover, deliberately: one was tried, and a banner above the hero
+    // pushed the answer below the fold for a page whose whole point is that
+    // the answer is the first thing you see. The share card keeps the art.
+    <div className="pt-16 pb-24">
       <ContributeHero {...hero} />
       <ContributeLadder
         title="How work gets funded"
