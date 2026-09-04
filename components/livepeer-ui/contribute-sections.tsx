@@ -169,7 +169,7 @@ export function ContributeContributors({ count, spotlight }: ContributorSet) {
   return (
     <section className="mt-20 sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 border-t border-border pt-12 sm:pt-16">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 border-t border-border pt-12 sm:pt-16">
           <div className="flex -space-x-2">
             {spotlight.map((c, i) => (
               <a
@@ -307,11 +307,13 @@ export function ContributeLadder({
     // and the rule are one seam rather than a fade, dead air, and a rule.
     <section className="mt-12 sm:mt-16">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        {/* 4xl, not 3xl: the "best for" column needs ~470px for every rung to
-            stay on one line, and one line per rung is the whole point. The
-            rule sits on this column, not the page, so it is as wide as what
-            it introduces. */}
-        <div className="mx-auto max-w-4xl border-t border-border pt-12 sm:pt-16">
+        {/* 3xl: the hero's text block is about 600px wide, and at 4xl this
+            was the widest thing on the page between two centred blocks. Some
+            "best for" cells wrap to two lines at this width; that costs less
+            than the column reading as a different page. The rule sits on
+            this column, not the page, so it is as wide as what it
+            introduces. */}
+        <div className="mx-auto max-w-3xl border-t border-border pt-12 sm:pt-16">
           {/* Page-title size at every width, not display: at display size
               this sat a few hundred pixels under a headline of nearly the
               same scale, and two headlines read as two pages. The hero is
