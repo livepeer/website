@@ -1,7 +1,7 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { ContributeStrands } from "@/components/livepeer-ui/contribute-strands";
+import { ContributeField } from "@/components/livepeer-ui/contribute-field";
 import { Button } from "@/components/ui/button";
 import {
   isActive,
@@ -62,7 +62,7 @@ function Ref({
  * it. One sentence, and the one thing to do — a real button, because the
  * action really is "go and say hello", and the two quieter doors beside it.
  *
- * The strands sit behind it, not above it. A cover above the title was
+ * The field sits behind it, not above it. A cover above the title was
  * tried and pushed the answer below the fold; a field behind the text costs
  * no height, and it fades out before the headline so the text keeps clean
  * ground. Full-bleed, so the section is the positioning box rather than the
@@ -84,7 +84,7 @@ export function ContributeHero({
 }) {
   return (
     <section className="relative overflow-hidden">
-      <ContributeStrands />
+      <ContributeField />
       <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
       <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
         {eyebrow}

@@ -6,7 +6,7 @@ import type { FrameLoopHandle } from "vgpu";
 
 import { getCanvasThemePalette } from "@/components/canvas-theme";
 
-import shader from "./contribute-strands.wgsl";
+import shader from "./contribute-field.wgsl";
 
 /**
  * The field behind the contribute hero, rendered with WebGPU through vgpu.
@@ -20,9 +20,11 @@ import shader from "./contribute-strands.wgsl";
  * retina display is not asked for four times the fragments.
  */
 
-/** Foreground at a hairline's weight; the accent lighter so a green strand reads. */
-const STRAND_ALPHA = 0.28;
-const ACCENT_ALPHA = 0.6;
+/** The grey dots at a hairline's weight; the green ones nearly solid. */
+const DIM_ALPHA = 0.35;
+const ACCENT_ALPHA = 0.9;
+/** Dot pitch in CSS pixels; scaled by the surface's pixel ratio. */
+const CELL = 5;
 /** Where the loop and the reduced-motion still frame both start from. */
 const STILL_TIME = 40;
 
@@ -45,12 +47,12 @@ function rgbOf(
 function colours(probe: CanvasRenderingContext2D) {
   const [foreground, , , , green] = getCanvasThemePalette();
   return {
-    strand: [...rgbOf(foreground, probe), STRAND_ALPHA],
+    dim: [...rgbOf(foreground, probe), DIM_ALPHA],
     accent: [...rgbOf(green, probe), ACCENT_ALPHA],
   };
 }
 
-export function ContributeStrands() {
+export function ContributeField() {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -89,30 +91,31 @@ export function ContributeStrands() {
         dpr: [1, 1.5],
         alphaMode: "premultiplied",
       });
-      const strands = effect(gpu, shader, {
-        label: "contribute-strands",
+      const field = effect(gpu, shader, {
+        label: "contribute-field",
         set: {
           params: {
             ...colours(probe),
+            size: [1, 1],
             time: STILL_TIME,
-            aspect: 1,
-            fade: 0.62,
-            pull: 0.35,
+            cell: CELL,
+            fade: 0.45,
           },
         },
       });
 
-      // Fires once immediately, then on every resize.
+      // Fires once immediately, then on every resize. The shader works in
+      // device pixels, so the pitch scales with the ratio the surface chose.
       cleanups.push(
-        target.onResize(({ width, height }) =>
-          strands.set({ params: { aspect: width / Math.max(height, 1) } })
+        target.onResize(({ width, height, dpr }) =>
+          field.set({ params: { size: [width, height], cell: CELL * dpr } })
         )
       );
 
       // The theme toggle flips a class on <html>; re-read the tokens when it
       // does, the way the agent hero's particles do.
       const theme = new MutationObserver(() =>
-        strands.set({ params: colours(probe) })
+        field.set({ params: colours(probe) })
       );
       theme.observe(document.documentElement, {
         attributes: true,
@@ -121,7 +124,7 @@ export function ContributeStrands() {
       cleanups.push(() => theme.disconnect());
 
       if (reduceMotion) {
-        strands.draw(target);
+        field.draw(target);
         return;
       }
 
@@ -129,8 +132,8 @@ export function ContributeStrands() {
       const start = () => {
         if (loop || !gpu) return;
         loop = frameLoop(gpu, (frame) => {
-          strands.set({ params: { time: STILL_TIME + time.time } });
-          frame.pass(target, strands);
+          field.set({ params: { time: STILL_TIME + time.time } });
+          frame.pass(target, field);
         });
       };
       const stop = () => {
