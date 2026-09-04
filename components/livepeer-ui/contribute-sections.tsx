@@ -312,9 +312,11 @@ export function ContributeLadder({
             rule sits on this column, not the page, so it is as wide as what
             it introduces. */}
         <div className="mx-auto max-w-4xl border-t border-border pt-12 sm:pt-16">
-          <h2 className="text-page-title text-balance sm:text-display-sm">
-            {title}
-          </h2>
+          {/* Page-title size at every width, not display: at display size
+              this sat a few hundred pixels under a headline of nearly the
+              same scale, and two headlines read as two pages. The hero is
+              the page's one big statement; this is a section of it. */}
+          <h2 className="text-page-title text-balance">{title}</h2>
           <p
             className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
           >
