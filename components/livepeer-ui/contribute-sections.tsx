@@ -210,7 +210,10 @@ export function ContributeLadder({
     "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
   return (
-    <section className="mt-20 sm:mt-24">
+    // relative: the hero's canvas bleeds down behind this section's rule,
+    // heading and intro, and a positioned sibling later in the tree paints
+    // over it — unpositioned, the text would sit under the tiles.
+    <section className="relative mt-20 sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         {/* 4xl, not 3xl: the "best for" column needs ~470px for every rung to
             stay on one line, and one line per rung is the whole point. The

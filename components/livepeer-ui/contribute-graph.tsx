@@ -59,9 +59,11 @@ const fallback: React.CSSProperties = {
 /**
  * The clearing. An ellipse over the text block — sized in pixels, so on a
  * phone it spans the width and the grid survives only above the eyebrow —
- * intersected with a fade toward the bottom, where the buttons are, and a
- * fade at either side, so the field thins out before the viewport edge
- * rather than being cut by it. Wide,
+ * intersected with a long fade that starts under the buttons and reaches
+ * the canvas's foot, well into the next section, and a fade at either side,
+ * so the field thins out before the viewport edge rather than being cut by
+ * it. Anchored in pixels from the top, not percentages: the canvas is far
+ * taller than the hero, and the hero is what the anchors are about. Wide,
  * with a long falloff: the whole block from eyebrow to buttons should sit on
  * faded ground, not just the headline, or the description reads over cells.
  * The radii are CSS variables set by responsive classes on the canvas, since
@@ -71,8 +73,8 @@ const fallback: React.CSSProperties = {
  */
 const clearing: React.CSSProperties = {
   maskImage: [
-    "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 56%, transparent 35%, black 100%)",
-    "linear-gradient(to bottom, black 62%, transparent 98%)",
+    "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 290px, transparent 35%, black 100%)",
+    "linear-gradient(to bottom, black 430px, transparent 100%)",
     "linear-gradient(to right, transparent, black 14%, black 86%, transparent)",
   ].join(", "),
   maskComposite: "intersect",
@@ -274,13 +276,14 @@ export function ContributeGraph() {
     // Width and height are explicit because an absolutely positioned canvas
     // with `width: auto` takes its intrinsic size and ignores `right` — and
     // the surface then sizes the canvas to the element, which is a loop.
-    // The height reaches 5rem past the section, into the gap above the
-    // ladder, so the ground does not stop dead under the buttons; the mask
-    // has it gone before the ladder's rule.
+    // The height reaches 24rem past the section, through the ladder's rule,
+    // heading and intro, so the ground bleeds into the page rather than
+    // stopping at the hero; the mask has it gone before the rows. The ladder
+    // is positioned so its text paints over the canvas, not under it.
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%+5rem)] w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
+      className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%+24rem)] w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
       style={{ ...fallback, ...clearing }}
     />
   );
