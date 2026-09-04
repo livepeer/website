@@ -345,34 +345,38 @@ export function ContributeLadder({
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {rung.bestFor}
                   </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Decided by{" "}
-                    <Link
-                      href={`/organizations/${rung.decidedBy.slug}`}
-                      className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
-                    >
-                      {rung.decidedBy.name}
-                    </Link>
-                  </p>
-                  {/* The one value that floated without a name. The
-                      description reads as what the path is for on its own,
-                      and "Decided by" carries its own label; "Per task" and
-                      "Set by the brief" did not, so the ceiling gets a
-                      quiet one. Labelled rows for every field were tried and
-                      spent the cell's whole quietness on it. */}
-                  <p className="mt-4 flex items-baseline justify-between gap-4 text-sm">
-                    <span>
-                      <span className="mr-2 text-xs text-muted-foreground">
+                  {/* Two facts under the description, set as facts: a small
+                      muted label of one width, then the value, so they read
+                      as a pair of rows rather than as more prose — "Decided
+                      by" directly under the description, in the same colour,
+                      read as its third line. The ceiling is the one value
+                      that floated without a name; the link shares its line.
+                      Labelled rows for every field were tried and spent the
+                      cell's whole quietness on it. */}
+                  <div className="mt-4 space-y-1 text-sm">
+                    <p className="flex items-baseline gap-3">
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                        Decided by
+                      </span>
+                      <Link
+                        href={`/organizations/${rung.decidedBy.slug}`}
+                        className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                      >
+                        {rung.decidedBy.name}
+                      </Link>
+                    </p>
+                    <p className="flex items-baseline gap-3">
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
                         Ceiling
                       </span>
                       <span className="font-mono">{rung.ceiling}</span>
-                    </span>
-                    <Ref
-                      label={rung.linkLabel}
-                      href={rung.link}
-                      className="text-foreground"
-                    />
-                  </p>
+                      <Ref
+                        label={rung.linkLabel}
+                        href={rung.link}
+                        className="ml-auto text-foreground"
+                      />
+                    </p>
+                  </div>
                 </div>
               );
             })}
