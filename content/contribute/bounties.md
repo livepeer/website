@@ -1,6 +1,6 @@
 ---
 name: Bounties
-bestFor: "You want a small task that is already defined"
+bestFor: "Small, defined tasks with a known answer"
 ceiling: "Per task"
 decidedBy: Network Engineering SPE
 link: https://github.com/orgs/livepeer/projects/24/views/1

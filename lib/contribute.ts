@@ -31,11 +31,7 @@ export type LinkLabel = (typeof LINK_LABELS)[number];
 export type ActiveFundingPath = {
   retired: false;
   name: string;
-  /**
-   * One line the reader can say yes or no to — "You already shipped
-   * something the network uses" — not a description of the programme. The
-   * row then reads as a sentence: situation, path, ceiling, where to go.
-   */
+  /** One phrase: the kind of work, not the kind of applicant. */
   bestFor: string;
   /** Short and scannable — the one column a reader runs down. */
   ceiling: string;
