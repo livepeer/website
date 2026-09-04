@@ -365,7 +365,10 @@ export function ContributeLadder({
                         {rung.decidedBy.name}
                       </Link>
                     </p>
-                    <p className="flex items-baseline gap-3">
+                    {/* flex-wrap: in a narrow cell a long ceiling and the
+                        link ran into each other; the link drops under
+                        instead, still on the right. */}
+                    <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                       <span className="w-20 shrink-0 text-xs text-muted-foreground">
                         Ceiling
                       </span>
