@@ -20,9 +20,6 @@ export const livepeerOrgNavigationImages: LivepeerOrgNavigationImages = {
   Brand: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
   Roadmap: `${CDN}/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png`,
   Documentation: `${CDN}/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png`,
-  // The same frame as the page's share card, so the menu and the link unfurl
-  // show one picture. (Roadmap is the deliberate exception to that.)
-  Contribute: `${CDN}/6bda58163dac9238d28ecd67e2e147ae0aeddc8f-1456x816.png`,
 };
 
 export function getLivepeerOrgNavigationImages(): Promise<LivepeerOrgNavigationImages> {

@@ -30,7 +30,6 @@ const linkDescriptions: Record<string, string> = {
   "Provide GPUs": "Run an orchestrator and earn fees",
   Roadmap: "See what’s next for the network",
   Blog: "Updates from across the ecosystem",
-  Contribute: "How to get involved and get funded",
   Foundation: "Meet the organization supporting Livepeer",
   Brand: "Logos, guidelines, and brand assets",
   Documentation: "Technical guides and reference",
@@ -58,12 +57,9 @@ const localLinkMatches: Record<
 
 const resourceOrder: Record<string, number> = {
   Blog: 0,
-  // Second, above the reference material: it is the one item here somebody
-  // arrives looking for rather than stumbles into.
-  Contribute: 1,
-  Brand: 2,
-  Roadmap: 3,
-  Documentation: 4,
+  Brand: 1,
+  Roadmap: 2,
+  Documentation: 3,
 };
 
 const networkOrder: Record<string, number> = {
@@ -142,6 +138,10 @@ export function getLivepeerOrgHeaderLinks(
       (item) =>
         item.label !== "Primer" &&
         item.label !== "Foundation" &&
+        // Footer-only: /contribute is reached from the footer and from the
+        // roadmap's "Not on the roadmap?" block, and the header's Resources
+        // menu stays the five it was designed with.
+        item.label !== "Contribute" &&
         !(group.title === "Network" && item.label === "Roadmap")
     )
     .sort((a, b) => {
