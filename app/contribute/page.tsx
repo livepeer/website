@@ -68,9 +68,9 @@ export default async function ContributePage() {
         intro={
           <>
             Check <Link href="/roadmap">the roadmap</Link> first. Everything
-            below exists to fund work that moves it forward. A proposal should
-            say where your work fits on it, what success looks like, and why
-            it matters to the network.
+            below exists to fund work that moves it forward. A good proposal
+            answers three questions: what problem it solves, what success
+            looks like, and why it matters to the network.
           </>
         }
         paths={paths}
