@@ -307,9 +307,9 @@ export function ContributeLadder({
               about the order — a newcomer's real question is "how big is my
               thing", and the ladder climbs from a bounty to a treasury vote —
               but five rows of four columns spent a lot of typography on five
-              facts. A cell gives each path its own ground: the name, then
-              who it is for, the ceiling and who decides as labelled rows,
-              and where to go as the foot. Reading order is the ladder, left to right and
+              facts. A cell gives each path its own ground: the name, who it
+              is for, who decides, and a foot line with the ceiling in mono
+              and where to go. Reading order is the ladder, left to right and
               down, so the numbers went with the rows; the treasury, the top
               rung, spans the width. The body that decides was a mono caption
               over each group first, and read as one more device; it is a
@@ -342,40 +342,31 @@ export function ContributeLadder({
                   )}
                 >
                   <h3 className="text-lg font-light">{rung.name}</h3>
-                  {/* Labelled, as the record pages label a property: a value
-                      on its own — "Per task", "Small, defined tasks" — left
-                      the reader guessing what it was the value of. Same
-                      grid as RecordRow, without its icons. */}
-                  <dl className="mt-3 space-y-1.5">
-                    <div className="grid grid-cols-[6.5rem_1fr] gap-x-3">
-                      <dt className="text-sm text-muted-foreground">
-                        Best for
-                      </dt>
-                      <dd className="text-sm leading-relaxed">
-                        {rung.bestFor}
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[6.5rem_1fr] gap-x-3">
-                      <dt className="text-sm text-muted-foreground">Ceiling</dt>
-                      <dd className="font-mono text-sm leading-relaxed">
-                        {rung.ceiling}
-                      </dd>
-                    </div>
-                    <div className="grid grid-cols-[6.5rem_1fr] gap-x-3">
-                      <dt className="text-sm text-muted-foreground">
-                        Decided by
-                      </dt>
-                      <dd className="text-sm leading-relaxed">
-                        <Link
-                          href={`/organizations/${rung.decidedBy.slug}`}
-                          className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                        >
-                          {rung.decidedBy.name}
-                        </Link>
-                      </dd>
-                    </div>
-                  </dl>
-                  <p className="mt-4 text-sm">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {rung.bestFor}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Decided by{" "}
+                    <Link
+                      href={`/organizations/${rung.decidedBy.slug}`}
+                      className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+                    >
+                      {rung.decidedBy.name}
+                    </Link>
+                  </p>
+                  {/* The one value that floated without a name. The
+                      description reads as what the path is for on its own,
+                      and "Decided by" carries its own label; "Per task" and
+                      "Set by the brief" did not, so the ceiling gets a
+                      quiet one. Labelled rows for every field were tried and
+                      spent the cell's whole quietness on it. */}
+                  <p className="mt-4 flex items-baseline justify-between gap-4 text-sm">
+                    <span>
+                      <span className="mr-2 text-xs text-muted-foreground">
+                        Ceiling
+                      </span>
+                      <span className="font-mono">{rung.ceiling}</span>
+                    </span>
                     <Ref
                       label={rung.linkLabel}
                       href={rung.link}
