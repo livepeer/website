@@ -13,11 +13,13 @@
 // is premultiplied for a transparent canvas over the page.
 
 struct Params {
-  green: vec4f,  // brand green rgb; a unused
-  empty: vec4f,  // foreground rgb, alpha — a day with nothing on it
-  size: vec2f,   // canvas, in device pixels
+  green: vec4f,   // brand green rgb; a unused
+  empty: vec4f,   // foreground rgb, alpha — a day with nothing on it
+  levels: vec4f,  // alpha of the four green levels, lowest first
+  size: vec2f,    // canvas, in device pixels
   time: f32,
   dpr: f32,
+  shade: f32,     // how far the top level leans toward the foreground
 }
 @group(0) @binding(0) var<uniform> params: Params;
 
@@ -77,15 +79,21 @@ fn fbm(p: vec2f) -> f32 {
   let n = field * 0.62 + swell * 0.23 + hash(cid + 0.5) * 0.15 + lift;
 
   // Four levels of green, as the real one has; the rest are empty days.
-  var level = 0.0;
-  if (n > 0.52) { level = 0.26; }
-  if (n > 0.60) { level = 0.46; }
-  if (n > 0.68) { level = 0.70; }
-  if (n > 0.77) { level = 0.95; }
+  var level = -1;
+  if (n > 0.52) { level = 0; }
+  if (n > 0.60) { level = 1; }
+  if (n > 0.68) { level = 2; }
+  if (n > 0.77) { level = 3; }
 
+  // Each theme brings its own ramp. Over black, alpha alone turns the green
+  // into four distinct steps; over white it only pales it, so light also
+  // leans the upper levels toward the foreground ink — the real graph's light
+  // palette goes darker with level, not paler.
   var colour = params.empty;
-  if (level > 0.0) {
-    colour = vec4f(params.green.rgb, level);
+  if (level >= 0) {
+    let k = f32(level) / 3.0;
+    let rgb = mix(params.green.rgb, params.empty.rgb, params.shade * k * k);
+    colour = vec4f(rgb, params.levels[level]);
   }
   let a = colour.a * coverage;
   return vec4f(colour.rgb * a, a);

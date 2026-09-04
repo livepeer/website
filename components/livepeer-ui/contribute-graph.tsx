@@ -55,11 +55,17 @@ const fallback: React.CSSProperties = {
 /**
  * The clearing. An ellipse over the text block — sized in pixels, so on a
  * phone it spans the width and the grid survives only above the eyebrow —
- * intersected with a fade toward the bottom, where the buttons are.
+ * intersected with a fade toward the bottom, where the buttons are. Wide,
+ * with a long falloff: the whole block from eyebrow to buttons should sit on
+ * faded ground, not just the headline, or the description reads over cells.
+ * The radii are CSS variables set by responsive classes on the canvas, since
+ * an inline style has no breakpoints: smaller below sm, where the desktop
+ * ellipse would also fade the rows above the eyebrow, the only ones a phone
+ * keeps.
  */
 const clearing: React.CSSProperties = {
   maskImage: [
-    "radial-gradient(ellipse 420px 210px at 50% 67%, transparent 45%, black 100%)",
+    "radial-gradient(ellipse var(--clearing-x) var(--clearing-y) at 50% 66%, transparent 35%, black 100%)",
     "linear-gradient(to bottom, black 53%, transparent 97%)",
   ].join(", "),
   maskComposite: "intersect",
@@ -82,11 +88,23 @@ function rgbOf(
   return [r / 255, g / 255, b / 255];
 }
 
+/**
+ * The palette, and the ramp the theme needs. Over a dark ground the green's
+ * alpha alone makes four distinct levels; over a light one it only pales, so
+ * light runs stronger alphas and leans the top levels toward the ink. Which
+ * ground it is comes from the background token's luminance, not the class on
+ * <html>, so a third theme would sort itself.
+ */
 function colours(probe: CanvasRenderingContext2D) {
   const [foreground, , , , green] = getCanvasThemePalette();
+  const [background] = getCanvasThemePalette(true);
+  const [r, g, b] = rgbOf(background, probe);
+  const dark = 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.5;
   return {
     green: [...rgbOf(green, probe), 1],
     empty: [...rgbOf(foreground, probe), EMPTY_ALPHA],
+    levels: dark ? [0.26, 0.46, 0.7, 0.95] : [0.4, 0.65, 0.88, 1],
+    shade: dark ? 0 : 0.45,
   };
 }
 
@@ -221,7 +239,7 @@ export function ContributeGraph() {
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full"
+      className="pointer-events-none absolute inset-0 h-full w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
       style={{ ...fallback, ...clearing }}
     />
   );
