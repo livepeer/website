@@ -315,11 +315,15 @@ export function ContributeLadder({
           <h2 className="text-page-title text-balance sm:text-display-sm">
             {title}
           </h2>
-          <p
-            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
+          {/* A div, not a p: the intro is a sentence and a short list, and
+              the list is the most useful thing on the page — what a proposal
+              has to answer — so it is set as three lines rather than buried
+              in a paragraph. */}
+          <div
+            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground [&_ol]:mt-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:marker:font-mono [&_ol]:marker:text-xs [&_p+p]:mt-4 ${prose}`}
           >
             {intro}
-          </p>
+          </div>
 
           <table role="table" className="mt-6 w-full border-collapse text-sm">
             <caption className="sr-only">{title}</caption>

@@ -76,10 +76,16 @@ export default async function ContributePage() {
         title="How work gets funded"
         intro={
           <>
-            Check <Link href="/roadmap">the roadmap</Link> first. Everything
-            below exists to fund work that moves it forward. A good proposal
-            answers three questions: what problem it solves, what success
-            looks like, and why it matters to the network.
+            <p>
+              Check <Link href="/roadmap">the roadmap</Link> first. Everything
+              below exists to fund work that moves it forward.
+            </p>
+            <p>A good proposal answers three questions:</p>
+            <ol>
+              <li>What problem it solves.</li>
+              <li>What success looks like.</li>
+              <li>Why it matters to the network.</li>
+            </ol>
           </>
         }
         paths={paths}
