@@ -12,7 +12,7 @@ import shader from "./contribute-graph.wgsl";
  * A contribution graph as the ground of the contribute hero, rendered with
  * WebGPU through vgpu.
  *
- * It fills the hero and runs up under the nav, and the text sits in a
+ * It fills the hero, which runs up under the header, and the text sits in a
  * clearing: a CSS mask on the canvas fades the grid out around the headline
  * and toward the bottom, so the ground is loud at the edges and quiet where
  * the words are. The mask is CSS rather than shader because it has to shape
@@ -59,8 +59,8 @@ const fallback: React.CSSProperties = {
  */
 const clearing: React.CSSProperties = {
   maskImage: [
-    "radial-gradient(ellipse 420px 210px at 50% 62%, transparent 45%, black 100%)",
-    "linear-gradient(to bottom, black 45%, transparent 96%)",
+    "radial-gradient(ellipse 420px 210px at 50% 67%, transparent 45%, black 100%)",
+    "linear-gradient(to bottom, black 53%, transparent 97%)",
   ].join(", "),
   maskComposite: "intersect",
   WebkitMaskComposite: "source-in",
@@ -215,15 +215,13 @@ export function ContributeGraph() {
   }, []);
 
   return (
-    // -top-16 reaches up through the page's top padding to the nav, so the
-    // field has room above the eyebrow; the height adds those 4rem back.
     // Width and height are explicit because an absolutely positioned canvas
     // with `width: auto` takes its intrinsic size and ignores `right` — and
     // the surface then sizes the canvas to the element, which is a loop.
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 -top-16 h-[calc(100%+4rem)] w-full"
+      className="pointer-events-none absolute inset-0 h-full w-full"
       style={{ ...fallback, ...clearing }}
     />
   );

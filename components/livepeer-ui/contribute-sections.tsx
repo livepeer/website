@@ -69,6 +69,11 @@ function Ref({
  * widget — and the text sits in a clearing the canvas's mask cuts for it.
  * Full-bleed, so the section is the positioning box rather than the padded
  * column; the header is `relative` so it paints over the canvas.
+ *
+ * -mt-16 pulls the section up under the site header, which is transparent
+ * at rest, the way the home hero and the record pages do; pt-32 puts the
+ * eyebrow back where the page's own padding had it. The ground then runs to
+ * the top of the window instead of stopping at a line under the nav.
  */
 export function ContributeHero({
   eyebrow,
@@ -84,7 +89,7 @@ export function ContributeHero({
   secondary: Ref[];
 }) {
   return (
-    <section className="relative">
+    <section className="relative -mt-16 pt-32">
       <ContributeGraph />
       <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
       <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">

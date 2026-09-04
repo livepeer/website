@@ -61,7 +61,9 @@ export default async function ContributePage() {
     // No cover, deliberately: one was tried, and a banner above the hero
     // pushed the answer below the fold for a page whose whole point is that
     // the answer is the first thing you see. The share card keeps the art.
-    <div className="pt-16 pb-24">
+    // No top padding either: the hero pulls itself up under the header and
+    // carries its own.
+    <div className="pb-24">
       <ContributeHero {...hero} />
       <ContributeLadder
         title="How work gets funded"
