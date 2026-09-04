@@ -31,7 +31,7 @@ const PITCH = 14;
 const CELL = 11;
 
 /** A day with nothing on it: the foreground at a whisper. */
-const EMPTY_ALPHA = 0.07;
+const EMPTY_ALPHA = 0.055;
 /** Where the loop and the reduced-motion still frame both start from. */
 const STILL_TIME = 40;
 
@@ -103,7 +103,9 @@ const GREEN_HUE = 157.5;
  * — so dark's levels are the green at four opacities over the background.
  * Over a light ground alpha only pales it, and mixing toward black bleeds
  * chroma so the top level goes dull, so light's levels are stated directly
- * in OKLCH at the green's hue, darker and more saturated with each step.
+ * in OKLCH at the green's hue, darker and more saturated with each step —
+ * but never below L 0.68: a dark green tile on white reads as a stain, not
+ * a light, and the range is narrower than dark's on purpose.
  * Which ground it is comes from the background token's luminance, not the
  * class on <html>, so a third theme would sort itself. The browser resolves
  * every colour, including gamut, through the probe.
@@ -118,10 +120,10 @@ function colours(probe: CanvasRenderingContext2D) {
         (pct) => `color-mix(in srgb, ${green} ${pct}%, ${background})`
       )
     : [
-        [0.88, 0.09],
-        [0.78, 0.14],
-        [0.67, 0.165],
-        [0.55, 0.16],
+        [0.9, 0.07],
+        [0.83, 0.11],
+        [0.76, 0.14],
+        [0.68, 0.155],
       ].map(([l, c]) => `oklch(${l} ${c} ${GREEN_HUE})`);
   const [level1, level2, level3, level4] = levels.map((css) => [
     ...rgbOf(css, probe),
