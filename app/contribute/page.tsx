@@ -5,6 +5,7 @@ import {
   ContributeHero,
   ContributeLadder,
 } from "@/components/livepeer-ui/contribute-sections";
+import { getContributors } from "@/lib/contributors";
 import { getFundingPaths } from "@/lib/register";
 
 /**
@@ -31,10 +32,9 @@ const hero = {
   description:
     "Livepeer is built by independent teams, not by one company. Say what you want to work on and someone will point you at the work.",
   primary: { label: "Join the Discord", href: "https://discord.gg/livepeer" },
-  secondary: [
-    { label: "Forum", href: "https://forum.livepeer.org" },
-    { label: "GitHub", href: "https://github.com/livepeer" },
-  ],
+  // GitHub is not here because the contributors strip under the buttons
+  // carries it, next to the faces of the people it means.
+  secondary: [{ label: "Forum", href: "https://forum.livepeer.org" }],
 };
 
 const DESCRIPTION =
@@ -55,7 +55,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ContributePage() {
-  const paths = await getFundingPaths();
+  const [paths, contributors] = await Promise.all([
+    getFundingPaths(),
+    getContributors(),
+  ]);
 
   return (
     // No cover, deliberately: one was tried, and a banner above the hero
@@ -64,7 +67,7 @@ export default async function ContributePage() {
     // No top padding either: the hero pulls itself up under the header and
     // carries its own.
     <div className="pb-24">
-      <ContributeHero {...hero} />
+      <ContributeHero {...hero} contributors={contributors} />
       <ContributeLadder
         title="How work gets funded"
         intro={

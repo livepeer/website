@@ -8,6 +8,7 @@ import {
   type ActiveFundingPath,
   type FundingPath,
 } from "@/lib/contribute";
+import type { ContributorSet } from "@/lib/contributors";
 
 /* ------------------------------------------------------------------ *
  * Links
@@ -83,12 +84,14 @@ export function ContributeHero({
   description,
   primary,
   secondary,
+  contributors,
 }: {
   eyebrow: string;
   heading: string;
   description: string;
   primary: Ref;
   secondary: Ref[];
+  contributors: ContributorSet;
 }) {
   return (
     <section className="relative -mt-16 pt-32" data-header-glass="">
@@ -125,8 +128,86 @@ export function ContributeHero({
           ))}
         </p>
       </div>
+      <Contributors {...contributors} />
       </header>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Contributors
+ * ------------------------------------------------------------------ */
+
+const GITHUB = "https://github.com/livepeer";
+
+/**
+ * The people behind the sentence above: twelve faces — the year's most
+ * active on GitHub — stacked the way the roadmap stacks a card's credits, a
+ * count of everyone else, and one line. Lifted from the old home page's
+ * network section, where it was the quiet proof under "builders and
+ * engineers who run the network"; here it is the proof under "built by
+ * independent teams", and it carries the page's GitHub link, which is why
+ * the hero's own row no longer does.
+ *
+ * Greyscale until hovered, so twelve photographs read as one thing rather
+ * than twelve. Five on a phone, eight from sm, all twelve from lg: a row of
+ * twelve at 375px is the whole width. The first face sits on top, as the
+ * original had it, so the stack reads left to right.
+ *
+ * A raw <img>, not next/image: GitHub serves avatars at any size on request,
+ * so there is nothing for the optimizer to do but proxy twelve small files.
+ */
+function Contributors({ count, spotlight }: ContributorSet) {
+  const remaining = count - spotlight.length;
+  const face =
+    "relative block size-10 shrink-0 overflow-hidden rounded-full ring-2 ring-background transition duration-200 outline-none motion-reduce:transition-none hover:z-10 hover:-translate-y-1 hover:scale-110 focus-visible:z-10 focus-visible:ring-ring";
+  const shown = (i: number) =>
+    i < 5 ? "" : i < 8 ? "hidden sm:block" : "hidden lg:block";
+
+  return (
+    <div className="mt-14 flex flex-col items-center gap-4">
+      <div className="flex -space-x-2">
+        {spotlight.map((c, i) => (
+          <a
+            key={c.login}
+            href={`https://github.com/${c.login}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`${c.name} · ${c.yearly.toLocaleString()} contributions this year`}
+            style={{ zIndex: spotlight.length - i }}
+            className={`${face} ${shown(i)}`}
+          >
+            <img
+              src={`${c.avatar}&s=80`}
+              alt={c.name}
+              width={40}
+              height={40}
+              loading="lazy"
+              className="size-full object-cover grayscale transition duration-200 motion-reduce:transition-none hover:grayscale-0"
+            />
+          </a>
+        ))}
+        <a
+          href={GITHUB}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`${remaining.toLocaleString()} more contributors`}
+          style={{ zIndex: 0 }}
+          className={`${face} flex items-center justify-center bg-muted font-mono text-[0.625rem] font-medium text-muted-foreground hover:text-foreground`}
+        >
+          +{remaining}
+        </a>
+      </div>
+      {/* Balanced, so a phone breaks it after the count rather than in the
+          middle of the link. */}
+      <p className="text-sm text-balance text-muted-foreground">
+        Built in the open by{" "}
+        <span className="font-medium text-foreground tabular-nums">
+          {count.toLocaleString()} contributors
+        </span>
+        . <Ref label="Contribute on GitHub" href={GITHUB} className="text-foreground" />
+      </p>
+    </div>
   );
 }
 
