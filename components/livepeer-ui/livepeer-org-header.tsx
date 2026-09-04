@@ -160,6 +160,11 @@ export function LivepeerOrgHeader({
   // 1.7:1. Such sections opt the header into an opaque background instead, so
   // it renders on its own ground regardless of what is passing underneath.
   const [solid, setSolid] = React.useState(false);
+  // [data-header-glass] is for a hero that is already passing content behind
+  // the header before anyone scrolls — the contribute ground, which runs to the
+  // top of the window. Fully transparent, the header reads as nothing at all
+  // there; the glass it earns on scroll is the right surface from the start.
+  const [glass, setGlass] = React.useState(false);
   const pathname = usePathname();
 
   React.useEffect(() => {
@@ -173,6 +178,9 @@ export function LivepeerOrgHeader({
     const solidTargets = Array.from(
       document.querySelectorAll("[data-header-solid]")
     );
+    const glassTargets = Array.from(
+      document.querySelectorAll("[data-header-glass]")
+    );
 
     const update = () => {
       setScrolled(window.scrollY > 8);
@@ -180,6 +188,7 @@ export function LivepeerOrgHeader({
       // as the band reaches the header, not when it enters the viewport.
       setInverted(invertTargets.some(behindHeader));
       setSolid(solidTargets.some(behindHeader));
+      setGlass(glassTargets.some(behindHeader));
     };
 
     update();
@@ -192,6 +201,10 @@ export function LivepeerOrgHeader({
     // Re-query on navigation: the header lives in the root layout and persists
     // across routes, so the marked sections change beneath it.
   }, [pathname]);
+
+  // The glass is up once the page has scrolled under the header, or from rest
+  // when a section asks for it; never while the mega-menu supplies its own.
+  const glassUp = (scrolled || glass) && !desktopMenuOpen;
 
   return (
     <>
@@ -214,9 +227,7 @@ export function LivepeerOrgHeader({
         // Set only while the translucent scrim is up: `solid` bands and the
         // open mega-menu both render an opaque surface, where the nav's resting
         // colour is fine.
-        data-glass={
-          scrolled && !desktopMenuOpen && !solid ? "" : undefined
-        }
+        data-glass={glassUp && !solid ? "" : undefined}
         className={cn(
           // sticky (not fixed): stays in flow so pages that don't opt into a
           // full-bleed hero start below it, while the hero pulls itself up
@@ -246,7 +257,7 @@ export function LivepeerOrgHeader({
           //
           // Measured on /blog, whose grid of arbitrary photographic covers is
           // the worst case the header has to survive.
-          scrolled && !desktopMenuOpen
+          glassUp
             ? solid
               ? "bg-background"
               : "bg-background/80 backdrop-blur-xl"
@@ -275,7 +286,7 @@ export function LivepeerOrgHeader({
           <div
             className={cn(
               "flex h-16 items-center justify-between gap-2 border-b transition-colors duration-200 sm:gap-6",
-              scrolled && !desktopMenuOpen
+              glassUp
                 ? "border-border dark:border-[color-mix(in_srgb,var(--foreground)_15%,var(--background))]"
                 : "border-transparent"
             )}
