@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
+  ContributeContributors,
   ContributeHero,
   ContributeLadder,
 } from "@/components/livepeer-ui/contribute-sections";
@@ -21,7 +22,9 @@ import { getFundingPaths } from "@/lib/register";
  * here today. The ladder is the one piece of reference the answer needs:
  * every way work gets paid for, ordered by size, read from the Funding paths
  * database so a cap that changed last week is true here without a deploy.
- * Nothing between them explains what the ladder already shows.
+ * Nothing between them explains what the ladder already shows. The page
+ * closes on the people: the contributors strip, lifted from the old home
+ * page, with the GitHub call for the reader who has just read the ladder.
  *
  * The copy here is the site's voice and stays in the repo (CLAUDE.md →
  * Content); the rows are the Foundation's data and live in Notion.
@@ -32,9 +35,10 @@ const hero = {
   description:
     "Livepeer is built by independent teams, not by one company. Say what you want to work on and someone will point you at the work.",
   primary: { label: "Join the Discord", href: "https://discord.gg/livepeer" },
-  // GitHub is not here because the contributors strip under the buttons
-  // carries it, next to the faces of the people it means.
-  secondary: [{ label: "Forum", href: "https://forum.livepeer.org" }],
+  secondary: [
+    { label: "Forum", href: "https://forum.livepeer.org" },
+    { label: "GitHub", href: "https://github.com/livepeer" },
+  ],
 };
 
 const DESCRIPTION =
@@ -67,7 +71,7 @@ export default async function ContributePage() {
     // No top padding either: the hero pulls itself up under the header and
     // carries its own.
     <div className="pb-24">
-      <ContributeHero {...hero} contributors={contributors} />
+      <ContributeHero {...hero} />
       <ContributeLadder
         title="How work gets funded"
         intro={
@@ -94,6 +98,7 @@ export default async function ContributePage() {
           </>
         }
       />
+      <ContributeContributors {...contributors} />
     </div>
   );
 }
