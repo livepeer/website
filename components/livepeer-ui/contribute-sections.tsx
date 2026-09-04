@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ContributeGraph } from "@/components/livepeer-ui/contribute-graph";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   isActive,
   type ActiveFundingPath,
@@ -22,11 +23,7 @@ export type Ref = { label: string; href: string };
  * make it mean nothing. The arrow is inline, not a flex item, so a label that
  * wraps keeps it after the last word.
  */
-function Ref({
-  label,
-  href,
-  className = "",
-}: Ref & { className?: string }) {
+function Ref({ label, href, className = "" }: Ref & { className?: string }) {
   const external = !href.startsWith("/");
   const base =
     "underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
@@ -95,37 +92,37 @@ export function ContributeHero({
     <section className="relative -mt-16 pt-32" data-header-glass="">
       <ContributeGraph />
       <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
-      <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
-        {eyebrow}
-      </p>
-      <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
-        {heading}
-      </h1>
-      <p className="mx-auto mt-5 max-w-[46ch] text-reading-body text-balance text-muted-foreground">
-        {description}
-      </p>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-        <Button
-          size="lg"
-          nativeButton={false}
-          render={
-            <a
-              href={primary.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-          }
-          className="h-12 rounded-sm px-5"
-        >
-          {primary.label}
-          <ArrowUpRightIcon className="size-4" aria-hidden="true" />
-        </Button>
-        <p className="flex items-center gap-x-5 text-sm">
-          {secondary.map((ref) => (
-            <Ref key={ref.href} {...ref} />
-          ))}
+        <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
+          {eyebrow}
         </p>
-      </div>
+        <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
+          {heading}
+        </h1>
+        <p className="mx-auto mt-5 max-w-[46ch] text-reading-body text-balance text-muted-foreground">
+          {description}
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+          <Button
+            size="lg"
+            nativeButton={false}
+            render={
+              <a
+                href={primary.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+            className="h-12 rounded-sm px-5"
+          >
+            {primary.label}
+            <ArrowUpRightIcon className="size-4" aria-hidden="true" />
+          </Button>
+          <p className="flex items-center gap-x-5 text-sm">
+            {secondary.map((ref) => (
+              <Ref key={ref.href} {...ref} />
+            ))}
+          </p>
+        </div>
       </header>
     </section>
   );
@@ -260,6 +257,7 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
  * the ladder climbs across groups as well as within them and needs no third
  * axis. The caption is that body's name, linked to its page in Organizations
  * — "who is the Network Engineering SPE" is a fair question to have here.
+ * Each group is a grid of cells rather than rows of a table; see below.
  * Retired programmes are not rungs: they render as one line at the foot, for
  * the reader who followed an old link and would otherwise wait on a dead end.
  *
@@ -297,7 +295,6 @@ export function ContributeLadder({
     else groups.push({ body: rung.decidedBy, rungs: [rung] });
   }
 
-  const cell = "block sm:table-cell sm:py-5 sm:align-baseline";
   const prose =
     "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
@@ -325,93 +322,73 @@ export function ContributeLadder({
             {intro}
           </p>
 
-          <table role="table" className="mt-6 w-full border-collapse text-sm">
-            <caption className="sr-only">{title}</caption>
-            <thead role="rowgroup" className="sr-only">
-              <tr role="row">
-                <th role="columnheader" scope="col">
-                  Path
-                </th>
-                <th role="columnheader" scope="col">
-                  Best for
-                </th>
-                <th role="columnheader" scope="col">
-                  Ceiling
-                </th>
-                <th role="columnheader" scope="col">
-                  Apply
-                </th>
-              </tr>
-            </thead>
-            {groups.map((group) => (
-              <tbody key={group.body.slug} role="rowgroup">
-                <tr role="row" className="block sm:table-row">
-                  <th
-                    role="rowheader"
-                    scope="rowgroup"
-                    colSpan={4}
-                    className="block pt-8 pb-3 text-left font-mono text-ui-caption font-normal tracking-wide text-muted-foreground uppercase sm:table-cell"
+          {/* Cells, not rows. A table was the first form, and it was right
+              about the order — a newcomer's real question is "how big is my
+              thing", and the ladder climbs from a bounty to a treasury vote —
+              but five rows of four columns spent a lot of typography on five
+              facts. A cell gives each path its own ground: the name, who it
+              is for, and a foot line with the ceiling in mono and where to
+              go. Reading order is the ladder, left to right and down, so the
+              numbers went with the rows. The body that decides is one caption
+              above its group, linked to its page in Organizations; the
+              treasury is its own group and its own row, the top rung, so it
+              spans the width.
+
+              The rules are Compute's requirements-grid logic: border-b on
+              every cell but a group's last row, a vertical rule carried by
+              the left cell of each pair, no outer rules, so the block reads
+              as structure rather than as cards. */}
+          <div className="mt-8">
+            {groups.map((group) => {
+              const n = group.rungs.length;
+              const odd = n % 2 === 1;
+              const lastRowStart = odd ? n - 1 : n - 2;
+              return (
+                <div key={group.body.slug} className="pt-8 first:pt-0">
+                  <Link
+                    href={`/organizations/${group.body.slug}`}
+                    className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase underline-offset-4 transition-colors hover:text-foreground hover:underline"
                   >
-                    <Link
-                      href={`/organizations/${group.body.slug}`}
-                      className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
-                    >
-                      {group.body.name}
-                    </Link>
-                  </th>
-                </tr>
-                {group.rungs.map((rung) => (
-                  <tr
-                    key={rung.name}
-                    role="row"
-                    className="block border-t border-border py-4 sm:table-row sm:py-0"
-                  >
-                    <th
-                      role="rowheader"
-                      scope="row"
-                      className={`${cell} pr-6 text-left font-medium sm:w-[12rem]`}
-                    >
-                      {/* The rung's height on the ladder, counted across
-                          groups. Not an icon: it is the Order field, rendered,
-                          and it makes the climb literal. Hidden from readers
-                          who would otherwise hear "one Bounties". */}
-                      <span
-                        aria-hidden="true"
-                        className="mr-3 inline-block w-4 font-mono text-xs text-muted-foreground tabular-nums"
-                      >
-                        {active.indexOf(rung) + 1}
-                      </span>
-                      {rung.name}
-                    </th>
-                    <td
-                      role="cell"
-                      className={`${cell} mt-1 pr-6 text-muted-foreground sm:mt-0`}
-                    >
-                      {rung.bestFor}
-                    </td>
-                    {/* Stacked, the ceiling and the link share a line — a
-                        rung is three lines on a phone, not four. */}
-                    <td
-                      role="cell"
-                      className="mt-3 inline-block font-mono whitespace-nowrap sm:mt-0 sm:table-cell sm:w-[9rem] sm:py-5 sm:pr-6 sm:text-right sm:align-baseline"
-                    >
-                      {rung.ceiling}
-                    </td>
-                    <td
-                      role="cell"
-                      className="mt-3 ml-5 inline-block sm:mt-0 sm:ml-0 sm:table-cell sm:w-[5rem] sm:py-5 sm:text-right sm:align-baseline"
-                    >
-                      <Ref
-                        label={rung.linkLabel}
-                        href={rung.link}
-                        className="text-foreground"
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            ))}
-          </table>
+                    {group.body.name}
+                  </Link>
+                  <div className="mt-2 grid sm:grid-cols-2">
+                    {group.rungs.map((rung, i) => {
+                      const spans = odd && i === n - 1;
+                      const left = !spans && i % 2 === 0;
+                      return (
+                        <div
+                          key={rung.name}
+                          className={cn(
+                            "py-6",
+                            i < n - 1 && "border-b border-border",
+                            i >= lastRowStart && i < n - 1 && "sm:border-b-0",
+                            spans
+                              ? "sm:col-span-2"
+                              : left
+                                ? "sm:border-r sm:border-border sm:pr-7"
+                                : "sm:pl-7"
+                          )}
+                        >
+                          <h3 className="text-lg font-light">{rung.name}</h3>
+                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                            {rung.bestFor}
+                          </p>
+                          <p className="mt-4 flex items-baseline justify-between gap-4 text-sm">
+                            <span className="font-mono">{rung.ceiling}</span>
+                            <Ref
+                              label={rung.linkLabel}
+                              href={rung.link}
+                              className="text-foreground"
+                            />
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
           {/* Small, and not a section: a rule and a heading would promise
               more than two lines deliver. */}
