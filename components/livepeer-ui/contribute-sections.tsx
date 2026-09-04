@@ -2,7 +2,11 @@ import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { FUNDING_BODIES, type FundingPath } from "@/lib/contribute";
+import {
+  isActive,
+  type ActiveFundingPath,
+  type FundingPath,
+} from "@/lib/contribute";
 
 /* ------------------------------------------------------------------ *
  * Links
@@ -141,10 +145,12 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
  * is behind the link on the row, where it is read by the one person who has
  * already chosen that path.
  *
- * Grouped by the body that decides, in FUNDING_BODIES order, which is also
- * the size order — so the ladder needs no third axis. Retired programmes are
- * not rungs: they render as one line at the foot, for the reader who followed
- * an old link and would otherwise wait on a dead end.
+ * Grouped by the body that decides, each group placed by its lowest rung, so
+ * the ladder climbs across groups as well as within them and needs no third
+ * axis. The caption is that body's name, linked to its page in Organizations
+ * — "who is the Network Engineering SPE" is a fair question to have here.
+ * Retired programmes are not rungs: they render as one line at the foot, for
+ * the reader who followed an old link and would otherwise wait on a dead end.
  *
  * On a muted band so it reads as a reference card, distinct from the prose
  * above it. Below sm the rows stack; the header goes to screen readers. The
@@ -163,16 +169,24 @@ export function ContributeLadder({
   /** The one thing true of every rung, which would be wrong to say five times. */
   note: React.ReactNode;
 }) {
-  const active = paths.filter((p) => !p.retired);
+  const active = paths.filter(isActive);
   const retired = paths.filter((p) => p.retired);
-  const groups = FUNDING_BODIES.map((body) => ({
-    name: body,
-    rungs: active.filter((p) => p.decidedBy === body),
-  })).filter((group) => group.rungs.length > 0);
+  // Paths arrive sorted by order, so the first rung seen for a body is its
+  // lowest, and groups fall into ladder order by being created as they are
+  // met.
+  const groups: {
+    body: ActiveFundingPath["decidedBy"];
+    rungs: ActiveFundingPath[];
+  }[] = [];
+  for (const rung of active) {
+    const group = groups.find((g) => g.body.slug === rung.decidedBy.slug);
+    if (group) group.rungs.push(rung);
+    else groups.push({ body: rung.decidedBy, rungs: [rung] });
+  }
 
   const cell = "block sm:table-cell sm:py-5 sm:align-baseline";
   const prose =
-    "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors hover:[&_a]:decoration-foreground";
+    "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
   return (
     <section className="mt-20 bg-muted py-16 sm:mt-24 sm:py-20">
@@ -208,7 +222,7 @@ export function ContributeLadder({
               </tr>
             </thead>
             {groups.map((group) => (
-              <tbody key={group.name} role="rowgroup">
+              <tbody key={group.body.slug} role="rowgroup">
                 <tr role="row" className="block sm:table-row">
                   <th
                     role="rowheader"
@@ -216,7 +230,12 @@ export function ContributeLadder({
                     colSpan={4}
                     className="block pt-8 pb-3 text-left font-mono text-ui-caption font-normal tracking-wide text-muted-foreground uppercase sm:table-cell"
                   >
-                    {group.name}
+                    <Link
+                      href={`/organizations/${group.body.slug}`}
+                      className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                    >
+                      {group.body.name}
+                    </Link>
                   </th>
                 </tr>
                 {group.rungs.map((rung) => (

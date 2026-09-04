@@ -15,6 +15,8 @@ Keep them valid; do not try to keep them current. Chasing Notion by hand would
 recreate the drift that moving to a CMS removed, and a row here that fails
 `lib/contribute.ts` breaks the build for everyone working without a token.
 
-A file is frontmatter only — a rung has no body. A retired programme needs just
+A file is frontmatter only — a rung has no body. `decidedBy` is an
+organisation's name exactly as it appears in `content/organizations`, because
+the caption links to that body's page and the build checks it exists. A retired programme needs just
 a name, a link and `status: Retired`; it renders as one line at the foot of the
 page, not as a rung.

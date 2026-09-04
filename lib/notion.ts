@@ -12,7 +12,12 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
-import { checkLadder, toFundingPath, type FundingPath } from "./contribute";
+import {
+  checkLadder,
+  toFundingPath,
+  type FundingBody,
+  type FundingPath,
+} from "./contribute";
 import {
   WORKSTREAMS,
   targetSortKey,
@@ -1019,27 +1024,54 @@ function numberOf(prop: Json | undefined): number | undefined {
 /**
  * The funding ladder, read from Notion. Throws rather than degrading.
  *
- * Every rule lives in `toFundingPath`, shared with the markdown reader, so
- * this is only the mapping from Notion's property shapes onto the raw record.
+ * Every rule lives in `toFundingPath`, shared with the markdown reader; this
+ * is the mapping from Notion's property shapes onto the raw record, plus the
+ * one thing only this source has to do — turn the "Decided by" relation into
+ * a body, through the same organisations read the register uses for owners.
  */
 export async function getNotionFundingPaths(): Promise<FundingPath[]> {
-  const rows = await queryAll(FUNDING_DB);
+  const [rows, orgs] = await Promise.all([
+    queryAll(FUNDING_DB),
+    readOrganizations(),
+  ]);
+
   const paths = rows.map((row) => {
     const p = props(row);
     const name = text(p.Name);
+    const where = `Funding paths → ${name || (row.url as string)}`;
+
+    let decidedBy: FundingBody | undefined;
+    const ids = relationIds(p["Decided by"]);
+    if (ids.length > 1) {
+      throw new Error(
+        `${where}: "Decided by" names ${ids.length} organizations. Exactly ` +
+          `one body says yes.`
+      );
+    }
+    if (ids[0]) {
+      const orgName = orgs.get(ids[0]);
+      if (!orgName) {
+        throw new Error(
+          `${where}: "Decided by" is a page that is not in Organizations.`
+        );
+      }
+      decidedBy = { name: orgName, slug: slugify(orgName) };
+    }
+
     return toFundingPath(
       {
         name,
         bestFor: text(p["Best for"]),
         ceiling: text(p.Ceiling),
-        decidedBy: selectName(p["Decided by"]),
+        decidedBy,
         link: urlOf(p.Link),
         linkLabel: selectName(p["Link label"]),
         order: numberOf(p.Order),
         status: selectName(p.Status),
       },
-      `Funding paths → ${name || (row.url as string)}`
+      where
     );
   });
+
   return checkLadder(paths, "Funding paths");
 }
