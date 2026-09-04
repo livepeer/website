@@ -677,7 +677,8 @@ function FilterRow({
  *
  * Deliberately not a button. Per the requirements doc the pipeline stays where
  * it is and this page "links to it rather than absorbing it" — a filled CTA
- * would claim the submission happens here.
+ * would claim the submission happens here. It now points at /contribute, which
+ * is the page that explains where submission actually happens.
  */
 function SuggestBlock({
   href,
@@ -694,7 +695,7 @@ function SuggestBlock({
         they are owned and dated.
       </p>
       <p className="mt-3 text-sm">
-        <LinkRow label="Go to the forum" href={href} />
+        <LinkRow label="How to contribute" href={href} />
       </p>
     </div>
   );
@@ -1258,7 +1259,7 @@ export function Roadmap({
                     Work appears here once it has an owner, a date and a source
                     you can check — not before.{" "}
                     <LinkRow
-                      label="Propose it on the forum"
+                      label="How to propose something"
                       href={suggestionsHref}
                     />
                   </p>

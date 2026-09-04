@@ -34,6 +34,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/blog`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/compute`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/roadmap`, changeFrequency: "weekly", priority: 0.7 },
+    // The destination the forum's welcome post and the Foundation's Notion
+    // page are being repointed at, so it is worth more than its age suggests.
+    { url: `${BASE_URL}/contribute`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/primer`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/token`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE_URL}/foundation`, changeFrequency: "monthly", priority: 0.5 },

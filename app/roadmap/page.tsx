@@ -62,19 +62,18 @@ export const metadata: Metadata = {
 };
 
 /**
- * Where ideas live before they are commitments.
+ * Where someone goes when the thing they care about is not on this page.
  *
- * The forum, not the board. This went back and forth: the requirements doc
- * exempted the suggestions pipeline from "part of livepeer.org, not a
- * subdomain" on the grounds that it did that job well, so an earlier version
- * pointed here, then at the board, and now here again — this time because
- * Featurebase is being retired rather than because of how the doc reads.
- *
- * Proposals, RFCs, LIPs and SPE updates already happen on the forum, and it
- * is where `related` sends people on most records. Sending someone with an
- * idea somewhere the discussion is not would be the odd choice.
+ * /contribute, not the forum directly. This has moved before — the board,
+ * then the forum when Featurebase was retired — and the forum was right as
+ * far as it went: that is where proposals are argued about. But it answers
+ * the second question. Someone reading a roadmap and finding a gap is asking
+ * how to get involved at all, and the forum drops them into a running
+ * conversation with no explanation of the five funding paths or which one is
+ * theirs. /contribute answers that and links to the forum in its first
+ * section, which is one hop instead of none and a much shorter fall.
  */
-const SUGGESTIONS_HREF = "https://forum.livepeer.org";
+const SUGGESTIONS_HREF = "/contribute";
 
 /** The rail and the cards share this label setting; the header borrows it. */
 function Label({ children }: { children: React.ReactNode }) {

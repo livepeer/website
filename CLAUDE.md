@@ -37,7 +37,7 @@ pnpm dlx shadcn@latest add @livepeer-ui/button @livepeer-ui/card
 
 ## Information architecture (redesign)
 
-Ten linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
+Eleven linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
 
 | Page | Route | Notes |
 | --- | --- | --- |
@@ -48,6 +48,7 @@ Ten linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) 
 | Token | `/token` | no live protocol stats in the new design |
 | Foundation | `/foundation` | |
 | Latest (blog) | `/blog` | nav labels it "Latest"; URL stays `/blog`. Notion-backed |
+| Contribute | `/contribute` | **no mockup** — built from the Foundation's Grants & Funding Mechanisms Notion page, which it replaces as the canonical destination. Answers "how can I get involved?": what the roadmap already commits to, the five funding paths (Treasury + the Network Engineering SPE's four lanes), and the doors in that need no proposal. The roadmap's "Not on the roadmap?" block points here rather than straight at the forum |
 | Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
 | Roadmap | `/roadmap` (`/[slug]`) | **no mockup** — built from the requirements doc. Notion-backed; records have their own pages, and an intercepting route slides one over the register |
 | Organizations | `/organizations/[slug]` | **no mockup**. Notion-backed, rendered like a roadmap record and slid over the register by an intercepting route (`app/roadmap/@modal/(..)organizations`), and **no index** — with one logo and three bodies owning nothing, seven cards read thin. Reached only from an owner's name on a roadmap card. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |

@@ -38,6 +38,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       title: "Resources",
       links: [
         { label: "Blog", href: "/blog" },
+        { label: "Contribute", href: "/contribute" },
         { label: "Foundation", href: "/foundation" },
         { label: "Brand", href: "/brand" },
         { label: "Documentation", href: "https://docs.livepeer.org" },

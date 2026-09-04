@@ -126,6 +126,11 @@ export const ogArt = {
   // the table a contributor edits show the same picture. Unused elsewhere —
   // no two pages share a frame.
   organizations: `${CDN}/4ac4787dd83522e28d270d96554f26b487ee7d66-1456x816.png`,
+  // Measured against home the way roadmap's was: 27% of its pixels saturated
+  // to home's 27%, and a bottom-left band at 36% luminance to home's 31% —
+  // which is the number that decides how hard the scrim works under the
+  // headline. Many strands running together, which is the page's subject.
+  contribute: `${CDN}/6bda58163dac9238d28ecd67e2e147ae0aeddc8f-1456x816.png`,
 } as const;
 
 /**
