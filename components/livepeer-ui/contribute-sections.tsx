@@ -1,7 +1,7 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { ContributeField } from "@/components/livepeer-ui/contribute-field";
+import { ContributeGraph } from "@/components/livepeer-ui/contribute-graph";
 import { Button } from "@/components/ui/button";
 import {
   isActive,
@@ -62,12 +62,12 @@ function Ref({
  * it. One sentence, and the one thing to do — a real button, because the
  * action really is "go and say hello", and the two quieter doors beside it.
  *
- * The field sits behind it, not above it. A cover above the title was
- * tried and pushed the answer below the fold; a field behind the text costs
- * no height, and it fades out before the headline so the text keeps clean
- * ground. Full-bleed, so the section is the positioning box rather than the
- * padded column; the header is `relative` so it paints over the canvas —
- * a positioned sibling wins regardless of source order.
+ * Above it, a contribution graph: the picture of people doing work in the
+ * open, which is what the page is asking the reader to join. It takes its
+ * own strip rather than washing behind the text — a graph reads as a graph
+ * only with hard edges — and it is 95px tall, which is the height the hero
+ * moves down. A cover was tried here once and pushed the answer below the
+ * fold; this does not. Full-bleed, faded at both sides.
  */
 export function ContributeHero({
   eyebrow,
@@ -83,9 +83,9 @@ export function ContributeHero({
   secondary: Ref[];
 }) {
   return (
-    <section className="relative overflow-hidden">
-      <ContributeField />
-      <header className="relative mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
+    <section>
+      <ContributeGraph />
+      <header className="mx-auto w-full max-w-page px-4 pt-12 text-center sm:px-6 lg:px-10 lg:pt-16">
       <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
         {eyebrow}
       </p>
