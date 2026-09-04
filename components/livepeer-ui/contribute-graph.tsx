@@ -279,14 +279,14 @@ export function ContributeGraph() {
     // Width and height are explicit because an absolutely positioned canvas
     // with `width: auto` takes its intrinsic size and ignores `right` — and
     // the surface then sizes the canvas to the element, which is a loop.
-    // The height reaches 5rem past the section, into the gap above the
-    // ladder, so the ground does not stop dead under the buttons — and no
-    // further: it was run on through the ladder's heading once, and the
-    // divider is where the hero ends. The mask has it gone before the rule.
+    // The height reaches exactly to the ladder's rule — the section's
+    // 3rem/4rem top margin — so the ground fades into the line rather than
+    // dying in the air above it, and no further: it was run on through the
+    // ladder's heading once, and the divider is where the hero ends.
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%+5rem)] w-full [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
+      className="pointer-events-none absolute inset-x-0 top-0 h-[calc(100%+3rem)] w-full sm:h-[calc(100%+4rem)] [--clearing-x:400px] [--clearing-y:220px] sm:[--clearing-x:560px] sm:[--clearing-y:290px]"
       style={{ ...fallback, ...clearing }}
     />
   );
