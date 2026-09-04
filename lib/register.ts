@@ -5,8 +5,10 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
+import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
 import {
   getNotionCommitments,
+  getNotionFundingPaths,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -79,4 +81,17 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     ? await getNotionPost(slug)
     : await getMarkdownPost(slug);
   return post && isPublished(post) ? post : null;
+}
+
+/**
+ * The funding ladder on /contribute, from the same source as everything else.
+ *
+ * The one surface whose editor is not a developer at all: the Foundation
+ * maintains which programmes exist and what they pay, and a cap that changed
+ * last week should not wait on a pull request to be true on the site.
+ */
+export async function getFundingPaths(): Promise<FundingPath[]> {
+  return hasNotionCredentials()
+    ? getNotionFundingPaths()
+    : getMarkdownFundingPaths();
 }

@@ -12,6 +12,7 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
+import { checkLadder, toFundingPath, type FundingPath } from "./contribute";
 import {
   WORKSTREAMS,
   targetSortKey,
@@ -83,6 +84,8 @@ const ORGS_DB =
   process.env.NOTION_ORGS_DB ?? "728d4f42db6d4ba4925ae177c08b1d70";
 const BLOG_DB =
   process.env.NOTION_BLOG_DB ?? "ed74ac33f630497d8c3cf23599de462b";
+const FUNDING_DB =
+  process.env.NOTION_FUNDING_DB ?? "e2a8b7e07c92459f81e06af6e15a3440";
 
 /**
  * How stale the page may be, in seconds.
@@ -1000,4 +1003,43 @@ export async function getNotionPost(slug: string): Promise<BlogPost | null> {
     readingTime: readingTime(html.replace(/<[^>]*>/g, " ")).text,
     html,
   };
+}
+
+/** A URL property's value. Not rich text, so `text` reads it as empty. */
+function urlOf(prop: Json | undefined): string {
+  return (prop as { url?: string | null } | undefined)?.url ?? "";
+}
+
+/** A number property's value, or undefined when it is blank. */
+function numberOf(prop: Json | undefined): number | undefined {
+  const value = (prop as { number?: number | null } | undefined)?.number;
+  return typeof value === "number" ? value : undefined;
+}
+
+/**
+ * The funding ladder, read from Notion. Throws rather than degrading.
+ *
+ * Every rule lives in `toFundingPath`, shared with the markdown reader, so
+ * this is only the mapping from Notion's property shapes onto the raw record.
+ */
+export async function getNotionFundingPaths(): Promise<FundingPath[]> {
+  const rows = await queryAll(FUNDING_DB);
+  const paths = rows.map((row) => {
+    const p = props(row);
+    const name = text(p.Name);
+    return toFundingPath(
+      {
+        name,
+        bestFor: text(p["Best for"]),
+        ceiling: text(p.Ceiling),
+        decidedBy: selectName(p["Decided by"]),
+        link: urlOf(p.Link),
+        linkLabel: selectName(p["Link label"]),
+        order: numberOf(p.Order),
+        status: selectName(p.Status),
+      },
+      `Funding paths → ${name || (row.url as string)}`
+    );
+  });
+  return checkLadder(paths, "Funding paths");
 }
