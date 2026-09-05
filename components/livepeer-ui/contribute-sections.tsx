@@ -308,8 +308,7 @@ export function ContributeLadder({
               thing", and the ladder climbs from a bounty to a treasury vote —
               but five rows of four columns spent a lot of typography on five
               facts. A cell gives each path its own ground: the name, who it
-              is for, who decides, and a foot line with the ceiling in mono
-              and where to go. Reading order is the ladder, left to right and
+              is for, who decides, the ceiling, and where to go. Reading order is the ladder, left to right and
               down, so the numbers went with the rows; the treasury, the top
               rung, spans the width. The body that decides was a mono caption
               over each group first, and read as one more device; it is a
@@ -372,7 +371,11 @@ export function ContributeLadder({
                       <span className="w-20 shrink-0 text-xs text-muted-foreground">
                         Ceiling
                       </span>
-                      <span className="font-mono">{rung.ceiling}</span>
+                      {/* Sans, like the body beside it. The mono was the
+                          table's, where figures lined up in a column; in a
+                          cell there is nothing to align, and two fact rows
+                          in two faces read as two kinds of thing. */}
+                      <span>{rung.ceiling}</span>
                       <Ref
                         label={rung.linkLabel}
                         href={rung.link}
