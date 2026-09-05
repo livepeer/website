@@ -364,10 +364,7 @@ export function ContributeLadder({
                         {rung.decidedBy.name}
                       </Link>
                     </p>
-                    {/* flex-wrap: in a narrow cell a long ceiling and the
-                        link ran into each other; the link drops under
-                        instead, still on the right. */}
-                    <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <p className="flex items-baseline gap-3">
                       <span className="w-20 shrink-0 text-xs text-muted-foreground">
                         Ceiling
                       </span>
@@ -376,13 +373,21 @@ export function ContributeLadder({
                           cell there is nothing to align, and two fact rows
                           in two faces read as two kinds of thing. */}
                       <span>{rung.ceiling}</span>
-                      <Ref
-                        label={rung.linkLabel}
-                        href={rung.link}
-                        className="ml-auto text-foreground"
-                      />
                     </p>
                   </div>
+                  {/* The action on its own line, on the left edge with
+                      everything else. It rode the ceiling row's right end
+                      first, which made it read as part of that fact and, in
+                      the spanning treasury cell, stranded it a column away
+                      from anything. A little more air above it than between
+                      the facts, so it reads as the cell's last step. */}
+                  <p className="mt-5 text-sm">
+                    <Ref
+                      label={rung.linkLabel}
+                      href={rung.link}
+                      className="text-foreground"
+                    />
+                  </p>
                 </div>
               );
             })}

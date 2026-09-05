@@ -30,7 +30,6 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Provide GPUs", href: "/compute" },
         { label: "Livepeer Token", href: "/token" },
         { label: "Delegate LPT", href: "https://explorer.livepeer.org" },
-        { label: "Roadmap", href: "/roadmap" },
       ],
     },
     {
@@ -38,6 +37,11 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       title: "Resources",
       links: [
         { label: "Blog", href: "/blog" },
+        // Roadmap is a reading destination — "see what's next for the
+        // network" — like Blog and Documentation, not a network surface like
+        // Provide GPUs. The header always listed it here; the footer had it
+        // under Network, and the two disagreed without anyone deciding so.
+        { label: "Roadmap", href: "/roadmap" },
         { label: "Contribute", href: "/contribute" },
         { label: "Foundation", href: "/foundation" },
         { label: "Brand", href: "/brand" },
@@ -55,8 +59,16 @@ export const livepeerOrgSite: LivepeerOrgSite = {
     },
   ],
   socialLinks: [
-    { label: "Discord", href: "https://discord.gg/livepeer", service: "discord" },
-    { label: "X / Twitter", href: "https://twitter.com/Livepeer", service: "x" },
+    {
+      label: "Discord",
+      href: "https://discord.gg/livepeer",
+      service: "discord",
+    },
+    {
+      label: "X / Twitter",
+      href: "https://twitter.com/Livepeer",
+      service: "x",
+    },
     { label: "GitHub", href: "https://github.com/livepeer", service: "github" },
     { label: "Livepeer.org", href: "https://livepeer.org", service: "website" },
   ],
@@ -102,7 +114,8 @@ const agentConsoleHref = agentAppOrigin;
  * dead link is worse than an honest mockup. Move it when the console grows the
  * page.
  */
-const playbooksHref = "https://livepeer.peaceno.de/mockups/livepeer-agent/playbooks";
+const playbooksHref =
+  "https://livepeer.peaceno.de/mockups/livepeer-agent/playbooks";
 
 /**
  * What sits behind "Log in".

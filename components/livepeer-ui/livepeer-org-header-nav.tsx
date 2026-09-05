@@ -67,7 +67,6 @@ const networkOrder: Record<string, number> = {
   "Provide GPUs": 1,
   "Livepeer Token": 2,
   "Delegate LPT": 3,
-  Roadmap: 4,
 };
 
 function resolveHref(site: LivepeerOrgSite, label: string, href: string) {
@@ -113,20 +112,9 @@ export function getLivepeerOrgHeaderGroup(
     };
   }
 
-  if (title === "Resources") {
-    const resources = site.footerGroups.find((item) => item.title === title);
-    const roadmap = site.footerGroups
-      .find((item) => item.title === "Network")
-      ?.links.find((item) => item.label === "Roadmap");
-
-    return resources
-      ? {
-          ...resources,
-          links: roadmap ? [...resources.links, roadmap] : resources.links,
-        }
-      : undefined;
-  }
-
+  // Resources and Network read straight from the footer groups. Roadmap used
+  // to be lifted out of Network here and filtered back out below, so the two
+  // surfaces disagreed; it lives under Resources in lib/site.ts now.
   return site.footerGroups.find((item) => item.title === title);
 }
 
@@ -141,8 +129,7 @@ export function getLivepeerOrgHeaderLinks(
         // Footer-only: /contribute is reached from the footer and from the
         // roadmap's "Not on the roadmap?" block, and the header's Resources
         // menu stays the five it was designed with.
-        item.label !== "Contribute" &&
-        !(group.title === "Network" && item.label === "Roadmap")
+        item.label !== "Contribute"
     )
     .sort((a, b) => {
       const order =
@@ -256,7 +243,7 @@ export function LivepeerOrgHeaderNav({
   // Per-trigger backgrounds would cross-fade, and with four triggers side by
   // side that reads as a flicker; a single element that travels gives the
   // highlight continuity, so the eye follows it instead of re-finding it.
- const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const switchTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   // Mirrors activeTitle so openMenu can branch on the current state without
   // taking it as a dependency (which would re-create the handler each open).
@@ -382,7 +369,8 @@ export function LivepeerOrgHeaderNav({
         onPointerEnter={cancelClose}
         onPointerLeave={scheduleClose}
         onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) scheduleClose();
+          if (!event.currentTarget.contains(event.relatedTarget))
+            scheduleClose();
         }}
       >
         {headerItems.map((title) => {
@@ -449,7 +437,8 @@ export function LivepeerOrgHeaderNav({
             // the measurement is for.
             animate={{
               opacity: 1,
-              height: openSettled && panelHeight !== null ? panelHeight : "auto",
+              height:
+                openSettled && panelHeight !== null ? panelHeight : "auto",
             }}
             onAnimationComplete={() => setOpenSettled(true)}
             exit={{
