@@ -207,7 +207,7 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
   const done = reached(phase, "done");
   return (
     <div className="w-full max-w-[32rem] overflow-hidden rounded-lg border border-border bg-background/50 font-mono text-xs">
-      <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2">
+      <div className="flex items-center justify-between gap-3 px-3 py-2">
         <span className="flex items-center gap-2 text-foreground">
           <span
             className={cn(
@@ -218,22 +218,62 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
           />
           run_capability
         </span>
+        {/* The status slot carries the render's progress text, so the
+            rendering phase adds nothing below the call. */}
         <span className="text-muted-foreground">
-          {done ? "done" : running ? "running" : "queued"}
+          {done ? (
+            "done"
+          ) : running ? (
+            <>
+              {/* The full line wrapped beside the call name on a phone. */}
+              <span className="sm:hidden">
+                <ShimmeringText
+                  text="Rendering…"
+                  startOnView={false}
+                  duration={1.6}
+                />
+              </span>
+              <span className="hidden sm:inline">
+                <ShimmeringText
+                  text="Rendering on the network…"
+                  startOnView={false}
+                  duration={1.6}
+                />
+              </span>
+            </>
+          ) : (
+            "queued"
+          )}
         </span>
       </div>
-      <div className="px-3 py-2.5 leading-relaxed text-muted-foreground">
-        {CALL.map((line, i) => (
+      {/* The arguments fold away once the call is done, as a runtime collapses
+          a finished call, so the finished conversation fits the window
+          without scrolling: prompt, call, quote, clip, all in view. */}
+      <AnimatePresence initial={false}>
+        {!done && (
           <motion.div
-            key={line}
-            {...rise}
-            transition={{ ...rise.transition, delay: i * 0.06 }}
-            className="whitespace-pre-wrap"
+            key="args"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="overflow-hidden"
           >
-            {line}
+            <div className="border-t border-border px-3 py-2.5 leading-relaxed text-muted-foreground">
+              {CALL.map((line, i) => (
+                <motion.div
+                  key={line}
+                  {...rise}
+                  transition={{ ...rise.transition, delay: i * 0.06 }}
+                  className="whitespace-pre-wrap"
+                >
+                  {line}
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-        ))}
-      </div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {reached(phase, "quoted") && (
           <motion.div
@@ -245,10 +285,11 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {(running || done) && (
+        {running && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="h-px w-full bg-border"
           >
             <div
@@ -264,33 +305,35 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
 
 function Result() {
   return (
-    <div className="w-full max-w-[32rem]">
-      <div className="relative aspect-video overflow-hidden rounded-lg bg-background/60">
+    <div className="flex w-full max-w-[32rem] items-start gap-3">
+      <div className="relative aspect-video w-36 shrink-0 overflow-hidden rounded-md bg-background/60 sm:w-44">
         <Image
           src={sanityStaticAssets.playbooks.generateVideo}
           alt=""
           fill
-          sizes="576px"
+          sizes="176px"
           className="object-cover"
         />
         <span className="absolute inset-0 flex items-center justify-center">
-          <span className="flex size-11 items-center justify-center rounded-full bg-background/70 text-foreground backdrop-blur-sm">
+          <span className="flex size-8 items-center justify-center rounded-full bg-background/70 text-foreground backdrop-blur-sm">
             <PlayIcon
-              className="ml-0.5 size-4 fill-current"
+              className="ml-0.5 size-3 fill-current"
               aria-hidden="true"
             />
           </span>
         </span>
-        <span className="absolute right-2 bottom-2 rounded-sm bg-background/70 px-1.5 py-0.5 font-mono text-[0.625rem] text-foreground backdrop-blur-sm">
+        <span className="absolute right-1.5 bottom-1.5 rounded-sm bg-background/70 px-1 py-0.5 font-mono text-[0.625rem] text-foreground backdrop-blur-sm">
           0:05
         </span>
       </div>
-      <p className="mt-3 text-sm text-foreground">
-        Done. 5 seconds, 16:9, no audio. $0.34 charged.
-      </p>
-      <p className="mt-1 font-mono text-xs text-muted-foreground">
-        saved ./out/dawn-teaser.mp4
-      </p>
+      <div className="min-w-0 pt-0.5">
+        <p className="text-sm text-foreground">
+          Done. 5 seconds, 16:9, no audio. $0.34 charged.
+        </p>
+        <p className="mt-1 font-mono text-xs text-muted-foreground">
+          saved ./out/dawn-teaser.mp4
+        </p>
+      </div>
     </div>
   );
 }
@@ -340,8 +383,10 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
           stick-to-bottom scroller that fills a flex parent, and given a height
           class directly it rendered at the height of its content — 132px while
           idle, growing as messages arrived, which is the reflow a fixed height
-          exists to prevent. */}
-      <div className="flex h-[21rem] flex-col sm:h-[23rem]">
+          exists to prevent. Sized so the finished conversation fits without
+          scrolling at either width — the tool call folds its arguments away
+          once done, and the clip sits beside its caption, to make that true. */}
+      <div className="flex h-[24rem] flex-col sm:h-[23rem]">
         {/* No scrollbar: the surface is presentational and inert, and a track
           down the edge of a window nobody can scroll reads as a glitch. The
           stick-to-bottom scroller still scrolls the newest message into
@@ -355,7 +400,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                     library's primary fill, which in dark is near-white and
                     dominated the card. Flat gives the user a quiet secondary
                     surface and the assistant none. */}
-                  <Message from="user" className="py-3">
+                  <Message from="user" className="py-2.5">
                     <MessageContent variant="flat" className="gap-2.5">
                       <Attachment />
                       <span>{PROMPT}</span>
@@ -365,7 +410,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
               )}
               {reached(phase, "thinking") && phase !== "fade" && (
                 <motion.div key="assistant" {...rise} exit={{ opacity: 0 }}>
-                  <Message from="assistant" className="py-3">
+                  <Message from="assistant" className="py-2.5">
                     <MessageContent variant="flat" className="gap-3">
                       {phase === "thinking" && (
                         <ShimmeringText
@@ -377,14 +422,6 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                       )}
                       {reached(phase, "call") && (
                         <ToolCall phase={phase} progress={progress} />
-                      )}
-                      {phase === "rendering" && (
-                        <ShimmeringText
-                          text="Rendering on the network…"
-                          className="text-sm"
-                          startOnView={false}
-                          duration={1.6}
-                        />
                       )}
                       {reached(phase, "done") && (
                         <motion.div {...rise}>
