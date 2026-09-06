@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * The Agent section's product surface: an agent runtime mid-task, calling
- * Livepeer Agent over MCP, played as a loop.
+ * Livepeer Agent over MCP, played once each time it scrolls into view.
  *
  * It replaced a mocked-up "Generate video" form. A form shows a product's
  * controls; this shows the product being used, which is the thing a visitor
@@ -43,11 +43,13 @@ import { cn } from "@/lib/utils";
  * already says it works in all of them.
  *
  * Scripted, not simulated: one timeline, driven by requestAnimationFrame
- * while the card is in view, with each phase derived from elapsed time so a
- * tab that was hidden resumes at the right place rather than piling up
- * timeouts. Under reduced motion the finished state is shown still. The
- * conversation area has a fixed height, so nothing on the page reflows as
- * messages appear; Conversation's stick-to-bottom keeps the newest in view.
+ * from the moment the card enters view, with each phase derived from elapsed
+ * time so a tab that was hidden resumes at the right place rather than
+ * piling up timeouts. It runs to the result and holds there; leaving and
+ * re-entering view replays it. Under reduced motion the finished state is
+ * shown still. The conversation area has a fixed height, so nothing on the
+ * page reflows as messages appear; Conversation's stick-to-bottom keeps the
+ * newest in view.
  * Presentation only: `inert` and hidden from assistive tech, as the form was.
  */
 
@@ -67,7 +69,11 @@ const CALL = [
 ];
 const QUOTE = "$0.34 · ~23s · 94% ok this week";
 
-/** Seconds into the loop at which each phase begins. */
+/** Seconds into the run at which each phase begins. The run ends on `done`
+ *  and holds there: the finished frame — prompt, folded call with its price,
+ *  clip — is the one that explains the product, and looping threw it away
+ *  every twenty seconds to fade back to an empty window. Scrolling away and
+ *  back replays it from the typing. */
 const T = {
   typing: 0.4,
   typed: 2.6, // the prompt is fully typed
@@ -77,8 +83,6 @@ const T = {
   quoted: 6.6,
   rendering: 7.4,
   done: 12.4,
-  fade: 20.5,
-  end: 21.5,
 } as const;
 
 type Phase =
@@ -89,8 +93,7 @@ type Phase =
   | "call"
   | "quoted"
   | "rendering"
-  | "done"
-  | "fade";
+  | "done";
 
 function phaseAt(t: number): Phase {
   if (t < T.typing) return "idle";
@@ -100,8 +103,7 @@ function phaseAt(t: number): Phase {
   if (t < T.quoted) return "call";
   if (t < T.rendering) return "quoted";
   if (t < T.done) return "rendering";
-  if (t < T.fade) return "done";
-  return "fade";
+  return "done";
 }
 
 const ORDER: Phase[] = [
@@ -113,7 +115,6 @@ const ORDER: Phase[] = [
   "quoted",
   "rendering",
   "done",
-  "fade",
 ];
 const reached = (phase: Phase, at: Phase) =>
   ORDER.indexOf(phase) >= ORDER.indexOf(at);
@@ -138,14 +139,10 @@ function useTimeline(active: boolean, still: boolean) {
     }
     if (!active) return;
     let raf = 0;
-    let start = performance.now();
+    const start = performance.now();
     let last = { phase: "idle" as Phase, typed: 0, progress: 0 };
     const tick = (now: number) => {
-      let t = (now - start) / 1000;
-      if (t >= T.end) {
-        start = now;
-        t = 0;
-      }
+      const t = (now - start) / 1000;
       const phase = phaseAt(t);
       const typed =
         phase === "idle"
@@ -170,7 +167,9 @@ function useTimeline(active: boolean, still: boolean) {
         last = { phase, typed, progress };
         setFrame(last);
       }
-      raf = requestAnimationFrame(tick);
+      // Done is the end: no frame after it changes, so the loop stops rather
+      // than ticking for as long as the card is on screen.
+      if (phase !== "done") raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -394,7 +393,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
         <Conversation className="min-h-0 flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ConversationContent className="px-4 py-2 sm:px-5">
             <AnimatePresence>
-              {reached(phase, "sent") && phase !== "fade" && (
+              {reached(phase, "sent") && (
                 <motion.div key="user" {...rise} exit={{ opacity: 0 }}>
                   {/* flat for both: the contained user bubble takes the
                     library's primary fill, which in dark is near-white and
@@ -408,7 +407,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                   </Message>
                 </motion.div>
               )}
-              {reached(phase, "thinking") && phase !== "fade" && (
+              {reached(phase, "thinking") && (
                 <motion.div key="assistant" {...rise} exit={{ opacity: 0 }}>
                   <Message from="assistant" className="py-2.5">
                     <MessageContent variant="flat" className="gap-3">
@@ -446,6 +445,11 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
             className="size-4 shrink-0 text-muted-foreground"
             aria-hidden="true"
           />
+          {/* The still sits in the composer while the prompt is typed and
+              travels into the message on send, as an attachment does in a
+              runtime; appearing only in the sent message, it came from
+              nowhere. */}
+          {composing && <Attachment />}
           <span
             className={cn(
               "min-h-5 flex-1 truncate",
