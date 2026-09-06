@@ -453,13 +453,16 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
               travels into the message on send, as an attachment does in a
               runtime; appearing only in the sent message, it came from
               nowhere. */}
+          {/* Lands with a settle, leaves instantly: on send the chip is
+              travelling into the message, and an exit animation held its
+              width in the composer so the placeholder sat to the right and
+              then snapped back. */}
           <AnimatePresence>
             {reached(phase, "attached") && !reached(phase, "sent") && (
               <motion.span
                 key="attachment"
                 initial={{ opacity: 0, scale: 0.6, y: 6 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 500, damping: 26 }}
                 className="shrink-0"
               >
