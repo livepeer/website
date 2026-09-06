@@ -75,18 +75,20 @@ const QUOTE = "$0.34 · ~23s · 94% ok this week";
  *  every twenty seconds to fade back to an empty window. Scrolling away and
  *  back replays it from the typing. */
 const T = {
-  typing: 0.4,
-  typed: 2.6, // the prompt is fully typed
-  sent: 3.1,
-  thinking: 3.6,
-  call: 5.0,
-  quoted: 6.6,
-  rendering: 7.4,
-  done: 12.4,
+  attach: 0.4, // the still drops into the composer
+  typing: 1.1,
+  typed: 3.3, // the prompt is fully typed
+  sent: 3.8,
+  thinking: 4.3,
+  call: 5.7,
+  quoted: 7.3,
+  rendering: 8.1,
+  done: 13.1,
 } as const;
 
 type Phase =
   | "idle"
+  | "attached"
   | "typing"
   | "sent"
   | "thinking"
@@ -96,7 +98,8 @@ type Phase =
   | "done";
 
 function phaseAt(t: number): Phase {
-  if (t < T.typing) return "idle";
+  if (t < T.attach) return "idle";
+  if (t < T.typing) return "attached";
   if (t < T.sent) return "typing";
   if (t < T.thinking) return "sent";
   if (t < T.call) return "thinking";
@@ -108,6 +111,7 @@ function phaseAt(t: number): Phase {
 
 const ORDER: Phase[] = [
   "idle",
+  "attached",
   "typing",
   "sent",
   "thinking",
@@ -144,15 +148,12 @@ function useTimeline(active: boolean, still: boolean) {
     const tick = (now: number) => {
       const t = (now - start) / 1000;
       const phase = phaseAt(t);
-      const typed =
-        phase === "idle"
-          ? 0
-          : Math.min(
-              PROMPT.length,
-              Math.round(
-                ((t - T.typing) / (T.typed - T.typing)) * PROMPT.length
-              )
-            );
+      const typed = !reached(phase, "typing")
+        ? 0
+        : Math.min(
+            PROMPT.length,
+            Math.round(((t - T.typing) / (T.typed - T.typing)) * PROMPT.length)
+          );
       const progress =
         phase === "rendering"
           ? Math.round(((t - T.rendering) / (T.done - T.rendering)) * 100)
@@ -342,7 +343,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
   const inView = useInView(ref, { amount: 0.3 });
   const still = useReducedMotion() ?? false;
   const { phase, typed, progress } = useTimeline(inView, still);
-  const composing = phase === "typing";
+  const composing = phase === "attached" || phase === "typing";
   const prompt = PROMPT.slice(0, typed);
 
   return (
@@ -399,7 +400,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                     library's primary fill, which in dark is near-white and
                     dominated the card. Flat gives the user a quiet secondary
                     surface and the assistant none. */}
-                  <Message from="user" className="py-2.5">
+                  <Message from="user" className="py-2">
                     <MessageContent variant="flat" className="gap-2.5">
                       <Attachment />
                       <span>{PROMPT}</span>
@@ -409,7 +410,7 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
               )}
               {reached(phase, "thinking") && (
                 <motion.div key="assistant" {...rise} exit={{ opacity: 0 }}>
-                  <Message from="assistant" className="py-2.5">
+                  <Message from="assistant" className="py-2">
                     <MessageContent variant="flat" className="gap-3">
                       {phase === "thinking" && (
                         <ShimmeringText
@@ -423,7 +424,10 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                         <ToolCall phase={phase} progress={progress} />
                       )}
                       {reached(phase, "done") && (
-                        <motion.div {...rise}>
+                        /* Air above the clip: it is the one place two
+                           different things touch. Paid for by the messages'
+                           padding, so the finished state still fits. */
+                        <motion.div {...rise} className="mt-4">
                           <Result />
                         </motion.div>
                       )}
@@ -449,7 +453,20 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
               travels into the message on send, as an attachment does in a
               runtime; appearing only in the sent message, it came from
               nowhere. */}
-          {composing && <Attachment />}
+          <AnimatePresence>
+            {reached(phase, "attached") && !reached(phase, "sent") && (
+              <motion.span
+                key="attachment"
+                initial={{ opacity: 0, scale: 0.6, y: 6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 500, damping: 26 }}
+                className="shrink-0"
+              >
+                <Attachment />
+              </motion.span>
+            )}
+          </AnimatePresence>
           <span
             className={cn(
               "min-h-5 flex-1 truncate",
