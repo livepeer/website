@@ -40,7 +40,7 @@ const brand = {
     },
     {
       label: "Ask on Discord",
-      href: "https://discord.gg/livepeer",
+      href: "/discord",
       note: "Unsure whether a use is on-brand? Ask before you ship it.",
     },
   ],

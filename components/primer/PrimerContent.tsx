@@ -723,7 +723,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                   collaborators.
                 </Text18>
                 <InvolvedButton
-                  href="https://discord.gg/livepeer"
+                  href="/discord"
                   label="Let's build"
                 />
               </InvolvedCard>

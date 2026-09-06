@@ -62,6 +62,6 @@ The final component of this next chapter for Livepeer is making the network reac
 
 ## Come build it
 
-Read the initial roadmap and the 2.0 vision on the [Livepeer Forum](https://forum.livepeer.org). If you run an orchestrator, delegate, or hold LPT, the community design sessions are where we'll explore protocol upgrades. The details and schedule are in [Discord](https://discord.gg/livepeer).
+Read the initial roadmap and the 2.0 vision on the [Livepeer Forum](https://forum.livepeer.org). If you run an orchestrator, delegate, or hold LPT, the community design sessions are where we'll explore protocol upgrades. The details and schedule are in [Discord](https://livepeer.org/discord).
 
 This is the first of many exciting updates to come—stay tuned for more next week, where we'll have something new to get your hands on.

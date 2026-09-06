@@ -77,12 +77,15 @@ export function ContributeHero({
   description,
   primary,
   secondary,
+  online,
 }: {
   eyebrow: string;
   heading: string;
   description: string;
   primary: Ref;
   secondary: Ref[];
+  /** Members online in the Discord right now; omitted when unknown. */
+  online?: number | null;
 }) {
   return (
     <section className="relative -mt-16 pt-32" data-header-glass="">
@@ -119,6 +122,14 @@ export function ContributeHero({
             ))}
           </p>
         </div>
+        {/* Who is there right now, read from the server's widget with the
+            invite. Real, free and changing; the button above is the promise
+            and this is the proof. Nothing when the widget could not be read. */}
+        {typeof online === "number" && online > 0 && (
+          <p className="mt-4 font-mono text-xs text-muted-foreground tabular-nums">
+            {online.toLocaleString()} online right now
+          </p>
+        )}
       </header>
     </section>
   );

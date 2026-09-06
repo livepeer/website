@@ -18,7 +18,7 @@ madeByUrl: https://livepeer.org/foundation
 twitter: https://x.com/Livepeer
 github: https://github.com/livepeer
 docs: https://docs.livepeer.org/v1/ai/builders/get-started
-support: https://discord.gg/livepeer
+support: https://livepeer.org/discord
 ---
 
 ## Overview

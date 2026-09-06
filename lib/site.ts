@@ -1,4 +1,5 @@
 import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
+import { DISCORD_FALLBACK_INVITE } from "@/lib/discord";
 
 /**
  * Static site configuration that drives the registry Header and Footer.
@@ -52,7 +53,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       _key: "community",
       title: "Community",
       links: [
-        { label: "Discord", href: "https://discord.gg/livepeer" },
+        { label: "Discord", href: DISCORD_FALLBACK_INVITE },
         { label: "X / Twitter", href: "https://twitter.com/Livepeer" },
         { label: "Forum", href: "https://forum.livepeer.org" },
       ],
@@ -61,7 +62,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
   socialLinks: [
     {
       label: "Discord",
-      href: "https://discord.gg/livepeer",
+      href: DISCORD_FALLBACK_INVITE,
       service: "discord",
     },
     {

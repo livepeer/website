@@ -109,7 +109,7 @@ with their own frontmatter art.
 
 - **Thesis:** "The open inference network — run AI video and image workloads on Livepeer." Agent-centric. Name the workloads concretely (video, images); "AI and media workloads" was the earlier, vaguer framing.
 - Lead with what builders do on the network; route audiences to **solutions/the ecosystem**. The network is infrastructure; solutions are the products.
-- **CTAs point to the Agent / Discord.** No email capture, no newsletter.
+- **CTAs point to the Agent / Discord.** No email capture, no newsletter. **Never hardcode a Discord invite**: discord.gg/livepeer was taken over. Pages read the live invite (and the online count) from the server's widget through `lib/discord.ts`; content links to `livepeer.org/discord`, a route that redirects to it.
 - **Voice:** confident, technical, accessible. Name competitors honestly. Be honest about constraints. Avoid "revolutionary," hype, "web3 bro" tone, and "decentralized" as a selling point.
 - **Terminology:** "the network" (not "the platform"), "open network," "solutions," "orchestrators," "GPU providers," "inference."
 

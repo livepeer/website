@@ -4,6 +4,7 @@ import {
   LivepeerAgentFeatureSection,
   OrchestratorCtaSection,
 } from "@/components/livepeer-ui/livepeer-org-landing-sections";
+import { getDiscord } from "@/lib/discord";
 import { agentApp } from "@/lib/site";
 
 // Static, in-repo page content matching the registry's content contract
@@ -37,7 +38,8 @@ const hero: HomeContent["hero"] & {
   primaryCta: { label: "Try Livepeer Agent", href: agentApp.console },
   secondaryCta: {
     label: "Join Discord",
-    href: "https://discord.gg/livepeer",
+    // Replaced with the live invite at render; see lib/discord.ts.
+    href: "/discord",
     newTab: true,
   },
 };
@@ -57,10 +59,16 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const { invite } = await getDiscord();
   return (
     <>
-      <NetworkHeroSection content={hero} />
+      <NetworkHeroSection
+        content={{
+          ...hero,
+          secondaryCta: { ...hero.secondaryCta, href: invite },
+        }}
+      />
       {/* These two share a background so the Orchestrator's particle field can
           overflow up past the section boundary and pass behind the playbook
           card. An opaque background on the Agent section would clip it there;

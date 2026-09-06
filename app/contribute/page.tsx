@@ -7,6 +7,7 @@ import {
   ContributeLadder,
 } from "@/components/livepeer-ui/contribute-sections";
 import { getContributors } from "@/lib/contributors";
+import { getDiscord } from "@/lib/discord";
 import { getFundingPaths } from "@/lib/register";
 
 /**
@@ -34,7 +35,8 @@ const hero = {
   heading: "How to get involved.",
   description:
     "Livepeer is built by independent teams, not by one company. Say what you want to work on and someone will point you at the work.",
-  primary: { label: "Join the Discord", href: "https://discord.gg/livepeer" },
+  // The href is the live invite at render; see lib/discord.ts.
+  primary: { label: "Join the Discord", href: "/discord" },
   secondary: [
     { label: "Forum", href: "https://forum.livepeer.org" },
     { label: "GitHub", href: "https://github.com/livepeer" },
@@ -59,9 +61,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ContributePage() {
-  const [paths, contributors] = await Promise.all([
+  const [paths, contributors, discord] = await Promise.all([
     getFundingPaths(),
     getContributors(),
+    getDiscord(),
   ]);
 
   return (
@@ -71,15 +74,19 @@ export default async function ContributePage() {
     // No top padding either: the hero pulls itself up under the header and
     // carries its own.
     <div className="pb-24">
-      <ContributeHero {...hero} />
+      <ContributeHero
+        {...hero}
+        primary={{ ...hero.primary, href: discord.invite }}
+        online={discord.online}
+      />
       <ContributeLadder
         title="How work gets funded"
         intro={
           <>
             Check <Link href="/roadmap">the roadmap</Link> first. Everything
             below exists to fund work that moves it forward. A good proposal
-            answers three questions: what problem it solves, what success
-            looks like, and why it matters to the network.
+            answers three questions: what problem it solves, what success looks
+            like, and why it matters to the network.
           </>
         }
         paths={paths}

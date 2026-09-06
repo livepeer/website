@@ -100,9 +100,11 @@ const nextConfig: NextConfig = {
         destination: "https://docs.livepeer.org",
         permanent: false,
       },
+      // The invite is read live by app/discord/route.ts; a static redirect
+      // cannot fetch, so it goes through that route.
       {
         source: "/community-hub",
-        destination: "https://discord.gg/livepeer",
+        destination: "/discord",
         permanent: false,
       },
       {

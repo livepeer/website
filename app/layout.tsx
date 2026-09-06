@@ -3,6 +3,7 @@ import Script from "next/script";
 import { inter, favoritPro, favoritMono } from "@/lib/fonts";
 import { LivepeerOrgHeader } from "@/components/livepeer-ui/livepeer-org-header";
 import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer";
+import { getDiscord, withDiscordInvite } from "@/lib/discord";
 import { livepeerOrgSite } from "@/lib/site";
 import { SectionRule } from "@/components/ui/section-rule";
 import { livepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
@@ -34,11 +35,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // The footer's Discord link is the live invite, not the hand-typed vanity
+  // that was taken over. See lib/discord.ts.
+  const { invite } = await getDiscord();
+  const site = withDiscordInvite(livepeerOrgSite, invite);
+
   return (
     <html
       lang="en"
@@ -102,14 +108,14 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
         <LivepeerOrgHeader
-          site={livepeerOrgSite}
+          site={site}
           navigationImages={livepeerOrgNavigationImages}
         />
         <main className="flex-1">{children}</main>
         {/* Closes the page against the footer on every route, on the same
             vertical lines as the header rule and the section rules. */}
         <SectionRule />
-        <LivepeerOrgFooter site={livepeerOrgSite} />
+        <LivepeerOrgFooter site={site} />
       </body>
     </html>
   );
