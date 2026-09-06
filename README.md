@@ -1,18 +1,19 @@
 # Livepeer Website
 
-The official website for [Livepeer](https://livepeer.org) — open infrastructure for real-time AI video.
+The official website for [Livepeer](https://livepeer.org) — the open inference network for AI video and image workloads.
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
-- **UI**: React 19, Tailwind CSS v4, Framer Motion 11
+- **UI**: React 19, Tailwind CSS v4
+- **Design system**: [Livepeer UI](https://livepeer.peaceno.de/design.md) — a shadcn component registry (semantic tokens, light + dark)
 - **Language**: TypeScript
-- **Fonts**: Favorit Pro & Favorit Mono (Dinamo Typefaces)
+- **Fonts**: Inter (product UI), Favorit Pro (display), Favorit Mono (code)
 
 ## Prerequisites
 
-- [Node.js 22.x](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (includes npm)
-- [pnpm v10.x](https://pnpm.io/installation) — install with `npm install -g pnpm` or `corepack enable`
+- [Node.js 22.x](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [pnpm v10.x](https://pnpm.io/installation) — install with `corepack enable` (the version is pinned in `package.json`)
 - [Docker](https://docs.docker.com/get-docker/) (optional) — required for the dev container
 
 > [!TIP]
@@ -48,12 +49,24 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Scripts
 
-| Command         | Description              |
-| --------------- | ------------------------ |
-| `npm run dev`   | Start development server |
-| `npm run build` | Create production build  |
-| `npm run start` | Serve production build   |
-| `npm run lint`  | Run ESLint               |
+| Command          | Description              |
+| ---------------- | ------------------------ |
+| `pnpm dev`       | Start development server |
+| `pnpm build`     | Create production build  |
+| `pnpm start`     | Serve production build   |
+| `pnpm lint`      | Run ESLint               |
+| `pnpm typecheck` | Type-check with `tsc`    |
+
+## Design System
+
+UI is built from the [Livepeer UI](https://livepeer.peaceno.de/design.md) shadcn registry. Install the theme and components with the shadcn CLI:
+
+```bash
+pnpm dlx shadcn@latest add @livepeer-ui/theme
+pnpm dlx shadcn@latest add @livepeer-ui/button
+```
+
+Compose with the registry's semantic tokens and roles. See `CLAUDE.md` for the working rules (token discipline, font roles, brand-green constraint, per-page checklist).
 
 ## Dev Container (Recommended)
 
@@ -66,15 +79,23 @@ Develop inside a pre-configured container — consistent tooling, zero local set
 
 ```
 app/                  # Next.js App Router pages
-  brand/              # Brand guidelines page
-  primer/             # Livepeer primer page
-  use-cases/          # Use-case pages
+  agent/              # Agent product page
+  ecosystem/          # Ecosystem catalog (+ [slug], submit)
+  compute/            # Provide GPU compute
+  token/              # Livepeer Token (LPT)
+  foundation/         # Foundation
+  blog/               # Latest / blog (+ [slug])
+  brand/              # Brand guidelines
+  primer/             # Livepeer primer (kept, unlinked)
 components/
-  home/               # Homepage sections (Hero, Capabilities, etc.)
   layout/             # Header and Footer
-  ui/                 # Shared UI primitives (Button, Card, Container, etc.)
-  icons/              # Logo components (Symbol, Wordmark, Lockup)
-lib/                  # Constants, fonts, and custom hooks
+  ui/                 # Shared primitives + registry components
+  blog/ ecosystem/    # Section-specific components
+  primer/ icons/      # Primer chapters, logo components
+content/
+  blog/               # Markdown blog posts
+  ecosystem/          # Markdown ecosystem entries
+lib/                  # Content loaders, fonts, hooks, subgraph
 public/               # Static assets (images, videos, fonts)
 ```
 
