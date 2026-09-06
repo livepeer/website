@@ -12,12 +12,25 @@ export type EcosystemApp = {
   slug: string;
   name: string;
   url: string;
-  hostname: string;
+  /**
+   * What the card and detail page print under the name: the host, plus the
+   * path when the URL has one. Not just the host — an entry that lives at a
+   * path (livepeer.org/foundation) would otherwise be shown as the bare
+   * domain, which points somewhere it does not.
+   */
+  displayUrl: string;
   description: string;
   categories: string[];
   logo?: string;
   logoBg?: string;
+  /**
+   * Single-ink mark: supply it in black and it is inverted under .dark, so it
+   * stays legible on the theme-aware tile without a fixed logoBg plate.
+   */
+  logoMonochrome?: boolean;
   madeBy?: string;
+  /** Optional home for the maker, so the credit can be a link. */
+  madeByUrl?: string;
   twitter?: string;
   bluesky?: string;
   github?: string;
@@ -49,23 +62,27 @@ export function getAppBySlug(slug: string): EcosystemApp {
   const { data, content } = matter(fileContents);
 
   const url: string = data.url ?? "";
-  let hostname = "";
+  let displayUrl = "";
   try {
-    hostname = new URL(url).hostname.replace(/^www\./, "");
+    const parsed = new URL(url);
+    const path = parsed.pathname.replace(/\/$/, "");
+    displayUrl = parsed.hostname.replace(/^www\./, "") + path;
   } catch {
-    hostname = url;
+    displayUrl = url;
   }
 
   return {
     slug,
     name: data.name ?? slug,
     url,
-    hostname,
+    displayUrl,
     description: data.description ?? "",
     categories: Array.isArray(data.categories) ? data.categories : [],
     logo: normalize(data.logo),
     logoBg: normalize(data.logoBg),
+    logoMonochrome: data.logoMonochrome === true,
     madeBy: normalize(data.madeBy),
+    madeByUrl: normalize(data.madeByUrl),
     twitter: normalize(data.twitter),
     bluesky: normalize(data.bluesky),
     github: normalize(data.github),

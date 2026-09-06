@@ -1,224 +1,122 @@
 # CLAUDE.md
 
-**Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: npm. No test framework.
+**Stack:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4. Package manager: **pnpm** (pinned via `packageManager` — use `corepack`). No test framework.
 
-**Environment variables** (set in Vercel / `.env.local`):
+This repo is mid-migration to the **Livepeer UI design system** (a shadcn registry). Read the "Design system" section below before touching UI — it overrides older habits.
 
-- `THEGRAPH_API_KEY` — optional; authenticated subgraph requests for live protocol stats (falls back to hardcoded values)
+## Design system — Livepeer UI (source of truth)
+
+The design system lives outside this repo and is the authority for tokens, type, color, and components. Do not invent a parallel system.
+
+- **Guidelines:** https://livepeer.peaceno.de/design.md — read the "Agent workflow" section and follow it.
+- **Registry docs:** https://livepeer.peaceno.de/docs
+- **Registry items:** `https://livepeer.peaceno.de/r/{name}.json`, namespaced `@livepeer-ui` in `components.json`.
+
+Install the theme, then only the items a page needs:
+
+```bash
+pnpm dlx shadcn@latest add @livepeer-ui/theme
+pnpm dlx shadcn@latest add @livepeer-ui/button @livepeer-ui/card
+```
+
+**Agent workflow (from design.md):** pick one surface → inspect the nearest existing mockup/section/demo → install theme + only the registry items the job needs → build real content and **loading / empty / error / unavailable / disabled / ready** states before visual polish → compose with **semantic tokens and existing roles** (invent a pattern only when the registry doesn't cover it) → verify supported themes + **390px**, meaningful **sm** and **md** transitions, and **wide desktop**.
+
+### Hard rules
+
+- **Semantic tokens only.** `background`/`foreground`, `card`, `muted`, `primary`, `secondary`/`accent`, `border`/`input`/`ring`, `destructive`, `chart-1..5`, `radius`. No hard-coded theme colors. **No second token layer** — the registry theme is the only one.
+- **Livepeer green is not an affordance color.** Green is non-interactive brand expression only. Actions use `primary`, never green.
+- **Fonts are role-split:** `font-sans` = **Inter** (all product UI, nav, body, docs); `font-display` = **Favorit Pro** (opt-in — major marketing/editorial statements only); `font-mono` = **Favorit Mono** (code, paths, IDs, timestamps; usually `text-xs`/`text-sm`). Use the semantic type utilities (`text-ui-body`, `text-reading-body`, `text-page-title`, `text-display-sm/md/lg/fluid`).
+- **Light and dark are both first-class.** Neither is a fallback. Verify both.
+- **Lucide icons only** (`lucide-react`).
 
 ## Commands
 
-- `npm run dev` — start Next.js dev server on localhost:3000
-- `npm run build` — production build (use to verify changes compile)
-- `npm run start` — start production server (requires prior build)
-- `npm run lint` — run ESLint
+- `pnpm dev` — dev server on localhost:3000
+- `pnpm build` — production build (verify changes compile)
+- `pnpm lint` / `pnpm typecheck`
 
-## Project Structure
+## Information architecture (redesign)
 
-### `app/`
+Eleven linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org`) except where noted, plus the primer kept intact but unlinked.
 
-- **Routes**: home (`/`), blog, blog/[slug], primer, foundation, brand
-- **Redirects**: developers, lpt, community → `/` via `redirect()`; use-cases/world-models → `/`
-- **API routes**: none currently active.
-- **Use cases**: `use-cases/` has 7 sub-routes — all currently redirect to home. No `/use-cases` index page.
-- **Layout**: `layout.tsx` wraps all pages with Header + Footer. Global metadata and font classes defined here.
-- **SEO**: OG images generated via `next/og` at root and `/blog` levels. Primer and blog pages have per-page metadata.
-- **Styling**: `globals.css` — Tailwind v4 `@theme` block, utility classes, keyframe animations.
+| Page | Route | Notes |
+| --- | --- | --- |
+| Home | `/` | The Agent section's product surface is `components/livepeer-ui/agent-runtime-preview.tsx`: a scripted loop of an agent runtime calling Livepeer Agent over MCP — prompt in, `run_capability` out with a real capability, price and latency read from the network, a clip back. It replaced a mocked-up "Generate video" form; a form shows controls, this shows the product being used. Built on **ElevenLabs UI** items vendored into `components/ui` (`conversation`, `message`, `shimmering-text`, MIT, plus the shadcn `avatar` they need) with import paths adapted — the registry rate-limited installs, so they were copied from github.com/elevenlabs/ui. The runtime is deliberately unnamed |
+| Agent | `/agent` | flagship product surface |
+| Ecosystem | `/ecosystem` (`/[slug]`, `/submit`) | markdown-driven catalog |
+| Provide GPU compute | `/compute` | one page for running + earning (`/earn` is an alias → `/compute`) |
+| Token | `/token` | no live protocol stats in the new design |
+| Foundation | `/foundation` | |
+| Latest (blog) | `/blog` | nav labels it "Latest"; URL stays `/blog`. Notion-backed |
+| Contribute | `/contribute` | **no mockup** — **footer-only**: not in the header's Resources menu (the header nav excludes it), reached from the footer and the roadmap. Replaces the Foundation's Grants & Funding Mechanisms Notion page as the canonical destination. Answers "how can I get involved?" in two parts: a sentence and a Discord button (in-repo copy), and the **funding ladder** — every way work gets paid for, ordered by size, read from the Notion *Funding paths* database. The page closes on the **contributors strip** lifted from the old home page — twelve faces and a count read live from spotlight.livepeer.dev by `lib/contributors.ts`, revalidated daily, with a dated snapshot as the fallback when the endpoint is down; it was under the hero's buttons first and competed with the hero's one job. The roadmap's "Not on the roadmap?" block points here rather than straight at the forum. The hero's ground is a contribution graph drawn with **vgpu** (`components/livepeer-ui/contribute-graph.tsx` and its `.wgsl`): the grid a contributor's year is drawn on, filling the hero and running up under the header (the section carries `data-header-glass`, so the header wears its scrolled glass from rest rather than vanishing), four levels of the brand green, moving as a slow tide with a diagonal swell over it, cells snapping between levels as they pass, with a CSS mask on the canvas clearing the ground around the text. Colour from the theme tokens, one still frame under reduced motion, DPR capped at 1.5. The empty grid is CSS behind the canvas, so with no WebGPU adapter the ground is simply empty and the page never shifts; the shader and that CSS share pitch, cell and centring, so change both together. `.wgsl` imports go through `@vgpu/wgsl/loader-webpack`, wired in `next.config.ts` for both bundlers, with the type shim in `wgsl-env.d.ts`; the loader does not validate, so check a shader with `pnpm exec vgpu check <file> --require-validation` |
+| Brand | `/brand` | **no mockup** — designed from design.md + registry Foundations. Signed off; no CD review pending |
+| Roadmap | `/roadmap` (`/[slug]`) | **no mockup** — built from the requirements doc. Notion-backed; records have their own pages, and an intercepting route slides one over the register |
+| Organizations | `/organizations/[slug]` | **no mockup**. Notion-backed, rendered like a roadmap record and slid over the register by an intercepting route (`app/roadmap/@modal/(..)organizations`), and **no index** — with one logo and three bodies owning nothing, seven cards read thin. Reached only from an owner's name on a roadmap card. What each owns is derived by filtering the register on `ownerSlug`, never stored on the organization |
+| People | `/people/[slug]` | **no mockup**. Notion-backed, same record/sheet treatment, **no index**. Reached from a credited face on a roadmap card. A bio is the page body and is optional — a person with none renders "No bio yet" rather than an invented one. What they worked on is derived from the register |
+| Primer | `/primer` | **keep intact, unlinked** — its own scoped legacy CSS; only consumer of `lib/subgraph.ts` |
 
-### `components/`
+Redirect changes live in `next.config.ts`: `/network` & `/orchestrate` → `/compute`; the five `/use-cases/*` → `/agent` (transcoding one → `/compute`); `/delegate` stays external (explorer). Keep existing blog host + slug redirects.
 
-- **`home/`** — self-contained homepage sections. Render order in `app/page.tsx`: Hero, BuiltOnLivepeer, CommunityCTA. (`NetworkParticipants.tsx` exists but is not currently rendered.)
-- **`layout/`** — Header, Footer. Header has headroom behavior on `/primer` (hides on scroll down, reveals on scroll up).
-- **`ui/`** — shared primitives (Button, Card, Container, SectionHeader, Badge, ImageMask, GlowOverlay, etc.). Reuse these; don't create new wrappers for the same purpose. Also contains canvas components: `GenerativeCanvas.tsx` (GLSL shader), `LiveNetwork.tsx` (Canvas 2D particle trails), `AiVideoHero.tsx` (Sobel edge detection on video texture). All canvas components follow `useEffect` + `useRef<HTMLCanvasElement>` + `requestAnimationFrame` + cleanup.
-- **`blog/`** — blog listing page (`BlogListingClient`, `BlogCategoryFilter`, `BlogPostCard`) and post detail (`BlogPostHeader`, `BlogPostContent`).
-- **`primer/`** — 10-chapter educational primer with chapter navigation, scroll-based background color transitions, and live protocol stats from subgraph. Primer uses a light theme override. Components: `PrimerContent`, `InflationMeter`, `MintingDiagram`.
-- **`icons/`** — `LivepeerLogo.tsx` exports `LivepeerSymbol` (icon), `LivepeerWordmark` (text), `LivepeerLockup` (icon + text).
+## Content — split on shape and update frequency
 
-### `lib/`
+Page copy lives in the repo and is edited in-repo (with Claude Code), not through a CMS. This is a considered decision, not an inherited rule: the registry is Sanity-native (its `contracts.ts` is a full Sanity content schema, and the header ships a `sanity/` client), but we don't want a CMS dependency — copy is easy to update in-repo.
 
-- `constants.ts` — `NAV_ITEMS` and `EXTERNAL_LINKS`
-- `fonts.ts` — Favorit Pro and Favorit Mono config via `next/font/local`
-- `useCountUp.ts` — IntersectionObserver-triggered count-up animation hook
-- `blog.ts` — blog content loading, markdown→HTML pipeline (gray-matter + unified/remark/rehype), reading time calculation
-- `subgraph.ts` — fetches live protocol stats (inflation, participation, supply) from The Graph Livepeer subgraph with hardcoded fallbacks
+**Templated content that gets updated frequently** goes to Notion instead — many records sharing one shape, maintained by people on their own schedule. Three surfaces do: the **roadmap register**, edited by people across several organisations who do not open pull requests and where a commitment a week stale is worse than no page at all; the **blog**, where publishing should not require a deploy; and the **funding ladder** on /contribute, whose caps and programmes the Foundation maintains. Scope is those three — this is not a general migration of the site into a CMS, and bespoke page copy stays here. See below.
 
-### `public/`
+- **Page content:** author static, typed objects that match the registry's content contracts in `components/livepeer-ui/contracts.ts` (e.g. `LivepeerOrgSite`, `LivepeerOrgPage`). `lib/site.ts` is the pattern. This uses registry components exactly as designed — they just take a content object — and keeps a clean seam to adopt Sanity later if that ever changes.
+- **Sanity is stubbed, not used:** `sanity/lib/livepeer-org-navigation.ts` is a static, no-CMS replacement — a plain module of 11 hard-coded `cdn.sanity.io` URLs for the nav dropdown thumbnails, no client and no query. It is **load-bearing**: `app/layout.tsx` imports the value and two registry header components import its type, so it cannot be deleted. It lives under `sanity/` only because that is the import path the registry components expect. Don't install `next-sanity` or wire a real Sanity client.
+- **Ecosystem:** local **markdown** + YAML frontmatter (`content/ecosystem/*`), rendered via gray-matter + unified/remark/rehype in `lib/ecosystem.ts`. `content/ecosystem-template.md` is the live contributor schema.
+- **Roadmap, blog and funding ladder: Notion.** Five databases under *Livepeer.org content* in the Livepeer Foundation workspace — *Roadmap commitments* (`0a51970884f44514a405f63d6bdb68db`), *Livepeer people* (`cdaf4aff05034435aed838eb2a8676ab`), *Organizations* (`728d4f42db6d4ba4925ae177c08b1d70`) and *Blog posts* (below). The register relates to the middle two so a person's name, portrait and profile id, and an owner's name and type, are each stated once. They sit beside the register rather than under it, and are named for everyone rather than the roadmap, because the same rows credit people elsewhere — which is what *Blog posts* now does for `Author`. `lib/notion.ts` reads them over plain `fetch` (no `@notionhq/client`) and maps them onto the same `Commitment` type the markdown reader produces, enforcing every rule the markdown reader enforced. `lib/register.ts` picks the source: Notion when `NOTION_TOKEN` is set, `content/roadmap/*.md` when it is not, so a clone with no workspace credential still runs. A Notion failure *with* a token throws — a build that quietly served stale markdown would publish a roadmap that looks current and is not. ISR at one minute (`NOTION_REVALIDATE`), so a card moved to Shipped reaches the site without a deploy.
+  - **Blog posts** (`ed74ac33f630497d8c3cf23599de462b`), added the same way: the post *is* the Notion page body, and `lib/register.ts` gains `getBlogRegister()` (the index, metadata only) and `getBlogPost(slug)` (one post, with its body). The split is deliberate — twelve bodies fetched to render a list of cards that show none of them is twelve wasted round-trips. `content/blog/*.md` stays as the no-token fallback, exactly like `content/roadmap`. Drafts are filtered in the register rather than at each of the four routes that read a post.
+  - `Slug` is an explicit property, not derived from the title the way commitment ids are: a published URL is quoted back by everyone who links to it, and a headline gets edited.
+  - **`Author` relates to *Livepeer people***, which is what that database was named generically for. One or none, enforced by the reader.
+  - `Tags` are carried but rendered nowhere today — the index filters on `Category`, a closed set of five that both readers enforce.
+  - **Funding paths** (`e2a8b7e07c92459f81e06af6e15a3440`) is the smallest: one row per way work gets paid for, and the only Notion-backed surface with no page body — the site reads Name, Best for, Ceiling, Decided by, Link, Link label, Order and Status, and nothing else. **`Decided by` relates to *Organizations***, exactly one, so the caption above a group of rungs links to the body's page; groups are ordered by their lowest rung, so the ladder climbs across bodies as well as within them and nothing about which bodies exist is in code. It is record-shaped on purpose: the ladder's design (a hairline grid of cells — name, who it is for, who decides and the ceiling as two labelled rows, and a link — in size order, the treasury spanning the width as the top rung) survives only because the data is five fixed fields rather than prose. `lib/contribute.ts` holds the one validator both readers use; `Order` must be unique among active rows because two rungs at one height would render in whichever order Notion returned them. **Retired is a status, not a deletion** — a retired row renders as the "no longer takes requests" line for the reader who followed an old link. `content/contribute/*.md` is the frontmatter-only fallback. The hero and the two notes on that page are the site's voice and stay in the repo.
+  - **A post's art is its page cover**, not a property — one image serving the index card, the post's header and the share card. It started as a `Card image`/`Hero image` pair beside a cover holding the same URL, which is two visible copies of one fact and a rule the roadmap does not have. Required: a post with no cover fails the build.
+  - Portraits stay in `public/people`; Notion's **Portrait** property holds a Files entry linking to that same committed file, so Notion can preview the face while the site serves the repo copy. The site takes the filename off the end of that link and never loads it.
+  - **Media in a page body must be a link, never an upload** — `lib/notion-media.ts` is the allowlist and the reasoning. `cdn.sanity.io` passes through; a `livepeer.org` address is rewritten to the committed file under `public/` and checked for existence, so Notion previews it from the live site while the site serves its own copy. Anything else fails the build. A caption doubles as alt text, because Notion has no separate field for it.
+  - **Every commitment needs a page cover**, and it must be an **external** image on `cdn.sanity.io` from Peace Node's stock library (`livepeer.peaceno.de/marketing/stock-images`) — never an upload. Notion returns an uploaded image as a signed URL that expires within the hour, so a page built at noon would show a broken banner by one. Same reason portraits are committed rather than hosted in Notion. This rule is repeated in the *Roadmap commitments* database description, because a cover is not a property and an agent reading the schema would otherwise never learn of it.
+  - A Notion automation sets `Shipped on` when someone drags a card to Shipped — but **Notion does not run automations on API edits**, so anything writing `Status` through the API or an MCP must write `Shipped on` in the same edit. The reader fails the build when the two disagree.
 
-- `images/` — static images and SVGs (including `primer/` and `blog/` subdirectories)
-- `videos/` — MP4 files for hero backgrounds and visual effects
-- `fonts/` — Favorit Pro (.woff2, .otf) and Favorit Mono (.woff2)
+## Migration state — complete
 
-### `content/`
+The registry theme is now the only token layer. The old hand-rolled `--color-*`
+layer, the Holographik grid, the hero classes, `.blog-prose`, and 17 bespoke
+keyframes are gone; `app/globals.css` went 1209 → ~610 lines and holds only the
+`@theme` type scale, the two theme roots, `.reading-prose` / `.article-prose`,
+and four live keyframes. The primer keeps its own scoped slice and its Raleway
+face — it is the one page deliberately left unmigrated.
 
-- `blog/` — markdown blog posts with YAML frontmatter (title, description, date, author, category, tags, image, draft). Draft posts are hidden in production.
+Also deleted with the cutover: `components/home/*`, `components/legacy/*`,
+`components/ecosystem/*` (superseded by `components/livepeer-ui/*`), the
+PascalCase `components/ui/*` visuals, `lib/constants.ts`, and the five
+`app/use-cases/*` routes — the redirects in `next.config.ts` are what serve
+those URLs now, so the pages were unreachable anyway.
 
-### Reference docs
+The Foundation page **deliberately drops** content the old page carried — the
+three pillars spelled out individually, and the "About The Project" block with
+the Messari citation. That is a considered editorial cut, not migration loss:
+don't restore it from git history.
 
-- `brand-tokens.md` — full brand spec (colors, typography, logo, gradients, greyscale ramp, graphic elements)
-- `livepeer-website-brief.md` — project brief with messaging and positioning context
+**Share images** (`lib/og.tsx`): `/` renders the registry's `@livepeer-ui/og`
+card verbatim — the lockup centred on `#000000`. Every other page renders the
+same canvas with a page title, and each segment carries a `twitter-image`
+re-export beside its `opengraph-image`, because metadata files cascade and a
+segment without one serves the *root's* Twitter card. Blog posts override both
+with their own frontmatter art.
 
-## Conventions
+## Positioning
 
-### Component patterns
+- **Thesis:** "The open inference network — run AI video and image workloads on Livepeer." Agent-centric. Name the workloads concretely (video, images); "AI and media workloads" was the earlier, vaguer framing.
+- Lead with what builders do on the network; route audiences to **solutions/the ecosystem**. The network is infrastructure; solutions are the products.
+- **CTAs point to the Agent / Discord.** No email capture, no newsletter. **Never hardcode a Discord invite**: discord.gg/livepeer was taken over. Pages read the live invite (and the online count) from the server's widget through `lib/discord.ts`; content links to `livepeer.org/discord`, a route that redirects to it.
+- **Voice:** confident, technical, accessible. Name competitors honestly. Be honest about constraints. Avoid "revolutionary," hype, "web3 bro" tone, and "decentralized" as a selling point.
+- **Terminology:** "the network" (not "the platform"), "open network," "solutions," "orchestrators," "GPU providers," "inference."
 
-- All homepage sections and interactive components use `"use client"`.
-- Scroll animations: Framer Motion `whileInView` with `viewport={{ once: true }}` and staggered children. Hero/brand pages use `initial`/`animate` (fires on mount) instead.
-- Section headers: use the `SectionHeader` component with `label`, `title`, `description` props.
-- Section dividers: `.divider-gradient` divs between sections.
-- Imports: path alias `@/*` maps to repo root. Use `@/components/...`, `@/lib/...`.
+## Don't
 
-### Assets
-
-- Static files in `public/images/`, `public/videos/`, `public/fonts/`.
-- Videos use `autoPlay muted loop playsInline`.
-- `globals.css` includes `prefers-reduced-motion` to blanket-disable all animations.
-
-### Grid system — "Holographik" visual language
-
-The site's signature visual is a layered grid system that combines B&W video/imagery, geometric shapes, animated particle trails, and liquid glass effects. This creates an "outer space control room" aesthetic — technical, cinematic, and distinctly Livepeer.
-
-**Layer stack (bottom to top):**
-
-1. **Media layer** — B&W video or image with green tint, darkened (`ImageMask`)
-2. **Tile grid** — 9-column square grid with 1px white borders, overlaid on the media
-3. **Geometric shapes** — circles, crosshairs, and a starburst node positioned at grid intersections
-4. **Pulse trail** — an animated dot that traverses the grid lines and shape edges via SVG `getPointAtLength()`, creating a living-network feel
-5. **Liquid glass overlay** — frosted panel with subtle gradient fill, chromatic rainbow refraction, specular highlights, and corner crosshairs, snapped to grid lines
-6. **Content** — text, CTAs, rendered on top of everything
-
-**`ImageMask`** (`components/ui/ImageMask.tsx`) — Pure CSS grid, the core brand component. Uses `container-type: inline-size` with `100cqw / cols` row heights so tiles stay square relative to their container (not the viewport). Columns are `1fr`. Used on the homepage hero and brand page hero. The homepage overlays geometric shapes positioned with `${N * TILE}vw` units (`Hero.tsx`); the brand page uses percentage-based positions inside an `aspect-ratio: 9/5` wrapper. **Do not cap tile size independently on the homepage** — the vw-based positions of every overlay element depend on tiles spanning the full viewport. To control tile size on wide screens, adjust the column count or constrain the section width.
-
-### Don't
-
-- **No `next/image`** — use raw `<img>` tags. `ImageMask` needs direct CSS filter/absolute stacking that `next/image`'s wrapper breaks. Primer SVGs are incompatible with required width/height props. WebGL components use `<video>` as GPU textures. Don't introduce without discussion.
-- **No global state** — local `useState` only. No context providers, no state libraries.
-- **No CMS** — page content is static/hardcoded. Blog posts are local markdown files, not fetched from an external CMS.
-- **Minimal server-side fetching** — the only external data source is the Livepeer subgraph (protocol stats, ISR-cached). Don't add new external dependencies without discussion.
-
-## Brand & Styling
-
-Full spec in `brand-tokens.md` — colors, typography, logo rules, greyscale ramp, gradients, graphic elements.
-
-**Theme tokens** (`globals.css` `@theme`):
-
-- Colors: `green`, `green-light`, `green-dark`, `green-bright`, `green-subtle`, `blue`, `blue-light`, `blue-bright`, `blue-dark`, `blue-subtle`, `dark`, `dark-lighter`, `dark-card`, `dark-border`
-- Fonts: `--font-sans` (Favorit Pro — Light/Book/Regular/Medium/Bold), `--font-mono` (Favorit Mono — Regular/Medium/Bold)
-
-**Primary colors:** Green `#18794E`, Black `#121212`, White `#FFFFFF`. Use Tailwind tokens, not raw hex.
-
-**Utility classes:** `.text-gradient` (green gradient text), `.divider-gradient` (section separator), `.tile-bg` (subtle grid)
-
-**Keyframes:** `breathe`, `node-pulse`, `scanLine`, `imageMaskFlow`
-
-Dark theme only — except `/primer`, which uses a light theme override with scroll-based background color transitions per chapter.
-
-## Messaging
-
-### Positioning (v2 Thesis — March 2026)
-
-- **Thesis statement:** "Livepeer is the open network for real-time ai video."
-- **Canonical headline:** "The open network for real-time ai video"
-- **Tagline (footer):** "The open network for real-time ai video."
-- Lead with solutions (builds on the network), not raw protocol capabilities.
-- The network provides GPU infrastructure. Solutions provide the product experience.
-- **Three competitive variables (cost / capability / community):**
-  - **Cost:** 60–85% cheaper than centralized alternatives (AWS, RunPod, Fal). [FLAG: pending validation with Rick — do not scale to "10x" without confirmed data]
-  - **Capability:** Specialized for real-time, streaming video inference. Nine years of video processing optimization. BYOC flexibility for custom models and pipelines. No other network is built specifically for this.
-  - **Community:** The network is operated by independent orchestrators, expanded by builders building on builders, and open to permissionless participation. This is a structural property of the infrastructure — not a Discord server or governance forum. A centralized provider structurally cannot replicate this.
-- Not a trilemma — cost, capability, and community interact.
-- **External competitive frame:** Livepeer solutions (powered by community-operated GPU infrastructure) vs. centralized alternatives (AWS, RunPod, Fal, Replicate) for real-time ai video. Name competitors explicitly — the target audience is comparison-shopping.
-- **Internal only (not for website copy):** DePIN comparisons (Theta, Render, Akash). These are relevant for internal strategy but not for developer-facing positioning.
-- **Narrative routing principle:** Every piece of external communication should route audiences to solutions on the network. The question the website answers: "What's being built on Livepeer, and how can I use it?"
-- **Solutions on the network:** Daydream (real-time generative video), Frameworks (sovereign live streaming), Streamplace (decentralized social video), Embody (AI avatars). These are the ecosystem, not Livepeer products.
-- **CTA pattern:** All CTAs point to Discord ("Build with Livepeer"). No email capture.
-
-### Voice
-
-- Confident, technical but accessible, no-nonsense.
-- Lead with what builders can do on the network and why it matters. Use concrete numbers where validated.
-- Name competitors directly — credibility comes from honest comparison, not avoidance.
-- Be honest about constraints. The network has ~100 AI-capable GPUs, estimated 90–95% uptime, no formal SLAs. Don't oversell what doesn't exist yet.
-- Explain technical concepts simply on first reference.
-- **Avoid:** "revolutionary," "game-changing," empty superlatives, hype language, "web3 bro" tone, "decentralized" as a selling point, "the platform," lorem ipsum.
-
-### Terminology
-
-| Use                                        | Don't use                                             |
-| ------------------------------------------ | ----------------------------------------------------- |
-| "the network"                              | "the platform," "the service"                         |
-| "open network"                             | "decentralized infrastructure" (too web3-coded)       |
-| "solutions"                                | "builds" (internal only), "gateways," "tools," "DGEs" |
-| "GPU providers" (dev-facing)               | "nodes" (too generic)                                 |
-| "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model)           |
-| "inference"                                | "processing" (when referring to AI specifically)      |
-| "real-time ai video"                       | "GPU-powered video" (previous headline, now retired) |
-
-### What the v2 thesis kills (do not use this framing)
-
-- ~~"The network is the product."~~ → The network is infrastructure. Solutions are the products.
-- ~~"Livepeer is a generalized GPU compute network."~~ → It's specialized. Real-time ai video.
-- ~~"We need to attract developers to the raw protocol."~~ → Route audiences to solutions.
-- ~~"Enterprise is the near-term market."~~ → The edges are.
-- ~~"Centralized vs. decentralized."~~ → The tension is centralized-proprietary vs. community-operated/open.
-- ~~"10x cost reduction."~~ → 60–85% cheaper. [FLAG: pending Rick validation]
-- ~~"100K+ GPUs."~~ → ~100 AI-capable GPUs currently. Don't inflate supply numbers.
-
-## Strategic Context
-
-This website reflects Livepeer's v2 positioning as a specialized GPU network for real-time video inference. The thesis organizes everything around a three-layer stack: supply (GPUs contributed by orchestrators), protocol (routing that matches workloads to GPUs), and demand (builds that package network capabilities for their audiences).
-
-### The Stack
-
-```
-┌─────────────────────────────────────────────┐
-│              DEMAND (top)                    │
-│  Builds. Products and businesses on the     │
-│  protocol that serve their own audiences.   │
-├─────────────────────────────────────────────┤
-│             PROTOCOL (middle)               │
-│  Routing. Orchestrator discovery, job       │
-│  routing, staking, delegation, payments.    │
-├─────────────────────────────────────────────┤
-│              SUPPLY (bottom)                │
-│  GPUs. Physical compute contributed by      │
-│  independent orchestrators.                 │
-└─────────────────────────────────────────────┘
-```
-
-### Current Builds (the ecosystem)
-
-- **Scope / Daydream** — Creative AI tools for real-time video. ~30-person creative technologist cohort. Demand R&D partner, not primary demand driver.
-- **Frameworks (Marco)** — Live streaming infrastructure. Bare-metal video pipelines on the network.
-- **Embody (George)** — Embodied AI avatars. ~70% dev time on integration infrastructure.
-- **Streamplace (Eli)** — Open-source video infrastructure for decentralized social (AT Protocol).
-
-### Target Audience: The Edges
-
-The near-term audience is the edges — builders drawn to frontier, specialized infrastructure for emerging use cases. They tolerate constraints (reliability, polish) because cost, capability, or community alignment makes their work possible. This is not the enterprise market.
-
-Three segments: creative technologists (enter through Scope), early-stage AI video builders (enter through whichever build fits), orchestrator-entrepreneurs (enter through the network itself).
-
-### 2026 Foundation Priorities
-
-1. Route audiences to builds — the ecosystem page is the website's primary routing surface
-2. Validate edges audience motivations through builder discovery and audience research
-3. Ship case studies proving cost, capability, and community claims before they become headlines
-4. Grow the builder ecosystem — the network's demand story is the builds' story
-
-### Website Design Direction
-
-- **Specialized, not generic** — lead with video inference specialization, not "open infrastructure"
-- **Brand source of truth:** Holographic Agency brand guidelines (see `brand-tokens.md`)
-- **Design references:** Vercel, Linear, Stripe, Raycast — clean, developer-focused, premium feel
-- **Primary audience:** Builders evaluating GPU infrastructure for real-time video AI applications
-- **Ecosystem page is the primary routing surface** — every visitor should be able to answer "what's being built here and how do I use it?"
-- **Honest about constraints.** Don't mock up product UI that doesn't exist. The CTA is "Build with Livepeer" (Discord) — match the copy to that reality.
-
-### Open Flags
-
-These claims require validation before shipping as headlines. Use [FLAG] markers in copy:
-
-- 60–85% cost claim — needs Rick validation against current network pricing
-- "Agents can discover and pay directly" — pending Rick's architecture confirmation
-- Framework case study — blocked on Marco discovery conversation
-- Specific GPU/node counts — verify current numbers before publishing
+- **`next/image`:** registry components use it (with `cdn.sanity.io` allowed in `next.config.ts`) — that's fine. The legacy exception still holds: keep raw `<img>` for `ImageMask`/canvas/WebGL components and primer SVGs, which depend on direct CSS filter/stacking that `next/image` breaks.
+- **No second token layer**, no one-off color/spacing/radius values outside the registry roles.
+- **No global state** — local `useState` only.
+- **No CMS for page copy** — author it as typed objects matching the registry contracts. This rule is scoped to copy that changes with its design; it is *not* an argument against the roadmap and blog living in Notion (see Content). Equally, don't propose moving other surfaces there unasked. Keep the Sanity client stubbed and don't add `next-sanity`.
+- **Green is never an interactive/affordance color.**

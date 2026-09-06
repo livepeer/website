@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { favoritPro, favoritMono, instrumentSerif } from "@/lib/fonts";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { inter, favoritPro, favoritMono } from "@/lib/fonts";
+import { LivepeerOrgHeader } from "@/components/livepeer-ui/livepeer-org-header";
+import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer";
+import { getDiscord, withDiscordInvite } from "@/lib/discord";
+import { livepeerOrgSite } from "@/lib/site";
+import { SectionRule } from "@/components/ui/section-rule";
+import { livepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,34 +17,39 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : "https://livepeer.org"
   ),
-  title: "Livepeer — The world's open video infrastructure",
+  title: "Livepeer — The open inference network",
   description:
-    "Generate, transform, and interpret video on a permissionless GPU network built for AI video inference.",
+    "Run AI video and image workloads on Livepeer — the open inference network.",
   openGraph: {
-    title: "Livepeer — The world's open video infrastructure",
+    title: "Livepeer — The open inference network",
     description:
-      "Generate, transform, and interpret video on a permissionless GPU network built for AI video inference.",
+      "Run AI video and image workloads on Livepeer — the open inference network.",
     siteName: "Livepeer",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Livepeer — The world's open video infrastructure",
+    title: "Livepeer — The open inference network",
     description:
-      "Generate, transform, and interpret video on a permissionless GPU network built for AI video inference.",
+      "Run AI video and image workloads on Livepeer — the open inference network.",
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // The footer's Discord link is the live invite, not the hand-typed vanity
+  // that was taken over. See lib/discord.ts.
+  const { invite } = await getDiscord();
+  const site = withDiscordInvite(livepeerOrgSite, invite);
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${favoritPro.variable} ${favoritMono.variable} ${instrumentSerif.variable}`}
+      className={`${inter.variable} ${favoritPro.variable} ${favoritMono.variable}`}
     >
       <head>
         {/* No-FOUC theme init — must run synchronously before paint so
@@ -54,7 +63,14 @@ export default function RootLayout({
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var p=window.location.pathname;var force=p==='/foundation'||p.indexOf('/foundation/')===0;var t;if(force){t='dark';}else{var s=localStorage.getItem('theme');if(s==='system'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}else if(s==='light'||s==='dark'){t=s;}else{t='dark';}}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+            // Unset means "system", not "dark". The footer toggle stores
+            // "system" | "light" | "dark"; anything else (or no value at all)
+            // resolves against prefers-color-scheme.
+            //
+            // Sets both hooks: the registry theme keys off the `dark` class,
+            // the quarantined legacy CSS off html[data-theme]. See
+            // components/theme-toggle.tsx.
+            __html: `(function(){function apply(t){var de=document.documentElement;de.setAttribute('data-theme',t);de.classList.toggle('dark',t==='dark');}function sys(){return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}try{var s=localStorage.getItem('theme');apply(s==='light'||s==='dark'?s:sys());}catch(e){try{apply(sys());}catch(e2){apply('dark');}}})();`,
           }}
         />
         {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (
@@ -91,9 +107,15 @@ export default function RootLayout({
         )}
       </head>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
-        <Header />
+        <LivepeerOrgHeader
+          site={site}
+          navigationImages={livepeerOrgNavigationImages}
+        />
         <main className="flex-1">{children}</main>
-        <Footer />
+        {/* Closes the page against the footer on every route, on the same
+            vertical lines as the header rule and the section rules. */}
+        <SectionRule />
+        <LivepeerOrgFooter site={site} />
       </body>
     </html>
   );

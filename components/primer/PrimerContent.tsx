@@ -5,7 +5,6 @@ import Link from "next/link";
 import { raleway } from "@/lib/fonts";
 import type { ProtocolStats } from "@/lib/subgraph";
 import MintingDiagram from "@/components/primer/MintingDiagram";
-import { EXTERNAL_LINKS } from "@/lib/constants";
 
 /**
  * Livepeer 10-Minute Primer
@@ -724,7 +723,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                   collaborators.
                 </Text18>
                 <InvolvedButton
-                  href={EXTERNAL_LINKS.discord}
+                  href="/discord"
                   label="Let's build"
                 />
               </InvolvedCard>

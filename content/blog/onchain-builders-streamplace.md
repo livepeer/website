@@ -2,10 +2,10 @@
 title: "Livepeer Onchain Builders — Streamplace: Building the Video Backbone of Decentralized Social"
 description: "Spotlighting Streamplace, the open-source video streaming platform powering decentralized social applications with real-time, creator-first infrastructure."
 date: "2025-08-14"
-category: "Ecosystem"
+category: "Community"
 tags: ["onchain-builders", "streamplace", "SPE", "decentralized-social"]
-image: "/images/blog/onchain-builders-streamplace.svg"
-imageAlt: "Streamplace - Livepeer Onchain Builders"
+image: "https://cdn.sanity.io/images/l36s876e/production/c8bd525d1e15ddb91109450269e3d6eb484817ba-1456x816.png?fm=webp&q=82"
+imageAlt: "Soft-focus office with colorful lights by a bright window"
 draft: false
 ---
 
@@ -121,4 +121,4 @@ Follow along, fork the code, or join a stream — the future of social video is 
 
 Livepeer is a decentralized video infrastructure network for live and on-demand streaming. It has integrated AI Video Compute capabilities (Livepeer AI) by harnessing its massive GPU network and is not building the future of real-time AI video.
 
-[Twitter](https://x.com/Livepeer) | [Discord](https://discord.gg/55SZFEEH5y) | [Website](https://www.livepeer.org/)
+[Twitter](https://x.com/Livepeer) | [Discord](https://livepeer.org/discord) | [Website](https://www.livepeer.org/)

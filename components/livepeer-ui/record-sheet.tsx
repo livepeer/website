@@ -1,0 +1,188 @@
+"use client";
+
+import { Maximize2, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+/**
+ * A record, slid over the page behind it.
+ *
+ * Rendered by an intercepting route, so this is what a click from the index
+ * gets while the URL becomes /roadmap/<slug>. A direct visit or a refresh
+ * bypasses it and lands on the real page — same content either way, because
+ * both routes render CommitmentRecord.
+ *
+ * Which is the whole reason for doing it in this order. A drawer built before
+ * the page would have been a second rendering path with no address, nothing
+ * to share and nothing to index; built after, it is presentation over a page
+ * that already exists.
+ *
+ * Base UI's Dialog underneath rather than a hand-rolled panel: focus
+ * trapping, scroll locking, Esc, and the backdrop are all things that look
+ * easy and are not, and the repo already had the primitive.
+ */
+/**
+ * Whether a panel is already on screen when the next one mounts.
+ *
+ * A swap is not an entrance. Following an owner's name out of an open
+ * commitment replaces one record with another in the same surface, and sliding
+ * the panel in again would animate something that never left. But the two
+ * routes are different components in different files, so React unmounts one
+ * and mounts the other — there is no state between them to read. This is
+ * module scope for that reason.
+ *
+ * Counted rather than flagged: the incoming sheet renders before the outgoing
+ * one's cleanup runs, so the count is still 1 when the new one asks. The
+ * timestamp covers the other order, where the old one has already gone.
+ */
+let mountedSheets = 0;
+let lastUnmountedAt = 0;
+const SWAP_WINDOW_MS = 200;
+
+function replacingAnOpenSheet(): boolean {
+  return mountedSheets > 0 || Date.now() - lastUnmountedAt < SWAP_WINDOW_MS;
+}
+
+export function RecordSheet({
+  href,
+  closeTo,
+  title,
+  cover,
+  children,
+}: {
+  /** Where "open as full page" goes — this serves more than one record type. */
+  href: string;
+  /** The page this panel sits over, and where dismissing it lands. */
+  closeTo: string;
+  title: string;
+  cover?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  // Mounted closed, opened on the next tick.
+  //
+  // Not a flourish: a dialog whose first render is already open has no state
+  // change to transition from, so Base UI skips the enter animation and the
+  // panel simply appears. Rendering closed and flipping in an effect gives it
+  // a false-to-true edge, which is what makes it slide.
+  //
+  // Closing sets state first and navigates after, so the exit animation runs
+  // before the history entry goes rather than unmounting mid-transition.
+  // Whether this panel replaced one, captured once at mount. It decides two
+  // things: that there is no entrance to animate, and that closing has a chain
+  // to escape rather than a single step to undo.
+  const [swappedIn] = useState(replacingAnOpenSheet);
+  const [open, setOpen] = useState(swappedIn);
+  useEffect(() => {
+    mountedSheets++;
+    setOpen(true);
+    return () => {
+      mountedSheets--;
+      lastUnmountedAt = Date.now();
+    };
+  }, []);
+
+  // Over a cover the controls need to carry their own contrast. Muted
+  // foreground on a photograph is legible over the dark half of an image and
+  // invisible over the bright half, and these images have both. A dark scrim
+  // with a white glyph reads on either, and on either theme — the panel body
+  // is white in light mode, so a treatment tuned to the dark surface would
+  // fail there too.
+  //
+  // cursor-pointer is explicit because these two are different elements: the
+  // expand control is an anchor and gets it from the browser, while SheetClose
+  // renders a button, and Tailwind v4 dropped the preflight rule that used to
+  // give buttons a pointer. Identical-looking controls sat side by side with
+  // different cursors.
+  const control = cover
+    ? "cursor-pointer rounded-md bg-black/50 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+    : "cursor-pointer rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground";
+
+  return (
+    <Sheet
+      open={open}
+      onOpenChange={(next) => {
+        if (next) return;
+        setOpen(false);
+        // A single panel came from the page behind it, so one step back is
+        // exactly right and leaves no history behind.
+        //
+        // A swapped one did not. Following an owner out of a commitment and
+        // then dismissing the panel should land on the register, not reveal
+        // the commitment that was in the panel a moment ago — the reader
+        // closed the surface, not the record inside it. Counting the chain to
+        // walk back through it breaks the moment anyone uses the back button
+        // mid-way, so this goes to the page the panel always overlays.
+        if (swappedIn) router.replace(closeTo, { scroll: false });
+        else router.back();
+      }}
+    >
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        // Above the site header, which sits at z-80. At the sheet's default
+        // z-50 the header painted over the panel and its menu button sat on
+        // top of this one's close control — a modal you cannot close.
+        //
+        // No blur. The default backdrop frosts the whole page, which reads as
+        // a heavy modal state; this is a record opening beside the register,
+        // and the register should stay legible behind it. A plain scrim is
+        // also cheaper — a full-viewport backdrop-filter is the sort of thing
+        // that costs frames on a mid-range laptop.
+        overlayClassName="z-[90] bg-black/40 supports-backdrop-filter:backdrop-blur-none"
+        // Full width below sm, then a reading column. Every override carries
+        // the same data-[side=right] prefix as the default it replaces — a
+        // bare w-full loses to the variant-scoped w-3/4, which is how this
+        // first rendered as a 281px strip of prose on a phone.
+        //
+        // translate-x-full, not the sheet's default 2.5rem: that nudge plus a
+        // fade reads as a dialog appearing, and the thing being asked for is
+        // Notion's panel arriving from off-screen.
+        className="z-[90] gap-0 overflow-y-auto data-[side=right]:w-full data-[side=right]:duration-300 data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full data-[side=right]:sm:max-w-[46rem]"
+      >
+        {/* Named for assistive tech; the record renders its own visible
+            heading, so this one is not shown twice. */}
+        <SheetTitle className="sr-only">{title}</SheetTitle>
+
+        {/* The controls float over the banner rather than sitting above it,
+            so the image starts at the top edge of the panel the way Notion's
+            cover does. Absolute, not sticky, when there is a cover: a sticky
+            bar with a translucent background over a photograph reads as a
+            smear as it scrolls. */}
+        <div
+          className={
+            cover
+              ? "absolute top-0 right-0 z-10 flex items-center justify-end gap-1 p-3"
+              : "sticky top-0 z-10 flex items-center justify-end gap-1 bg-popover/80 px-4 py-3 backdrop-blur"
+          }
+        >
+          {/* Notion's other affordance: take it full-screen. A plain anchor
+              rather than a Link — the point is to leave the overlay and land
+              on the page itself, which is what a full navigation does. */}
+          <a href={href} aria-label="Open as full page" className={control}>
+            <Maximize2 className="size-4" aria-hidden />
+          </a>
+          <SheetClose aria-label="Close" className={control}>
+            <X className="size-4" aria-hidden />
+          </SheetClose>
+        </div>
+
+        {cover}
+        <div
+          className={
+            cover ? "px-6 pt-10 pb-20 sm:px-10" : "px-6 pt-4 pb-20 sm:px-10"
+          }
+        >
+          {children}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
