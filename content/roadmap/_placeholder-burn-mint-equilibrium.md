@@ -1,0 +1,19 @@
+---
+title: Burn-Mint Equilibrium
+outcome: Connect LPT issuance to network usage, so rewards follow demand rather than a fixed schedule.
+workstream: Protocol
+state: next
+owner: Protocol R&D SPE
+contributors:
+  - name: Peter Lindqvist
+    avatar: peter-lindqvist.jpg
+  - name: Elena Vargas
+    avatar: elena-vargas.jpg
+target: Q4 2026
+related:
+  - label: A Path to Livepeer 2.0
+    href: https://forum.livepeer.org/t/a-path-to-livepeer-2-0/3291
+---
+
+One of the three protocol changes proposed under Livepeer 2.0. Illustrative
+until it is owned and dated.
