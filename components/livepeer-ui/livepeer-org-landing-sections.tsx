@@ -5,7 +5,7 @@ import { AgentWordmark, LivepeerWordmark } from "@/components/brand";
 import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility";
 import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
 import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream";
-import { PlaybookPreview } from "@/components/livepeer-ui/playbook-preview";
+import { AgentRuntimePreview } from "@/components/livepeer-ui/agent-runtime-preview";
 import { Button } from "@/components/ui/button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { ExternalArrow } from "@/components/ui/external-arrow";
@@ -207,8 +207,9 @@ export function LivepeerAgentFeatureSection({
   content: HomeContent["agentFeature"];
 }) {
   return (
-    // The playbook is the product surface, so it is shown upright and sharp
-    // rather than tilted and faded into the background.
+    // The runtime is the product surface — an agent mid-task, calling the
+    // network — so it is shown upright and sharp rather than tilted and faded
+    // into the background.
     //
     // Deliberately transparent: on the home page this section shares the
     // Orchestrator section's particle field, which bleeds up past the boundary
@@ -293,7 +294,7 @@ export function LivepeerAgentFeatureSection({
             aria-hidden="true"
             className="pointer-events-none absolute -bottom-28 -left-28 right-0 hidden h-28 bg-gradient-to-t from-transparent to-background [mask-image:linear-gradient(to_right,transparent_0px,black_112px)] lg:block"
           />
-          <PlaybookPreview />
+          <AgentRuntimePreview />
         </div>
       </div>
     </section>

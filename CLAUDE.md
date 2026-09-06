@@ -41,7 +41,7 @@ Eleven linked pages, designed in the mockup set (`/docs/public-beta/livepeer-org
 
 | Page | Route | Notes |
 | --- | --- | --- |
-| Home | `/` | |
+| Home | `/` | The Agent section's product surface is `components/livepeer-ui/agent-runtime-preview.tsx`: a scripted loop of an agent runtime calling Livepeer Agent over MCP — prompt in, `run_capability` out with a real capability, price and latency read from the network, a clip back. It replaced a mocked-up "Generate video" form; a form shows controls, this shows the product being used. Built on **ElevenLabs UI** items vendored into `components/ui` (`conversation`, `message`, `shimmering-text`, MIT, plus the shadcn `avatar` they need) with import paths adapted — the registry rate-limited installs, so they were copied from github.com/elevenlabs/ui. The runtime is deliberately unnamed |
 | Agent | `/agent` | flagship product surface |
 | Ecosystem | `/ecosystem` (`/[slug]`, `/submit`) | markdown-driven catalog |
 | Provide GPU compute | `/compute` | one page for running + earning (`/earn` is an alias → `/compute`) |
