@@ -22,7 +22,7 @@ const WIDGET = `https://discord.com/api/guilds/${GUILD}/widget.json`;
 /** Hourly: invites rarely change, and the count is decoration. */
 const REVALIDATE = 3_600;
 
-export const DISCORD_FALLBACK_INVITE = "https://discord.com/invite/WYTNB3w7";
+export const DISCORD_FALLBACK_INVITE = "https://discord.gg/55SZFEEH5y";
 
 export type Discord = {
   /** A current invite URL. */
