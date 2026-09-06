@@ -206,7 +206,7 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
   const running = phase === "rendering";
   const done = reached(phase, "done");
   return (
-    <div className="w-full max-w-[36rem] overflow-hidden rounded-lg border border-border bg-background/50 font-mono text-xs">
+    <div className="w-full max-w-[32rem] overflow-hidden rounded-lg border border-border bg-background/50 font-mono text-xs">
       <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2">
         <span className="flex items-center gap-2 text-foreground">
           <span
@@ -264,7 +264,7 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
 
 function Result() {
   return (
-    <div className="w-full max-w-[36rem]">
+    <div className="w-full max-w-[32rem]">
       <div className="relative aspect-video overflow-hidden rounded-lg bg-background/60">
         <Image
           src={sanityStaticAssets.playbooks.generateVideo}
@@ -341,8 +341,12 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
           class directly it rendered at the height of its content — 132px while
           idle, growing as messages arrived, which is the reflow a fixed height
           exists to prevent. */}
-      <div className="flex h-[30rem] flex-col sm:h-[34rem]">
-        <Conversation className="min-h-0 flex-1">
+      <div className="flex h-[21rem] flex-col sm:h-[23rem]">
+        {/* No scrollbar: the surface is presentational and inert, and a track
+          down the edge of a window nobody can scroll reads as a glitch. The
+          stick-to-bottom scroller still scrolls the newest message into
+          view. */}
+        <Conversation className="min-h-0 flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ConversationContent className="px-4 py-2 sm:px-5">
             <AnimatePresence>
               {reached(phase, "sent") && phase !== "fade" && (
