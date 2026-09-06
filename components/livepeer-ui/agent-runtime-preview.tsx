@@ -479,7 +479,12 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                 <span className="ml-px inline-block h-4 w-px translate-y-0.5 bg-foreground align-baseline motion-safe:animate-pulse" />
               </>
             ) : (
-              "Ask for a render…"
+              <>
+                {/* A caret at rest, in front of the placeholder: a focused,
+                    empty input rather than one nobody is at. */}
+                <span className="mr-1 inline-block h-4 w-px translate-y-0.5 bg-foreground align-baseline motion-safe:animate-pulse" />
+                Ask for a render…
+              </>
             )}
           </span>
           <span
