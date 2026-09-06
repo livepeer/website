@@ -2,10 +2,10 @@
 title: "Using the Livepeer Community Treasury"
 description: "A guide to the processes and social conventions for submitting proposals, building community support, and accessing funding from the Livepeer on-chain treasury."
 date: "2023-11-07"
-category: "Governance"
+category: "Proposals"
 tags: ["governance", "treasury", "community", "grants"]
-image: "/images/blog/using-the-livepeer-community-treasury.svg"
-imageAlt: "Livepeer Community Treasury illustration"
+image: "https://cdn.sanity.io/images/l36s876e/production/d20446b7a982e3bd955481a32e8c4fb78435ac97-1456x816.png?fm=webp&q=82"
+imageAlt: "Front-facing metallic vault structure in dark blue light"
 draft: false
 author:
   name: "Doug Petkanics"
@@ -73,7 +73,7 @@ Livepeer treasury governance works very similarly to Livepeer protocol governanc
 
 2. Join Community Calls
 
-   1. Treasury Chat. This is a bi-weekly call in the [Livepeer Discord](https://discord.gg/55SZFEEH5y) for those paying attention to the treasury proposals and governance process. Be prepared to speak about your proposal, answer questions, and receive input.
+   1. Treasury Chat. This is a bi-weekly call in the [Livepeer Discord](https://livepeer.org/discord) for those paying attention to the treasury proposals and governance process. Be prepared to speak about your proposal, answer questions, and receive input.
 
    2. Water Coolers. These are weekly meetings hosted in Discord for Orchestrators and active community members to discuss activities top of mind and a good place to get early feedback and guidance around your proposal.
 
