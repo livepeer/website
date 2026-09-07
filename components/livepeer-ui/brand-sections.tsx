@@ -108,9 +108,6 @@ export function BrandHeroSection({
   return (
     <header className="mx-auto max-w-2xl pt-12 text-center sm:pt-20">
       <p className="font-mono text-xs text-muted-foreground">Livepeer</p>
-      {/* Inter, like every other page title. The Favorit Pro line in the
-          type section is the one place this page sets the display face;
-          there it is the subject, not the styling. */}
       <h1 className="mt-5 text-display-md text-balance sm:text-display-lg">
         {heading}
       </h1>
@@ -353,19 +350,12 @@ const FACES = [
   {
     name: "Inter",
     utility: "font-sans",
-    role: "Product, body, docs, ordinary headings.",
+    role: "Everything. Headings, body, product, docs.",
     text: "The open inference network",
     className: "font-sans text-display-sm sm:text-display-md",
   },
   {
-    name: "Favorit Pro",
-    utility: "font-display",
-    role: "Major statements, by choice.",
-    text: "The open inference network",
-    className: "font-display text-display-sm sm:text-display-md",
-  },
-  {
-    name: "Favorit Mono",
+    name: "Geist Mono",
     utility: "font-mono",
     role: "Code, paths, IDs, timestamps.",
     text: "0x1a2b · 128 GPUs · 04:21:07",
@@ -389,7 +379,7 @@ export function BrandTypeSection() {
     <Section
       id="type"
       title="Type"
-      lede="Three faces, split by what the text is doing."
+      lede="Two faces. One for words, one for values."
       aside={
         <p className="hidden shrink-0 font-mono text-xs text-muted-foreground sm:block">
           Click a line to type

@@ -254,10 +254,7 @@ export async function renderArtCard(art: string) {
  * link were indistinguishable in a timeline. A page worth sharing should say
  * which page it is.
  *
- * Favorit Pro rather than Inter, which every page title on the site now uses.
- * design.md reserves the display face for "major marketing statements and
- * editorial titles" and rules it out for product UI — a share card is the
- * former, and it is the one surface here that is pure marketing.
+ * Inter, as on the page itself: there is one face now.
  */
 /**
  * Headline size, from the length of the headline.
@@ -290,16 +287,17 @@ export async function renderTitledCard(
    */
   eyebrow?: string
 ) {
-  const [image, favoritPro] = await Promise.all([
+  const [image, interRegular] = await Promise.all([
     art ? loadArt(art) : Promise.resolve(null),
-    // Satori reads ttf/otf/woff but not woff2, so the OTF cuts are the only
-    // usable Favorit Pro in the repo.
-    readFile(join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")),
+    // Satori reads ttf/otf/woff but not woff2 and not the variable build, so
+    // a static OTF cut from the same rsms.me release sits beside the web
+    // files for this one consumer.
+    readFile(join(process.cwd(), "public/fonts/Inter-Regular.otf")),
   ]);
 
   return new ImageResponse(
     (
-      <div style={{ ...CANVAS, fontFamily: "Favorit Pro" }}>
+      <div style={{ ...CANVAS, fontFamily: "Inter" }}>
         {/* Weighted to the foot, where the headline sits: light enough at the
             top that the art still reads, dense enough at the bottom that the
             title holds over any of it. */}
@@ -367,7 +365,7 @@ export async function renderTitledCard(
     {
       ...OG_SIZE,
       fonts: [
-        { name: "Favorit Pro", data: favoritPro, weight: 400, style: "normal" },
+        { name: "Inter", data: interRegular, weight: 400, style: "normal" },
       ],
     }
   );

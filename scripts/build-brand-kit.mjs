@@ -84,8 +84,11 @@ Colors
   colors/livepeer-colors.txt — hex values for the brand palette.
 
 Typography (not included)
-  Favorit Pro (primary) and Favorit Mono are licensed from Dinamo Type.
-  We cannot redistribute the font files. License them directly from Dinamo.
+  Inter for everything, from Rasmus Andersson's distribution:
+    https://rsms.me/inter/
+  Geist Mono for code and values:
+    https://vercel.com/font
+  Both are free under the SIL Open Font License.
 
 More
   Full brand guidelines:  https://livepeer.org/brand

@@ -8,7 +8,7 @@ export const contentType = "image/png";
 
 export default async function OGImage() {
   const [fontRegular, devicesSvg] = await Promise.all([
-    readFile(join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")),
+    readFile(join(process.cwd(), "public/fonts/Inter-Regular.otf")),
     readFile(join(process.cwd(), "public/images/primer/devices.svg"), "utf-8"),
   ]);
 
@@ -21,7 +21,7 @@ export default async function OGImage() {
         height: "100%",
         display: "flex",
         background: "#5AE680",
-        fontFamily: "Favorit Pro",
+        fontFamily: "Inter",
         position: "relative",
         overflow: "hidden",
       }}
@@ -138,7 +138,7 @@ export default async function OGImage() {
       ...size,
       fonts: [
         {
-          name: "Favorit Pro",
+          name: "Inter",
           data: fontRegular,
           weight: 400,
           style: "normal" as const,

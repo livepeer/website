@@ -15,9 +15,8 @@ import {
  * than traced from a comp.
  *
  * It corrects the previous page rather than restyling it. That page described
- * "two typefaces", with Favorit Pro as the primary face for "headings, body,
- * UI" — true before the registry, and the opposite of the rule now: Inter is
- * the default and Favorit Pro is opt-in display. Anyone following the old page
+ * "two typefaces" with Favorit Pro as the primary; Favorit is gone, Inter is
+ * the one face, and Geist Mono is the mono. Anyone following the old page
  * would have built something the design system rejects.
  */
 const brand = {

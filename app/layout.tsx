@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { inter, favoritPro, favoritMono } from "@/lib/fonts";
+import { inter, geistMono } from "@/lib/fonts";
 import { LivepeerOrgHeader } from "@/components/livepeer-ui/livepeer-org-header";
 import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer";
 import { getDiscord, withDiscordInvite } from "@/lib/discord";
@@ -49,7 +49,7 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${favoritPro.variable} ${favoritMono.variable}`}
+      className={`${inter.variable} ${geistMono.variable}`}
     >
       <head>
         {/* No-FOUC theme init — must run synchronously before paint so

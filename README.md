@@ -8,7 +8,7 @@ The official website for [Livepeer](https://livepeer.org) — the open inference
 - **UI**: React 19, Tailwind CSS v4
 - **Design system**: [Livepeer UI](https://livepeer.peaceno.de/design.md) — a shadcn component registry (semantic tokens, light + dark)
 - **Language**: TypeScript
-- **Fonts**: Inter (product UI), Favorit Pro (display), Favorit Mono (code)
+- **Fonts**: Inter for everything (self-hosted from rsms.me), Geist Mono for code
 
 ## Prerequisites
 

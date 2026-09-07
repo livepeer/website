@@ -1,44 +1,33 @@
 import localFont from "next/font/local";
-import { Inter, Raleway } from "next/font/google";
+import { Geist_Mono, Raleway } from "next/font/google";
 
-// Inter — the Livepeer UI product/interface typeface (font-sans). Default for
-// nav, body, forms, data, docs, and ordinary headings.
-export const inter = Inter({
-  subsets: ["latin"],
+// Inter — the one face for everything: nav, body, forms, data, docs, and
+// every heading and display line. Self-hosted from Rasmus Andersson's own
+// distribution (rsms.me/inter, v4.1) rather than Google Fonts: the variable
+// build there carries the optical-size axis and the full feature set, and it
+// is the canonical cut. `InterVariable` covers 100–900 in one file.
+export const inter = localFont({
   variable: "--font-inter",
-  display: "swap",
-});
-
-export const favoritPro = localFont({
-  variable: "--font-favorit-pro",
   display: "swap",
   src: [
     {
-      path: "../public/fonts/FavoritPro-Light.woff2",
-      weight: "300",
+      path: "../public/fonts/InterVariable.woff2",
+      weight: "100 900",
       style: "normal",
     },
     {
-      path: "../public/fonts/FavoritPro-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/FavoritPro-Book.woff2",
-      weight: "450",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/FavoritPro-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/FavoritPro-Bold.woff2",
-      weight: "700",
-      style: "normal",
+      path: "../public/fonts/InterVariable-Italic.woff2",
+      weight: "100 900",
+      style: "italic",
     },
   ],
+});
+
+// Geist Mono — code, paths, IDs, timestamps, and the small mono labels.
+export const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
 });
 
 export const raleway = Raleway({
@@ -46,26 +35,4 @@ export const raleway = Raleway({
   variable: "--font-raleway",
   display: "swap",
   weight: ["300", "400", "700", "800", "900"],
-});
-
-export const favoritMono = localFont({
-  variable: "--font-favorit-mono",
-  display: "swap",
-  src: [
-    {
-      path: "../public/fonts/FavoritMono-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/FavoritMono-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/FavoritMono-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
 });

@@ -123,7 +123,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                 </button>
                 {loginLinks.map((item) => {
                   const className =
-                    "flex items-center gap-2 rounded-sm py-2.5 font-display text-display-sm text-foreground outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
+                    "flex items-center gap-2 rounded-sm py-2.5 text-display-sm text-foreground outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
                   const content = (
                     <>
                       <span>{item.label}</span>
@@ -161,7 +161,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
               <>
                 {mobileLinks.map((item) => {
                   const className =
-                    "rounded-sm py-2.5 font-display text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
+                    "rounded-sm py-2.5 text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
 
                   return item.href.startsWith("http") ? (
                     <a
@@ -188,7 +188,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                 <button
                   type="button"
                   onClick={() => setShowLoginLinks(true)}
-                  className="mt-8 flex items-center gap-2 rounded-sm py-2.5 font-display text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
+                  className="mt-8 flex items-center gap-2 rounded-sm py-2.5 text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
                 >
                   <span>Login</span>
                   <span aria-hidden="true">→</span>
