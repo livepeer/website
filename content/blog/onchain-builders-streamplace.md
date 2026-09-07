@@ -119,6 +119,6 @@ Follow along, fork the code, or join a stream — the future of social video is 
 
 ---
 
-Livepeer is a decentralized video infrastructure network for live and on-demand streaming. It has integrated AI Video Compute capabilities (Livepeer AI) by harnessing its massive GPU network and is not building the future of real-time AI video.
+Livepeer is a decentralized video infrastructure network for live and on-demand streaming. It has integrated AI Video Compute capabilities (Livepeer AI) by harnessing its massive GPU network and is now building the future of real-time AI video.
 
 [Twitter](https://x.com/Livepeer) | [Discord](https://discord.gg/55SZFEEH5y) | [Website](https://www.livepeer.org/)
