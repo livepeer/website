@@ -6,12 +6,13 @@ import {
   BrandMarkSection,
   BrandSystemSection,
   BrandTypeSection,
+  BrandUsageSection,
 } from "@/components/livepeer-ui/brand-sections";
 
 /**
  * The one page in the redesign with no mockup (CLAUDE.md → IA), so it is
  * composed from design.md's Foundations and the registry's own language rather
- * than traced from a comp. Needs creative-direction review.
+ * than traced from a comp.
  *
  * It corrects the previous page rather than restyling it. That page described
  * "two typefaces", with Favorit Pro as the primary face for "headings, body,
@@ -21,27 +22,27 @@ import {
  */
 const brand = {
   hero: {
-    eyebrow: "Brand",
-    heading: "Using the Livepeer brand",
+    heading: "Brand guidelines",
     description:
-      "What you need to represent Livepeer accurately — the marks and how to place them, the one colour that is ours, and the three type roles.",
+      "The mark, the green, the type, and the few rules that keep them looking right. If you're putting Livepeer on something, start here.",
   },
   kitHref: "/downloads/livepeer-brand-kit.zip",
+  systemHref: "https://livepeer.peaceno.de/design.md",
   system: [
     {
       label: "Design guidelines",
       href: "https://livepeer.peaceno.de/design.md",
-      note: "The full rules for colour roles, type roles, spacing, and composition.",
+      note: "Colour roles, type roles, spacing and composition in full.",
     },
     {
       label: "Component registry",
       href: "https://livepeer.peaceno.de/docs",
-      note: "Livepeer UI — installable components, themed and documented.",
+      note: "Livepeer UI. Installable components, themed and documented.",
     },
     {
       label: "Ask on Discord",
       href: "/discord",
-      note: "Unsure whether a use is on-brand? Ask before you ship it.",
+      note: "Unsure whether a use is on-brand? Ask before shipping it.",
     },
   ],
 };
@@ -53,15 +54,20 @@ export const metadata: Metadata = {
 };
 
 export default function BrandPage() {
-  // Gutter and max-width on the same element, as in the header, the footer and
-  // SectionRule. With the gutter on an outer wrapper instead, max-w-page
-  // constrains the content box rather than the padded box, so the column lands
-  // 40px wider on each side than the chrome above and below it.
+  // A centred 56rem measure, like the ladder on /contribute, rather than the
+  // chrome's max-w-page: plates read as objects at this width and as banners
+  // any wider. Gutter and max-width on the same element, so the padded box is
+  // what is constrained.
   return (
-    <div className="pt-16 pb-24">
-      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <BrandHeroSection {...brand.hero} />
-        <BrandMarkSection kitHref={brand.kitHref} />
+    <div className="pt-16 pb-24 sm:pb-32">
+      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-10">
+        <BrandHeroSection
+          {...brand.hero}
+          kitHref={brand.kitHref}
+          systemHref={brand.systemHref}
+        />
+        <BrandMarkSection />
+        <BrandUsageSection />
         <BrandColorSection />
         <BrandTypeSection />
         <BrandSystemSection links={brand.system} />

@@ -1,182 +1,276 @@
-import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
+import { ArrowUpRightIcon, DownloadIcon, XIcon } from "lucide-react";
 
-import {
-  LivepeerLockup,
-  LivepeerSymbol,
-  LivepeerWordmark,
-} from "@/components/brand";
+import { LivepeerLockup, LivepeerSymbol } from "@/components/brand";
 import { CopyButton } from "@/components/copy-button";
-import { MarkConstructionDiagram } from "@/components/livepeer-ui/mark-construction";
+import { MarkPlates, Specimen } from "@/components/livepeer-ui/brand-interactive";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ *
- * Shared furniture
+ * Furniture
+ *
+ * Objects, not paragraphs. Each thing the page has to say is a plate you
+ * can look at: the marks in both inks, every rule as a small picture, the
+ * colour as a field, the faces as lines you can type into. Copy is a
+ * caption under the object, never a block beside it.
  * ------------------------------------------------------------------ */
 
-/** A major block. Rule, then title, then content — repeated down the page. */
 function Section({
   id,
   title,
-  intro,
+  lede,
+  aside,
   children,
 }: {
   id: string;
   title: string;
-  intro?: React.ReactNode;
+  lede?: string;
+  aside?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
-    <section
-      id={id}
-      className="mt-20 border-t border-border pt-12 sm:mt-24 sm:pt-16"
-    >
-      <h2 className="text-page-title text-balance sm:text-display-sm">
-        {title}
-      </h2>
-      {intro && (
-        <p className="mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground">
-          {intro}
-        </p>
-      )}
-      <div className="mt-10">{children}</div>
+    <section id={id} className="mt-28 scroll-mt-24 sm:mt-36">
+      <div className="flex items-end justify-between gap-6">
+        <div>
+          <h2 className="text-page-title">{title}</h2>
+          {lede && (
+            <p className="mt-3 max-w-[44ch] text-sm leading-relaxed text-pretty text-muted-foreground">
+              {lede}
+            </p>
+          )}
+        </div>
+        {aside}
+      </div>
+      <div className="mt-8">{children}</div>
     </section>
   );
 }
 
-/** The mono caption used for sub-blocks, matching /ecosystem/submit. */
-function Caption({ children }: { children: React.ReactNode }) {
+/** A soft field for an object to sit on. */
+function Plate({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <h3 className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
+    <div
+      className={cn(
+        "flex items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground",
+        className
+      )}
+    >
       {children}
-    </h3>
-  );
-}
-
-/**
- * A rule stated as a rule.
- *
- * Brand pages fail by burying constraints in paragraphs nobody finishes. Each
- * of these is one line, and the ones that say "never" say it first.
- */
-function Rule({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="border-b border-border py-4 last:border-b-0 sm:grid sm:grid-cols-[12rem_1fr] sm:gap-6">
-      <dt className="text-sm font-medium">{label}</dt>
-      <dd className="mt-1 text-sm leading-relaxed text-muted-foreground sm:mt-0">
-        {children}
-      </dd>
     </div>
   );
 }
 
+/** The caption under a plate: a name, then a note in the quieter colour. */
+function Caption({
+  name,
+  note,
+  never,
+}: {
+  name: string;
+  note?: string;
+  never?: boolean;
+}) {
+  return (
+    <p className="mt-3 flex items-baseline gap-2 px-1 text-sm">
+      {never && (
+        <XIcon
+          className="size-3 shrink-0 self-center text-muted-foreground"
+          aria-hidden="true"
+        />
+      )}
+      <span className="whitespace-nowrap">{name}</span>
+      {note && <span className="text-muted-foreground">{note}</span>}
+    </p>
+  );
+}
+
 /* ------------------------------------------------------------------ *
- * The mark
+ * Hero
  * ------------------------------------------------------------------ */
 
-const MARKS = [
+export function BrandHeroSection({
+  heading,
+  description,
+  kitHref,
+  systemHref,
+}: {
+  heading: string;
+  description: string;
+  kitHref: string;
+  systemHref: string;
+}) {
+  return (
+    <header className="mx-auto max-w-2xl pt-12 text-center sm:pt-20">
+      <p className="font-mono text-xs text-muted-foreground">Livepeer</p>
+      {/* Inter, like every other page title. The Favorit Pro line in the
+          type section is the one place this page sets the display face;
+          there it is the subject, not the styling. */}
+      <h1 className="mt-5 text-display-md text-balance sm:text-display-lg">
+        {heading}
+      </h1>
+      <p className="mx-auto mt-6 max-w-[40ch] text-reading-body text-pretty text-muted-foreground">
+        {description}
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Button
+          size="lg"
+          nativeButton={false}
+          render={<a href={kitHref} download />}
+        >
+          <DownloadIcon data-icon="inline-start" aria-hidden="true" />
+          Download the kit
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          nativeButton={false}
+          render={
+            <a href={systemHref} target="_blank" rel="noopener noreferrer" />
+          }
+        >
+          Design system
+          <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+        </Button>
+      </div>
+    </header>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Mark
+ * ------------------------------------------------------------------ */
+
+export function BrandMarkSection() {
+  return (
+    <section id="mark" className="mt-16 scroll-mt-24 sm:mt-24">
+      <MarkPlates />
+    </section>
+  );
+}
+
+/**
+ * Clear space, drawn. The symbol is 73 units wide and 89 tall; the margin on
+ * every side is one symbol width, so the hairline is the exclusion zone.
+ */
+function ClearSpace() {
+  const W = 73;
+  const H = 89;
+  return (
+    <svg
+      viewBox={`-8 -8 ${W * 3 + 16} ${H + W * 2 + 16}`}
+      className="h-[60%] w-auto"
+      aria-label="Clear space: one symbol width on every side"
+      role="img"
+    >
+      <rect
+        x="0.5"
+        y="0.5"
+        width={W * 3 - 1}
+        height={H + W * 2 - 1}
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity="0.35"
+        strokeDasharray="3 3"
+      />
+      <g stroke="currentColor" strokeOpacity="0.5">
+        <line x1={W} y1={W / 2} x2={W * 2} y2={W / 2} />
+        <line x1={W} y1={W / 2 - 4} x2={W} y2={W / 2 + 4} />
+        <line x1={W * 2} y1={W / 2 - 4} x2={W * 2} y2={W / 2 + 4} />
+      </g>
+      <g transform={`translate(${W} ${W})`}>
+        <LivepeerSymbol width={W} height={H} aria-hidden="true" />
+      </g>
+    </svg>
+  );
+}
+
+const NEVER = [
   {
-    name: "Symbol",
-    note: "Favicons, avatars, app icons — anywhere the name is already established.",
-    file: "livepeer-symbol",
-    render: <LivepeerSymbol className="h-12 w-auto" aria-hidden="true" />,
+    name: "Stretched",
+    render: (
+      <LivepeerSymbol
+        className="h-10 w-auto scale-x-[1.6]"
+        aria-hidden="true"
+      />
+    ),
   },
   {
-    name: "Wordmark",
-    note: "The default. Use it wherever the name has to be read.",
-    file: "livepeer-wordmark",
-    render: <LivepeerWordmark className="h-6 w-auto" aria-hidden="true" />,
+    name: "Rotated",
+    render: (
+      <LivepeerSymbol className="h-10 w-auto rotate-[24deg]" aria-hidden="true" />
+    ),
   },
   {
-    name: "Lockup",
-    note: "Symbol and wordmark in fixed relation. Never rebuild it by hand.",
-    file: "livepeer-lockup",
-    render: <LivepeerLockup className="h-6 w-auto" aria-hidden="true" />,
+    name: "Outlined",
+    render: (
+      <LivepeerSymbol
+        className="h-10 w-auto"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.5}
+        aria-hidden="true"
+      />
+    ),
+  },
+  {
+    name: "Recoloured",
+    render: (
+      // The one green mark on the site, shown as the thing not to do.
+      <LivepeerSymbol className="h-10 w-auto text-brand" aria-hidden="true" />
+    ),
   },
 ];
 
-export function BrandMarkSection({ kitHref }: { kitHref: string }) {
+export function BrandUsageSection() {
   return (
     <Section
-      id="mark"
-      title="The mark"
-      intro="Three forms, one relationship. Take them from here rather than lifting them off a screenshot — every file below is the source vector."
+      id="usage"
+      title="Using the mark"
+      lede="Give it room, keep it legible, and leave it alone."
     >
-      <ul className="grid gap-3 sm:grid-cols-3">
-        {MARKS.map((mark) => (
-          <li
-            key={mark.name}
-            className="flex flex-col rounded-sm border border-border"
-          >
-            {/* The mark sits on muted rather than the page: a logo needs a
-                field of its own to be judged, and the tile is that field. */}
-            <div className="flex min-h-40 items-center justify-center bg-muted px-6">
-              {mark.render}
-            </div>
-            <div className="flex flex-1 flex-col p-5">
-              <Caption>{mark.name}</Caption>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                {mark.note}
-              </p>
-              <div className="mt-5 flex gap-4 font-mono text-xs">
-                {/* Named by ink colour, not by theme: "black" is unambiguous
-                    where "light" invites the wrong download half the time. */}
-                <a
-                  href={`/brand-assets/${mark.file}-black.svg`}
-                  download
-                  className="text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-                >
-                  Black SVG
-                </a>
-                <a
-                  href={`/brand-assets/${mark.file}-white.svg`}
-                  download
-                  className="text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
-                >
-                  White SVG
-                </a>
-              </div>
-            </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <Plate className="aspect-[3/2]">
+            <ClearSpace />
+          </Plate>
+          <Caption name="Clear space" note="One symbol width, every side." />
+        </div>
+        <div>
+          <Plate className="aspect-[3/2]">
+            {/* The lockup at its floor. The symbol shares the wordmark's
+                height there, so this one object states both minimums. */}
+            <span className="flex flex-col items-center gap-3">
+              <LivepeerLockup className="h-8 w-auto" aria-hidden="true" />
+              <span className="font-mono text-xs text-muted-foreground">
+                32px
+              </span>
+            </span>
+          </Plate>
+          <Caption
+            name="Minimum size"
+            note="Symbol and lockup 32px. Wordmark alone 24px."
+          />
+        </div>
+      </div>
+      <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {NEVER.map((item) => (
+          <li key={item.name}>
+            <Plate className="aspect-square">{item.render}</Plate>
+            <Caption name={item.name} never />
           </li>
         ))}
       </ul>
-
-      <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_minmax(0,26rem)] lg:gap-16">
-        <div>
-          <Caption>Placing it</Caption>
-          <dl className="mt-4">
-            <Rule label="Clear space">
-              Keep space equal to the symbol&apos;s width on all four sides.
-              Nothing — type, rules, image edges — enters it.
-            </Rule>
-            <Rule label="Minimum size">
-              Symbol at 16px. Wordmark and lockup at 24px tall. Below that the
-              counters close up and it stops reading as the mark.
-            </Rule>
-            <Rule label="Colour">
-              Black or white only. The mark is never green, never gradient,
-              never tinted to match a background.
-            </Rule>
-            <Rule label="Never">
-              Stretch, rotate, outline, add a shadow, reorder the lockup, or
-              rebuild it from the symbol and wordmark by hand.
-            </Rule>
-          </dl>
-          <Button
-            size="lg"
-            nativeButton={false}
-            render={<a href={kitHref} download />}
-            className="mt-8 h-12 rounded-sm px-5"
-          >
-            <DownloadIcon className="size-4" aria-hidden="true" />
-            Download the brand kit
-          </Button>
-          <p className="mt-3 font-mono text-xs text-muted-foreground">
-            ZIP · marks, colour, and usage notes
-          </p>
-        </div>
-
-        <MarkConstructionDiagram />
-      </div>
+      <p className="mt-6 max-w-[48ch] px-1 text-sm leading-relaxed text-muted-foreground">
+        Below 32px the symbol&apos;s squares close up, so it is not an icon.
+        Black or white, never a gradient, never a shadow, never rebuilt from
+        the parts. If it is not in the kit, it is not the mark.
+      </p>
     </Section>
   );
 }
@@ -185,27 +279,25 @@ export function BrandMarkSection({ kitHref }: { kitHref: string }) {
  * Colour
  * ------------------------------------------------------------------ */
 
+const GREEN = "color(display-p3 0.04 0.74 0.49)";
+
 /**
- * The semantic roles.
- *
- * No hex values printed anywhere. Roles are the interface: the registry theme
- * owns the numbers, they differ between light and dark, and a page that
- * reprints them creates the second token layer design.md forbids. The swatch
- * renders the live value for whichever theme you are reading in, which is both
- * truthful and self-updating.
+ * The semantic roles. No hex values: the registry theme owns the numbers
+ * and they differ between light and dark, so each swatch renders the live
+ * value for the theme you are reading in.
  */
 const ROLES = [
-  { token: "--background", swatch: "bg-background", use: "The canvas." },
-  { token: "--foreground", swatch: "bg-foreground", use: "Default text." },
-  { token: "--card", swatch: "bg-card", use: "A self-contained object." },
-  { token: "--muted", swatch: "bg-muted", use: "Subdued regions and supporting text." },
-  { token: "--primary", swatch: "bg-primary", use: "The default action." },
-  { token: "--secondary", swatch: "bg-secondary", use: "Lower-emphasis actions." },
-  { token: "--accent", swatch: "bg-accent", use: "State changes." },
-  { token: "--border", swatch: "bg-border", use: "Separation." },
-  { token: "--input", swatch: "bg-input", use: "Control edges." },
-  { token: "--ring", swatch: "bg-ring", use: "Visible focus." },
-  { token: "--destructive", swatch: "bg-destructive", use: "Destructive actions and errors." },
+  { token: "background", swatch: "bg-background" },
+  { token: "foreground", swatch: "bg-foreground" },
+  { token: "card", swatch: "bg-card" },
+  { token: "muted", swatch: "bg-muted" },
+  { token: "primary", swatch: "bg-primary" },
+  { token: "secondary", swatch: "bg-secondary" },
+  { token: "accent", swatch: "bg-accent" },
+  { token: "border", swatch: "bg-border" },
+  { token: "input", swatch: "bg-input" },
+  { token: "ring", swatch: "bg-ring" },
+  { token: "destructive", swatch: "bg-destructive" },
 ];
 
 export function BrandColorSection() {
@@ -213,66 +305,42 @@ export function BrandColorSection() {
     <Section
       id="colour"
       title="Colour"
-      intro="One brand colour, and a set of roles that carry everything else. The roles are the interface — they resolve differently in light and dark, which is why this page shows the role rather than a hex value."
+      lede="One colour is ours. Everything else is a role the theme resolves."
     >
-      {/* Green first and alone, because the rule attached to it is the single
-          most-broken rule in the system. */}
-      <div className="grid gap-0 overflow-hidden rounded-sm border border-border sm:grid-cols-[1fr_1.2fr]">
-        <div className="min-h-48 bg-brand" />
-        <div className="flex flex-col justify-center p-6 sm:p-10">
-          <Caption>Livepeer green</Caption>
-          <div className="mt-3 flex items-center gap-1">
-            <code className="font-mono text-sm">
-              color(display-p3 0.04 0.74 0.49)
-            </code>
-            <CopyButton value="color(display-p3 0.04 0.74 0.49)" />
-          </div>
-          <p className="mt-5 max-w-[44ch] text-sm leading-relaxed text-muted-foreground">
-            <strong className="font-medium text-foreground">
-              Green is not an affordance colour.
-            </strong>{" "}
-            Never a button, link, hover, focus, selected state, or success
-            message. It is non-interactive brand expression only — marks,
-            diagrams, artwork, and branded motion. Actions use{" "}
-            <code className="font-mono text-xs">primary</code>.
-          </p>
-        </div>
+      <div className="aspect-[2/1] rounded-lg bg-brand sm:aspect-[3/1]" />
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-1">
+        <p className="text-sm">
+          Livepeer green
+          <span className="ml-2 text-muted-foreground">
+            Marks, diagrams, artwork, motion. Never a button, link or state.
+          </span>
+        </p>
+        <span className="inline-flex items-center gap-1">
+          <code className="font-mono text-xs text-muted-foreground">
+            {GREEN}
+          </code>
+          <CopyButton value={GREEN} className="-my-2" />
+        </span>
       </div>
 
-      <div className="mt-12">
-        <Caption>Roles</Caption>
-        <ul className="mt-4 grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {ROLES.map((role) => (
-            <li
-              key={role.token}
-              className="flex items-center gap-3 border-b border-border py-3"
-            >
-              {/* Bordered, because two of these roles are the page background
-                  itself and would otherwise be an invisible swatch. */}
-              <span
-                className={`size-8 shrink-0 rounded-sm border border-border ${role.swatch}`}
-                aria-hidden="true"
-              />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-mono text-xs">
-                  {role.token}
-                </span>
-                <span className="block truncate text-xs text-muted-foreground">
-                  {role.use}
-                </span>
-              </span>
-              <CopyButton value={`var(${role.token})`} />
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 max-w-[52ch] text-sm leading-relaxed text-muted-foreground">
-          <code className="font-mono text-xs">chart-1</code> through{" "}
-          <code className="font-mono text-xs">chart-5</code> distinguish ordered
-          data series and are never an alternative action palette. Do not add a
-          second token layer or hard-code a colour for a role the theme already
-          covers.
-        </p>
-      </div>
+      <ul className="mt-12 grid grid-cols-3 gap-3 sm:grid-cols-6">
+        {ROLES.map((role) => (
+          <li key={role.token} className="min-w-0">
+            {/* Hairline on every swatch: two of these roles are the page
+                itself and would otherwise be an invisible square. */}
+            <span
+              className={cn(
+                "block aspect-square w-full rounded-lg border border-border",
+                role.swatch
+              )}
+              aria-hidden="true"
+            />
+            <span className="mt-2 block truncate px-1 font-mono text-xs text-muted-foreground">
+              {role.token}
+            </span>
+          </li>
+        ))}
+      </ul>
     </Section>
   );
 }
@@ -285,35 +353,35 @@ const FACES = [
   {
     name: "Inter",
     utility: "font-sans",
-    specimen: "The open inference network",
-    specimenClass: "font-sans",
-    rule: "The default. Product UI, navigation, forms, data, docs, ordinary headings, and body copy. A heading element does not imply a display face.",
+    role: "Product, body, docs, ordinary headings.",
+    text: "The open inference network",
+    className: "font-sans text-display-sm sm:text-display-md",
   },
   {
     name: "Favorit Pro",
     utility: "font-display",
-    specimen: "The open inference network",
-    specimenClass: "font-display font-light",
-    rule: "Opt-in brand display type, for major marketing statements and editorial titles. Never for routine product UI.",
+    role: "Major statements, by choice.",
+    text: "The open inference network",
+    className: "font-display text-display-sm sm:text-display-md",
   },
   {
     name: "Favorit Mono",
     utility: "font-mono",
-    specimen: "0x1a2b · 128 GPUs · 04:21:07",
-    specimenClass: "font-mono",
-    rule: "Code, commands, paths, IDs, timestamps, and short technical annotations — normally at text-xs or text-sm. Never explanatory prose.",
+    role: "Code, paths, IDs, timestamps.",
+    text: "0x1a2b · 128 GPUs · 04:21:07",
+    className: "font-mono text-2xl sm:text-3xl",
   },
 ];
 
+/** The scale at its own sizes. A ladder of the utilities is the scale. */
 const SCALE = [
-  { role: "UI caption", utility: "text-ui-caption", size: "12 / 16", weight: "500", tracking: "—" },
-  { role: "UI body", utility: "text-ui-body", size: "14 / 20", weight: "400", tracking: "—" },
-  { role: "Reading body", utility: "text-reading-body", size: "16 / 28", weight: "400", tracking: "—" },
-  { role: "Page title", utility: "text-page-title", size: "32 / 0.98", weight: "300", tracking: "-0.025em" },
-  { role: "Display small", utility: "text-display-sm", size: "36 / 0.98", weight: "300", tracking: "-0.045em" },
-  { role: "Display medium", utility: "text-display-md", size: "48 / 0.98", weight: "300", tracking: "-0.045em" },
-  { role: "Display large", utility: "text-display-lg", size: "60 / 0.98", weight: "300", tracking: "-0.045em" },
-  { role: "Display fluid", utility: "text-display-fluid", size: "40→64 / 0.98", weight: "300", tracking: "-0.045em" },
+  { utility: "text-ui-caption", note: "12" },
+  { utility: "text-ui-body", note: "14" },
+  { utility: "text-reading-body", note: "16" },
+  { utility: "text-page-title", note: "32" },
+  { utility: "text-display-sm", note: "36" },
+  { utility: "text-display-md", note: "48" },
+  { utility: "text-display-lg", note: "60" },
 ];
 
 export function BrandTypeSection() {
@@ -321,92 +389,53 @@ export function BrandTypeSection() {
     <Section
       id="type"
       title="Type"
-      intro="Three faces, split by role rather than by hierarchy. Which one you reach for is decided by what the text is doing, not by how large it is."
+      lede="Three faces, split by what the text is doing."
+      aside={
+        <p className="hidden shrink-0 font-mono text-xs text-muted-foreground sm:block">
+          Click a line to type
+        </p>
+      }
     >
-      <ul className="grid gap-3 lg:grid-cols-3">
+      <ul className="rounded-lg bg-muted px-6 sm:px-10">
         {FACES.map((face) => (
           <li
             key={face.name}
-            className="flex flex-col rounded-sm border border-border"
+            className="border-b border-border py-8 last:border-b-0 sm:py-10"
           >
-            <div className="flex min-h-32 items-center bg-muted px-6 py-8">
-              <p className={`${face.specimenClass} text-2xl text-pretty`}>
-                {face.specimen}
-              </p>
-            </div>
-            <div className="flex flex-1 flex-col p-5">
-              <div className="flex items-baseline gap-2">
-                <Caption>{face.name}</Caption>
-                <code className="font-mono text-xs text-muted-foreground">
-                  {face.utility}
-                </code>
-              </div>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {face.rule}
-              </p>
-            </div>
+            <Specimen text={face.text} className={face.className} />
+            <p className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+              <span>{face.name}</span>
+              <span className="font-mono text-xs text-muted-foreground">
+                {face.utility}
+              </span>
+              <span className="text-muted-foreground">{face.role}</span>
+            </p>
           </li>
         ))}
       </ul>
 
-      <div className="mt-12">
-        <Caption>The scale</Caption>
-        <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted-foreground">
-          Each utility carries its own size, line height, weight, and tracking.
-          Add the font-family utility separately, and reach for a responsive
-          pair — <code className="font-mono text-xs">text-display-sm</code>{" "}
-          <code className="font-mono text-xs">sm:text-display-md</code> — rather
-          than interpolating a one-off size.
-        </p>
-
-        {/* Scrolls inside its own box: five columns of tabular data do not
-            compress to 390px, and squeezing them would cost the alignment
-            that makes a scale readable as a scale. */}
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[38rem] border-collapse text-left">
-            <thead>
-              <tr className="border-b border-border">
-                {["Role", "Utility", "Size / leading", "Weight", "Tracking"].map(
-                  (head) => (
-                    <th
-                      key={head}
-                      scope="col"
-                      className="py-3 pr-6 font-mono text-ui-caption tracking-wide text-muted-foreground uppercase"
-                    >
-                      {head}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {SCALE.map((row) => (
-                <tr key={row.utility} className="border-b border-border">
-                  <td className="py-3 pr-6 text-sm">{row.role}</td>
-                  <td className="py-3 pr-6 font-mono text-xs">{row.utility}</td>
-                  {/* Tabular numerals so the sizes form a column you can read
-                      down, which is the whole point of printing a scale. */}
-                  <td className="py-3 pr-6 font-mono text-xs tabular-nums text-muted-foreground">
-                    {row.size}
-                  </td>
-                  <td className="py-3 pr-6 font-mono text-xs tabular-nums text-muted-foreground">
-                    {row.weight}
-                  </td>
-                  <td className="py-3 pr-6 font-mono text-xs tabular-nums text-muted-foreground">
-                    {row.tracking}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <ol className="mt-12 px-1">
+        {SCALE.map((step) => (
+          <li
+            key={step.utility}
+            className="grid gap-1 border-b border-border py-4 last:border-b-0 sm:grid-cols-[11rem_1fr] sm:items-baseline sm:gap-6"
+          >
+            <span className="font-mono text-xs text-muted-foreground">
+              {step.utility}
+              <span className="ml-3 tabular-nums">{step.note}</span>
+            </span>
+            {/* Clip rather than wrap, so every step is one line and the
+                ladder reads as a ladder. */}
+            <span className={cn(step.utility, "block truncate")}>Livepeer</span>
+          </li>
+        ))}
+      </ol>
     </Section>
   );
 }
 
 /* ------------------------------------------------------------------ *
- * Where the system lives
+ * System
  * ------------------------------------------------------------------ */
 
 export function BrandSystemSection({
@@ -418,66 +447,31 @@ export function BrandSystemSection({
     <Section
       id="system"
       title="The system"
-      intro="This page is the summary. The design system itself — tokens, components, and the full guidance — is the Livepeer UI registry."
+      lede="This page is the summary. The tokens, components and the full guidance are the Livepeer UI registry."
     >
       <ul className="grid gap-3 sm:grid-cols-3">
         {links.map((link) => (
           <li key={link.href}>
-            {/* Per-theme fill, matching the ecosystem cards: `card` is
-                oklch(1 0 0) in light — identical to the background — so it is
-                invisible there, and `muted/50` is rgb 7 in dark, so it
-                disappears there. Each theme takes the one that lifts. */}
             <a
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-sm border border-border p-5 transition-colors hover:bg-muted/50 dark:hover:bg-card"
+              className="group flex h-full flex-col justify-between gap-8 rounded-lg bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
             >
-              <span className="flex items-center gap-1.5 text-sm font-medium">
-                {link.label}
-                <ArrowUpRightIcon
-                  className="size-3.5 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </span>
-              <span className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {link.note}
+              <ArrowUpRightIcon
+                className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+              <span>
+                <span className="block text-sm">{link.label}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">
+                  {link.note}
+                </span>
               </span>
             </a>
           </li>
         ))}
       </ul>
     </Section>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Hero
- * ------------------------------------------------------------------ */
-
-export function BrandHeroSection({
-  eyebrow,
-  heading,
-  description,
-}: {
-  eyebrow: string;
-  heading: string;
-  description: string;
-}) {
-  return (
-    <header className="pt-12 text-center lg:pt-16">
-      <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
-        {eyebrow}
-      </p>
-      {/* Inter, like every other page title. The Favorit Pro specimen further
-          down the page is the one place this page sets the display face — there
-          it is the subject, not the styling. */}
-      <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
-        {heading}
-      </h1>
-      <p className="mx-auto mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">
-        {description}
-      </p>
-    </header>
   );
 }
