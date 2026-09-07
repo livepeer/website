@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-**Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: npm. No test framework.
+**Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, Framer Motion 11. Package manager: pnpm (v10.x, `packageManager` pinned). No test framework.
 
 **Environment variables** (set in Vercel / `.env.local`):
 
@@ -8,10 +8,10 @@
 
 ## Commands
 
-- `npm run dev` — start Next.js dev server on localhost:3000
-- `npm run build` — production build (use to verify changes compile)
-- `npm run start` — start production server (requires prior build)
-- `npm run lint` — run ESLint
+- `pnpm dev` — start Next.js dev server on localhost:3000
+- `pnpm build` — production build (use to verify changes compile)
+- `pnpm start` — start production server (requires prior build)
+- `pnpm lint` — run ESLint
 
 ## Project Structure
 
