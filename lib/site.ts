@@ -81,9 +81,8 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  *
  * A separate surface from this marketing site: accounts and the playbook
  * library live there. Centralised here because /agent links to it several
- * times and the host is the one thing about those links that is not yet
- * settled — this is the Vercel preview of the console, not its final address,
- * so there is still one edit to make before launch.
+ * times, so a change of host is one edit. It is `earlyaccess.livepeer.org`
+ * now, the console's own address; it was the Vercel preview before that.
  *
  * It replaced `livepeer.peaceno.de`, which was the registry's mockup rather
  * than a deployment. The paths below moved with it and are the real ones the
@@ -95,7 +94,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * `agent.livepeer.org`, its own host — this said `livepeer.org/api/mcp` for a
  * while, which 404s, and nothing on a marketing page can catch that.
  */
-const agentAppOrigin = "https://livepeer-console.vercel.app";
+const agentAppOrigin = "https://earlyaccess.livepeer.org";
 
 /**
  * Where "Use Livepeer", "Try Livepeer Agent", and "Agent Console" all point.
