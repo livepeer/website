@@ -9,7 +9,7 @@ imageAlt: "Abstract cyan and orange system diagram on black"
 draft: false
 ---
 
-Messari's [*State of Livepeer Q1 2026 Report*](https://messari.io/report/state-of-livepeer-q1-2026), by Senior Research Analyst [Jake Koch-Gallup](https://x.com/immutablejacob), marks a milestone for Livepeer: the network reached all-time highs in both usage and fee generation, while AI inference remained the largest driver of protocol revenue.
+Messari's [_State of Livepeer Q1 2026 Report_](https://messari.io/report/state-of-livepeer-q1-2026), by Senior Research Analyst [Jake Koch-Gallup](https://x.com/immutablejacob), marks a milestone for Livepeer: the network reached all-time highs in both usage and fee generation, while AI inference remained the largest driver of protocol revenue.
 
 ![Total minutes processed on Livepeer in Q1 2026](/images/blog/q1-2026-messari/total-minutes.png)
 
@@ -35,4 +35,4 @@ Q1 also showed the ecosystem moving from raw infrastructure toward application-r
 
 With Q1 as Livepeer's strongest quarter on record, the Foundation's priority is to carry the momentum forward. We're shortening the path for independent developers to put their first inference job on the open network, and expanding the number of builders bringing real-time AI video applications to market.
 
-Read Messari's complete [*State of Livepeer Q1 2026* Report](https://messari.io/report/state-of-livepeer-q1-2026).
+Read Messari's complete [_State of Livepeer Q1 2026_ Report](https://messari.io/report/state-of-livepeer-q1-2026).

@@ -138,99 +138,99 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
             onMouseEnter={openToc}
             onMouseLeave={scheduleCloseToc}
           >
-          <button
-            onClick={() => setTocOpen(!tocOpen)}
-          className={`cursor-pointer select-none flex items-center justify-center uppercase transition-all
+            <button
+              onClick={() => setTocOpen(!tocOpen)}
+              className={`cursor-pointer select-none flex items-center justify-center uppercase transition-all
             h-12 w-12 rounded-full border border-foreground/40 bg-foreground/20 backdrop-blur-2xl shadow-[0_2px_16px_rgba(0,0,0,0.1)]
             md:h-[44px] md:w-auto md:gap-3 md:px-5 md:border-[1.5px] md:border-black md:bg-[#a6adeb]/80 md:backdrop-blur-xl ${tocOpen ? "md:shadow-[0_0_#000]" : "md:shadow-[3px_3px_#000]"} md:hover:shadow-none`}
-          style={{
-            fontFamily: "var(--font-mono), monospace",
-            fontSize: "16px",
-            lineHeight: "19px",
-          }}
-        >
-          {/* Mobile: book/chapters icon */}
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 18 18"
-            fill="none"
-            className="md:hidden"
-          >
-            <path
-              d="M2 2.5C2 2.5 4 1.5 6.5 1.5C9 1.5 9 2.5 9 2.5V15.5C9 15.5 9 14.5 6.5 14.5C4 14.5 2 15.5 2 15.5V2.5Z"
-              stroke="#131418"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M9 2.5C9 2.5 9 1.5 11.5 1.5C14 1.5 16 2.5 16 2.5V15.5C16 15.5 14 14.5 11.5 14.5C9 14.5 9 15.5 9 15.5V2.5Z"
-              stroke="#131418"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {/* Desktop: full label */}
-          <span className="hidden md:inline">CHAPTERS</span>
-          <svg
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
-            fill="none"
-            className="hidden transition-transform md:block"
-            style={{
-              transform: tocOpen ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          >
-            <path
-              d="M1 1L5 5L9 1"
-              stroke="#131418"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
+              style={{
+                fontFamily: "var(--font-mono), monospace",
+                fontSize: "16px",
+                lineHeight: "19px",
+              }}
+            >
+              {/* Mobile: book/chapters icon */}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                className="md:hidden"
+              >
+                <path
+                  d="M2 2.5C2 2.5 4 1.5 6.5 1.5C9 1.5 9 2.5 9 2.5V15.5C9 15.5 9 14.5 6.5 14.5C4 14.5 2 15.5 2 15.5V2.5Z"
+                  stroke="#131418"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M9 2.5C9 2.5 9 1.5 11.5 1.5C14 1.5 16 2.5 16 2.5V15.5C16 15.5 14 14.5 11.5 14.5C9 14.5 9 15.5 9 15.5V2.5Z"
+                  stroke="#131418"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {/* Desktop: full label */}
+              <span className="hidden md:inline">CHAPTERS</span>
+              <svg
+                width="10"
+                height="6"
+                viewBox="0 0 10 6"
+                fill="none"
+                className="hidden transition-transform md:block"
+                style={{
+                  transform: tocOpen ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              >
+                <path
+                  d="M1 1L5 5L9 1"
+                  stroke="#131418"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
 
-        {/* Dropdown — opens downward. Outer wrapper sits flush with the
+            {/* Dropdown — opens downward. Outer wrapper sits flush with the
             button (top: 100%) and uses transparent top padding to create the
             visual gap, so the hover hit-area is continuous and moving the
             cursor from button → dropdown never crosses an empty zone. */}
-        {tocOpen && (
-          <div
-            className="absolute top-full right-0 w-[300px] pt-2"
-            style={{
-              animation: "fadeIn 0.15s ease-out",
-            }}
-          >
-          <div className="rounded-lg border-[1.5px] border-black bg-white p-2 shadow-lg">
-            {CHAPTERS.map((ch, i) => (
-              <a
-                key={ch.id}
-                href={`#${ch.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo(ch.id);
-                  window.history.replaceState(null, "", `#${ch.id}`);
+            {tocOpen && (
+              <div
+                className="absolute top-full right-0 w-[300px] pt-2"
+                style={{
+                  animation: "fadeIn 0.15s ease-out",
                 }}
-                className="flex w-full items-center gap-3 rounded-md px-4 py-3 text-left no-underline transition-colors hover:bg-black/5"
               >
-                <span
-                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-black/60"
-                  style={{ backgroundColor: ch.bg }}
-                >
-                  {i + 1}
-                </span>
-                <span className="text-[15px] font-medium text-black/80">
-                  {ch.label}
-                </span>
-              </a>
-            ))}
-          </div>
-          </div>
-        )}
+                <div className="rounded-lg border-[1.5px] border-black bg-white p-2 shadow-lg">
+                  {CHAPTERS.map((ch, i) => (
+                    <a
+                      key={ch.id}
+                      href={`#${ch.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollTo(ch.id);
+                        window.history.replaceState(null, "", `#${ch.id}`);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-md px-4 py-3 text-left no-underline transition-colors hover:bg-black/5"
+                    >
+                      <span
+                        className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-black/60"
+                        style={{ backgroundColor: ch.bg }}
+                      >
+                        {i + 1}
+                      </span>
+                      <span className="text-[15px] font-medium text-black/80">
+                        {ch.label}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
