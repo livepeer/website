@@ -67,16 +67,23 @@ export function getPostBySlug(slug: string): BlogPost {
   };
 }
 
+// Drafts are hidden on production only; previews and local dev show them.
+export function isPublished(post: BlogPost): boolean {
+  return !(post.draft && process.env.VERCEL_ENV === "production");
+}
+
+// Single lookup for URL slugs so the page and its metadata agree on drafts.
+export function getPublishedPost(slug: string): BlogPost | null {
+  if (!getPostSlugs().includes(slug)) return null;
+  const post = getPostBySlug(slug);
+  return isPublished(post) ? post : null;
+}
+
 export function getAllPosts(): BlogPost[] {
   const slugs = getPostSlugs();
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
-    .filter((post) => {
-      // Hide drafts only on the public production deployment; keep them visible
-      // on Vercel preview deployments and in local dev for pre-publish review.
-      if (process.env.VERCEL_ENV === "production") return !post.draft;
-      return true;
-    })
+    .filter(isPublished)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return posts;
 }

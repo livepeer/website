@@ -4,58 +4,49 @@ import { notFound } from "next/navigation";
 import Container from "@/components/ui/Container";
 import BlogPostHeader from "@/components/blog/BlogPostHeader";
 import BlogPostContent from "@/components/blog/BlogPostContent";
-import { getPostBySlug, getPostSlugs, renderMarkdown } from "@/lib/blog";
+import { getAllPosts, getPublishedPost, renderMarkdown } from "@/lib/blog";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
-  const slugs = getPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return getAllPosts().map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  try {
-    const post = getPostBySlug(slug);
-    return {
-      title: `${post.title} | Livepeer Blog`,
-      description: post.description,
-      openGraph: {
-        title: post.title,
-        description: post.description,
-        type: "article",
-        publishedTime: post.date,
-        authors: post.author ? [post.author.name] : [],
-        images: post.image ? [post.image] : [],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: post.title,
-        description: post.description,
-        images: post.image ? [post.image] : [],
-      },
-    };
-  } catch {
+  const post = getPublishedPost(slug);
+  if (!post) {
     return { title: "Post Not Found — Livepeer Blog" };
   }
+
+  return {
+    title: `${post.title} | Livepeer Blog`,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      publishedTime: post.date,
+      authors: post.author ? [post.author.name] : [],
+      images: post.image ? [post.image] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: post.image ? [post.image] : [],
+    },
+  };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-
-  let post;
-  try {
-    post = getPostBySlug(slug);
-  } catch {
-    notFound();
-  }
-
-  // Drafts are hidden only on the public production deployment. They remain
-  // visible on Vercel preview deployments (VERCEL_ENV === "preview") and in
-  // local dev so they can be reviewed before going public.
-  if (post.draft && process.env.VERCEL_ENV === "production") {
+  const post = getPublishedPost(slug);
+  if (!post) {
     notFound();
   }
 
