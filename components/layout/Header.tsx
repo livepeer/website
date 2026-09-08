@@ -76,7 +76,6 @@ function DesktopNav({
   // Re-measure when the active item changes layout (e.g. font-load reflow).
   useLayoutEffect(() => {
     if (activeKey) measure(activeKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeKey]);
 
   const activeItem = items.find((i) => i.label === activeKey);
@@ -247,17 +246,12 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [headerHidden, setHeaderHidden] = useState(false);
+  const [primerHidden, setPrimerHidden] = useState(false);
   const lastScrollY = useRef(0);
   const pathname = usePathname();
   const isPrimer = pathname === "/primer";
-
-  useEffect(() => {
-    if (!isPrimer) {
-      setHeaderHidden(false);
-      lastScrollY.current = 0;
-    }
-  }, [isPrimer]);
+  // Headroom behaviour only applies on the primer.
+  const headerHidden = isPrimer && primerHidden;
 
   useEffect(() => {
     const onScroll = () => {
@@ -266,18 +260,23 @@ export default function Header() {
 
       if (isPrimer) {
         if (currentY < 50) {
-          setHeaderHidden(false);
+          setPrimerHidden(false);
         } else if (currentY > lastScrollY.current + 5) {
-          setHeaderHidden(true);
+          setPrimerHidden(true);
         } else if (currentY < lastScrollY.current - 5) {
-          setHeaderHidden(false);
+          setPrimerHidden(false);
         }
         lastScrollY.current = currentY;
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      // Start fresh the next time the primer is entered.
+      setPrimerHidden(false);
+      lastScrollY.current = 0;
+    };
   }, [isPrimer]);
 
   return (

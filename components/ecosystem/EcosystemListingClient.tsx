@@ -73,11 +73,14 @@ export default function EcosystemListingClient({
     router.replace(url, { scroll: false });
   }, [activeCategories, search, pathname, router]);
 
-  useEffect(() => {
+  // Any filter change starts the list over from the first batch.
+  const updateSearch = (value: string) => {
+    setSearch(value);
     setVisible(BATCH_SIZE);
-  }, [activeCategories, search]);
+  };
 
   const handleCategoryToggle = (cat: string) => {
+    setVisible(BATCH_SIZE);
     if (cat === "All") {
       setActiveCategories([]);
       return;
@@ -170,7 +173,7 @@ export default function EcosystemListingClient({
                 placeholder="Search"
                 aria-label="Search ecosystem apps"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => updateSearch(e.target.value)}
                 className="w-full rounded-md border border-foreground/[0.12] bg-foreground/[0.03] backdrop-blur-sm py-1.5 pl-9 pr-8 text-sm text-foreground/60 placeholder:text-foreground/30 transition-colors duration-200 focus:bg-foreground/[0.05] focus:border-foreground/20 focus:outline-none sm:w-56 select-none"
               />
               <AnimatePresence>
@@ -179,7 +182,7 @@ export default function EcosystemListingClient({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { duration: 0.2 } }}
                     exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                    onClick={() => setSearch("")}
+                    onClick={() => updateSearch("")}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-foreground/50 transition-colors hover:text-foreground/80"
                     aria-label="Clear search"
                   >
@@ -289,7 +292,7 @@ export default function EcosystemListingClient({
                 Try searching for another term.
                 <button
                   onClick={() => {
-                    setSearch("");
+                    updateSearch("");
                     setActiveCategories([]);
                   }}
                   className="cursor-pointer rounded border border-foreground/10 px-3 py-1 text-xs font-medium text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground/80"
