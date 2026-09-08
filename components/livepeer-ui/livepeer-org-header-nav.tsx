@@ -11,17 +11,17 @@ import type {
   LivepeerOrgSite,
 } from "@/components/livepeer-ui/contracts";
 import { Button } from "@/components/ui/button";
-import { agentApp } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import type { LivepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
 
-export const livepeerOrgHeaderGroups = [
-  "Network",
-  "Agent",
-  "Resources",
-] as const;
+export const livepeerOrgHeaderGroups = ["Network", "Resources"] as const;
 
-const headerItems = [...livepeerOrgHeaderGroups, "Foundation"] as const;
+// Agent and Foundation are plain links, not groups. Agent had a dropdown of
+// three — the page, the playbook library and the docs — but the library and
+// the docs do not exist yet, and a menu whose two other items lead to mockups
+// is worse than no menu. It becomes a group again when they do.
+type HeaderLink = "Agent" | "Foundation";
+const headerItems = ["Network", "Agent", "Resources", "Foundation"] as const;
 
 const linkDescriptions: Record<string, string> = {
   Ecosystem: "Explore apps built on Livepeer",
@@ -34,8 +34,6 @@ const linkDescriptions: Record<string, string> = {
   Brand: "Logos, guidelines, and brand assets",
   Documentation: "Technical guides and reference",
   "Livepeer Agent": "Create and edit media with your agent",
-  "Agent Playbooks": "Run production-ready workflows in Agent Console",
-  "Agent Documentation": "Build with Livepeer AI tools and APIs",
 };
 
 const localLinkMatches: Record<
@@ -89,29 +87,6 @@ export function getLivepeerOrgHeaderGroup(
   site: LivepeerOrgSite,
   title: (typeof livepeerOrgHeaderGroups)[number]
 ) {
-  if (title === "Agent") {
-    const matchesAgent = localLinkMatches["Livepeer Agent"];
-    const agentHref =
-      site.menuLinks.find((link) => matchesAgent(link.label, link.href))
-        ?.href ?? `${site.homeHref}/agent`;
-
-    return {
-      _key: "agent",
-      title: "Agent",
-      links: [
-        { label: "Livepeer Agent", href: agentHref },
-        // The playbook library, which lives in the Agent console rather than
-        // on this site — hence agentApp.playbooks and the jump-out arrow
-        // LivepeerOrgNavItem already special-cases for this label.
-        { label: "Agent Playbooks", href: agentApp.playbooks },
-        {
-          label: "Agent Documentation",
-          href: "https://docs.livepeer.org/v1/ai/builders/get-started",
-        },
-      ],
-    };
-  }
-
   // Resources and Network read straight from the footer groups. Roadmap used
   // to be lifted out of Network here and filtered back out below, so the two
   // surfaces disagreed; it lives under Resources in lib/site.ts now.
@@ -147,6 +122,19 @@ export function getLivepeerOrgFoundationHref(site: LivepeerOrgSite) {
   return resolveHref(site, "Foundation", "https://livepeer.org/foundation");
 }
 
+export function getLivepeerOrgAgentHref(site: LivepeerOrgSite) {
+  return resolveHref(site, "Livepeer Agent", `${site.homeHref}/agent`);
+}
+
+function getLivepeerOrgLinkHref(
+  site: LivepeerOrgSite,
+  title: HeaderLink
+) {
+  return title === "Agent"
+    ? getLivepeerOrgAgentHref(site)
+    : getLivepeerOrgFoundationHref(site);
+}
+
 export function LivepeerOrgNavItem({
   site,
   item,
@@ -161,7 +149,7 @@ export function LivepeerOrgNavItem({
   className?: string;
 }) {
   const href = resolveHref(site, item.label, item.href);
-  const jumpOut = href.startsWith("http") || item.label === "Agent Playbooks";
+  const jumpOut = href.startsWith("http");
   const label =
     item.label === "Blog"
       ? "Latest Updates"
@@ -377,18 +365,18 @@ export function LivepeerOrgHeaderNav({
         }}
       >
         {headerItems.map((title) => {
-          if (title === "Foundation") {
+          if (title === "Agent" || title === "Foundation") {
             return (
               <Button
                 key={title}
                 variant="ghost"
                 nativeButton={false}
-                render={<Link href={getLivepeerOrgFoundationHref(site)} />}
+                render={<Link href={getLivepeerOrgLinkHref(site, title)} />}
                 onPointerEnter={() => setActiveTitle(null)}
                 onFocus={() => setActiveTitle(null)}
                 className="h-auto rounded-sm px-3 py-0 leading-none font-normal text-muted-foreground transition-colors hover:bg-transparent hover:text-foreground active:translate-y-0 dark:hover:bg-transparent [[data-glass]_&]:text-foreground/80 [[data-glass]_&]:hover:text-foreground"
               >
-                Foundation
+                {title}
               </Button>
             );
           }
