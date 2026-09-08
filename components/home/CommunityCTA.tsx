@@ -204,7 +204,7 @@ export default function CommunityCTA() {
                   className={`group relative -ml-2 transition-transform duration-200 first:ml-0 hover:z-20 hover:-translate-y-1 ${avatarVisibilityClass(i)}`}
                 >
                   <img
-                    src={sizedAvatar(c.avatar, 96)}
+                    src={sizedAvatar(c.avatar, 80)}
                     alt={contributorName(c)}
                     width={40}
                     height={40}
@@ -219,7 +219,7 @@ export default function CommunityCTA() {
                 rel="noopener noreferrer"
                 title={`+${remainingContributors} more contributors`}
                 style={{ zIndex: 0 }}
-                className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.06] font-mono text-[10px] font-medium text-foreground/60 ring-2 ring-background transition-colors duration-200 hover:bg-foreground/[0.1] hover:text-green-bright"
+                className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full bg-foreground/[0.06] font-mono text-xs font-medium text-foreground/60 ring-2 ring-background transition-colors duration-200 hover:bg-foreground/[0.1] hover:text-green-bright"
               >
                 +{remainingContributors}
               </a>
