@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 
 const ECOSYSTEM_DIR = path.join(process.cwd(), "content/ecosystem");
@@ -105,6 +106,9 @@ export async function renderEcosystemMarkdown(
   const result = await unified()
     .use(remarkParse)
     .use(remarkRehype)
+    // Entries are contributed by outside PRs: drop unsafe URL schemes and
+    // any attribute or element outside the default allowlist.
+    .use(rehypeSanitize)
     .use(rehypeStringify)
     .process(content);
 
