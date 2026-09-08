@@ -10,8 +10,6 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-// Only the slugs listed at build time are routable; anything else is a 404
-// from the router before any file is read.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
