@@ -16,18 +16,6 @@ const fadeUp = {
 // can reference the Strategy/Coordination/Support graphic components,
 // which sit later in the file.
 
-// Preserved for when the Team section is re-enabled (pending member
-// headshots). Underscore prefix keeps the unused-vars linter happy
-// while clearly signaling intent.
-const _TEAM = [
-  { name: "Steph Alinsug", role: "Narrative" },
-  { name: "Ben Perez", role: "Operations" },
-  { name: "Rick Staa", role: "Technical" },
-  { name: "Rich O'Grady", role: "Ecosystem & Trust" },
-  { name: "Mehrdad Sadeghi", role: "Ops Engineer" },
-  { name: "Joe Birch", role: "Storyteller" },
-];
-
 /* ================================================================== */
 /*  Hero graphic — Venn-style overlapping circles, modeled exactly on   */
 /*  Linear Method's graphic.                                           */
@@ -1252,7 +1240,14 @@ export default function FoundationPage() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ staggerChildren: 0.06 }}
             >
-              {TEAM.map((person) => (
+              {[
+                { name: "Steph Alinsug", role: "Narrative" },
+                { name: "Ben Perez", role: "Operations" },
+                { name: "Rick Staa", role: "Technical" },
+                { name: "Rich O'Grady", role: "Ecosystem & Trust" },
+                { name: "Mehrdad Sadeghi", role: "Ops Engineer" },
+                { name: "Joe Birch", role: "Storyteller" },
+              ].map((person) => (
                 <motion.li
                   key={person.name}
                   variants={fadeUp}
