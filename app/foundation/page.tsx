@@ -1045,8 +1045,7 @@ export default function FoundationPage() {
           >
             <HeroVenn />
           </div>
-        </div>{" "}
-        {/* /hero-region */}
+        </div> {/* /hero-region */}
         {/* ================================================================ */}
         {/*  1. ABOUT THE FOUNDATION                                          */}
         {/* ================================================================ */}
