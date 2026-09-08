@@ -1228,15 +1228,6 @@ export default function FoundationPage() {
       {/*  still has a quiet sign-off after The Network.                    */}
       {/* ================================================================ */}
       {/*
-      const TEAM = [
-        { name: "Steph Alinsug", role: "Narrative" },
-        { name: "Ben Perez", role: "Operations" },
-        { name: "Rick Staa", role: "Technical" },
-        { name: "Rich O'Grady", role: "Ecosystem & Trust" },
-        { name: "Mehrdad Sadeghi", role: "Ops Engineer" },
-        { name: "Joe Birch", role: "Storyteller" },
-      ];
-
       <section className="relative" data-chapter="3">
         <div className="divider-gradient absolute top-0 right-0 left-0" />
         <Container>
@@ -1249,7 +1240,14 @@ export default function FoundationPage() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ staggerChildren: 0.06 }}
             >
-              {TEAM.map((person) => (
+              {[
+                { name: "Steph Alinsug", role: "Narrative" },
+                { name: "Ben Perez", role: "Operations" },
+                { name: "Rick Staa", role: "Technical" },
+                { name: "Rich O'Grady", role: "Ecosystem & Trust" },
+                { name: "Mehrdad Sadeghi", role: "Ops Engineer" },
+                { name: "Joe Birch", role: "Storyteller" },
+              ].map((person) => (
                 <motion.li
                   key={person.name}
                   variants={fadeUp}
