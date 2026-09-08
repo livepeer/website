@@ -67,6 +67,9 @@ export function ThemeToggle({ className }: { className?: string }) {
   // is honest; guessing would flash the wrong pill.
   const [mounted, setMounted] = useState(false);
 
+  // Two synchronous updates on mount, once, to replace a server guess with
+  // what localStorage actually holds. Not a cascade.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const stored = read();
     setChoice(stored);
@@ -76,6 +79,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     // would silently revert the theme a moment after load.
     apply(stored);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Follow the OS live while "system" is selected — otherwise the setting only
   // takes effect on the next page load, which reads as broken.

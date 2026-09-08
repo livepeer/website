@@ -1,17 +1,15 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
+import prettier from "eslint-config-prettier/flat";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
+// eslint-config-next 16 ships flat configs, so they are spread in directly.
+// The FlatCompat shim it used to go through cannot serialise v16's config
+// (its plugin objects are circular) and threw before linting anything.
 const eslintConfig = [
   { ignores: [".next/", "node_modules/", "next-env.d.ts"] },
-  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
+  prettier,
   {
     rules: {
       "@next/next/no-img-element": "off",

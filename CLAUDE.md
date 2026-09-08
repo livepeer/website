@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-**Stack:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4. Package manager: **pnpm** (pinned via `packageManager` — use `corepack`). No test framework.
+**Stack:** Next.js 16 (App Router, built and served with `--webpack` — the `.wgsl` loader and the watch tweaks in `next.config.ts` are webpack rules), React 19, TypeScript, Tailwind CSS v4, framer-motion 13. Package manager: **pnpm** (pinned via `packageManager` — use `corepack`). No test framework. ESLint runs `eslint-config-next` 16's flat configs directly; do not reintroduce the `FlatCompat` shim, which cannot serialise them.
 
 This repo is mid-migration to the **Livepeer UI design system** (a shadcn registry). Read the "Design system" section below before touching UI — it overrides older habits.
 

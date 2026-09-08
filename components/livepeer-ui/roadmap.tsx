@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowUpRightIcon,
@@ -23,6 +23,18 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
+
+// The live quarter, read on the client and cached: useSyncExternalStore
+// needs a stable snapshot, and the quarter does not change within a visit.
+let quarterSnapshot: string | null = null;
+const subscribeToNothing = () => () => {};
+function readCurrentQuarter() {
+  if (quarterSnapshot === null) {
+    const now = new Date();
+    quarterSnapshot = `Q${Math.floor(now.getMonth() / 3) + 1} ${now.getFullYear()}`;
+  }
+  return quarterSnapshot;
+}
 
 type View = "roadmap" | "shipped";
 
@@ -973,11 +985,11 @@ export function Roadmap({
   // build-time "today" would ship frozen and quietly claim the wrong quarter
   // was live for the next three months. The marker simply appears once the
   // browser can answer.
-  const [today, setToday] = useState<Date | null>(null);
-  useEffect(() => setToday(new Date()), []);
-  const currentQuarter = today
-    ? `Q${Math.floor(today.getMonth() / 3) + 1} ${today.getFullYear()}`
-    : null;
+  const currentQuarter = useSyncExternalStore(
+    subscribeToNothing,
+    readCurrentQuarter,
+    () => null
+  );
 
   const setParams = (
     next: Partial<{

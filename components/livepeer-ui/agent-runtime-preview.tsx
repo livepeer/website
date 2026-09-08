@@ -137,11 +137,7 @@ function useTimeline(active: boolean, still: boolean) {
   });
 
   useEffect(() => {
-    if (still) {
-      setFrame({ phase: "done", typed: PROMPT.length, progress: 100 });
-      return;
-    }
-    if (!active) return;
+    if (still || !active) return;
     let raf = 0;
     const start = performance.now();
     let last = { phase: "idle" as Phase, typed: 0, progress: 0 };
@@ -176,7 +172,11 @@ function useTimeline(active: boolean, still: boolean) {
     return () => cancelAnimationFrame(raf);
   }, [active, still]);
 
-  return frame;
+  // A still card is the finished state, derived rather than stored: it is
+  // not a frame the loop reached, it is the loop declined.
+  return still
+    ? { phase: "done" as Phase, typed: PROMPT.length, progress: 100 }
+    : frame;
 }
 
 const rise = {

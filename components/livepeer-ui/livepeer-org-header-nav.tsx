@@ -274,6 +274,9 @@ export function LivepeerOrgHeaderNav({
   React.useLayoutEffect(() => {
     activeRef.current = activeTitle;
     if (activeTitle) measureHeight();
+    // Reset on close so the next open animates from "auto" to its measured
+    // height again. One synchronous update on a close, not a cascade.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     else setOpenSettled(false);
   }, [activeTitle, renderedTitle, measureHeight]);
 

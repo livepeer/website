@@ -46,21 +46,26 @@ function LoginMenuItems({
 }: {
   links: readonly { label: string; href: string }[];
 }) {
-  const [rect, setRect] = React.useState<{ top: number; height: number } | null>(
-    null
-  );
-  const wasVisible = React.useRef(false);
-  const slides = rect !== null && wasVisible.current;
-
-  React.useEffect(() => {
-    wasVisible.current = rect !== null;
-  }, [rect]);
+  // Whether the highlight slides is decided at the moment it moves: it
+  // slides only if it was already visible. Carried in the same state as the
+  // rect, so it never needs a ref read during render.
+  const [highlight, setHighlight] = React.useState<{
+    rect: { top: number; height: number } | null;
+    slides: boolean;
+  }>({ rect: null, slides: false });
+  const { rect, slides } = highlight;
 
   const track = (element: HTMLElement) =>
-    setRect({ top: element.offsetTop, height: element.offsetHeight });
+    setHighlight((prev) => ({
+      rect: { top: element.offsetTop, height: element.offsetHeight },
+      slides: prev.rect !== null,
+    }));
 
   return (
-    <div className="relative" onPointerLeave={() => setRect(null)}>
+    <div
+      className="relative"
+      onPointerLeave={() => setHighlight({ rect: null, slides: false })}
+    >
       <div
         aria-hidden="true"
         className={cn(

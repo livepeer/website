@@ -82,6 +82,8 @@ export function RecordSheet({
   const [open, setOpen] = useState(swappedIn);
   useEffect(() => {
     mountedSheets++;
+    // The false-to-true edge described above is the point of this effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpen(true);
     return () => {
       mountedSheets--;
