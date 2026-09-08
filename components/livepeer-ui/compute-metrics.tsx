@@ -1,8 +1,11 @@
 import {
-  Card, CardDescription, CardHeader, CardTitle,
-} from "@/components/ui/card"
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export type ComputeMetric = { label: string; value: string; period?: string }
+export type ComputeMetric = { label: string; value: string; period?: string };
 
 /**
  * `align` exists because the label row is a flex container: it ignores an
@@ -14,8 +17,8 @@ export function ComputeMetrics({
   align = "start",
   stats,
 }: {
-  align?: "start" | "center"
-  stats: ComputeMetric[]
+  align?: "start" | "center";
+  stats: ComputeMetric[];
 }) {
   return (
     <div className="grid grid-cols-2 gap-4 sm:w-fit sm:grid-cols-[repeat(2,14rem)]">
@@ -52,5 +55,5 @@ export function ComputeMetrics({
         </Card>
       ))}
     </div>
-  )
+  );
 }

@@ -369,8 +369,7 @@ async function readOrganizations(): Promise<Map<string, string>> {
  */
 function portraitFilename(prop: Json | undefined): string | undefined {
   const files = prop?.files as
-    | { type?: string; external?: { url?: string } }[]
-    | undefined;
+    { type?: string; external?: { url?: string } }[] | undefined;
   const url = files?.find((f) => f.type === "external")?.external?.url;
   if (!url) return undefined;
   try {
@@ -592,9 +591,7 @@ function toCommitment(
         `most — the others belong in Contributors.`
     );
   }
-  const lead = leadIds[0]
-    ? people.get(leadIds[0])
-    : undefined;
+  const lead = leadIds[0] ? people.get(leadIds[0]) : undefined;
   if (leadIds[0] && !lead) {
     throw new Error(
       `${where}: Lead relates to ${leadIds[0]}, which is not ` +
@@ -607,9 +604,7 @@ function toCommitment(
   // rendering, so an upload is ignored rather than baked into a page that
   // would break by lunchtime.
   const coverProp = row.cover as
-    | { type?: string; external?: { url?: string } }
-    | null
-    | undefined;
+    { type?: string; external?: { url?: string } } | null | undefined;
   const cover =
     coverProp?.type === "external" ? coverProp.external?.url : undefined;
 
@@ -649,7 +644,10 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
   // otherwise run end to end.
   const details = await Promise.all(
     rows.map((row) =>
-      readDetail(row.id as string, `Roadmap commitments → ${text(props(row).Name)}`)
+      readDetail(
+        row.id as string,
+        `Roadmap commitments → ${text(props(row).Name)}`
+      )
     )
   );
 
@@ -731,8 +729,7 @@ export async function getNotionOrganizations(): Promise<Organization[]> {
       }
 
       const coverProp = row.cover as
-        | { type?: string; external?: { url?: string } }
-        | undefined;
+        { type?: string; external?: { url?: string } } | undefined;
 
       return {
         slug: slugify(name),
@@ -813,8 +810,7 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
         : undefined;
 
       const coverProp = row.cover as
-        | { type?: string; external?: { url?: string } }
-        | undefined;
+        { type?: string; external?: { url?: string } } | undefined;
 
       return {
         slug: slugify(name),

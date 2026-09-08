@@ -1,7 +1,7 @@
 # The commitment register — fallback copy
 
-**The register lives in Notion**, in **Roadmap commitments** under *Livepeer.org
-content*. That is what `/roadmap` renders, and where a commitment is added,
+**The register lives in Notion**, in **Roadmap commitments** under _Livepeer.org
+content_. That is what `/roadmap` renders, and where a commitment is added,
 edited, or moved to Shipped. Each property there carries a description
 explaining what belongs in it; read those rather than this file when you are
 filling one in.

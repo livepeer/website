@@ -1,16 +1,20 @@
-import { ArrowUpRightIcon, GlobeIcon } from "lucide-react"
+import { ArrowUpRightIcon, GlobeIcon } from "lucide-react";
 
-import { LivepeerLogo } from "@/components/brand"
-import { DiscordIcon, GitHubIcon, XIcon } from "@/components/brand-social-icons"
-import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { LivepeerLogo } from "@/components/brand";
+import {
+  DiscordIcon,
+  GitHubIcon,
+  XIcon,
+} from "@/components/brand-social-icons";
+import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const socialIcons = {
   discord: DiscordIcon,
   x: XIcon,
   github: GitHubIcon,
   website: GlobeIcon,
-}
+};
 
 export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
   return (
@@ -22,9 +26,9 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
               <h2 className="text-sm font-medium">{group.title}</h2>
               <nav className="mt-4 flex flex-col items-start gap-3">
                 {group.links.map((link) => {
-                  const isLatest = link.label === "Blog"
-                  const href = isLatest ? "/latest" : link.href
-                  const external = href.startsWith("http")
+                  const isLatest = link.label === "Blog";
+                  const href = isLatest ? "/latest" : link.href;
+                  const external = href.startsWith("http");
 
                   return (
                     <a
@@ -42,7 +46,7 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                         />
                       )}
                     </a>
-                  )
+                  );
                 })}
               </nav>
             </div>
@@ -59,7 +63,7 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
           </a>
           <div className="flex items-center gap-4 sm:col-start-2 sm:row-start-1">
             {site.socialLinks.map((social) => {
-              const Icon = socialIcons[social.service]
+              const Icon = socialIcons[social.service];
 
               return (
                 <a
@@ -72,7 +76,7 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                 >
                   <Icon className="size-5" aria-hidden="true" />
                 </a>
-              )
+              );
             })}
           </div>
         </div>
@@ -86,5 +90,5 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
         </div>
       </div>
     </footer>
-  )
+  );
 }

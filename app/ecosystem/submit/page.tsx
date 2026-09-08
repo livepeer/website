@@ -27,11 +27,11 @@ function buildNewFileUrl(templateContents: string): string {
 const DESCRIPTION =
   "Add your project to the Livepeer ecosystem catalogue — open a pull request with a markdown file and a logo.";
 
-  // openGraph and twitter are declared, not inferred. Next does not fill
-  // og:title from `title` or og:description from `description`, so a page
-  // setting only those two inherits the root layout's openGraph object whole —
-  // and served "Livepeer — The open inference network" with the home page's
-  // description to every timeline it was shared into.
+// openGraph and twitter are declared, not inferred. Next does not fill
+// og:title from `title` or og:description from `description`, so a page
+// setting only those two inherits the root layout's openGraph object whole —
+// and served "Livepeer — The open inference network" with the home page's
+// description to every timeline it was shared into.
 export const metadata: Metadata = {
   title: "Submit your project",
   description: DESCRIPTION,
@@ -47,9 +47,7 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitAppPage() {
-  const templateUrl = buildNewFileUrl(
-    fs.readFileSync(TEMPLATE_PATH, "utf8")
-  );
+  const templateUrl = buildNewFileUrl(fs.readFileSync(TEMPLATE_PATH, "utf8"));
 
   // "All" is the listing's unfiltered pseudo-category, not a real one — a
   // contributor must never write it into their frontmatter.

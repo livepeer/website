@@ -166,7 +166,10 @@ export function toFundingPath(raw: RawFundingPath, where: string): FundingPath {
  * returned them, which is the kind of thing that changes between builds
  * without anyone editing anything — so it fails instead.
  */
-export function checkLadder(paths: FundingPath[], where: string): FundingPath[] {
+export function checkLadder(
+  paths: FundingPath[],
+  where: string
+): FundingPath[] {
   const active = paths.filter(isActive);
   if (active.length === 0) {
     throw new Error(

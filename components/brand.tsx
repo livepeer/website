@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 const symbolPaths = (
   <>
@@ -9,7 +9,7 @@ const symbolPaths = (
     <path d="M0 88.6207V73.1212H15.4995V88.6207H0Z" />
     <path d="M0 52.5661V37.0667H15.4995V52.5661H0Z" />
   </>
-)
+);
 
 const wordmarkPaths = (
   <>
@@ -22,7 +22,7 @@ const wordmarkPaths = (
     <path d="M560.869 88.6863V52.5316H577.891V37.121H560.869V0.97998H627.785V16.0258H577.891V37.121H620.2V52.5316H577.891V73.6405H629.081V88.6863H560.869Z" />
     <path d="M641.85 88.6863V0.97998H682.925C698.488 0.983166 710.061 8.54418 710.061 22.8274C710.061 33.708 705.127 40.3254 695.013 44.0563C704.202 44.0563 708.766 48.2153 708.766 56.4722V88.6863H691.744V60.6923C691.744 54.3927 689.894 52.5578 683.541 52.5578H658.872V88.6863H641.85ZM658.872 37.0884H677.867C687.797 37.0884 692.977 33.7995 692.977 26.616C692.977 19.4325 687.982 16.0258 677.867 16.0258H658.872V37.0884Z" />
   </>
-)
+);
 
 function LivepeerSymbol(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -36,11 +36,11 @@ function LivepeerSymbol(props: React.SVGProps<SVGSVGElement>) {
     >
       {symbolPaths}
     </svg>
-  )
+  );
 }
 
 function LivepeerGradientSymbol(props: React.SVGProps<SVGSVGElement>) {
-  const gradientId = React.useId().replaceAll(":", "")
+  const gradientId = React.useId().replaceAll(":", "");
 
   return (
     <svg
@@ -59,7 +59,7 @@ function LivepeerGradientSymbol(props: React.SVGProps<SVGSVGElement>) {
       </defs>
       <g fill={`url(#${gradientId})`}>{symbolPaths}</g>
     </svg>
-  )
+  );
 }
 
 function LivepeerWordmark(props: React.SVGProps<SVGSVGElement>) {
@@ -74,7 +74,7 @@ function LivepeerWordmark(props: React.SVGProps<SVGSVGElement>) {
     >
       {wordmarkPaths}
     </svg>
-  )
+  );
 }
 
 function LivepeerLogo({ className, ...props }: React.ComponentProps<"span">) {
@@ -91,7 +91,7 @@ function LivepeerLogo({ className, ...props }: React.ComponentProps<"span">) {
       {/* <LivepeerGradientSymbol className="h-4 w-auto" aria-hidden="true" /> */}
       <LivepeerWordmark className="h-4 w-auto" aria-hidden="true" />
     </span>
-  )
+  );
 }
 
 function LivepeerLockup(props: React.SVGProps<SVGSVGElement>) {
@@ -107,16 +107,16 @@ function LivepeerLockup(props: React.SVGProps<SVGSVGElement>) {
       {symbolPaths}
       {wordmarkPaths}
     </svg>
-  )
+  );
 }
 
 function LivepeerGradientLockup({
   metallic = false,
   ...props
 }: React.SVGProps<SVGSVGElement> & { metallic?: boolean }) {
-  const gradientId = React.useId().replaceAll(":", "")
-  const wordmarkGradientId = `${gradientId}-wordmark`
-  const metallicSymbolGradientId = `${gradientId}-metallic-symbol`
+  const gradientId = React.useId().replaceAll(":", "");
+  const wordmarkGradientId = `${gradientId}-wordmark`;
+  const metallicSymbolGradientId = `${gradientId}-metallic-symbol`;
 
   return (
     <svg
@@ -172,7 +172,7 @@ function LivepeerGradientLockup({
         {wordmarkPaths}
       </g>
     </svg>
-  )
+  );
 }
 
 function AgentWordmark(props: React.SVGProps<SVGSVGElement>) {
@@ -191,7 +191,7 @@ function AgentWordmark(props: React.SVGProps<SVGSVGElement>) {
       <path d="M454.62,119.17l-61.08-96.45h-.37v80.44c0,5.4.37,10.43,2.23,16.01h-20.48c1.86-5.59,2.23-10.61,2.23-16.01V16.01c0-5.4-.37-10.43-2.23-16.01h43.76l59.96,94.59h.37V16.01c0-5.4-.37-10.43-2.23-16.01h20.48c-1.86,5.59-2.23,10.61-2.23,16.01v103.16h-40.41Z" />
       <path d="M606.59,0l2.98,18.06c-5.59-2.42-13.22-2.79-18.43-2.79h-18.25v87.89c0,5.4.37,10.43,2.23,16.01h-39.47c1.86-5.59,2.23-10.61,2.23-16.01V15.27h-18.25c-5.21,0-12.85.37-18.43,2.79l2.98-18.06h102.41Z" />
     </svg>
-  )
+  );
 }
 
 function RegistryUiMark(props: React.SVGProps<SVGSVGElement>) {
@@ -207,7 +207,7 @@ function RegistryUiMark(props: React.SVGProps<SVGSVGElement>) {
       <path d="M1.53,22.64L9.33,0h18.87l-7.97,23.19c-4.08,11.87-.91,16.98,14.18,16.98s21.18-2.62,25.26-14.55L68.43,0h4.81l-8.76,25.62c-5.54,16.07-13.27,19.9-36.34,19.9S-3.88,38.41,1.53,22.64Z" />
       <path d="M84.79,0h18.32l-15.46,44.92h-18.32L84.79,0Z" />
     </svg>
-  )
+  );
 }
 
 export {
@@ -219,4 +219,4 @@ export {
   LivepeerGradientLockup,
   AgentWordmark,
   RegistryUiMark,
-}
+};

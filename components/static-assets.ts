@@ -73,4 +73,4 @@ export const sanityStaticAssets = {
         "https://cdn.sanity.io/images/l36s876e/production/ca34ac10ad1cc05c38297e1d71832e097e477245-1680x720.png",
     },
   },
-} as const
+} as const;

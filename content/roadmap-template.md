@@ -10,8 +10,8 @@ title: Name of the outcome
 # under the title on the closed card. Not the same as the body at the bottom of
 # this file, which the expanded card shows as "Context".
 outcome: One sentence, max ~140 chars — what lands, in plain terms.
-workstream: Network            # Protocol | Network | Agent
-state: building                # building | next | shipped
+workstream: Network # Protocol | Network | Agent
+state: building # building | next | shipped
 # The one party answerable for delivering this, shown on the closed card as
 # "by". Exactly one: accountability that is shared is accountability nobody
 # holds, and a reader whose question is "who do I ask about that date" needs a
@@ -46,7 +46,7 @@ owner: Name or team
 contributors:
   - name: Full name or handle
     avatar: their-file.jpg
-target: Q4 2026                # month | quarter | half | year — the real precision, no more
+target: Q4 2026 # month | quarter | half | year — the real precision, no more
 
 # The banner at the top of the record, from Peace Node's stock library:
 #   https://livepeer.peaceno.de/marketing/stock-images

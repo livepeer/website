@@ -2,7 +2,10 @@ import { ArrowUpRightIcon, DownloadIcon, XIcon } from "lucide-react";
 
 import { LivepeerLockup, LivepeerSymbol } from "@/components/brand";
 import { CopyButton } from "@/components/copy-button";
-import { MarkPlates, Specimen } from "@/components/livepeer-ui/brand-interactive";
+import {
+  MarkPlates,
+  Specimen,
+} from "@/components/livepeer-ui/brand-interactive";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -200,7 +203,10 @@ const NEVER = [
   {
     name: "Rotated",
     render: (
-      <LivepeerSymbol className="h-10 w-auto rotate-[24deg]" aria-hidden="true" />
+      <LivepeerSymbol
+        className="h-10 w-auto rotate-[24deg]"
+        aria-hidden="true"
+      />
     ),
   },
   {
@@ -265,8 +271,8 @@ export function BrandUsageSection() {
       </ul>
       <p className="mt-6 max-w-[48ch] px-1 text-sm leading-relaxed text-muted-foreground">
         Below 32px the symbol&apos;s squares close up, so it is not an icon.
-        Black or white, never a gradient, never a shadow, never rebuilt from
-        the parts. If it is not in the kit, it is not the mark.
+        Black or white, never a gradient, never a shadow, never rebuilt from the
+        parts. If it is not in the kit, it is not the mark.
       </p>
     </Section>
   );

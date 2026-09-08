@@ -62,9 +62,7 @@ export default async function PersonPage({
   const contributed = commitments.filter((c) =>
     c.contributors?.some((p) => p.slug === person.slug)
   );
-  const leading = commitments.filter(
-    (c) => c.lead?.slug === person.slug
-  );
+  const leading = commitments.filter((c) => c.lead?.slug === person.slug);
 
   return (
     // The banner spans the page; the record keeps the reading column.

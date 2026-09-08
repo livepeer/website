@@ -125,11 +125,13 @@ export function assertCategory(value: unknown, where: string): BlogCategory {
 // credential still runs. See lib/register.ts.
 
 function slugsOnDisk(): string[] {
-  return fs
-    .readdirSync(BLOG_DIR)
-    // README.md documents the archive; it is not a post in it.
-    .filter((file) => file.endsWith(".md") && file !== "README.md")
-    .map((file) => file.replace(/\.md$/, ""));
+  return (
+    fs
+      .readdirSync(BLOG_DIR)
+      // README.md documents the archive; it is not a post in it.
+      .filter((file) => file.endsWith(".md") && file !== "README.md")
+      .map((file) => file.replace(/\.md$/, ""))
+  );
 }
 
 function readFile(slug: string): { summary: BlogSummary; body: string } {

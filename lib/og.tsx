@@ -222,9 +222,8 @@ export async function renderArtCard(art: string) {
   const image = await loadArt(art);
 
   return new ImageResponse(
-    (
-      <div style={CANVAS}>
-        {/* Radial, not a flat wash. A single tint heavy enough to carry white
+    <div style={CANVAS}>
+      {/* Radial, not a flat wash. A single tint heavy enough to carry white
             over the brightest of these images drains the colour out of the
             darker ones — a flat 45% measured 2.2:1 on the brightest, and the
             wash needed to fix that turned the vignette into a visible smudge.
@@ -232,15 +231,14 @@ export async function renderArtCard(art: string) {
             art intact at the edges. 3:1 is the bar that applies here: the
             lockup is a graphic, so WCAG 1.4.11 governs, not the 4.5:1 written
             for body text. */}
-        <ArtBackdrop
-          art={image}
-          scrim="radial-gradient(circle at 50% 50%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.66) 40%, rgba(0,0,0,0.34) 75%, rgba(0,0,0,0.22) 100%)"
-        />
-        <div style={{ ...LAYER, alignItems: "center", justifyContent: "center" }}>
-          <Lockup width={520} />
-        </div>
+      <ArtBackdrop
+        art={image}
+        scrim="radial-gradient(circle at 50% 50%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.66) 40%, rgba(0,0,0,0.34) 75%, rgba(0,0,0,0.22) 100%)"
+      />
+      <div style={{ ...LAYER, alignItems: "center", justifyContent: "center" }}>
+        <Lockup width={520} />
       </div>
-    ),
+    </div>,
     OG_SIZE
   );
 }
@@ -296,24 +294,23 @@ export async function renderTitledCard(
   ]);
 
   return new ImageResponse(
-    (
-      <div style={{ ...CANVAS, fontFamily: "Inter" }}>
-        {/* Weighted to the foot, where the headline sits: light enough at the
+    <div style={{ ...CANVAS, fontFamily: "Inter" }}>
+      {/* Weighted to the foot, where the headline sits: light enough at the
             top that the art still reads, dense enough at the bottom that the
             title holds over any of it. */}
-        <ArtBackdrop
-          art={image}
-          scrim="linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.88) 100%)"
-        />
-        <div
-          style={{
-            ...LAYER,
-            flexDirection: "column",
-            justifyContent: "space-between",
-            padding: 64,
-          }}
-        >
-          {/* Sized against the headline, not against legibility.
+      <ArtBackdrop
+        art={image}
+        scrim="linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.88) 100%)"
+      />
+      <div
+        style={{
+          ...LAYER,
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: 64,
+        }}
+      >
+        {/* Sized against the headline, not against legibility.
               215 was derived from holding the letterforms at the size the old
               wordmark set them, which kept the mark 27px tall against a 60px
               headline — legible at every width and still an afterthought in
@@ -325,43 +322,42 @@ export async function renderTitledCard(
 
               It helps the small end too — the symbol's columns go from 3.5px
               to 5.5px once Slack draws the card at 360px. */}
-          <div style={{ display: "flex" }}>
-            <Lockup width={340} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            {eyebrow ? (
-              // Sized and tracked off the page's own Label: 11px at 0.09em
-              // there, scaled to the card. Held at 72% rather than full white
-              // so it reads as a label on the headline rather than a second
-              // line of it.
-              <div
-                style={{
-                  display: "flex",
-                  fontSize: 26,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.72)",
-                }}
-              >
-                {eyebrow}
-              </div>
-            ) : null}
+        <div style={{ display: "flex" }}>
+          <Lockup width={340} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {eyebrow ? (
+            // Sized and tracked off the page's own Label: 11px at 0.09em
+            // there, scaled to the card. Held at 72% rather than full white
+            // so it reads as a label on the headline rather than a second
+            // line of it.
             <div
               style={{
                 display: "flex",
-                maxWidth: 940,
-                fontSize: headlineSize(title),
-                lineHeight: 1.08,
-                letterSpacing: "-0.02em",
-                color: FOREGROUND,
+                fontSize: 26,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.72)",
               }}
             >
-              {title}
+              {eyebrow}
             </div>
+          ) : null}
+          <div
+            style={{
+              display: "flex",
+              maxWidth: 940,
+              fontSize: headlineSize(title),
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
+              color: FOREGROUND,
+            }}
+          >
+            {title}
           </div>
         </div>
       </div>
-    ),
+    </div>,
     {
       ...OG_SIZE,
       fonts: [

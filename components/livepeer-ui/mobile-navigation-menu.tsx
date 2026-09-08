@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 
 function MobileMenuIcon({ open = false }: { open?: boolean }) {
   return (
@@ -34,7 +34,7 @@ function MobileMenuIcon({ open = false }: { open?: boolean }) {
         }}
       />
     </span>
-  )
+  );
 }
 
 export function MobileNavigationMenu({
@@ -44,13 +44,13 @@ export function MobileNavigationMenu({
   open,
   onOpenChange,
 }: {
-  title: string
-  header: React.ReactNode
-  children: (close: () => void) => React.ReactNode
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  title: string;
+  header: React.ReactNode;
+  children: (close: () => void) => React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const close = React.useCallback(() => onOpenChange(false), [onOpenChange])
+  const close = React.useCallback(() => onOpenChange(false), [onOpenChange]);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -99,5 +99,5 @@ export function MobileNavigationMenu({
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 # The funding ladder — fallback copy
 
-**The ladder lives in Notion**, in **Funding paths** under *Livepeer.org
-content*. That is what `/contribute` renders, and where a path is added, its
+**The ladder lives in Notion**, in **Funding paths** under _Livepeer.org
+content_. That is what `/contribute` renders, and where a path is added, its
 ceiling changed, or a programme retired. Each property there carries a
 description explaining what belongs in it; read those rather than this file
 when you are filling one in.

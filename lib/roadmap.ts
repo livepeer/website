@@ -422,10 +422,7 @@ function parse(file: string): Commitment {
     owner,
     ownerSlug: slugify(owner),
     contributors: readPeople(data.contributors, file),
-    lead: readPeople(
-      data.lead ? [data.lead] : undefined,
-      file
-    )?.[0],
+    lead: readPeople(data.lead ? [data.lead] : undefined, file)?.[0],
     target: String(at("target", data.target)),
     targetSort: targetSortKey(
       String(at("target", data.target)),

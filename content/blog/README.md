@@ -1,10 +1,10 @@
 # The blog — fallback copy
 
-**The blog lives in Notion**, in **Blog posts** under *Livepeer.org content*.
+**The blog lives in Notion**, in **Blog posts** under _Livepeer.org content_.
 That is what `/blog` renders, and where a post is written, edited, or published.
 The post itself is the Notion page body; the properties around it are what the
 index card, the share image and the metadata read. Each property carries a
-description explaining what belongs in it, and *Publishing a blog post* beside
+description explaining what belongs in it, and _Publishing a blog post_ beside
 the database explains the rest — read those rather than this file when you are
 writing one.
 
@@ -30,7 +30,7 @@ from the live site, and the site rewrites the address back to the repo copy it
 already has. Notion never holds the file, because an upload comes back from the
 API as a link that expires within the hour.
 
-So adding art *inside* a post is still a pull request: commit the file, then
+So adding art _inside_ a post is still a pull request: commit the file, then
 paste its livepeer.org address into the page. The build fails on an address that
 does not resolve to something in `public/`.
 

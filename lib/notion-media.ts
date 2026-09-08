@@ -95,7 +95,11 @@ export function resolveMediaUrl(url: string, where: string): string {
  * be a baffling thing to read after dragging a picture into a page.
  */
 export function resolveMediaSource(
-  source: { type?: string; external?: { url?: string }; file?: { url?: string } },
+  source: {
+    type?: string;
+    external?: { url?: string };
+    file?: { url?: string };
+  },
   where: string
 ): string {
   if (source.type === "file" || source.file) {

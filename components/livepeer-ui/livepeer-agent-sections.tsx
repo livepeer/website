@@ -1,12 +1,12 @@
-import Link from "next/link"
-import { ArrowRightIcon } from "lucide-react"
+import Link from "next/link";
+import { ArrowRightIcon } from "lucide-react";
 
-import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility"
-import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility";
+import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>
+type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>;
 
 /**
  * The split band: compatible clients on an inverted panel, the embed-it-in-
@@ -25,7 +25,7 @@ type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>
 export function AgentAccessSection({
   content,
 }: {
-  content: AgentContent["access"]
+  content: AgentContent["access"];
 }) {
   return (
     <section data-header-solid className="grid md:grid-cols-2">
@@ -58,7 +58,7 @@ export function AgentAccessSection({
         )}
       </div>
     </section>
-  )
+  );
 }
 
 /**
@@ -72,8 +72,8 @@ export function AgentCapabilitiesSection({
   content,
   capabilities,
 }: {
-  content: AgentContent["capabilities"]
-  capabilities: readonly string[]
+  content: AgentContent["capabilities"];
+  capabilities: readonly string[];
 }) {
   return (
     <section className="bg-background px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
@@ -111,5 +111,5 @@ export function AgentCapabilitiesSection({
         </Button>
       </div>
     </section>
-  )
+  );
 }

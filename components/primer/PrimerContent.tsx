@@ -722,10 +722,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                   questions, share what you&rsquo;re working on, and find
                   collaborators.
                 </Text18>
-                <InvolvedButton
-                  href="/discord"
-                  label="Let's build"
-                />
+                <InvolvedButton href="/discord" label="Let's build" />
               </InvolvedCard>
               <InvolvedCard
                 icon={`${IMG}/icon-mining.svg`}

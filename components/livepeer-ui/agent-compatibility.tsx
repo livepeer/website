@@ -1,7 +1,7 @@
-import Image from "next/image"
+import Image from "next/image";
 
-import { cn } from "@/lib/utils"
-import { sanityStaticAssets } from "@/components/static-assets"
+import { cn } from "@/lib/utils";
+import { sanityStaticAssets } from "@/components/static-assets";
 
 const agents = [
   {
@@ -32,7 +32,7 @@ const agents = [
     src: sanityStaticAssets.agentCompatibility.pi,
     monochrome: true,
   },
-]
+];
 
 function AgentCompatibility({
   className,
@@ -40,10 +40,10 @@ function AgentCompatibility({
   large = false,
   responsiveAlignment = false,
 }: {
-  className?: string
-  inverted?: boolean
-  large?: boolean
-  responsiveAlignment?: boolean
+  className?: string;
+  inverted?: boolean;
+  large?: boolean;
+  responsiveAlignment?: boolean;
 }) {
   return (
     <div
@@ -94,7 +94,7 @@ function AgentCompatibility({
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export { AgentCompatibility }
+export { AgentCompatibility };

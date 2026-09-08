@@ -1,7 +1,7 @@
 # The organisations — fallback copy
 
-**The live source is Notion**, in **Organizations** under *Livepeer.org
-content*. That is what `/organizations/<slug>` renders, and where a body is
+**The live source is Notion**, in **Organizations** under _Livepeer.org
+content_. That is what `/organizations/<slug>` renders, and where a body is
 added or edited. Each property there carries a description explaining what
 belongs in it; read those rather than this file when filling one in.
 

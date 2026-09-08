@@ -1,19 +1,19 @@
-import Link from "next/link"
+import Link from "next/link";
 
-import { CopyButton } from "@/components/copy-button"
-import { AgentWordmark, LivepeerWordmark } from "@/components/brand"
-import { LivepeerAgentDeltaStream } from "@/components/livepeer-ui/livepeer-agent-delta-stream"
+import { CopyButton } from "@/components/copy-button";
+import { AgentWordmark, LivepeerWordmark } from "@/components/brand";
+import { LivepeerAgentDeltaStream } from "@/components/livepeer-ui/livepeer-agent-delta-stream";
 
 export function LivepeerAgentHero({
   content,
 }: {
   content: {
-    heading: string
-    description: string
-    serverUrl: string
-    signInCta: { label: string; href: string }
-    createAccountCta: { label: string; href: string }
-  }
+    heading: string;
+    description: string;
+    serverUrl: string;
+    signInCta: { label: string; href: string };
+    createAccountCta: { label: string; href: string };
+  };
 }) {
   return (
     <section className="w-full overflow-hidden bg-background px-4 pb-24 sm:px-6 sm:pb-32">
@@ -77,5 +77,5 @@ export function LivepeerAgentHero({
         </div>
       </div>
     </section>
-  )
+  );
 }

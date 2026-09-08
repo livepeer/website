@@ -10,7 +10,7 @@ categories:
 logo: your-project.svg
 # logoBg: "#000000"   # optional, used when the logo needs a background plate
 # logoMonochrome: true # optional, for single-ink marks: supply the logo in
-                       # black and it is inverted in dark mode
+# black and it is inverted in dark mode
 
 # Optional metadata
 madeBy: Your Company or Name

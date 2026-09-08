@@ -119,4 +119,4 @@ export const agentCapabilities = [
   "whisper-word",
   "wizper",
   "yolo-segment",
-] as const
+] as const;

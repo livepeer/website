@@ -1,7 +1,7 @@
 # The people — fallback copy
 
-**The live source is Notion**, in **Livepeer people** under *Livepeer.org
-content*. That is what `/people/<slug>` renders, and where a person is added or
+**The live source is Notion**, in **Livepeer people** under _Livepeer.org
+content_. That is what `/people/<slug>` renders, and where a person is added or
 edited. Each property there carries a description; read those rather than this
 file when filling one in.
 

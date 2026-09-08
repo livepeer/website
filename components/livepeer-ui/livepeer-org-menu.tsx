@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { ArrowLeftIcon } from "lucide-react"
+import * as React from "react";
+import Link from "next/link";
+import { ArrowLeftIcon } from "lucide-react";
 
-import { LivepeerLogo } from "@/components/brand"
-import { getLivepeerOrgFoundationHref } from "@/components/livepeer-ui/livepeer-org-header-nav"
-import { MobileNavigationMenu } from "@/components/livepeer-ui/mobile-navigation-menu"
-import { ExternalArrow } from "@/components/ui/external-arrow"
-import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts"
-import { loginLinks } from "@/lib/site"
+import { LivepeerLogo } from "@/components/brand";
+import { getLivepeerOrgFoundationHref } from "@/components/livepeer-ui/livepeer-org-header-nav";
+import { MobileNavigationMenu } from "@/components/livepeer-ui/mobile-navigation-menu";
+import { ExternalArrow } from "@/components/ui/external-arrow";
+import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
+import { loginLinks } from "@/lib/site";
 
 // Shared with the header's "Log in" dropdown (lib/site.ts). The list used to
 // be local to this file and still pointed Agent Console at
 // /mockups/livepeer-agent — a path that only exists on the registry site.
 
 export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
-  const [open, setOpen] = React.useState(false)
-  const [showLoginLinks, setShowLoginLinks] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
+  const [showLoginLinks, setShowLoginLinks] = React.useState(false);
   const resetLoginLinksTimer = React.useRef<ReturnType<
     typeof setTimeout
-  > | null>(null)
+  > | null>(null);
   const allLinks = [
     ...site.menuLinks,
     ...site.footerGroups.flatMap((group) => group.links),
-  ]
+  ];
   const findHref = (labels: string[], path: string, fallback: string) =>
     site.menuLinks.find(
       (link) => labels.includes(link.label) || link.href.includes(path)
@@ -32,7 +32,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
     allLinks.find(
       (link) => labels.includes(link.label) || link.href.includes(path)
     )?.href ??
-    fallback
+    fallback;
   const mobileLinks = [
     { label: "Home", href: site.homeHref },
     { label: "Foundation", href: getLivepeerOrgFoundationHref(site) },
@@ -72,27 +72,27 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
         `${site.homeHref}/latest`
       ).replace(/\/blog(?=\/|$)/, "/latest"),
     },
-  ]
+  ];
 
   const clearLoginLinksReset = React.useCallback(() => {
     if (resetLoginLinksTimer.current) {
-      clearTimeout(resetLoginLinksTimer.current)
-      resetLoginLinksTimer.current = null
+      clearTimeout(resetLoginLinksTimer.current);
+      resetLoginLinksTimer.current = null;
     }
-  }, [])
+  }, []);
 
-  React.useEffect(() => clearLoginLinksReset, [clearLoginLinksReset])
+  React.useEffect(() => clearLoginLinksReset, [clearLoginLinksReset]);
 
   const handleOpenChange = (nextOpen: boolean) => {
-    clearLoginLinksReset()
-    setOpen(nextOpen)
+    clearLoginLinksReset();
+    setOpen(nextOpen);
     if (!nextOpen) {
       resetLoginLinksTimer.current = setTimeout(() => {
-        setShowLoginLinks(false)
-        resetLoginLinksTimer.current = null
-      }, 220)
+        setShowLoginLinks(false);
+        resetLoginLinksTimer.current = null;
+      }, 220);
     }
-  }
+  };
 
   return (
     <MobileNavigationMenu
@@ -123,7 +123,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                 </button>
                 {loginLinks.map((item) => {
                   const className =
-                    "flex items-center gap-2 rounded-sm py-2.5 text-display-sm text-foreground outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
+                    "flex items-center gap-2 rounded-sm py-2.5 text-display-sm text-foreground outline-none transition-colors hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg";
                   const content = (
                     <>
                       <span>{item.label}</span>
@@ -132,7 +132,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                           it takes in the header dropdown. */}
                       <ExternalArrow className="size-6 sm:size-8" />
                     </>
-                  )
+                  );
 
                   return item.href.startsWith("http") ? (
                     <a
@@ -154,14 +154,14 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                     >
                       {content}
                     </Link>
-                  )
+                  );
                 })}
               </>
             ) : (
               <>
                 {mobileLinks.map((item) => {
                   const className =
-                    "rounded-sm py-2.5 text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
+                    "rounded-sm py-2.5 text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg";
 
                   return item.href.startsWith("http") ? (
                     <a
@@ -183,7 +183,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                     >
                       {item.label}
                     </Link>
-                  )
+                  );
                 })}
                 <button
                   type="button"
@@ -199,5 +199,5 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
         </div>
       )}
     </MobileNavigationMenu>
-  )
+  );
 }

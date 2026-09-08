@@ -47,9 +47,7 @@ export default async function InterceptedPerson({
         contributed={commitments.filter((c) =>
           c.contributors?.some((p) => p.slug === person.slug)
         )}
-        leading={commitments.filter(
-          (c) => c.lead?.slug === person.slug
-        )}
+        leading={commitments.filter((c) => c.lead?.slug === person.slug)}
       />
     </RecordSheet>
   );
