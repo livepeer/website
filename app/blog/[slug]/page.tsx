@@ -8,6 +8,11 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+// No `dynamicParams = false` here, unlike the roadmap, people and
+// organization records: a post published in Notion after the last build must
+// be served on its first request, or publishing would need a deploy — the one
+// thing the Notion move was for. An unknown slug still 404s, because
+// getBlogPost returns null for it below.
 export async function generateStaticParams() {
   const posts = await getBlogRegister();
   return posts.map((post) => ({ slug: post.slug }));

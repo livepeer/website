@@ -24,6 +24,18 @@ const REVALIDATE = 3_600;
 
 export const DISCORD_FALLBACK_INVITE = "https://discord.gg/55SZFEEH5y";
 
+/**
+ * Only a Discord invite is ever served. The widget's answer is redirected to
+ * verbatim by /discord, so a spoofed or compromised response would turn that
+ * route into an open redirect; anything that is not an invite on Discord's
+ * own hosts is dropped for the fallback.
+ */
+const INVITE = /^https:\/\/(discord\.gg|discord\.com\/invite)\/[\w-]+$/;
+
+export function isDiscordInvite(url: string): boolean {
+  return INVITE.test(url);
+}
+
 export type Discord = {
   /** A current invite URL. */
   invite: string;
@@ -39,8 +51,12 @@ export async function getDiscord(): Promise<Discord> {
       instant_invite?: string | null;
       presence_count?: number;
     };
+    const invite = widget.instant_invite ?? "";
+    if (invite && !isDiscordInvite(invite)) {
+      console.warn(`discord: widget invite ${invite} is not a Discord invite`);
+    }
     return {
-      invite: widget.instant_invite || DISCORD_FALLBACK_INVITE,
+      invite: isDiscordInvite(invite) ? invite : DISCORD_FALLBACK_INVITE,
       online:
         typeof widget.presence_count === "number"
           ? widget.presence_count
