@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  async rewrites() {
+    return [
+      // Standalone alpha landing page served as a raw, self-contained HTML
+      // bundle from public/agent-alpha.html (kept outside the app/ design system).
+      {
+        source: "/agent-alpha",
+        destination: "/agent-alpha.html",
+      },
+    ];
+  },
   async redirects() {
     return [
       // Old livepeer.org routes → new site equivalents
