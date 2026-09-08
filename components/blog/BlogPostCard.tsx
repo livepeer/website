@@ -30,10 +30,7 @@ export default function BlogPostCard({
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Link
-        href={`/blog/${post.slug}`}
-        className="group block select-none"
-      >
+      <Link href={`/blog/${encodeURIComponent(post.slug)}`} className="group block select-none">
         {post.image && (
           <div className="relative aspect-[16/10] overflow-hidden rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5">
             <img

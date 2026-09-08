@@ -183,57 +183,57 @@ function DesktopNav({
             className="pointer-events-none absolute left-0 top-full z-50"
           >
             <div className="-translate-x-1/2 pt-2 pointer-events-auto">
-            <motion.div
-              layout
-              transition={{
-                layout: { type: "spring", stiffness: 380, damping: 32 },
-              }}
-              className="overflow-hidden rounded-xl border border-foreground/10 bg-background/95 shadow-xl shadow-black/30 backdrop-blur-xl"
-            >
               <motion.div
-                key={activeItem.label}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.12 }}
-                className="min-w-[220px] p-1.5"
+                layout
+                transition={{
+                  layout: { type: "spring", stiffness: 380, damping: 32 },
+                }}
+                className="overflow-hidden rounded-xl border border-foreground/10 bg-background/95 shadow-xl shadow-black/30 backdrop-blur-xl"
               >
-                {activeItem.children.map((child) => {
-                  const isExternal = child.external;
-                  const Tag = isExternal ? "a" : Link;
-                  const extraProps = isExternal
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {};
+                <motion.div
+                  key={activeItem.label}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.12 }}
+                  className="min-w-[220px] p-1.5"
+                >
+                  {activeItem.children.map((child) => {
+                    const isExternal = child.external;
+                    const Tag = isExternal ? "a" : Link;
+                    const extraProps = isExternal
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {};
 
-                  return (
-                    <Tag
-                      key={child.label}
-                      href={child.href}
-                      onClick={() => setActiveKey(null)}
-                      className="select-none flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
-                      {...extraProps}
-                    >
-                      {child.label}
-                      {isExternal && (
-                        <svg
-                          className="ml-auto h-3 w-3 text-foreground/30"
-                          fill="none"
-                          viewBox="0 0 12 12"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        >
-                          <path
-                            d="M3.5 2H10v6.5M10 2L2 10"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      )}
-                    </Tag>
-                  );
-                })}
+                    return (
+                      <Tag
+                        key={child.label}
+                        href={child.href}
+                        onClick={() => setActiveKey(null)}
+                        className="select-none flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-foreground/[0.06] hover:text-foreground"
+                        {...extraProps}
+                      >
+                        {child.label}
+                        {isExternal && (
+                          <svg
+                            className="ml-auto h-3 w-3 text-foreground/30"
+                            fill="none"
+                            viewBox="0 0 12 12"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          >
+                            <path
+                              d="M3.5 2H10v6.5M10 2L2 10"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </Tag>
+                    );
+                  })}
+                </motion.div>
               </motion.div>
-            </motion.div>
             </div>
           </motion.div>
         )}

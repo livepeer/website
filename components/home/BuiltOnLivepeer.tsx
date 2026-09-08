@@ -125,7 +125,9 @@ function StreamplacePanel() {
             fillOpacity="0.45"
           />
         </svg>
-        <span className="text-[32px] font-bold tracking-tight">Streamplace</span>
+        <span className="text-[32px] font-bold tracking-tight">
+          Streamplace
+        </span>
       </div>
     </div>
   );

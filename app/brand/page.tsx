@@ -98,7 +98,9 @@ function Swatch({
       />
       <p className="mt-2 text-sm text-foreground">{name}</p>
       <CopyButton value={hex} label={name} />
-      {token && <p className="font-mono text-[11px] text-foreground/30">{token}</p>}
+      {token && (
+        <p className="font-mono text-[11px] text-foreground/30">{token}</p>
+      )}
     </div>
   );
 }
@@ -123,9 +125,7 @@ function LogoCard({
   return (
     <div
       className={`rounded-xl border ${
-        isDark
-          ? "border-white/10 bg-[#121212]"
-          : "border-black/10 bg-white"
+        isDark ? "border-white/10 bg-[#121212]" : "border-black/10 bg-white"
       }`}
     >
       <div className="flex h-40 items-center justify-center px-8">
@@ -166,8 +166,8 @@ export default function BrandPage() {
             Brand guidelines
           </h1>
           <p className="mt-6 max-w-xl text-lg text-foreground/60">
-            Everything you need to use the Livepeer brand. Download the full
-            kit or grab individual assets below.
+            Everything you need to use the Livepeer brand. Download the full kit
+            or grab individual assets below.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button
@@ -200,8 +200,8 @@ export default function BrandPage() {
               </h2>
             </div>
             <p className="max-w-md text-sm text-foreground/60">
-              Symbol, wordmark, and lockup. White on dark, black on light.
-              Never rotate, stretch, recolor, or apply effects.
+              Symbol, wordmark, and lockup. White on dark, black on light. Never
+              rotate, stretch, recolor, or apply effects.
             </p>
           </div>
 
@@ -273,8 +273,8 @@ export default function BrandPage() {
                 Symbol
               </dt>
               <dd className="text-foreground/60">
-                Favicons, avatars, app icons — compact spaces where the brand
-                is known.
+                Favicons, avatars, app icons — compact spaces where the brand is
+                known.
               </dd>
             </div>
             <div className="flex gap-3">
@@ -282,12 +282,11 @@ export default function BrandPage() {
                 Lockup
               </dt>
               <dd className="text-foreground/60">
-                Partner pages, press kits, event signage — anywhere the
-                audience may not know the brand.
+                Partner pages, press kits, event signage — anywhere the audience
+                may not know the brand.
               </dd>
             </div>
           </dl>
-
         </Container>
       </section>
 
@@ -390,11 +389,12 @@ export default function BrandPage() {
             <div className="rounded-xl border border-border bg-card p-8">
               <div className="mb-6 flex items-baseline justify-between">
                 <h3 className="text-xl font-medium">Favorit Pro</h3>
-                <span className="font-mono text-xs text-foreground/40">Sans</span>
+                <span className="font-mono text-xs text-foreground/40">
+                  Sans
+                </span>
               </div>
               <p className="mb-8 text-sm text-foreground/50">
-                Primary typeface. Headings, body, UI. Licensed from Dinamo
-                Type.
+                Primary typeface. Headings, body, UI. Licensed from Dinamo Type.
               </p>
               <div className="space-y-5">
                 <div>
@@ -427,7 +427,9 @@ export default function BrandPage() {
             <div className="rounded-xl border border-border bg-card p-8">
               <div className="mb-6 flex items-baseline justify-between">
                 <h3 className="text-xl font-medium">Favorit Mono</h3>
-                <span className="font-mono text-xs text-foreground/40">Mono</span>
+                <span className="font-mono text-xs text-foreground/40">
+                  Mono
+                </span>
               </div>
               <p className="mb-8 text-sm text-foreground/50">
                 Stats, labels, code. Licensed from Dinamo Type.

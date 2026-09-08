@@ -127,7 +127,11 @@ export default function FilterPill({
                       </svg>
                     )}
                   </span>
-                  <span className={checked ? "text-foreground/80" : "text-foreground/50"}>
+                  <span
+                    className={
+                      checked ? "text-foreground/80" : "text-foreground/50"
+                    }
+                  >
                     {item}
                   </span>
                 </button>
