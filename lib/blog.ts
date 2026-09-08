@@ -67,16 +67,28 @@ export function getPostBySlug(slug: string): BlogPost {
   };
 }
 
+// Drafts are hidden only on the public production deployment; they stay
+// visible on Vercel preview deployments and in local dev for pre-publish
+// review. Every code path that decides whether a post is visible goes through
+// this single check so the page body and its metadata can never disagree.
+export function isPublished(post: BlogPost): boolean {
+  return !(post.draft && process.env.VERCEL_ENV === "production");
+}
+
+// Resolves a slug from the URL to a post the current deployment may show, or
+// null when it is unknown or unpublished. The slug is matched against the
+// listed files rather than joined into a path, so only a real post is read.
+export function getPublishedPost(slug: string): BlogPost | null {
+  if (!getPostSlugs().includes(slug)) return null;
+  const post = getPostBySlug(slug);
+  return isPublished(post) ? post : null;
+}
+
 export function getAllPosts(): BlogPost[] {
   const slugs = getPostSlugs();
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
-    .filter((post) => {
-      // Hide drafts only on the public production deployment; keep them visible
-      // on Vercel preview deployments and in local dev for pre-publish review.
-      if (process.env.VERCEL_ENV === "production") return !post.draft;
-      return true;
-    })
+    .filter(isPublished)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return posts;
 }

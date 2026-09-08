@@ -104,8 +104,8 @@ export async function renderEcosystemMarkdown(
 ): Promise<string> {
   const result = await unified()
     .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeStringify, { allowDangerousHtml: true })
+    .use(remarkRehype)
+    .use(rehypeStringify)
     .process(content);
 
   return result.toString();
