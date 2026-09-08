@@ -11,6 +11,15 @@ import readingTime from "reading-time";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
+function sanitizeSlug(raw: string): string {
+  return raw
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export type BlogAuthor = {
   name: string;
   avatar?: string;
@@ -36,7 +45,8 @@ export function getPostSlugs(): string[] {
   return fs
     .readdirSync(BLOG_DIR)
     .filter((file) => file.endsWith(".md"))
-    .map((file) => file.replace(/\.md$/, ""));
+    .map((file) => sanitizeSlug(file.replace(/\.md$/, "")))
+    .filter((slug) => slug.length > 0);
 }
 
 export function getPostBySlug(slug: string): BlogPost {
