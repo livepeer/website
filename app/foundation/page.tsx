@@ -289,6 +289,15 @@ function HeroStripes() {
 /*  the heading and the prose. Inspired by Linear Method.              */
 /* ================================================================== */
 
+// Seeded LCG so generated layouts are deterministic across renders.
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) % 2147483648;
+    return s / 2147483648;
+  };
+}
+
 // 01 — Network: a peer-mesh constellation. Nodes scattered organically,
 // connected to nearest neighbors with clearly visible mesh wiring.
 // Smooth glowing particles travel between connected peers — each
@@ -298,11 +307,7 @@ function NetworkGraphic() {
     // Seeded RNG so layout is deterministic across renders.
     // Seed picked after sampling several — produces the most evenly
     // triangulated mesh with no clusters or gaps.
-    let s = 0x2d8a;
-    const rand = () => {
-      s = (s * 1664525 + 1013904223) % 2147483648;
-      return s / 2147483648;
-    };
+    const rand = seededRandom(0x2d8a);
 
     // Perturbed grid: regular grid + per-node jitter for organic feel.
     // Base spans -360 → +360 with ±18 jitter, so even maximally-jittered

@@ -284,9 +284,10 @@ function TrackingBox({
 }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [conf, setConf] = useState(d.conf);
-  const t0 = useRef(Date.now());
+  const t0 = useRef(0);
 
   useEffect(() => {
+    t0.current = Date.now();
     const tick = setInterval(() => {
       const t = (Date.now() - t0.current) / 1000;
 

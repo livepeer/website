@@ -115,6 +115,9 @@ export default function ThemeToggle({
 
   useEffect(() => {
     const c = readChoice();
+    // Deliberate post-hydration sync: the server cannot know the stored
+    // choice, so the first client render must catch up in an effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChoice(c);
     setMounted(true);
     // Re-apply the resolved theme to <html> after React hydrates. In

@@ -239,6 +239,7 @@ const BG = "#121212";
 export default function NetworkSpirits() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
+  const drawRef = useRef<() => void>(() => {});
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -644,7 +645,7 @@ export default function NetworkSpirits() {
       }
     }
 
-    animRef.current = requestAnimationFrame(draw);
+    animRef.current = requestAnimationFrame(() => drawRef.current());
   }, []);
 
   useEffect(() => {
@@ -652,6 +653,7 @@ export default function NetworkSpirits() {
     if (!canvas) return;
     canvas.width = 1200;
     canvas.height = 440;
+    drawRef.current = draw;
     animRef.current = requestAnimationFrame(draw);
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
