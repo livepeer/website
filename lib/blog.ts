@@ -72,6 +72,7 @@ export function isPublished(post: BlogPost): boolean {
   return !(post.draft && process.env.VERCEL_ENV === "production");
 }
 
+// Single lookup for URL slugs so the page and its metadata agree on drafts.
 export function getPublishedPost(slug: string): BlogPost | null {
   if (!getPostSlugs().includes(slug)) return null;
   const post = getPostBySlug(slug);
