@@ -122,14 +122,14 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 - Lead with solutions (builds on the network), not raw protocol capabilities.
 - The network provides GPU infrastructure. Solutions provide the product experience.
 - **Three competitive variables (cost / capability / community):**
-  - **Cost:** 60–85% cheaper than centralized alternatives (AWS, RunPod, Fal). [FLAG: pending validation with Rick — do not scale to "10x" without confirmed data]
+  - **Cost:** 60–85% cheaper than centralized alternatives (AWS, RunPod, Fal). Status: see **Canonical claim status** (`[FLAG-COST-01]`).
   - **Capability:** Specialized for real-time, streaming video inference. Nine years of video processing optimization. BYOC flexibility for custom models and pipelines. No other network is built specifically for this.
   - **Community:** The network is operated by independent orchestrators, expanded by builders building on builders, and open to permissionless participation. This is a structural property of the infrastructure — not a Discord server or governance forum. A centralized provider structurally cannot replicate this.
 - Not a trilemma — cost, capability, and community interact.
 - **External competitive frame:** Livepeer solutions (powered by community-operated GPU infrastructure) vs. centralized alternatives (AWS, RunPod, Fal, Replicate) for real-time ai video. Name competitors explicitly — the target audience is comparison-shopping.
 - **Internal only (not for website copy):** DePIN comparisons (Theta, Render, Akash). These are relevant for internal strategy but not for developer-facing positioning.
 - **Narrative routing principle:** Every piece of external communication should route audiences to solutions on the network. The question the website answers: "What's being built on Livepeer, and how can I use it?"
-- **Solutions on the network:** Daydream (real-time generative video), Frameworks (sovereign live streaming), Streamplace (decentralized social video), Embody (AI avatars). These are the ecosystem, not Livepeer products.
+- **Solutions on the network:** Daydream (real-time generative video), Frameworks (sovereign live streaming), Streamplace (decentralized social video), Embody (AI avatars). These are the ecosystem, not Livepeer products. Public-facing names and one-liners for website copy; internal context per build lives in **Current Builds (the ecosystem)** below.
 - **CTA pattern:** All CTAs point to Discord ("Build with Livepeer"). No email capture.
 
 ### Voice
@@ -160,8 +160,13 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 - ~~"We need to attract developers to the raw protocol."~~ → Route audiences to solutions.
 - ~~"Enterprise is the near-term market."~~ → The edges are.
 - ~~"Centralized vs. decentralized."~~ → The tension is centralized-proprietary vs. community-operated/open.
-- ~~"10x cost reduction."~~ → 60–85% cheaper. [FLAG: pending Rick validation]
+- ~~"10x cost reduction."~~ → 60–85% cheaper. Status: see **Canonical claim status** (`[FLAG-COST-01]`).
 - ~~"100K+ GPUs."~~ → ~100 AI-capable GPUs currently. Don't inflate supply numbers.
+
+### Canonical claim status
+
+- `[FLAG-COST-01]` **Cost claim:** "60–85% cheaper than centralized alternatives." **Status:** pending Rick validation against current network pricing. Do not scale to "10x" without confirmed data.
+- This entry is the single source of truth for claim status; other sections reference it by flag id rather than repeating status text.
 
 ## Strategic Context
 
@@ -186,6 +191,8 @@ This website reflects Livepeer's v2 positioning as a specialized GPU network for
 ```
 
 ### Current Builds (the ecosystem)
+
+Internal context per build (owners, stage, role in the demand story). Public-facing names and one-liners are in **Solutions on the network** under Messaging.
 
 - **Scope / Daydream** — Creative AI tools for real-time video. ~30-person creative technologist cohort. Demand R&D partner, not primary demand driver.
 - **Frameworks (Marco)** — Live streaming infrastructure. Bare-metal video pipelines on the network.
@@ -218,7 +225,7 @@ Three segments: creative technologists (enter through Scope), early-stage AI vid
 
 These claims require validation before shipping as headlines. Use [FLAG] markers in copy:
 
-- 60–85% cost claim — needs Rick validation against current network pricing
+- `[FLAG-COST-01]` 60–85% cost claim — status in **Canonical claim status**
 - "Agents can discover and pay directly" — pending Rick's architecture confirmation
 - Framework case study — blocked on Marco discovery conversation
 - Specific GPU/node counts — verify current numbers before publishing

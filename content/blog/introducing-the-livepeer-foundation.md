@@ -86,7 +86,7 @@ Livepeer was built to be open—from its architecture to its community. The Foun
 
 ### Meet the team
 
-The Livepeer Foundation is structured as a non-profit entity focused on supporting the long-term growth and decentralization of the network. The Foundation will also operate its own node infrastructure and grow its capacity in step with the network's needs. Like all other special purpose entities in the Livepeer ecosystem, the Foundation's access to the on-chain treasury for specific initiatives is accountable to token holders"
+The Livepeer Foundation is structured as a non-profit entity focused on supporting the long-term growth and decentralization of the network. The Foundation will also operate its own node infrastructure and grow its capacity in step with the network's needs. Like all other special purpose entities in the Livepeer ecosystem, the Foundation's access to the on-chain treasury for specific initiatives is accountable to token holders.
 
 The initial team includes:
 
