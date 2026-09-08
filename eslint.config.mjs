@@ -1,6 +1,6 @@
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
-import prettier from "eslint-config-prettier";
+import prettier from "eslint-config-prettier/flat";
 
 const eslintConfig = [
   { ignores: [".next/", "node_modules/", "next-env.d.ts"] },
