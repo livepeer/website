@@ -81,7 +81,10 @@ export default function SubmitAppForm() {
                   <span className="text-foreground/80"> {SAMPLE.url}</span>
                   {"\n"}
                   <span className="text-foreground/40">description:</span>
-                  <span className="text-foreground/80"> {SAMPLE.description}</span>
+                  <span className="text-foreground/80">
+                    {" "}
+                    {SAMPLE.description}
+                  </span>
                   {"\n"}
                   <span className="text-foreground/40">categories:</span>
                   {"\n"}

@@ -8,7 +8,7 @@ export const contentType = "image/png";
 
 export default async function OGImage() {
   const fontRegular = await readFile(
-    join(process.cwd(), "public/fonts/FavoritPro-Regular.otf"),
+    join(process.cwd(), "public/fonts/FavoritPro-Regular.otf")
   );
 
   return new ImageResponse(
@@ -168,6 +168,6 @@ export default async function OGImage() {
           style: "normal",
         },
       ],
-    },
+    }
   );
 }

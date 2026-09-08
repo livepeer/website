@@ -20,7 +20,10 @@ export default function BlogPostHeader({ post }: { post: BlogPost }) {
     >
       {/* Breadcrumb */}
       <div className="mb-8 flex items-center gap-2 font-mono text-sm text-foreground/30">
-        <Link href="/blog" className="transition-colors hover:text-foreground/60">
+        <Link
+          href="/blog"
+          className="transition-colors hover:text-foreground/60"
+        >
           Blog
         </Link>
         <span>›</span>

@@ -126,7 +126,6 @@ function HeroVenn() {
 
         {/* Stripes inside the lens intersection */}
         <HeroStripes />
-
       </div>
 
       <style>{`
@@ -433,9 +432,7 @@ function NetworkGraphic() {
             cy={n.y}
             r={isHighlighted ? 2.6 : 2}
             fill={
-              isHighlighted
-                ? "rgba(64,191,134,0.95)"
-                : "rgba(255,255,255,0.7)"
+              isHighlighted ? "rgba(64,191,134,0.95)" : "rgba(255,255,255,0.7)"
             }
           />
         );
@@ -533,7 +530,6 @@ function FoundationGraphic() {
   );
 }
 
-
 /* ================================================================== */
 /*  Pillar marks — small editorial print-style figures, drawn as if    */
 /*  they belonged in a typographic plate from a book of geometry. No   */
@@ -573,17 +569,10 @@ function StrategyMark() {
             Each kite is split into two halves: one filled, one
             outlined, creating the classic shaded compass-rose look. */}
         {[0, 90, 180, 270].map((rot) => (
-          <g
-            key={`card-${rot}`}
-            transform={`rotate(${rot} 50 50)`}
-          >
+          <g key={`card-${rot}`} transform={`rotate(${rot} 50 50)`}>
             {/* Right (filled) half of the kite — tip up, base at
                 centre, side vertex midway out. */}
-            <path
-              d="M 50 11 L 53.5 35 L 50 50 Z"
-              fill={stroke}
-              stroke="none"
-            />
+            <path d="M 50 11 L 53.5 35 L 50 50 Z" fill={stroke} stroke="none" />
             {/* Left (outlined) half */}
             <path
               d="M 50 11 L 46.5 35 L 50 50 Z"
@@ -715,9 +704,30 @@ function SupportMark() {
         <line x1="34" y1="32" x2="36" y2="78" />
         <line x1="66" y1="32" x2="64" y2="78" />
         {/* Fluting — three thin vertical lines inside the shaft */}
-        <line x1="44" y1="34" x2="44" y2="76" stroke={faint} strokeWidth="0.5" />
-        <line x1="50" y1="34" x2="50" y2="76" stroke={faint} strokeWidth="0.5" />
-        <line x1="56" y1="34" x2="56" y2="76" stroke={faint} strokeWidth="0.5" />
+        <line
+          x1="44"
+          y1="34"
+          x2="44"
+          y2="76"
+          stroke={faint}
+          strokeWidth="0.5"
+        />
+        <line
+          x1="50"
+          y1="34"
+          x2="50"
+          y2="76"
+          stroke={faint}
+          strokeWidth="0.5"
+        />
+        <line
+          x1="56"
+          y1="34"
+          x2="56"
+          y2="76"
+          stroke={faint}
+          strokeWidth="0.5"
+        />
         {/* Base — wider than the shaft */}
         <line x1="32" y1="78" x2="68" y2="78" />
         <line x1="20" y1="84" x2="80" y2="84" />
@@ -906,7 +916,6 @@ function Colophon() {
 /*  Page                                                               */
 /* ================================================================== */
 
-
 export default function FoundationPage() {
   const heroEase = [0.16, 1, 0.3, 1] as const;
 
@@ -940,299 +949,297 @@ export default function FoundationPage() {
       />
 
       <div className="relative">
-
-      <div className="relative">
-
-      {/* ================================================================ */}
-      {/*  HERO — text perfectly vertically centered.                       */}
-      {/*  Mobile uses 78vh so the Venn peek doesn't sit too far below      */}
-      {/*  the lede; desktop uses full 100vh.                               */}
-      {/*  Each element staggers in for a more composed arrival.            */}
-      {/* ================================================================ */}
-      <section className="relative flex min-h-[78vh] items-center justify-center overflow-hidden lg:min-h-screen">
-        {/* Top horizon glow — mirrors xAI's edge band: a hot bright line
+        <div className="relative">
+          {/* ================================================================ */}
+          {/*  HERO — text perfectly vertically centered.                       */}
+          {/*  Mobile uses 78vh so the Venn peek doesn't sit too far below      */}
+          {/*  the lede; desktop uses full 100vh.                               */}
+          {/*  Each element staggers in for a more composed arrival.            */}
+          {/* ================================================================ */}
+          <section className="relative flex min-h-[78vh] items-center justify-center overflow-hidden lg:min-h-screen">
+            {/* Top horizon glow — mirrors xAI's edge band: a hot bright line
             at the very edge that condenses to ~1% of the height, then
             transitions into a single darker hue (Livepeer green) and
             fades to the page background. Single-family palette, no
             secondary colors. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[78vh] overflow-hidden"
-        >
-          {/* Outer curtain — wide green→teal→blue arc spanning the
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[78vh] overflow-hidden"
+            >
+              {/* Outer curtain — wide green→teal→blue arc spanning the
               full width of the hero. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 220% 90% at 42% 0% in oklch, rgba(110, 230, 175, 0.46) 0%, rgba(70, 200, 145, 0.38) 10%, rgba(38, 165, 105, 0.30) 22%, rgba(30, 160, 130, 0.26) 32%, rgba(28, 145, 165, 0.28) 44%, rgba(25, 130, 175, 0.36) 54%, rgba(22, 122, 165, 0.30) 66%, rgba(20, 110, 150, 0.20) 78%, rgba(20, 95, 125, 0.10) 88%, rgba(20, 90, 120, 0.03) 95%, transparent 100%)",
-              maskImage:
-                "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
-            }}
-          />
-          {/* Inner curtain — narrower, brighter mint peak sitting on
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 220% 90% at 42% 0% in oklch, rgba(110, 230, 175, 0.46) 0%, rgba(70, 200, 145, 0.38) 10%, rgba(38, 165, 105, 0.30) 22%, rgba(30, 160, 130, 0.26) 32%, rgba(28, 145, 165, 0.28) 44%, rgba(25, 130, 175, 0.36) 54%, rgba(22, 122, 165, 0.30) 66%, rgba(20, 110, 150, 0.20) 78%, rgba(20, 95, 125, 0.10) 88%, rgba(20, 90, 120, 0.03) 95%, transparent 100%)",
+                  maskImage:
+                    "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
+                }}
+              />
+              {/* Inner curtain — narrower, brighter mint peak sitting on
               top of the outer arc. Screen-blended so it brightens the
               center without re-coloring it, giving the impression of
               two overlapping aurora curtains rather than a single
               flat fill. Aligned to the same off-center peak (42%) so
               the two layers feel concentric. */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 95% 38% at 42% 0% in oklch, rgba(180, 250, 215, 0.48) 0%, rgba(110, 230, 175, 0.32) 18%, rgba(70, 200, 145, 0.18) 38%, rgba(45, 180, 130, 0.07) 60%, transparent 85%)",
+                  mixBlendMode: "screen",
+                  maskImage:
+                    "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
+                }}
+              />
+            </div>
+            <Container className="relative">
+              <div className="mx-auto max-w-5xl text-center">
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, ease: heroEase, delay: 0 }}
+                  className="font-mono text-[13px] font-medium tracking-[0.22em] text-white/50 uppercase"
+                >
+                  The Livepeer Foundation
+                </motion.p>
+
+                <motion.h1
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: heroEase, delay: 0.08 }}
+                  className="mt-6 font-serif font-normal leading-[0.95] tracking-[-0.02em] text-balance text-white lg:mt-8"
+                  style={{ fontSize: "clamp(2.5rem, 7.2vw, 5.75rem)" }}
+                >
+                  Advancing the world’s open video infrastructure
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: heroEase, delay: 0.18 }}
+                  className="mx-auto mt-8 max-w-xl text-base leading-[1.55] text-white/55 text-pretty lg:mt-10 lg:text-lg"
+                >
+                  The Livepeer Foundation is an independent non-profit created
+                  to ensure the protocol&rsquo;s long-term health, fund core
+                  development, set strategic direction and protect the
+                  ecosystem&rsquo;s interests.
+                </motion.p>
+              </div>
+            </Container>
+          </section>
+
+          {/* ================================================================ */}
+          {/*  HERO ARCS — partial arcs rendered in full (no clipping).        */}
+          {/*  Aspect 16:5 matches the SVG viewBox. Negative margin pulls      */}
+          {/*  the top slightly into the hero so the peaks peek above fold.   */}
+          {/* ================================================================ */}
           <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 95% 38% at 42% 0% in oklch, rgba(180, 250, 215, 0.48) 0%, rgba(110, 230, 175, 0.32) 18%, rgba(70, 200, 145, 0.18) 38%, rgba(45, 180, 130, 0.07) 60%, transparent 85%)",
-              mixBlendMode: "screen",
-              maskImage:
-                "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse 55% 90% at 50% 100%, transparent 0%, rgba(0,0,0,0.5) 35%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,1) 90%)",
-            }}
-          />
-        </div>
-        <Container className="relative">
-          <div className="mx-auto max-w-5xl text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: heroEase, delay: 0 }}
-              className="font-mono text-[13px] font-medium tracking-[0.22em] text-white/50 uppercase"
-            >
-              The Livepeer Foundation
-            </motion.p>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: heroEase, delay: 0.08 }}
-              className="mt-6 font-serif font-normal leading-[0.95] tracking-[-0.02em] text-balance text-white lg:mt-8"
-              style={{ fontSize: "clamp(2.5rem, 7.2vw, 5.75rem)" }}
-            >
-              Advancing the world’s open video infrastructure
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: heroEase, delay: 0.18 }}
-              className="mx-auto mt-8 max-w-xl text-base leading-[1.55] text-white/55 text-pretty lg:mt-10 lg:text-lg"
-            >
-              The Livepeer Foundation is an independent non-profit created
-              to ensure the protocol&rsquo;s long-term health, fund core
-              development, set strategic direction and protect the
-              ecosystem&rsquo;s interests.
-            </motion.p>
+            className="pointer-events-none relative -mt-[40px] w-full lg:-mt-[60px]"
+            aria-hidden="true"
+          >
+            <HeroVenn />
           </div>
-        </Container>
-      </section>
-
-      {/* ================================================================ */}
-      {/*  HERO ARCS — partial arcs rendered in full (no clipping).        */}
-      {/*  Aspect 16:5 matches the SVG viewBox. Negative margin pulls      */}
-      {/*  the top slightly into the hero so the peaks peek above fold.   */}
-      {/* ================================================================ */}
-      <div
-        className="pointer-events-none relative -mt-[40px] w-full lg:-mt-[60px]"
-        aria-hidden="true"
-      >
-        <HeroVenn />
-      </div>
-      </div> {/* /hero-region */}
-
-      {/* ================================================================ */}
-      {/*  1. ABOUT THE FOUNDATION                                          */}
-      {/* ================================================================ */}
-      <section className="relative" data-chapter="0">
-        <Container>
-          <div className="mx-auto max-w-3xl py-14 lg:py-40">
-            <ChapterHeader
-              num="01"
-              crumb="The Foundation"
-              title="About The Foundation"
-              graphic={<FoundationGraphic />}
-            />
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ staggerChildren: 0.1 }}
-              className="space-y-8 text-lg leading-[1.7] text-white/75 lg:text-xl lg:leading-[1.75]"
-            >
-              <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
-                <Link
-                  href="/blog/introducing-the-livepeer-foundation"
-                  className="underline decoration-white/25 decoration-1 underline-offset-[5px] transition-colors hover:text-white hover:decoration-white/50"
-                >
-                  Established in 2025
-                </Link>
-                , the Livepeer Foundation is a non-profit entity accountable
-                to the network&rsquo;s participants. Its mandate is the
-                long-term health of the Livepeer network, through strategy,
-                core development and ecosystem growth.
-              </motion.p>
-            </motion.div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ================================================================ */}
-      {/*  2. WHAT WE DO                                                    */}
-      {/* ================================================================ */}
-      <section className="relative" data-chapter="1">
-        <div className="divider-gradient absolute top-0 right-0 left-0" />
-        <Container>
-          <div className="mx-auto max-w-3xl py-14 lg:py-40">
-            <ChapterHeader num="02" crumb="What We Do" title="What We Do" />
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ staggerChildren: 0.14 }}
-              className="divide-y divide-white/[0.06]"
-            >
-              {[
-                {
-                  num: "01",
-                  label: "Strategy",
-                  text: "We set the strategic direction of the network and align stakeholders around a long-term roadmap of priority work.",
-                  Mark: StrategyMark,
-                },
-                {
-                  num: "02",
-                  label: "Coordination",
-                  text: "We coordinate technical development across independent teams building on and for the network.",
-                  Mark: CoordinationMark,
-                },
-                {
-                  num: "03",
-                  label: "Support",
-                  text: "We support builders through funding, connections and tools that lower the barrier to building.",
-                  Mark: SupportMark,
-                },
-              ].map((item) => (
-                <motion.article
-                  key={item.label}
-                  variants={fadeUp}
-                  transition={{ duration: 0.5 }}
-                  className="grid grid-cols-[60px_1fr] items-start gap-x-6 gap-y-4 py-10 sm:grid-cols-[88px_1fr] sm:gap-x-10 sm:py-12 lg:grid-cols-[112px_1fr] lg:gap-x-16 lg:py-16"
-                >
-                  {/* Bespoke editorial mark in the left gutter */}
-                  <div
-                    className="aspect-square w-full opacity-90"
-                    aria-hidden="true"
-                  >
-                    <item.Mark />
-                  </div>
-                  {/* Eyebrow / serif italic title / body */}
-                  <div>
-                    <p className="font-mono text-[11px] tracking-[0.22em] text-white/40 uppercase">
-                      {item.num}
-                      <span className="mx-2.5 text-white/15">·</span>
-                      {item.label}
-                    </p>
-                    <h3
-                      className="mt-3 font-serif font-normal italic tracking-[-0.01em] text-white"
-                      style={{ fontSize: "clamp(1.875rem, 4.4vw, 3rem)", lineHeight: 1 }}
-                    >
-                      {item.label}.
-                    </h3>
-                    <p className="mt-5 max-w-prose text-base leading-[1.7] text-white/70 lg:text-lg lg:leading-[1.7]">
-                      {item.text}
-                    </p>
-                  </div>
-                </motion.article>
-              ))}
+        </div>{" "}
+        {/* /hero-region */}
+        {/* ================================================================ */}
+        {/*  1. ABOUT THE FOUNDATION                                          */}
+        {/* ================================================================ */}
+        <section className="relative" data-chapter="0">
+          <Container>
+            <div className="mx-auto max-w-3xl py-14 lg:py-40">
+              <ChapterHeader
+                num="01"
+                crumb="The Foundation"
+                title="About The Foundation"
+                graphic={<FoundationGraphic />}
+              />
 
               <motion.div
-                variants={fadeUp}
-                transition={{ duration: 0.5 }}
-                className="pt-10 lg:pt-14"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ staggerChildren: 0.1 }}
+                className="space-y-8 text-lg leading-[1.7] text-white/75 lg:text-xl lg:leading-[1.75]"
               >
-                <Button href="/ecosystem" size="lg" variant="primary">
-                  Explore the ecosystem
-                  <span aria-hidden="true">&rarr;</span>
-                </Button>
+                <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
+                  <Link
+                    href="/blog/introducing-the-livepeer-foundation"
+                    className="underline decoration-white/25 decoration-1 underline-offset-[5px] transition-colors hover:text-white hover:decoration-white/50"
+                  >
+                    Established in 2025
+                  </Link>
+                  , the Livepeer Foundation is a non-profit entity accountable
+                  to the network&rsquo;s participants. Its mandate is the
+                  long-term health of the Livepeer network, through strategy,
+                  core development and ecosystem growth.
+                </motion.p>
               </motion.div>
-            </motion.div>
-          </div>
-        </Container>
-      </section>
+            </div>
+          </Container>
+        </section>
+        {/* ================================================================ */}
+        {/*  2. WHAT WE DO                                                    */}
+        {/* ================================================================ */}
+        <section className="relative" data-chapter="1">
+          <div className="divider-gradient absolute top-0 right-0 left-0" />
+          <Container>
+            <div className="mx-auto max-w-3xl py-14 lg:py-40">
+              <ChapterHeader num="02" crumb="What We Do" title="What We Do" />
 
-      {/* ================================================================ */}
-      {/*  3. ABOUT THE NETWORK                                             */}
-      {/* ================================================================ */}
-      <section className="relative" data-chapter="2">
-        <div className="divider-gradient absolute top-0 right-0 left-0" />
-        <Container>
-          <div className="mx-auto max-w-3xl py-14 lg:py-40">
-            <ChapterHeader
-              num="03"
-              crumb="The Project"
-              title="About The Project"
-              graphic={<NetworkGraphic />}
-            />
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ staggerChildren: 0.14 }}
+                className="divide-y divide-white/[0.06]"
+              >
+                {[
+                  {
+                    num: "01",
+                    label: "Strategy",
+                    text: "We set the strategic direction of the network and align stakeholders around a long-term roadmap of priority work.",
+                    Mark: StrategyMark,
+                  },
+                  {
+                    num: "02",
+                    label: "Coordination",
+                    text: "We coordinate technical development across independent teams building on and for the network.",
+                    Mark: CoordinationMark,
+                  },
+                  {
+                    num: "03",
+                    label: "Support",
+                    text: "We support builders through funding, connections and tools that lower the barrier to building.",
+                    Mark: SupportMark,
+                  },
+                ].map((item) => (
+                  <motion.article
+                    key={item.label}
+                    variants={fadeUp}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-[60px_1fr] items-start gap-x-6 gap-y-4 py-10 sm:grid-cols-[88px_1fr] sm:gap-x-10 sm:py-12 lg:grid-cols-[112px_1fr] lg:gap-x-16 lg:py-16"
+                  >
+                    {/* Bespoke editorial mark in the left gutter */}
+                    <div
+                      className="aspect-square w-full opacity-90"
+                      aria-hidden="true"
+                    >
+                      <item.Mark />
+                    </div>
+                    {/* Eyebrow / serif italic title / body */}
+                    <div>
+                      <p className="font-mono text-[11px] tracking-[0.22em] text-white/40 uppercase">
+                        {item.num}
+                        <span className="mx-2.5 text-white/15">·</span>
+                        {item.label}
+                      </p>
+                      <h3
+                        className="mt-3 font-serif font-normal italic tracking-[-0.01em] text-white"
+                        style={{
+                          fontSize: "clamp(1.875rem, 4.4vw, 3rem)",
+                          lineHeight: 1,
+                        }}
+                      >
+                        {item.label}.
+                      </h3>
+                      <p className="mt-5 max-w-prose text-base leading-[1.7] text-white/70 lg:text-lg lg:leading-[1.7]">
+                        {item.text}
+                      </p>
+                    </div>
+                  </motion.article>
+                ))}
 
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ staggerChildren: 0.1 }}
-              className="space-y-8 text-lg leading-[1.7] text-white/75 lg:text-xl lg:leading-[1.75]"
-            >
-              <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
-                Livepeer was founded in 2017 by Doug Petkanics and Eric Tang
-                to solve a straightforward problem: video infrastructure
-                was expensive, centralised, and controlled by a handful of
-                companies. They built an open alternative, where a global
-                network of GPU operators processes video at scale,{" "}
-                <em className="font-serif italic text-white/95">
-                  is owned and run by its participants
-                </em>{" "}
-                and available to anyone.
-              </motion.p>
-
-              <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
-                Eight years on, builders discovered that Livepeer&rsquo;s
-                low-latency GPU infrastructure was what the emerging wave
-                of real-time AI video applications needed. The
-                network&rsquo;s operators were already running the hardware
-                when the demand arrived. As of early 2026,{" "}
-                <a
-                  href="https://messari.io/report/state-of-livepeer-q4-2025"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-white/25 decoration-1 underline-offset-[5px] transition-colors hover:text-white hover:decoration-white/50"
+                <motion.div
+                  variants={fadeUp}
+                  transition={{ duration: 0.5 }}
+                  className="pt-10 lg:pt-14"
                 >
-                  72% of network fees come from AI inference workloads
-                </a>
-                .
-              </motion.p>
+                  <Button href="/ecosystem" size="lg" variant="primary">
+                    Explore the ecosystem
+                    <span aria-hidden="true">&rarr;</span>
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </div>
+          </Container>
+        </section>
+        {/* ================================================================ */}
+        {/*  3. ABOUT THE NETWORK                                             */}
+        {/* ================================================================ */}
+        <section className="relative" data-chapter="2">
+          <div className="divider-gradient absolute top-0 right-0 left-0" />
+          <Container>
+            <div className="mx-auto max-w-3xl py-14 lg:py-40">
+              <ChapterHeader
+                num="03"
+                crumb="The Project"
+                title="About The Project"
+                graphic={<NetworkGraphic />}
+              />
 
-              <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
-                The network is now a proving ground for builders
-                experimenting at the bleeding edge of real-time video and
-                AI. Live video streams analysed and acted on as they
-                happen, entire worlds generated in real time and AI
-                avatars that see, speak and respond. Livepeer&rsquo;s
-                roots are in transcoding and streaming, but the focus is
-                clear: be the open network for real-time AI video.
-              </motion.p>
-            </motion.div>
-          </div>
-        </Container>
-      </section>
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ staggerChildren: 0.1 }}
+                className="space-y-8 text-lg leading-[1.7] text-white/75 lg:text-xl lg:leading-[1.75]"
+              >
+                <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
+                  Livepeer was founded in 2017 by Doug Petkanics and Eric Tang
+                  to solve a straightforward problem: video infrastructure was
+                  expensive, centralised, and controlled by a handful of
+                  companies. They built an open alternative, where a global
+                  network of GPU operators processes video at scale,{" "}
+                  <em className="font-serif italic text-white/95">
+                    is owned and run by its participants
+                  </em>{" "}
+                  and available to anyone.
+                </motion.p>
 
-      {/* ================================================================ */}
-      {/*  4. THE TEAM — hidden until we have member headshots. Section     */}
-      {/*  preserved verbatim below so it can be uncommented in one step    */}
-      {/*  once the photography is ready. The Colophon (page-end Livepeer  */}
-      {/*  signature) is moved out into its own section above so the page  */}
-      {/*  still has a quiet sign-off after The Network.                    */}
-      {/* ================================================================ */}
-      {/*
+                <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
+                  Eight years on, builders discovered that Livepeer&rsquo;s
+                  low-latency GPU infrastructure was what the emerging wave of
+                  real-time AI video applications needed. The network&rsquo;s
+                  operators were already running the hardware when the demand
+                  arrived. As of early 2026,{" "}
+                  <a
+                    href="https://messari.io/report/state-of-livepeer-q4-2025"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline decoration-white/25 decoration-1 underline-offset-[5px] transition-colors hover:text-white hover:decoration-white/50"
+                  >
+                    72% of network fees come from AI inference workloads
+                  </a>
+                  .
+                </motion.p>
+
+                <motion.p variants={fadeUp} transition={{ duration: 0.5 }}>
+                  The network is now a proving ground for builders experimenting
+                  at the bleeding edge of real-time video and AI. Live video
+                  streams analysed and acted on as they happen, entire worlds
+                  generated in real time and AI avatars that see, speak and
+                  respond. Livepeer&rsquo;s roots are in transcoding and
+                  streaming, but the focus is clear: be the open network for
+                  real-time AI video.
+                </motion.p>
+              </motion.div>
+            </div>
+          </Container>
+        </section>
+        {/* ================================================================ */}
+        {/*  4. THE TEAM — hidden until we have member headshots. Section     */}
+        {/*  preserved verbatim below so it can be uncommented in one step    */}
+        {/*  once the photography is ready. The Colophon (page-end Livepeer  */}
+        {/*  signature) is moved out into its own section above so the page  */}
+        {/*  still has a quiet sign-off after The Network.                    */}
+        {/* ================================================================ */}
+        {/*
       <section className="relative" data-chapter="3">
         <div className="divider-gradient absolute top-0 right-0 left-0" />
         <Container>
@@ -1273,16 +1280,14 @@ export default function FoundationPage() {
         </Container>
       </section>
       */}
-
-      {/* Colophon — quiet Livepeer signature that closes the page. */}
-      <section className="relative">
-        <Container>
-          <div className="mx-auto max-w-3xl pb-14 lg:pb-32">
-            <Colophon />
-          </div>
-        </Container>
-      </section>
-
+        {/* Colophon — quiet Livepeer signature that closes the page. */}
+        <section className="relative">
+          <Container>
+            <div className="mx-auto max-w-3xl pb-14 lg:pb-32">
+              <Colophon />
+            </div>
+          </Container>
+        </section>
         {/* Spacer between the last chapter and the global Footer */}
         <div className="h-24 lg:h-32" aria-hidden="true" />
       </div>

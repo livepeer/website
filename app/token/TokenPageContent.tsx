@@ -15,11 +15,7 @@ const fadeUp = {
 /* ── L-bracket viewfinder corners — two perpendicular hairlines forming
    an L, hugging each corner of an artboard. Reads like a film viewfinder
    or architectural title block. */
-function CornerBracket({
-  corner,
-}: {
-  corner: "tl" | "tr" | "bl" | "br";
-}) {
+function CornerBracket({ corner }: { corner: "tl" | "tr" | "bl" | "br" }) {
   const isTop = corner === "tl" || corner === "tr";
   const isLeft = corner === "tl" || corner === "bl";
   const pos: Record<string, number | string> = {};
@@ -88,10 +84,8 @@ function LPTTokenSpecimen({ stats }: { stats: ProtocolStats }) {
   const squares = RAW_SQUARES.map((s) => ({ x: s.x, y: s.y - Y_MIN }));
 
   // Derived bounding box — exact extents of the mark in mark units.
-  const MARK_W =
-    Math.max(...squares.map((s) => s.x)) + SQ; // 72.394
-  const MARK_H =
-    Math.max(...squares.map((s) => s.y)) + SQ; // 87.677
+  const MARK_W = Math.max(...squares.map((s) => s.x)) + SQ; // 72.394
+  const MARK_H = Math.max(...squares.map((s) => s.y)) + SQ; // 87.677
 
   // Column-left positions and row-top positions — the natural construction lattice.
   const COL_X = [0, 28.469, 56.894];
@@ -132,7 +126,6 @@ function LPTTokenSpecimen({ stats }: { stats: ProtocolStats }) {
   const bboxCenterX = (bbTL.x + bbBR.x) / 2;
   const bboxCenterY = (bbTL.y + bbBR.y) / 2;
 
-
   const lineColor = "currentColor";
 
   return (
@@ -161,9 +154,7 @@ function LPTTokenSpecimen({ stats }: { stats: ProtocolStats }) {
         className="pointer-events-none absolute right-5 top-5 z-10 flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.26em] text-foreground/55"
         aria-hidden="true"
       >
-        <span
-          className="inline-block h-1 w-1 rounded-full bg-current"
-        />
+        <span className="inline-block h-1 w-1 rounded-full bg-current" />
         ETHEREUM
       </div>
 
@@ -206,13 +197,13 @@ function LPTTokenSpecimen({ stats }: { stats: ProtocolStats }) {
           const endN = Math.floor((600 - offsetX) / tileW);
           const verticals = Array.from(
             { length: endN - startN + 1 },
-            (_, i) => offsetX + (startN + i) * tileW,
+            (_, i) => offsetX + (startN + i) * tileW
           );
           const startM = Math.ceil((0 - offsetY) / tileH);
           const endM = Math.floor((600 - offsetY) / tileH);
           const horizontals = Array.from(
             { length: endM - startM + 1 },
-            (_, i) => offsetY + (startM + i) * tileH,
+            (_, i) => offsetY + (startM + i) * tileH
           );
           return (
             <g
@@ -477,14 +468,7 @@ function LPTTokenSpecimen({ stats }: { stats: ProtocolStats }) {
             { start: COL_X[1] + SQ, end: COL_X[2], label: "5/6X" },
             { start: COL_X[2], end: MARK_W, label: "X" },
           ];
-          const boundaries = [
-            0,
-            SQ,
-            COL_X[1],
-            COL_X[1] + SQ,
-            COL_X[2],
-            MARK_W,
-          ];
+          const boundaries = [0, SQ, COL_X[1], COL_X[1] + SQ, COL_X[2], MARK_W];
           const tickY = bbTL.y - 14;
           const labelY = bbTL.y - 20;
           return (
@@ -1605,11 +1589,7 @@ const exchanges = [
   },
 ];
 
-export default function TokenPageContent({
-  stats,
-}: {
-  stats: ProtocolStats;
-}) {
+export default function TokenPageContent({ stats }: { stats: ProtocolStats }) {
   return (
     <>
       {/* Hero — editorial left-aligned, token specimen card on the right */}
@@ -1686,8 +1666,8 @@ export default function TokenPageContent({
               <p className="mt-7 max-w-lg text-[16.5px] leading-[1.6] text-foreground/65">
                 Livepeer Token (LPT) is part of the coordination mechanism
                 behind the Livepeer network — aligning incentives between the
-                GPU providers who do the work, the applications that need
-                video, and the stakeholders who help secure the network.
+                GPU providers who do the work, the applications that need video,
+                and the stakeholders who help secure the network.
               </p>
 
               <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -1771,16 +1751,16 @@ export default function TokenPageContent({
                 </p>
                 <p>
                   Orchestrators — the providers who supply compute — stake LPT
-                  as a commitment to do reliable work. The more stake behind
-                  an orchestrator, the more work it earns, but it has to keep
-                  performing to keep it. Apps pay fees for that work, which
-                  flow to the orchestrators performing it.
+                  as a commitment to do reliable work. The more stake behind an
+                  orchestrator, the more work it earns, but it has to keep
+                  performing to keep it. Apps pay fees for that work, which flow
+                  to the orchestrators performing it.
                 </p>
                 <p>
-                  Delegators stake LPT behind orchestrators they trust,
-                  sharing in those fees and rewards — directing capital toward
-                  the best operators. And as the governance token, LPT lets
-                  holders shape the protocol and treasury.
+                  Delegators stake LPT behind orchestrators they trust, sharing
+                  in those fees and rewards — directing capital toward the best
+                  operators. And as the governance token, LPT lets holders shape
+                  the protocol and treasury.
                 </p>
               </div>
             </motion.div>

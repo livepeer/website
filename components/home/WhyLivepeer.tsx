@@ -15,7 +15,9 @@ function CostVis() {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-2.5">
-        <span className="w-14 font-mono text-[10px] text-foreground/25">Cloud</span>
+        <span className="w-14 font-mono text-[10px] text-foreground/25">
+          Cloud
+        </span>
         <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
             className="h-full rounded-full bg-foreground/10"
@@ -51,7 +53,9 @@ function LatencyVis() {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center gap-2.5">
-        <span className="w-14 font-mono text-[10px] text-foreground/25">Cloud</span>
+        <span className="w-14 font-mono text-[10px] text-foreground/25">
+          Cloud
+        </span>
         <div className="h-2 flex-1 rounded-full bg-foreground/[0.04]">
           <motion.div
             className="h-full rounded-full bg-foreground/10"
@@ -97,8 +101,12 @@ function ColdStartVis() {
       >
         <div className="h-2 w-2 rounded-full border border-foreground/20 border-t-transparent animate-spin" />
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] text-foreground/25">Cloud GPU</span>
-          <span className="font-mono text-[10px] text-foreground/15">30-60s</span>
+          <span className="font-mono text-[10px] text-foreground/25">
+            Cloud GPU
+          </span>
+          <span className="font-mono text-[10px] text-foreground/15">
+            30-60s
+          </span>
         </div>
       </motion.div>
       <motion.div
@@ -149,8 +157,12 @@ function ScaleVis() {
           ))}
         </div>
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] text-foreground/25">Cloud</span>
-          <span className="font-mono text-[10px] text-foreground/15">Fixed</span>
+          <span className="font-mono text-[10px] text-foreground/25">
+            Cloud
+          </span>
+          <span className="font-mono text-[10px] text-foreground/15">
+            Fixed
+          </span>
         </div>
       </div>
       <div className="flex items-center gap-2 rounded-md border border-emerald-500/15 bg-emerald-500/[0.04] px-3 py-2">

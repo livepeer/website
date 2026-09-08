@@ -151,7 +151,7 @@ Dark theme only — except `/primer`, which uses a light theme override with scr
 | "GPU providers" (dev-facing)               | "nodes" (too generic)                                 |
 | "orchestrators" (protocol/network context) | "miners," "validators" (wrong mental model)           |
 | "inference"                                | "processing" (when referring to AI specifically)      |
-| "real-time ai video"                       | "GPU-powered video" (previous headline, now retired) |
+| "real-time ai video"                       | "GPU-powered video" (previous headline, now retired)  |
 
 ### What the v2 thesis kills (do not use this framing)
 

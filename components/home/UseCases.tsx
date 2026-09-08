@@ -16,10 +16,7 @@ function WorldsVisual() {
   const inView = useInView(ref, { once: false, margin: "-50px" });
 
   return (
-    <div
-      ref={ref}
-      className="relative h-full overflow-hidden bg-surface"
-    >
+    <div ref={ref} className="relative h-full overflow-hidden bg-surface">
       {/* Sky gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#080f0c] via-[#060d0a] to-[#0a0a0a] light:from-[#eef8f1] light:via-[#e5f2e9] light:to-[#daede1]" />
 
@@ -583,7 +580,9 @@ function PipelinesVisual() {
                     : "color-mix(in srgb, currentColor 5%, transparent)"
                 }
                 stroke={
-                  node.active ? "var(--vis-green-strong)" : "color-mix(in srgb, currentColor 12%, transparent)"
+                  node.active
+                    ? "var(--vis-green-strong)"
+                    : "color-mix(in srgb, currentColor 12%, transparent)"
                 }
                 strokeWidth="1"
                 style={
@@ -600,7 +599,9 @@ function PipelinesVisual() {
                 className="font-mono"
                 fontSize="9"
                 fill={
-                  node.active ? "var(--vis-accent-green)" : "color-mix(in srgb, currentColor 50%, transparent)"
+                  node.active
+                    ? "var(--vis-accent-green)"
+                    : "color-mix(in srgb, currentColor 50%, transparent)"
                 }
               >
                 {node.label}

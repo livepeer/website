@@ -105,7 +105,9 @@ function MetaGroup({
   isFirst?: boolean;
 }) {
   return (
-    <div className={isFirst ? "" : "mt-5 border-t border-foreground/[0.06] pt-5"}>
+    <div
+      className={isFirst ? "" : "mt-5 border-t border-foreground/[0.06] pt-5"}
+    >
       <h3 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-foreground/50">
         {title}
       </h3>
@@ -145,8 +147,7 @@ function LinkOrDash({
       const isShortLink = /^(discord\.gg|t\.me|bit\.ly|tinyurl\.com)$/i.test(
         cleanHost
       );
-      host =
-        showPath || isShortLink ? `${cleanHost}${cleanPath}` : cleanHost;
+      host = showPath || isShortLink ? `${cleanHost}${cleanPath}` : cleanHost;
     } catch {
       host = value;
     }
@@ -228,10 +229,7 @@ export default function EcosystemDetail({ app, html }: Props) {
                 )}
                 {app.contact &&
                   (isEmail(app.contact) ? (
-                    <ConnectButton
-                      href={`mailto:${app.contact}`}
-                      label="Email"
-                    >
+                    <ConnectButton href={`mailto:${app.contact}`} label="Email">
                       <MailIcon className="h-4 w-4" />
                     </ConnectButton>
                   ) : (
@@ -308,9 +306,7 @@ export default function EcosystemDetail({ app, html }: Props) {
                 <MetaRow label="GitHub">
                   <LinkOrDash
                     value={app.github}
-                    display={
-                      app.github ? handleFromUrl(app.github) : undefined
-                    }
+                    display={app.github ? handleFromUrl(app.github) : undefined}
                   />
                 </MetaRow>
                 <MetaRow label="Contact">
