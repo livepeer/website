@@ -6,9 +6,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import {
   HealthIcon,
-  HealthMark,
+  HealthWord,
   ShippedIcon,
-  ShippedMark,
 } from "@/components/livepeer-ui/health";
 import {
   LatestNav,
@@ -55,76 +54,40 @@ function matches(row: RoundupRow, q: string): boolean {
 }
 
 /**
- * One group within a month — Shipped, In progress, No update — as a labelled
- * list of hairlined rows. The label is the register's eyebrow setting, so
- * the roundup reads as the roadmap re-sorted by month rather than as a new
- * kind of page.
- */
-function Section({
-  label,
-  count,
-  children,
-}: {
-  label: string;
-  count: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <section>
-      <h3 className="flex items-baseline justify-between gap-6 text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-        {label}
-        <span className="font-mono tracking-normal tabular-nums">{count}</span>
-      </h3>
-      <ul className="mt-2 divide-y divide-border border-y border-border">
-        {children}
-      </ul>
-    </section>
-  );
-}
-
-/**
- * A commitment in a roundup, laid out after Linear's project list: the
- * health first, in a column of its own, so the eye can run down the colour
- * and stop where it changes; then the title and, beneath it, what its lead
- * said, clamped to two lines so a wordy update does not stall the scan;
- * then who owns it and, for shipped work, when, on the right. On a phone
- * the columns stack, health above the title.
+ * A commitment in a roundup: the mark in a gutter on the left like a
+ * bullet, the title with its state word beside it, and one muted line
+ * beneath. No rules, no columns — the colour down the left and the order
+ * of the list do the grouping, and the line beneath changes by state so
+ * the owner is named only where it matters, which is where nothing has
+ * been said.
  */
 function Row({
   row,
-  mark,
-  date,
+  icon,
+  word,
   children,
 }: {
   row: RoundupRow;
-  mark: React.ReactNode;
-  date?: string;
-  children?: React.ReactNode;
+  icon: React.ReactNode;
+  word: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
-    <li className="grid gap-x-5 gap-y-1.5 py-3.5 md:grid-cols-[7.5rem_minmax(0,1fr)_auto] md:items-baseline">
-      <div className="text-sm">{mark}</div>
+    <li className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3">
+      <span className="flex h-6 items-center">{icon}</span>
       <div className="min-w-0">
-        <Link
-          href={`/roadmap/${row.slug}`}
-          className="font-medium text-pretty transition-colors hover:text-muted-foreground"
-        >
-          {row.title}
-        </Link>
-        {children}
-      </div>
-      <div className="text-sm text-muted-foreground md:text-right">
-        <Link
-          href={`/organizations/${row.ownerSlug}`}
-          className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
-        >
-          {row.owner}
-        </Link>
-        {date && (
-          <time dateTime={date} className="block font-mono text-xs">
-            {formatDay(date)}
-          </time>
-        )}
+        <h3 className="text-pretty">
+          <Link
+            href={`/roadmap/${row.slug}`}
+            className="font-medium transition-colors hover:text-muted-foreground"
+          >
+            {row.title}
+          </Link>
+          <span className="ml-2 text-sm whitespace-nowrap">{word}</span>
+        </h3>
+        <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
+          {children}
+        </p>
       </div>
     </li>
   );
@@ -165,73 +128,59 @@ function Tally({ r }: { r: RoundupView }) {
   );
 }
 
+/**
+ * One month as a flat list: shipped first, then work under way with what
+ * needs attention first, then the silent. Nothing labels the groups —
+ * the marks do, and the tally in the rail carries the counts.
+ */
 function Month({ r }: { r: RoundupView }) {
+  const owner = (row: RoundupRow) => (
+    <Link
+      href={`/organizations/${row.ownerSlug}`}
+      className="text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {row.owner}
+    </Link>
+  );
   return (
-    <div className="flex flex-col gap-9">
-      {r.shipped.length > 0 && (
-        <Section label="Shipped" count={r.shipped.length}>
-          {r.shipped.map((row) => (
-            <Row
-              key={row.slug}
-              row={row}
-              mark={<ShippedMark />}
-              date={row.shippedAt}
-            >
-              {/* The lead's last word on it before it shipped, where there
-                  was one, so shipping is not only a title and a date. */}
-              {row.summary && (
-                <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
-                  {row.summary}
-                </p>
-              )}
-            </Row>
-          ))}
-        </Section>
-      )}
-
-      {r.reported.length > 0 && (
-        <Section label="In progress" count={r.reported.length}>
-          {r.reported.map((row) => (
-            <Row
-              key={row.slug}
-              row={row}
-              mark={<HealthMark health={row.health} />}
-            >
-              <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
-                {row.summary}
-              </p>
-            </Row>
-          ))}
-        </Section>
-      )}
-
-      {/* The accountability half. Under way, and nothing said this month:
-          the list Linear's rollup exists to surface. In the month under way
-          it is softer, because the month is not over. When every commitment
-          under way did post, the roundup says so rather than leaving a gap
-          the reader has to interpret. */}
-      {r.quiet.length > 0 ? (
-        <Section
-          label={r.current ? "No update yet" : "No update"}
-          count={r.quiet.length}
+    <ol className="flex flex-col gap-6">
+      {r.shipped.map((row) => (
+        <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
+          <time dateTime={row.shippedAt}>{formatDay(row.shippedAt)}</time>
+          {" · "}
+          {row.summary ?? <>by {owner(row)}</>}
+        </Row>
+      ))}
+      {r.reported.map((row) => (
+        <Row
+          key={row.slug}
+          row={row}
+          icon={<HealthIcon health={row.health} />}
+          word={<HealthWord health={row.health} />}
         >
-          {r.quiet.map((row) => (
-            <Row
-              key={row.slug}
-              row={row}
-              mark={<HealthMark health="no-update" />}
-            />
-          ))}
-        </Section>
-      ) : (
-        r.reported.length > 0 &&
-        !r.current && (
-          <p className="text-sm text-muted-foreground">
-            Everything under way posted an update.
-          </p>
-        )
+          {row.summary}
+        </Row>
+      ))}
+      {/* The accountability half: under way, and nothing said this month.
+          The owner is named here and nowhere else in the list, because
+          this is the line that is about them. Softer in the month under
+          way, which is not over. */}
+      {r.quiet.map((row) => (
+        <Row
+          key={row.slug}
+          row={row}
+          icon={<HealthIcon health="no-update" />}
+          word={<HealthWord health="no-update" />}
+        >
+          {owner(row)} has not posted {r.current ? "yet " : ""}this month.
+        </Row>
+      ))}
+      {r.quiet.length === 0 && r.reported.length > 0 && !r.current && (
+        <li className="text-sm text-muted-foreground">
+          Everything under way posted an update.
+        </li>
       )}
-    </div>
+    </ol>
   );
 }
 
@@ -241,8 +190,8 @@ function Month({ r }: { r: RoundupView }) {
  *
  * The same shape as the blog's row over a dated list — Vercel's changelog
  * page — with the month where the day used to be: the month and its tally
- * in a column of its own on the left, its roundup beside it in three
- * groups. Nothing here is written; a month is what the register and the
+ * in a column of its own on the left, its roundup beside it as one flat
+ * list. Nothing here is written; a month is what the register and the
  * updates say it was.
  *
  * Search narrows the rows on the page by commitment title and owner, and

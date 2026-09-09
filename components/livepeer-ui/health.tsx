@@ -109,6 +109,21 @@ export function ShippedMark({ className }: { className?: string }) {
   );
 }
 
+/** The word alone, in its colour, for where the icon sits elsewhere. */
+export function HealthWord({
+  health,
+  className,
+}: {
+  health: HealthOrNone;
+  className?: string;
+}) {
+  return (
+    <span className={cn("text-[var(--health)]", TONE[health], className)}>
+      {HEALTH_LABEL[health]}
+    </span>
+  );
+}
+
 export function HealthMark({
   health,
   className,
