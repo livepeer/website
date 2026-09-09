@@ -40,7 +40,7 @@ export function changelogRow(register: BlogSummary[]): {
  * body is the largest thing on a record and the list shows none of it.
  */
 export function toView(r: Roundup): RoundupView {
-  const row = (c: Roundup["shipped"][number]) => ({
+  const row = (c: Roundup["quiet"][number]) => ({
     slug: c.slug,
     title: c.title,
     owner: c.owner,
@@ -50,7 +50,11 @@ export function toView(r: Roundup): RoundupView {
     month: r.month,
     title: r.title,
     current: r.current,
-    shipped: r.shipped.map((c) => ({ ...row(c), shippedAt: c.shippedAt! })),
+    shipped: r.shipped.map(({ commitment: c, update }) => ({
+      ...row(c),
+      shippedAt: c.shippedAt!,
+      summary: update?.summary,
+    })),
     reported: r.reported.map(({ commitment, update }) => ({
       ...row(commitment),
       health: update.health,

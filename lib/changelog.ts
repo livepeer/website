@@ -24,8 +24,11 @@ export type Roundup = {
   title: string;
   /** The month `now` falls in, which is not over yet. */
   current: boolean;
-  /** Commitments that shipped this month, newest first. */
-  shipped: Commitment[];
+  /**
+   * Commitments that shipped this month, newest first, each with the last
+   * thing its lead said before it shipped, if anything was said.
+   */
+  shipped: { commitment: Commitment; update?: UpdateSummary }[];
   /** Under way with an update posted this month, what needs attention first. */
   reported: { commitment: Commitment; update: UpdateSummary }[];
   /** Under way with nothing posted this month. */
@@ -129,7 +132,18 @@ export function roundupFor(
 
   const shipped = commitments
     .filter((c) => c.shippedAt && monthOf(c.shippedAt) === month)
-    .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!));
+    .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!))
+    .map((commitment) => ({
+      commitment,
+      // The newest update posted up to the day it shipped — the lead's last
+      // word on it, from whichever month it was said in.
+      update: updates
+        .filter(
+          (u) =>
+            u.commitment === commitment.slug && u.date <= commitment.shippedAt!
+        )
+        .sort((a, b) => b.date.localeCompare(a.date))[0],
+    }));
 
   const posted = new Map<string, UpdateSummary>();
   for (const u of updates) {

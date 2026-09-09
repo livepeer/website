@@ -122,25 +122,6 @@ function ActivityRow({
 }
 
 /**
- * "3 days ago", "2 weeks ago" — how long since an update was posted, the
- * way Linear stamps its latest update. Past a month the date itself is
- * more useful than a count, so it hands over to formatDate.
- */
-function ago(iso: string, now: Date): string {
-  const days = Math.floor(
-    (now.getTime() - new Date(iso).getTime()) / 86_400_000
-  );
-  if (days <= 0) return "today";
-  if (days === 1) return "yesterday";
-  if (days < 7) return `${days} days ago`;
-  if (days < 30) {
-    const weeks = Math.floor(days / 7);
-    return weeks === 1 ? "last week" : `${weeks} weeks ago`;
-  }
-  return formatDate(iso);
-}
-
-/**
  * One update, the way Linear draws one: the health its lead chose, who
  * posted it and when on one line, then what they said. The write-up, when
  * there is one, runs beneath the line in the reading prose.
@@ -380,7 +361,7 @@ export function CommitmentRecord({
           <div className="mt-10 border-t border-border pt-10">
             <UpdateCard
               update={latest}
-              when={ago(latest.date, now)}
+              when={shortDate(latest.date, now)}
               eyebrow="Latest update"
               note={
                 standing.health === "no-update"

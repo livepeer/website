@@ -31,7 +31,7 @@ export type RoundupView = {
   title: string;
   /** Still being written: the month `now` falls in. */
   current: boolean;
-  shipped: (RoundupRow & { shippedAt: string })[];
+  shipped: (RoundupRow & { shippedAt: string; summary?: string })[];
   reported: (RoundupRow & {
     health: Health;
     date: string;
@@ -176,7 +176,15 @@ function Month({ r }: { r: RoundupView }) {
               row={row}
               mark={<ShippedMark />}
               date={row.shippedAt}
-            />
+            >
+              {/* The lead's last word on it before it shipped, where there
+                  was one, so shipping is not only a title and a date. */}
+              {row.summary && (
+                <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
+                  {row.summary}
+                </p>
+              )}
+            </Row>
           ))}
         </Section>
       )}

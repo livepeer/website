@@ -32,7 +32,11 @@ function content(r: Roundup): string {
   const parts: string[] = [];
   if (r.shipped.length > 0) {
     parts.push(
-      `<h3>Shipped</h3><ul>${r.shipped.map((c) => item(c.slug, c.title, c.owner)).join("")}</ul>`
+      `<h3>Shipped</h3><ul>${r.shipped
+        .map(({ commitment: c, update }) =>
+          item(c.slug, c.title, update ? update.summary : c.owner)
+        )
+        .join("")}</ul>`
     );
   }
   if (r.reported.length > 0) {
