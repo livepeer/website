@@ -3,19 +3,27 @@ import {
   AlignLeft,
   ArrowUpRight,
   CalendarDays,
+  ChevronDown,
+  CircleCheck,
   CircleChevronDown,
+  CircleDot,
   Clock,
   Link2,
 } from "lucide-react";
 
-import { HealthMark } from "@/components/livepeer-ui/health";
+import { HealthDot, HealthMark } from "@/components/livepeer-ui/health";
 import {
   RecordCredit as Credit,
   RecordRow as Row,
 } from "@/components/livepeer-ui/record-parts";
 import type { Commitment } from "@/lib/roadmap";
 import { shippedPeriod } from "@/lib/roadmap";
-import { STALE_AFTER_DAYS, type Standing, type Update } from "@/lib/health";
+import {
+  HEALTH_LABEL,
+  STALE_AFTER_DAYS,
+  type Standing,
+  type Update,
+} from "@/lib/health";
 
 /**
  * One commitment, rendered once.
@@ -43,6 +51,73 @@ function formatDate(iso: string): string {
     month: "long",
     day: "numeric",
   });
+}
+
+/** "Sep 9", or "Sep 9, 2025" once it is not this year — an activity date. */
+function shortDate(iso: string, now: Date): string {
+  const sameYear = iso.slice(0, 4) === now.toISOString().slice(0, 4);
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
+
+/**
+ * One line of the activity log: an icon, who did what, and when.
+ *
+ * Linear's sidebar, not its feed: "ads1018 posted an update · Sep 9". A
+ * row with a body is a native <details>, so the text is one click away and
+ * the log stays a log. The marker is hidden and a chevron stands in, on
+ * the right where the eye is not.
+ */
+function ActivityRow({
+  icon,
+  actor,
+  verb,
+  date,
+  children,
+}: {
+  icon: React.ReactNode;
+  actor: string;
+  verb: string;
+  date: string;
+  children?: React.ReactNode;
+}) {
+  const line = (
+    <>
+      <span className="flex size-5 shrink-0 items-center justify-center">
+        {icon}
+      </span>
+      <span className="min-w-0">
+        <span className="text-foreground">{actor}</span> {verb}
+        <span aria-hidden="true"> · </span>
+        {date}
+      </span>
+    </>
+  );
+  if (!children) {
+    return (
+      <li className="flex items-center gap-3 py-2 text-sm text-muted-foreground">
+        {line}
+      </li>
+    );
+  }
+  return (
+    <li>
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center gap-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          {line}
+          <ChevronDown
+            className="ml-auto size-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+            aria-hidden
+          />
+        </summary>
+        <div className="pt-1 pb-4 pl-8">{children}</div>
+      </details>
+    </li>
+  );
 }
 
 /**
@@ -165,7 +240,6 @@ export function CommitmentRecord({
   // Everything older runs under the write-up. Shipped and committed work has
   // no standing, so its updates, if any, are all history.
   const latest = standing ? updates[0] : undefined;
-  const earlier = latest ? updates.slice(1) : updates;
   return (
     <>
       {/* Notion's page title: heavy, tight, and the largest thing on the
@@ -305,25 +379,50 @@ export function CommitmentRecord({
         </p>
       )}
 
-      {/* The trail: everything posted before the latest, newest first, each
-          on its own plate the way Linear's activity runs under a project.
-          Titled "Earlier updates" under a latest card, since the newest one
-          is already above the write-up; plain "Updates" on shipped work,
-          where all of them are history. */}
-      {earlier.length > 0 && (
+      {/* Activity, the way Linear keeps it beside a project: one line per
+          event, newest first — every update posted, with its health as the
+          icon and its text a click away, and the record's own milestones
+          around them. The latest update is in the log too, even though it
+          is the card above; a log with its newest entry missing is not one.
+          Shown whenever there is anything to log, which for committed work
+          with no updates is only the day it was committed. */}
+      {(updates.length > 0 || c.shippedAt || c.issued) && (
         <section className="mt-12 border-t border-border pt-10">
-          <h2 className="flex items-baseline justify-between text-sm font-medium">
-            {latest ? "Earlier updates" : "Updates"}
-            <span className="font-mono text-xs font-normal text-muted-foreground tabular-nums">
-              {earlier.length}
-            </span>
-          </h2>
-          <ol className="mt-6 space-y-5">
-            {earlier.map((u) => (
-              <li key={`${u.date}-${u.summary}`}>
-                <UpdateCard update={u} when={formatDate(u.date)} />
-              </li>
+          <h2 className="text-sm font-medium">Activity</h2>
+          <ol className="mt-4">
+            {c.shippedAt && (
+              <ActivityRow
+                icon={<CircleCheck className="size-4" aria-hidden />}
+                actor={c.owner}
+                verb="shipped it"
+                date={shortDate(c.shippedAt, now)}
+              />
+            )}
+            {updates.map((u) => (
+              <ActivityRow
+                key={`${u.date}-${u.summary}`}
+                icon={<HealthDot health={u.health} className="size-2" />}
+                actor={u.author?.name ?? c.owner}
+                verb={`posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`}
+                date={shortDate(u.date, now)}
+              >
+                <p className="text-sm text-pretty">{u.summary}</p>
+                {u.html && (
+                  <div
+                    className="reading-prose mt-2 text-sm"
+                    dangerouslySetInnerHTML={{ __html: u.html }}
+                  />
+                )}
+              </ActivityRow>
             ))}
+            {c.issued && (
+              <ActivityRow
+                icon={<CircleDot className="size-4" aria-hidden />}
+                actor={c.owner}
+                verb="committed to it"
+                date={shortDate(c.issued, now)}
+              />
+            )}
           </ol>
         </section>
       )}
