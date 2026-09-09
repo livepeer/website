@@ -82,24 +82,42 @@ function UpdateCard({
   /** A remark on the card's standing, set on the right of the eyebrow. */
   note?: string;
 }) {
+  // Outlined, not filled. A muted plate with a border, stacked three deep,
+  // read as one grey block; a hairline alone leaves each update its own
+  // edge and lets the page's ground run between them. The structure does
+  // the rest: health and author on the left, the date on the right, the
+  // text below — the same header on every card, so the eye finds the next
+  // one by its shape.
   return (
-    <article className="rounded-lg border border-border bg-muted p-5">
+    <article className="rounded-xl border border-border p-5 sm:p-6">
       {(eyebrow || note) && (
-        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-          <h2 className="text-sm font-medium">{eyebrow}</h2>
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+            {eyebrow}
+          </h2>
           {note && (
             <span className="text-sm text-muted-foreground">{note}</span>
           )}
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-        <HealthMark health={u.health} className="font-medium" />
-        {u.author && <Credit person={u.author} />}
-        <time dateTime={u.date} title={formatDate(u.date)}>
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <HealthMark health={u.health} className="font-medium" />
+          {u.author && (
+            <span className="text-muted-foreground">
+              <Credit person={u.author} />
+            </span>
+          )}
+        </span>
+        <time
+          dateTime={u.date}
+          title={formatDate(u.date)}
+          className="text-muted-foreground"
+        >
           {when}
         </time>
-      </div>
-      <p className="mt-3 text-pretty">{u.summary}</p>
+      </header>
+      <p className="mt-4 text-pretty">{u.summary}</p>
       {u.html && (
         <div
           className="reading-prose mt-3"
@@ -255,9 +273,11 @@ export function CommitmentRecord({
             />
           </div>
         ) : (
-          <div className="mt-8 rounded-lg border border-border bg-muted p-5">
-            <h2 className="text-sm font-medium">Latest update</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+          <div className="mt-8 rounded-xl border border-border p-5 sm:p-6">
+            <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+              Latest update
+            </h2>
+            <p className="mt-3 text-sm text-muted-foreground">
               Nothing posted yet. The lead posts one a month while the work is
               under way.
             </p>
@@ -298,7 +318,7 @@ export function CommitmentRecord({
               {earlier.length}
             </span>
           </h2>
-          <ol className="mt-6 space-y-4">
+          <ol className="mt-6 space-y-5">
             {earlier.map((u) => (
               <li key={`${u.date}-${u.summary}`}>
                 <UpdateCard update={u} when={formatDate(u.date)} />
