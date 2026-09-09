@@ -71,6 +71,44 @@ export function HealthIcon({
   );
 }
 
+/**
+ * Shipped, in the same idiom: the disc with a tick, in the foreground
+ * rather than a colour, because done is not a health — it is the end of
+ * having one.
+ */
+export function ShippedIcon({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--health),transparent_82%)] text-[var(--health)] [--health:var(--foreground)]",
+        className
+      )}
+    >
+      <svg
+        viewBox="0 0 16 16"
+        className="size-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M3.5 8.5 L6.5 11.5 L12.5 5" />
+      </svg>
+    </span>
+  );
+}
+
+export function ShippedMark({ className }: { className?: string }) {
+  return (
+    <span className={cn("inline-flex items-center gap-1.5", className)}>
+      <ShippedIcon />
+      Shipped
+    </span>
+  );
+}
+
 export function HealthMark({
   health,
   className,

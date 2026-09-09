@@ -4,12 +4,17 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import { HealthMark } from "@/components/livepeer-ui/health";
+import {
+  HealthIcon,
+  HealthMark,
+  ShippedIcon,
+  ShippedMark,
+} from "@/components/livepeer-ui/health";
 import {
   LatestNav,
   type LatestLink,
 } from "@/components/livepeer-ui/latest-nav";
-import type { Health } from "@/lib/health";
+import { HEALTH_LABEL, HEALTHS, type Health } from "@/lib/health";
 
 export type RoundupRow = {
   slug: string;
@@ -70,7 +75,7 @@ function Section({
         {label}
         <span className="font-mono tracking-normal tabular-nums">{count}</span>
       </h3>
-      <ul className="mt-3 divide-y divide-border border-y border-border">
+      <ul className="mt-2 divide-y divide-border border-y border-border">
         {children}
       </ul>
     </section>
@@ -78,63 +83,99 @@ function Section({
 }
 
 /**
- * A commitment in a roundup: its title (linking to its record), who owns it,
- * and on the right whatever the group has to say — the day it shipped, or
- * the health its lead chose. The lead's line sits beneath.
+ * A commitment in a roundup, laid out after Linear's project list: the
+ * health first, in a column of its own, so the eye can run down the colour
+ * and stop where it changes; then the title and, beneath it, what its lead
+ * said, clamped to two lines so a wordy update does not stall the scan;
+ * then who owns it and, for shipped work, when, on the right. On a phone
+ * the columns stack, health above the title.
  */
 function Row({
   row,
-  aside,
+  mark,
+  date,
   children,
 }: {
   row: RoundupRow;
-  aside?: React.ReactNode;
+  mark: React.ReactNode;
+  date?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <li className="py-3.5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <span className="flex min-w-0 flex-wrap items-baseline gap-x-2">
-          <Link
-            href={`/roadmap/${row.slug}`}
-            className="font-medium text-pretty transition-colors hover:text-muted-foreground"
-          >
-            {row.title}
-          </Link>
-          <span className="text-sm text-muted-foreground">
-            by{" "}
-            <Link
-              href={`/organizations/${row.ownerSlug}`}
-              className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
-            >
-              {row.owner}
-            </Link>
-          </span>
-        </span>
-        {aside && <span className="shrink-0 text-sm">{aside}</span>}
+    <li className="grid gap-x-5 gap-y-1.5 py-3.5 md:grid-cols-[7.5rem_minmax(0,1fr)_auto] md:items-baseline">
+      <div className="text-sm">{mark}</div>
+      <div className="min-w-0">
+        <Link
+          href={`/roadmap/${row.slug}`}
+          className="font-medium text-pretty transition-colors hover:text-muted-foreground"
+        >
+          {row.title}
+        </Link>
+        {children}
       </div>
-      {children}
+      <div className="text-sm text-muted-foreground md:text-right">
+        <Link
+          href={`/organizations/${row.ownerSlug}`}
+          className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+        >
+          {row.owner}
+        </Link>
+        {date && (
+          <time dateTime={date} className="block font-mono text-xs">
+            {formatDay(date)}
+          </time>
+        )}
+      </div>
     </li>
+  );
+}
+
+/**
+ * The month's numbers, under its name in the rail: how many shipped, and
+ * how many were on track, at risk, off track or silent. The same icons the
+ * rows carry, so the tally is also the key. A month can be read from this
+ * alone, which is what a rail beside a long list is for.
+ */
+function Tally({ r }: { r: RoundupView }) {
+  const counts = HEALTHS.map((health) => ({
+    health,
+    n: r.reported.filter((row) => row.health === health).length,
+  })).filter(({ n }) => n > 0);
+  return (
+    <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground md:flex-col md:gap-y-1.5">
+      {r.shipped.length > 0 && (
+        <li className="flex items-center gap-1.5 tabular-nums">
+          <ShippedIcon />
+          {r.shipped.length} shipped
+        </li>
+      )}
+      {counts.map(({ health, n }) => (
+        <li key={health} className="flex items-center gap-1.5 tabular-nums">
+          <HealthIcon health={health} />
+          {n} {HEALTH_LABEL[health].toLowerCase()}
+        </li>
+      ))}
+      {r.quiet.length > 0 && (
+        <li className="flex items-center gap-1.5 tabular-nums">
+          <HealthIcon health="no-update" />
+          {r.quiet.length} {r.current ? "not yet reported" : "no update"}
+        </li>
+      )}
+    </ul>
   );
 }
 
 function Month({ r }: { r: RoundupView }) {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-9">
       {r.shipped.length > 0 && (
         <Section label="Shipped" count={r.shipped.length}>
           {r.shipped.map((row) => (
             <Row
               key={row.slug}
               row={row}
-              aside={
-                <time
-                  dateTime={row.shippedAt}
-                  className="text-muted-foreground"
-                >
-                  {formatDay(row.shippedAt)}
-                </time>
-              }
+              mark={<ShippedMark />}
+              date={row.shippedAt}
             />
           ))}
         </Section>
@@ -146,9 +187,9 @@ function Month({ r }: { r: RoundupView }) {
             <Row
               key={row.slug}
               row={row}
-              aside={<HealthMark health={row.health} />}
+              mark={<HealthMark health={row.health} />}
             >
-              <p className="mt-1.5 max-w-[62ch] text-sm text-pretty text-muted-foreground">
+              <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
                 {row.summary}
               </p>
             </Row>
@@ -167,7 +208,11 @@ function Month({ r }: { r: RoundupView }) {
           count={r.quiet.length}
         >
           {r.quiet.map((row) => (
-            <Row key={row.slug} row={row} />
+            <Row
+              key={row.slug}
+              row={row}
+              mark={<HealthMark health="no-update" />}
+            />
           ))}
         </Section>
       ) : (
@@ -187,9 +232,10 @@ function Month({ r }: { r: RoundupView }) {
  * roadmap register and the updates posted on it (see lib/changelog.ts).
  *
  * The same shape as the blog's row over a dated list — Vercel's changelog
- * page — with the month where the day used to be: the month in a column of
- * its own on the left, its roundup beside it in three groups. Nothing here is
- * written; a month is what the register and the updates say it was.
+ * page — with the month where the day used to be: the month and its tally
+ * in a column of its own on the left, its roundup beside it in three
+ * groups. Nothing here is written; a month is what the register and the
+ * updates say it was.
  *
  * Search narrows the rows on the page by commitment title and owner, and
  * hides a month with nothing left in it.
@@ -266,26 +312,27 @@ export function ChangelogListing({
           ) : (
             <ol className="divide-y divide-border">
               {shown.map((r) => (
-                // The month sits in a column of its own on wide screens and
-                // stays put while its roundup scrolls past it. On a phone it
-                // is a line above.
+                // The month and its tally sit in a column of their own on
+                // wide screens and stay put while the roundup scrolls past.
+                // On a phone they are a block above it.
                 <li
                   key={r.month}
-                  className="grid gap-5 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,44rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,44rem)]"
+                  className="grid gap-6 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,46rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,46rem)]"
                 >
-                  <h2 className="text-sm md:sticky md:top-24 md:self-start">
-                    <Link
-                      href={`/changelog/${r.month}`}
-                      className="text-foreground transition-colors hover:text-muted-foreground"
-                    >
-                      {r.title}
-                    </Link>
-                    {r.current && (
-                      <span className="block text-muted-foreground">
-                        so far
-                      </span>
-                    )}
-                  </h2>
+                  <div className="md:sticky md:top-24 md:self-start">
+                    <h2 className="text-sm">
+                      <Link
+                        href={`/changelog/${r.month}`}
+                        className="text-foreground transition-colors hover:text-muted-foreground"
+                      >
+                        {r.title}
+                      </Link>
+                      {r.current && (
+                        <span className="text-muted-foreground"> so far</span>
+                      )}
+                    </h2>
+                    <Tally r={r} />
+                  </div>
                   <Month r={r} />
                 </li>
               ))}
