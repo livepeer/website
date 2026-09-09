@@ -108,7 +108,7 @@ export function BlogListing({
   // Split across two, max-w-page bounds the content box instead of the padded
   // box and the column runs 40px wider each side than the header and footer.
   return (
-    <div className="pt-6 pb-24 sm:pt-8">
+    <div className="pt-12 pb-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         {/* A step up from the page-title utility on both axes, by request: the
             display-sm size with the regular weight rather than the 300 the
