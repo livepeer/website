@@ -409,7 +409,7 @@ export function CommitmentRecord({
                 <p className="text-sm text-pretty">{u.summary}</p>
                 {u.html && (
                   <div
-                    className="reading-prose mt-2 text-sm"
+                    className="reading-prose mt-2 text-sm!"
                     dangerouslySetInnerHTML={{ __html: u.html }}
                   />
                 )}
