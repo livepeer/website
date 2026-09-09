@@ -12,4 +12,6 @@ authors:
     avatar: andre-okafor.jpg
 ---
 
-Both are open source under [livepeer on GitHub](https://github.com/livepeer).
+The Live Runner lets a service drive the network from its own stack, and it
+ships alongside a Go SDK so that stack can be Go. Both are open source under
+[livepeer on GitHub](https://github.com/livepeer).

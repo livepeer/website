@@ -12,5 +12,6 @@ authors:
     avatar: anjali-raman.jpg
 ---
 
-Funded through the Documentation Restructure RFP. Read them at
-[docs.livepeer.org](https://docs.livepeer.org).
+The docs are restructured so a builder can find the network's capabilities
+without reading the source. Funded through the Documentation Restructure RFP.
+Read them at [docs.livepeer.org](https://docs.livepeer.org).

@@ -43,7 +43,12 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
             {entry.title}
           </h1>
 
-          {entry.summary && (
+          {/* The summary is the list's paragraph, not the entry's opening,
+              so it is not repeated above a write-up that says the same thing
+              at length — the blog omits a post's description the same way.
+              It stands in only where there is no write-up, so an entry that
+              is a headline and a sentence is not a headline over nothing. */}
+          {!entry.html && entry.summary && (
             <p className="mt-5 text-reading-body text-pretty text-muted-foreground">
               {entry.summary}
             </p>

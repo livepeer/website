@@ -12,6 +12,8 @@ authors:
     avatar: elena-vargas.jpg
 ---
 
-Deployed on-chain on 30 July by the Protocol R&D SPE. The proposal, the
-discussion and the audit trail are in the [LIPs repository](https://github.com/livepeer/LIPs);
-the operator guidance is on the [forum](https://forum.livepeer.org).
+LIP-118 is live on-chain. An orchestrator can now hand the reward call to
+another address, which removes a standing operational chore from running a
+node. Deployed on 30 July by the Protocol R&D SPE; the proposal, the discussion
+and the audit trail are in the [LIPs repository](https://github.com/livepeer/LIPs),
+and the operator guidance is on the [forum](https://forum.livepeer.org).
