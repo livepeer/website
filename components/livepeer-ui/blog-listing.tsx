@@ -38,20 +38,22 @@ function formatDate(iso: string): string {
 /**
  * The blog index — "Latest" in the nav, /blog in the URL.
  *
- * A rail and a grid, after Vercel's blog. The rail is a list of places: every
+ * A row and a grid, after Vercel's blog. The row is a list of places: every
  * category as its own URL, then any sibling surface that is not a category
- * (the changelog, when it exists), then a search box. Categories used to live
- * inside the search popover with the query, which made one control do two
- * jobs and left nowhere to put a page that was neither. A category is a
- * route now, so it can be linked to and indexed, and search does one thing:
- * it narrows the posts on the page you are on, by title and description.
+ * (the changelog, when it exists), with a search box at its right end.
+ * Categories used to live inside the search popover with the query, which
+ * made one control do two jobs and left nowhere to put a page that was
+ * neither. A category is a route now, so it can be linked to and indexed,
+ * and search does one thing: it narrows the posts on the page you are on, by
+ * title and description.
+ *
+ * A row rather than a sidebar, which this had for a day: with three to five
+ * places a sidebar leaves a column mostly empty and takes width from the
+ * covers, and the row is the same shape on every screen.
  *
  * The grid stays. Vercel runs a dense date-and-title list because it ships
  * several posts a week; this blog has a dozen posts, each with a required
  * cover, and the contact sheet of covers is the point of the index.
- *
- * On a phone the rail becomes a row above the grid: the categories scroll
- * sideways, the search sits beneath them.
  */
 export function BlogListing({
   posts,
@@ -108,118 +110,112 @@ export function BlogListing({
   return (
     <div className="pt-16 pb-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <div className="pt-8 lg:grid lg:grid-cols-[12rem_1fr] lg:gap-16 lg:pt-12">
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-            <h1 className="text-page-title">{heading}</h1>
+        <h1 className="pt-8 text-page-title lg:pt-12">{heading}</h1>
 
-            {/* One list, two shapes: a sideways scroller on a phone, a column
-                on a desktop. The sibling surfaces follow a hairline so they
-                read as a second group rather than more categories. */}
-            <nav
-              aria-label="Categories"
-              className="-mx-4 mt-8 flex gap-x-5 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-y-2 lg:overflow-visible lg:px-0 lg:whitespace-normal [&::-webkit-scrollbar]:hidden"
-            >
-              {railLink("All", allHref, active === null)}
-              {categories.map((category) =>
-                railLink(
-                  category.label,
-                  category.href,
-                  active === category.label
-                )
-              )}
-              {siblings.length > 0 && (
-                <>
-                  <span
-                    aria-hidden="true"
-                    className="w-px shrink-0 self-stretch bg-border lg:my-2 lg:h-px lg:w-full"
-                  />
-                  {siblings.map((link) =>
-                    railLink(link.label, link.href, false)
-                  )}
-                </>
-              )}
-            </nav>
+        {/* One row, on every screen: the places on the left, the search on
+            the right. On a phone the row wraps, so the search drops under the
+            categories at full width; the categories themselves scroll
+            sideways rather than wrap, so the row stays one line tall. The
+            sibling surfaces follow a hairline so they read as a second group
+            rather than more categories. */}
+        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <nav
+            aria-label="Categories"
+            className="-mx-4 flex min-w-0 gap-x-5 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+          >
+            {railLink("All", allHref, active === null)}
+            {categories.map((category) =>
+              railLink(category.label, category.href, active === category.label)
+            )}
+            {siblings.length > 0 && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="w-px shrink-0 self-stretch bg-border"
+                />
+                {siblings.map((link) => railLink(link.label, link.href, false))}
+              </>
+            )}
+          </nav>
 
-            <label className="relative mt-6 block lg:mt-8">
-              <SearchIcon
-                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder={searchPlaceholder}
-                aria-label={searchPlaceholder}
-                className="pl-9"
-              />
-            </label>
-          </aside>
+          <label className="relative block w-full sm:ml-auto sm:w-64">
+            <SearchIcon
+              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
+              className="pl-9"
+            />
+          </label>
+        </div>
 
-          <div className="mt-12 lg:mt-0">
-            <p className="sr-only" role="status" aria-live="polite">
-              {matches.length} of {posts.length} posts shown
+        <div className="mt-12">
+          <p className="sr-only" role="status" aria-live="polite">
+            {matches.length} of {posts.length} posts shown
+          </p>
+
+          {matches.length === 0 ? (
+            <p className="py-16 text-center text-reading-body text-muted-foreground">
+              {emptyMessage}
             </p>
-
-            {matches.length === 0 ? (
-              <p className="py-16 text-center text-reading-body text-muted-foreground">
-                {emptyMessage}
-              </p>
-            ) : (
-              // Two columns from the smallest screen, not one. Post art is the
-              // point of this grid and a single column of square images turns
-              // the index into a scroll; paired, the covers read as a contact
-              // sheet. Three only at xl, where the column beside the rail is
-              // wide enough for them.
-              <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-12 xl:grid-cols-3">
-                {matches.map((post) => (
-                  <li key={post.slug} className="contents">
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="group flex min-w-0 flex-col gap-2"
-                    >
-                      {/* Square, and the same tile whether or not the post
+          ) : (
+            // Two columns from the smallest screen, not one. Post art is the
+            // point of this grid and a single column of square images turns
+            // the index into a scroll; paired, the covers read as a contact
+            // sheet.
+            <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-3">
+              {matches.map((post) => (
+                <li key={post.slug} className="contents">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group flex min-w-0 flex-col gap-2"
+                  >
+                    {/* Square, and the same tile whether or not the post
                           has art: the bordered muted panel is the placeholder,
                           so a post without a cover leaves a considered gap
                           rather than a collapsed card. */}
-                      <div className="relative aspect-square overflow-hidden rounded-sm border bg-muted">
-                        {post.image && (
-                          <Image
-                            src={post.image}
-                            alt={post.imageAlt ?? ""}
-                            fill
-                            sizes="(min-width: 1280px) 28vw, (min-width: 1024px) 40vw, 50vw"
-                            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                          />
-                        )}
-                      </div>
-                      {/* font-medium: at 20px Inter's 300 goes thin and the
+                    <div className="relative aspect-square overflow-hidden rounded-sm border bg-muted">
+                      {post.image && (
+                        <Image
+                          src={post.image}
+                          alt={post.imageAlt ?? ""}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, 50vw"
+                          className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        />
+                      )}
+                    </div>
+                    {/* font-medium: at 20px Inter's 300 goes thin and the
                           title stops out-weighing the body copy beneath it.
                           Matches the ecosystem card title. */}
-                      <h2 className="text-xl leading-snug font-medium tracking-tight text-pretty">
-                        {post.title}
-                      </h2>
-                      {/* whitespace-nowrap with a truncating date: at 390px a
+                    <h2 className="text-xl leading-snug font-medium tracking-tight text-pretty">
+                      {post.title}
+                    </h2>
+                    {/* whitespace-nowrap with a truncating date: at 390px a
                           two-column card is ~180px wide, and letting this row
                           wrap would stagger every card in the row by a line.
                           The category holds its width; the date gives way. */}
-                      <div className="flex items-center gap-2 overflow-hidden pl-[1px] whitespace-nowrap">
-                        <span className="shrink-0 text-xs text-foreground">
-                          {post.category}
-                        </span>
-                        <time
-                          dateTime={post.date}
-                          className="min-w-0 truncate text-xs text-muted-foreground"
-                        >
-                          {formatDate(post.date)}
-                        </time>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                    <div className="flex items-center gap-2 overflow-hidden pl-[1px] whitespace-nowrap">
+                      <span className="shrink-0 text-xs text-foreground">
+                        {post.category}
+                      </span>
+                      <time
+                        dateTime={post.date}
+                        className="min-w-0 truncate text-xs text-muted-foreground"
+                      >
+                        {formatDate(post.date)}
+                      </time>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>
