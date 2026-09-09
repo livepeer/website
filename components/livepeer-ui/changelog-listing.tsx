@@ -131,7 +131,10 @@ function Tally({ r }: { r: RoundupView }) {
 /**
  * One month as a flat list: shipped first, then work under way with what
  * needs attention first, then the silent. Nothing labels the groups —
- * the marks do, and the tally in the rail carries the counts.
+ * the marks do, and the tally in the rail carries the counts. A month
+ * with nothing shipped simply opens on the work under way: with
+ * quarter-sized targets that is most months, and a line announcing it
+ * read as a confession rather than a calendar.
  */
 function Month({ r }: { r: RoundupView }) {
   const owner = (row: RoundupRow) => (
@@ -144,20 +147,6 @@ function Month({ r }: { r: RoundupView }) {
   );
   return (
     <ol className="flex flex-col gap-6">
-      {/* Said, not left out. A month in which nothing shipped is a fact
-          the changelog exists to state, so the shipped slot says so rather
-          than the list starting on work under way as if that were the
-          whole month. Softer while the month is open. */}
-      {r.shipped.length === 0 && (
-        <li className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 text-sm text-muted-foreground">
-          <span className="flex h-6 items-center opacity-50">
-            <ShippedIcon />
-          </span>
-          <span className="flex h-6 items-center">
-            Nothing shipped {r.current ? "yet " : ""}this month.
-          </span>
-        </li>
-      )}
       {r.shipped.map((row) => (
         <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
           <time dateTime={row.shippedAt}>{formatDay(row.shippedAt)}</time>
