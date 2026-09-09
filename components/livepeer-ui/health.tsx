@@ -2,29 +2,42 @@ import { HEALTH_LABEL, type HealthOrNone } from "@/lib/health";
 import { cn } from "@/lib/utils";
 
 /**
- * Health, the way Linear shows it: a dot, then the word, both in the
- * colour of the scale — green, yellow, red, and grey for nothing said.
+ * Health, drawn the way Linear draws it: a small disc tinted in the
+ * scale's colour with a line glyph inside — rising for On track, a wobble
+ * for At risk, falling for Off track — and the word beside it in the same
+ * colour. Green, yellow, red, and grey with a flat line for nothing said.
  *
  * The one place on the site a colour scale carries meaning. The rule that
  * green is brand expression rather than a status colour holds everywhere
  * else, and the roadmap already bends it once for the "In progress" dot;
  * health is that state's own weather, so it reads in the same green. No
- * new tokens: green is the brand colour with the same light-mode mix the
- * roadmap uses, red is `destructive`, and yellow is the point between the
- * two on the oklch hue wheel — the scale is drawn from the two colours the
- * system already has, and the one that lies between them.
+ * new tokens: green is the brand colour with the roadmap's light-mode mix,
+ * red is `destructive`, and yellow is the point between the two on the
+ * oklch hue wheel — the scale is drawn from the two colours the system
+ * already has, and the one that lies between them. Each is set once as
+ * `--health` on the mark, and the disc and the word both read it.
+ *
+ * The glyphs are three-segment polylines rather than library icons: no
+ * icon set has Linear's three, and a picture this small is a drawing, not
+ * an icon.
  */
-const GREEN = {
-  dot: "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand",
-  text: "text-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:text-brand",
+const TONE: Record<HealthOrNone, string> = {
+  "on-track":
+    "[--health:color-mix(in_oklch,var(--color-brand),black_28%)] dark:[--health:var(--color-brand)]",
+  "at-risk":
+    "[--health:color-mix(in_oklch,color-mix(in_oklch,var(--color-brand),var(--destructive)_55%),black_22%)] dark:[--health:color-mix(in_oklch,var(--color-brand),var(--destructive)_55%)]",
+  "off-track": "[--health:var(--destructive)]",
+  "no-update": "[--health:var(--muted-foreground)]",
 };
 
-const AMBER = {
-  dot: "bg-[color-mix(in_oklch,color-mix(in_oklch,var(--color-brand),var(--destructive)_55%),black_22%)] dark:bg-[color-mix(in_oklch,var(--color-brand),var(--destructive)_55%)]",
-  text: "text-[color-mix(in_oklch,color-mix(in_oklch,var(--color-brand),var(--destructive)_55%),black_22%)] dark:text-[color-mix(in_oklch,var(--color-brand),var(--destructive)_55%)]",
+const GLYPH: Record<HealthOrNone, string> = {
+  "on-track": "M3.5 10.5 L6.5 6.5 L9 9 L12.5 5",
+  "at-risk": "M3.5 7.5 L6.5 11 L9.5 5.5 L12.5 8.5",
+  "off-track": "M3.5 5.5 L6.5 9.5 L9 6.5 L12.5 11",
+  "no-update": "M4 8 L12 8",
 };
 
-export function HealthDot({
+export function HealthIcon({
   health,
   className,
 }: {
@@ -35,14 +48,23 @@ export function HealthDot({
     <span
       aria-hidden="true"
       className={cn(
-        "inline-block size-1.5 shrink-0 rounded-full",
-        health === "on-track" && GREEN.dot,
-        health === "at-risk" && AMBER.dot,
-        health === "off-track" && "bg-destructive",
-        health === "no-update" && "border border-muted-foreground/70",
+        "inline-flex size-4 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--health),transparent_82%)] text-[var(--health)]",
+        TONE[health],
         className
       )}
-    />
+    >
+      <svg
+        viewBox="0 0 16 16"
+        className="size-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d={GLYPH[health]} />
+      </svg>
+    </span>
   );
 }
 
@@ -56,15 +78,12 @@ export function HealthMark({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2",
-        health === "on-track" && GREEN.text,
-        health === "at-risk" && AMBER.text,
-        health === "off-track" && "text-destructive",
-        health === "no-update" && "text-muted-foreground",
+        "inline-flex items-center gap-1.5 text-[var(--health)]",
+        TONE[health],
         className
       )}
     >
-      <HealthDot health={health} />
+      <HealthIcon health={health} />
       {HEALTH_LABEL[health]}
     </span>
   );

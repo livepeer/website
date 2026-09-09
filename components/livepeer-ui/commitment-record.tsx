@@ -12,7 +12,7 @@ import {
   Link2,
 } from "lucide-react";
 
-import { HealthDot, HealthMark } from "@/components/livepeer-ui/health";
+import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
 import {
   RecordCredit as Credit,
   RecordRow as Row,
@@ -429,7 +429,7 @@ export function CommitmentRecord({
             {updates.map((u) => (
               <ActivityRow
                 key={`${u.date}-${u.summary}`}
-                icon={<HealthDot health={u.health} className="size-2" />}
+                icon={<HealthIcon health={u.health} />}
                 actor={u.author?.name ?? c.owner}
                 verb={`posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`}
                 date={shortDate(u.date, now)}
