@@ -6,6 +6,9 @@ const description =
 export const metadata: Metadata = {
   title: "Changelog | Livepeer",
   description,
+  alternates: {
+    types: { "application/atom+xml": "/changelog/feed.xml" },
+  },
   openGraph: { title: "Changelog | Livepeer", description },
   twitter: {
     card: "summary_large_image",

@@ -97,6 +97,7 @@ export function ChangelogListing({
   categories,
   siblings,
   current,
+  feedHref,
   searchPlaceholder,
   emptyMessage,
 }: {
@@ -107,6 +108,7 @@ export function ChangelogListing({
   categories: LatestLink[];
   siblings: LatestLink[];
   current: string;
+  feedHref?: string;
   searchPlaceholder: string;
   emptyMessage: string;
 }) {
@@ -132,6 +134,7 @@ export function ChangelogListing({
           categories={categories}
           siblings={siblings}
           current={current}
+          feedHref={feedHref}
           query={query}
           onQueryChange={setQuery}
           searchPlaceholder={searchPlaceholder}

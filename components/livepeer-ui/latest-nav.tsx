@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { SearchIcon } from "lucide-react";
+import { RssIcon, SearchIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,12 +23,16 @@ export type LatestLink = { label: string; href: string };
  *
  * On a phone the row wraps: the search drops beneath at full width, and the
  * places scroll sideways rather than wrap, so the row stays one line tall.
+ * The pressed place is scrolled into view on mount, because on the changelog
+ * it is the last in the row and would otherwise start past the right edge,
+ * leaving a reader unable to see which page they are on.
  */
 export function LatestNav({
   allHref,
   categories,
   siblings,
   current,
+  feedHref,
   query,
   onQueryChange,
   searchPlaceholder,
@@ -37,10 +42,26 @@ export function LatestNav({
   siblings: LatestLink[];
   /** The href of the place this page is, so it reads as pressed. */
   current: string;
+  /** An Atom feed for this page, shown as an icon after the search. */
+  feedHref?: string;
   query: string;
   onQueryChange: (value: string) => void;
   searchPlaceholder: string;
 }) {
+  const row = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = row.current;
+    const pressed = nav?.querySelector<HTMLElement>("[aria-current]");
+    if (!nav || !pressed) return;
+    // scrollLeft rather than scrollIntoView, which would also scroll the
+    // page vertically to the row. Only the row moves, and only when the
+    // pressed place is actually clipped.
+    const right = pressed.offsetLeft + pressed.offsetWidth;
+    if (right > nav.clientWidth + nav.scrollLeft) {
+      nav.scrollLeft = right - nav.clientWidth + 16;
+    }
+  }, [current]);
+
   const place = (link: LatestLink) => {
     const pressed = link.href === current;
     return (
@@ -67,6 +88,7 @@ export function LatestNav({
   return (
     <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
       <nav
+        ref={row}
         aria-label="Latest"
         className="-mx-4 flex min-w-0 gap-x-1 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] sm:-mx-3 sm:px-3 [&::-webkit-scrollbar]:hidden"
       >
@@ -97,6 +119,19 @@ export function LatestNav({
           className="pl-9"
         />
       </label>
+      {feedHref && (
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          nativeButton={false}
+          render={<a href={feedHref} />}
+          aria-label="Atom feed"
+          title="Atom feed"
+          className="-ml-4 hidden text-muted-foreground sm:inline-flex"
+        >
+          <RssIcon aria-hidden="true" />
+        </Button>
+      )}
     </div>
   );
 }

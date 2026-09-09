@@ -20,6 +20,7 @@ export default async function ChangelogPage() {
       intro={changelog.intro}
       {...changelogRow(posts)}
       current={changelog.href}
+      feedHref={changelog.feedHref}
       searchPlaceholder={changelog.searchPlaceholder}
       emptyMessage={changelog.emptyMessage}
     />

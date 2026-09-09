@@ -11,6 +11,7 @@ import { blog, categoryLinks } from "../blog/listing";
 export const changelog = {
   heading: "Changelog",
   href: "/changelog",
+  feedHref: "/changelog/feed.xml",
   intro:
     "What shipped on the network, the Agent, the protocol and this site, by day.",
   searchPlaceholder: "Search changes",
