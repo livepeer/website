@@ -134,22 +134,43 @@ function Tally({ r }: { r: RoundupView }) {
  * quarter-sized targets that is most months, and a line announcing it
  * read as a confession rather than a calendar.
  */
-function Month({ r }: { r: RoundupView }) {
-  const owner = (row: RoundupRow) => (
+function Owner({ row }: { row: RoundupRow }) {
+  return (
     <Link
       href={`/organizations/${row.ownerSlug}`}
-      className="text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+      className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
     >
       {row.owner}
     </Link>
+  );
+}
+
+/**
+ * Who and when, set in the foreground so they read as the facts of the
+ * row, with what was said following in the muted voice. The break in
+ * colour is the boundary between the record and the words.
+ */
+function Meta({ row, date }: { row: RoundupRow; date: string }) {
+  return (
+    <span className="text-foreground">
+      <Owner row={row} />
+      {" · "}
+      <time dateTime={date}>{formatDay(date)}</time>
+    </span>
+  );
+}
+
+function Month({ r }: { r: RoundupView }) {
+  const owner = (row: RoundupRow) => (
+    <span className="text-foreground">
+      <Owner row={row} />
+    </span>
   );
   return (
     <ol className="flex flex-col gap-6">
       {r.shipped.map((row) => (
         <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
-          {owner(row)}
-          {" · "}
-          <time dateTime={row.shippedAt}>{formatDay(row.shippedAt)}</time>
+          <Meta row={row} date={row.shippedAt} />
           {row.summary && <> · {row.summary}</>}
         </Row>
       ))}
@@ -160,7 +181,7 @@ function Month({ r }: { r: RoundupView }) {
           icon={<HealthIcon health={row.health} />}
           word={<HealthWord health={row.health} />}
         >
-          {owner(row)}
+          <Meta row={row} date={row.date} />
           {" · "}
           {row.summary}
         </Row>
