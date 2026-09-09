@@ -1,6 +1,6 @@
 # Updates — fallback copy
 
-**Updates live in Notion**, in **Updates** under _Livepeer.org content_, one row
+**Updates live in Notion**, in **Roadmap updates** under _Livepeer.org content_, one row
 per update posted on a roadmap commitment. That is what the roadmap reads a
 commitment's health from, and what `/changelog` rolls up month by month.
 _Posting an update_ beside the database explains how.

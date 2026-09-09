@@ -1047,11 +1047,12 @@ function toUpdateSummary(
 ): UpdateSummary {
   const p = props(row);
   const summary = text(p.Name);
-  const where = `Updates → ${summary || (row.url as string)}`;
+  const where = `Roadmap updates → ${summary || (row.url as string)}`;
 
   if (!summary) {
     throw new Error(
-      `Updates row ${row.url as string} is empty. Say what moved, in one line.`
+      `Roadmap updates row ${row.url as string} is empty. Say what moved, ` +
+        `in one line.`
     );
   }
 
@@ -1149,8 +1150,10 @@ export async function getNotionCommitmentUpdates(
     mine.map(async ({ row, summary }) => ({
       ...summary,
       html:
-        (await readDetail(row.id as string, `Updates → ${summary.summary}`)) ??
-        "",
+        (await readDetail(
+          row.id as string,
+          `Roadmap updates → ${summary.summary}`
+        )) ?? "",
     }))
   );
   return byNewest(withBodies);
