@@ -5,27 +5,27 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
-import {
-  getMarkdownChangelog,
-  getMarkdownChangelogEntry,
-  type ChangelogEntry,
-  type ChangelogSummary,
-} from "./changelog";
 import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
 import {
-  getNotionChangelog,
-  getNotionChangelogEntry,
+  getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
   getNotionPosts,
+  getNotionUpdates,
   hasNotionCredentials,
 } from "./notion";
 import { getOrganizations, type Organization } from "./organizations";
 import { getPeople, type PersonRecord } from "./people";
 import { getCommitments, type Commitment } from "./roadmap";
+import {
+  getMarkdownCommitmentUpdates,
+  getMarkdownUpdates,
+  type Update,
+  type UpdateSummary,
+} from "./updates";
 
 /**
  * Which copy of the register the page reads.
@@ -105,23 +105,24 @@ export async function getFundingPaths(): Promise<FundingPath[]> {
 }
 
 /**
- * The changelog, from the same source as the blog and filtered the same way:
- * a draft is visible on previews and in local dev, never on production, and
- * the rule lives here rather than at the three routes that read an entry.
+ * The updates posted on commitments, from the same source as the register.
+ *
+ * Chosen on the same token, for the reason the organisations are: an update
+ * names its commitment by slug, and a set of updates read from Notion against
+ * a register read from markdown would report on records the page has never
+ * heard of. Drafts are filtered here, as posts are, and by the same rule.
  */
-export async function getChangelog(): Promise<ChangelogSummary[]> {
-  const entries = hasNotionCredentials()
-    ? await getNotionChangelog()
-    : await getMarkdownChangelog();
-  return entries.filter(isPublished);
+export async function getUpdates(): Promise<UpdateSummary[]> {
+  const updates = hasNotionCredentials()
+    ? await getNotionUpdates()
+    : getMarkdownUpdates();
+  return updates.filter(isPublished);
 }
 
-/** One entry with its write-up, or null — a bad slug and a hidden draft both 404. */
-export async function getChangelogEntry(
-  slug: string
-): Promise<ChangelogEntry | null> {
-  const entry = hasNotionCredentials()
-    ? await getNotionChangelogEntry(slug)
-    : await getMarkdownChangelogEntry(slug);
-  return entry && isPublished(entry) ? entry : null;
+/** One commitment's updates with their write-ups, newest first. */
+export async function getCommitmentUpdates(slug: string): Promise<Update[]> {
+  const updates = hasNotionCredentials()
+    ? await getNotionCommitmentUpdates(slug)
+    : await getMarkdownCommitmentUpdates(slug);
+  return updates.filter(isPublished);
 }

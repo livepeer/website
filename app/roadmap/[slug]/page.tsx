@@ -6,8 +6,9 @@ import { notFound } from "next/navigation";
 import { CommitmentRecord } from "@/components/livepeer-ui/commitment-record";
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { StartAtTop } from "@/components/livepeer-ui/start-at-top";
-import { getChangelog, getRegister } from "@/lib/register";
+import { getCommitmentUpdates, getRegister } from "@/lib/register";
 import { type Commitment } from "@/lib/roadmap";
+import { standingOf } from "@/lib/updates";
 
 /**
  * One commitment, at length.
@@ -40,12 +41,6 @@ async function find(slug: string): Promise<Commitment | undefined> {
   return commitments.find((c) => c.slug === slug);
 }
 
-/** The changelog entry that announced a commitment, if one names it. */
-async function announcementFor(slug: string) {
-  const entry = (await getChangelog()).find((e) => e.commitment?.slug === slug);
-  return entry ? { slug: entry.slug, title: entry.title } : undefined;
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -76,6 +71,10 @@ export default async function CommitmentPage({
 }) {
   const c = await find((await params).slug);
   if (!c) notFound();
+  // The trail, and the standing derived from it. One read: the newest update
+  // decides the health, and the same list is the trail under the write-up.
+  const updates = await getCommitmentUpdates(c.slug);
+  const standing = standingOf(c, updates, new Date());
 
   return (
     // Banner first, flush to the header, then everything else in the reading
@@ -115,7 +114,8 @@ export default async function CommitmentPage({
         <div className="mt-8">
           <CommitmentRecord
             commitment={c}
-            announcement={await announcementFor(c.slug)}
+            standing={standing}
+            updates={updates}
           />
         </div>
       </div>

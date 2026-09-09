@@ -131,9 +131,9 @@ export const ogArt = {
   // which is the number that decides how hard the scrim works under the
   // headline. Many strands running together, which is the page's subject.
   contribute: `${CDN}/6bda58163dac9238d28ecd67e2e147ae0aeddc8f-1456x816.png`,
-  // Unused elsewhere, so no two pages share a frame. Every changelog entry's
-  // card is drawn on this one too: an entry has no cover of its own, and a
-  // list of small changes does not want a picture chosen for each.
+  // Unused elsewhere, so no two pages share a frame. Every month's roundup
+  // is drawn on this one too: a month has no cover of its own, and a page
+  // generated from the register does not want a picture chosen for each.
   changelog: `${CDN}/ba59163c9213eaf26f95ae424462be1b1145baa0-1456x816.png`,
 } as const;
 

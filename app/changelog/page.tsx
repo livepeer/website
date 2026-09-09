@@ -1,21 +1,27 @@
 import { ChangelogListing } from "@/components/livepeer-ui/changelog-listing";
-import { getBlogRegister, getChangelog } from "@/lib/register";
+import { roundups } from "@/lib/changelog";
+import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
 
-import { changelog, changelogRow } from "./listing";
+import { changelog, changelogRow, toView } from "./listing";
 
-// The entries come from the register — Notion when there is a token,
-// content/changelog when there is not (see CLAUDE.md → Content). The blog
-// register is read too, only for the row: the categories beside Changelog
-// are the blog's, and the row is the same one /blog shows.
+// Generated, not written: every month is composed from the roadmap register
+// and the updates posted on it (see lib/changelog.ts). The blog register is
+// read only for the row — the categories beside Changelog are the blog's,
+// and the row is the same one /blog shows.
 export default async function ChangelogPage() {
-  const [entries, posts] = await Promise.all([
-    getChangelog(),
+  const [commitments, updates, posts] = await Promise.all([
+    getRegister(),
+    getUpdates(),
     getBlogRegister(),
   ]);
+  const months = roundups(commitments, updates, new Date());
 
   return (
     <ChangelogListing
-      entries={entries}
+      roundups={months.slice(0, changelog.recentMonths).map(toView)}
+      earlier={months
+        .slice(changelog.recentMonths)
+        .map(({ month, title }) => ({ month, title }))}
       heading={changelog.heading}
       intro={changelog.intro}
       {...changelogRow(posts)}

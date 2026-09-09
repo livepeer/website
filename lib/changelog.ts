@@ -1,142 +1,170 @@
-import fs from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
-
-import { byNewest, renderMarkdown, SLUG } from "./blog";
-import { getCommitments, type Person } from "./roadmap";
-
-const CHANGELOG_DIR = path.join(process.cwd(), "content/changelog");
-const AVATAR_DIR = path.join(process.cwd(), "public", "people");
+import type { Commitment } from "./roadmap";
+import { HEALTH_ORDER, type HealthOrNone, type UpdateSummary } from "./health";
 
 /**
- * One thing that shipped: on the network, the Agent, the protocol or the
- * site. What the list needs, which is everything except the write-up.
+ * The changelog: one roundup per month, generated.
  *
- * Split from the entry for the same reason the blog is: the list shows a
- * headline, a summary and some faces, and fetching every body to render it
- * would be a round-trip per entry against Notion.
+ * Nothing here is written. A month's roundup is composed from the roadmap
+ * register and the updates posted on it: what shipped in the month, what was
+ * under way and what its lead said about it, and what was under way with
+ * nothing said. Linear's changelog is one entry per release; Vercel's is one
+ * per change; this is one per month, because the thing it is accountable for
+ * is a cadence — every funded commitment reports monthly, and the roundup is
+ * where a missed month is visible.
+ *
+ * Months are addressed as yyyy-mm, so /changelog/2026-08 is August 2026.
  */
-export type ChangelogSummary = {
-  slug: string;
+
+export const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
+
+export type Roundup = {
+  /** yyyy-mm. */
+  month: string;
+  /** "August 2026". */
   title: string;
-  /** One or two sentences under the headline on the list. */
-  summary: string;
-  /** ISO yyyy-mm-dd: the day it shipped. The list groups entries by it. */
-  date: string;
-  /** Who shipped it. Any number, or none for a change credited to a team. */
-  authors: Person[];
-  /**
-   * The roadmap commitment this change delivers, if it was one. One or
-   * none: a site fix ships without ever being a commitment. Both readers
-   * check the commitment is Shipped — an entry announcing something the
-   * roadmap still calls Building is a contradiction, and fails the build.
-   */
-  commitment?: { slug: string; title: string };
-  draft: boolean;
+  /** The month `now` falls in, which is not over yet. */
+  current: boolean;
+  /** Commitments that shipped this month, newest first. */
+  shipped: Commitment[];
+  /** Under way with an update posted this month, what needs attention first. */
+  reported: { commitment: Commitment; update: UpdateSummary }[];
+  /** Under way with nothing posted this month. */
+  quiet: Commitment[];
 };
 
-/** A summary and its write-up, rendered. */
-export type ChangelogEntry = ChangelogSummary & {
-  html: string;
-};
-
-// -- The markdown copy -------------------------------------------------------
-//
-// The no-token fallback, exactly like content/blog: the changelog as it stood
-// when the site was built, kept so a clone without a workspace credential has
-// real entries to develop the list against. See lib/register.ts.
-
-function slugsOnDisk(): string[] {
-  return fs
-    .readdirSync(CHANGELOG_DIR)
-    .filter((file) => file.endsWith(".md") && file !== "README.md")
-    .map((file) => file.replace(/\.md$/, ""));
+/** "2026-08-19" → "2026-08". */
+export function monthOf(iso: string): string {
+  return iso.slice(0, 7);
 }
 
-function readAuthors(value: unknown, where: string): Person[] {
-  if (value === undefined) return [];
-  if (!Array.isArray(value)) {
-    throw new Error(`${where}: authors must be a list.`);
+export function monthTitle(month: string): string {
+  return new Date(`${month}-01T00:00:00Z`).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/** The last day of a month, as ISO, so dates can be compared as text. */
+function endOf(month: string): string {
+  const [y, m] = month.split("-").map(Number);
+  const last = new Date(Date.UTC(y!, m!, 0)).getUTCDate();
+  return `${month}-${String(last).padStart(2, "0")}`;
+}
+
+function nextMonth(month: string): string {
+  const [y, m] = month.split("-").map(Number);
+  const d = new Date(Date.UTC(y!, m! - 1 + 1, 1));
+  return d.toISOString().slice(0, 7);
+}
+
+/**
+ * When a commitment's history on this site begins.
+ *
+ * The date it was committed, where the register records one; otherwise the
+ * first thing we know about it — its first update, or the day it shipped.
+ * Work under way that has none of those is taken to have started now, which
+ * is the honest reading: it is not listed as silent for months nobody can
+ * show it existed in.
+ */
+function activeFrom(
+  c: Commitment,
+  updates: UpdateSummary[],
+  today: string
+): string | undefined {
+  if (c.issued) return c.issued;
+  const first = updates
+    .filter((u) => u.commitment === c.slug)
+    .map((u) => u.date)
+    .sort()[0];
+  if (first) return first;
+  if (c.shippedAt) return c.shippedAt;
+  return c.state === "building" ? today : undefined;
+}
+
+function healthRank(health: HealthOrNone): number {
+  return HEALTH_ORDER.indexOf(health);
+}
+
+/**
+ * Every month with something to say, newest first.
+ *
+ * A commitment is under way in a month if its history had begun by the end
+ * of it and it had not shipped by then. Committed work that has not started
+ * is left out unless its lead posted on it, in which case the post counts.
+ */
+export function roundups(
+  commitments: Commitment[],
+  updates: UpdateSummary[],
+  now: Date
+): Roundup[] {
+  const today = now.toISOString().slice(0, 10);
+  const thisMonth = monthOf(today);
+
+  const starts = commitments
+    .map((c) => activeFrom(c, updates, today))
+    .filter((d): d is string => Boolean(d))
+    .map(monthOf)
+    .sort();
+  const firstMonth = starts[0];
+  if (!firstMonth) return [];
+
+  const months: string[] = [];
+  for (let m = firstMonth; m <= thisMonth; m = nextMonth(m)) months.push(m);
+
+  return months
+    .map((month) => roundupFor(month, commitments, updates, now))
+    .filter((r) => r.shipped.length + r.reported.length + r.quiet.length > 0)
+    .reverse();
+}
+
+export function roundupFor(
+  month: string,
+  commitments: Commitment[],
+  updates: UpdateSummary[],
+  now: Date
+): Roundup {
+  const today = now.toISOString().slice(0, 10);
+  const end = endOf(month);
+
+  const shipped = commitments
+    .filter((c) => c.shippedAt && monthOf(c.shippedAt) === month)
+    .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!));
+
+  const posted = new Map<string, UpdateSummary>();
+  for (const u of updates) {
+    if (monthOf(u.date) !== month) continue;
+    const held = posted.get(u.commitment);
+    if (!held || held.date < u.date) posted.set(u.commitment, u);
   }
-  return value.map(
-    (author: { name?: string; slug?: string; avatar?: string }) => {
-      if (!author?.name || !author.slug) {
-        throw new Error(`${where}: every author needs a name and a slug.`);
-      }
-      if (
-        author.avatar &&
-        !fs.existsSync(path.join(AVATAR_DIR, author.avatar))
-      ) {
-        throw new Error(
-          `${where}: avatar ${JSON.stringify(author.avatar)} is not in public/people.`
-        );
-      }
-      return { name: author.name, slug: author.slug, avatar: author.avatar };
-    }
-  );
-}
 
-/** The shipped commitments in the markdown register, by slug. */
-async function shippedCommitments(): Promise<Map<string, string>> {
-  const shipped = new Map<string, string>();
-  for (const c of await getCommitments()) {
-    if (c.state === "shipped") shipped.set(c.slug, c.title);
-  }
-  return shipped;
-}
+  const underWay = commitments.filter((c) => {
+    if (c.shippedAt && c.shippedAt <= end) return false;
+    if (posted.has(c.slug)) return true;
+    if (c.state === "next") return false;
+    const from = activeFrom(c, updates, today);
+    return Boolean(from && from <= end);
+  });
 
-function readFile(
-  slug: string,
-  shipped: Map<string, string>
-): { summary: ChangelogSummary; body: string } {
-  const where = `content/changelog/${slug}.md`;
-  const { data, content } = matter(
-    fs.readFileSync(path.join(CHANGELOG_DIR, `${slug}.md`), "utf8")
-  );
-  if (!SLUG.test(slug)) {
-    throw new Error(
-      `${where}: the filename is the slug and must be lowercase words joined by hyphens.`
+  const reported = underWay
+    .filter((c) => posted.has(c.slug))
+    .map((commitment) => ({ commitment, update: posted.get(commitment.slug)! }))
+    .sort(
+      (a, b) =>
+        healthRank(a.update.health) - healthRank(b.update.health) ||
+        b.update.date.localeCompare(a.update.date)
     );
-  }
-  if (!data.title) throw new Error(`${where}: no title.`);
-  if (!data.date) throw new Error(`${where}: no date.`);
 
-  let commitment: ChangelogSummary["commitment"];
-  if (data.commitment !== undefined) {
-    const title = shipped.get(String(data.commitment));
-    if (!title) {
-      throw new Error(
-        `${where}: commitment ${JSON.stringify(data.commitment)} is not a ` +
-          `shipped commitment in content/roadmap. An entry announces ` +
-          `something that shipped.`
-      );
-    }
-    commitment = { slug: String(data.commitment), title };
-  }
+  const quiet = underWay
+    .filter((c) => !posted.has(c.slug))
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return {
-    summary: {
-      slug,
-      title: String(data.title),
-      summary: String(data.summary ?? ""),
-      date: String(data.date),
-      authors: readAuthors(data.authors, where),
-      commitment,
-      draft: data.draft ?? false,
-    },
-    body: content,
+    month,
+    title: monthTitle(month),
+    current: month === monthOf(today),
+    shipped,
+    reported,
+    quiet,
   };
-}
-
-export async function getMarkdownChangelog(): Promise<ChangelogSummary[]> {
-  const shipped = await shippedCommitments();
-  return byNewest(slugsOnDisk().map((slug) => readFile(slug, shipped).summary));
-}
-
-export async function getMarkdownChangelogEntry(
-  slug: string
-): Promise<ChangelogEntry | null> {
-  if (!slugsOnDisk().includes(slug)) return null;
-  const { summary, body } = readFile(slug, await shippedCommitments());
-  return { ...summary, html: await renderMarkdown(body) };
 }

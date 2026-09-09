@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Activity,
   AlignLeft,
   ArrowUpRight,
   CalendarDays,
@@ -8,12 +9,14 @@ import {
   Link2,
 } from "lucide-react";
 
+import { HealthMark } from "@/components/livepeer-ui/health";
 import {
   RecordCredit as Credit,
   RecordRow as Row,
 } from "@/components/livepeer-ui/record-parts";
 import type { Commitment } from "@/lib/roadmap";
 import { shippedPeriod } from "@/lib/roadmap";
+import type { Standing, Update } from "@/lib/health";
 
 /**
  * One commitment, rendered once.
@@ -52,15 +55,18 @@ const STATE_LABEL: Record<Commitment["state"], string> = {
 export function CommitmentRecord({
   commitment: c,
   overlay = false,
-  announcement,
+  standing,
+  updates = [],
 }: {
   commitment: Commitment;
   /**
-   * The changelog entry that announced this, if there is one. Derived by the
-   * route from the changelog register rather than stored on the record: the
-   * entry names its commitment, and nothing keeps a second copy in step.
+   * Where the work stands, for a commitment under way — derived by the route
+   * from the updates below (lib/updates.ts), never stored on the record.
+   * Absent for shipped and committed work, which has no health to report.
    */
-  announcement?: { slug: string; title: string };
+  standing?: Standing;
+  /** The updates posted on this commitment, newest first, with write-ups. */
+  updates?: Update[];
   /**
    * Whether this is the panel over the register rather than a page.
    *
@@ -84,6 +90,23 @@ export function CommitmentRecord({
         <Row icon={CircleChevronDown} label="Status">
           {STATE_LABEL[c.state]}
         </Row>
+        {/* What the lead last said, and when. The date matters as much as
+            the word: "On track" as of last week and as of three months ago
+            are different claims, and past six weeks the word is withdrawn
+            and the row says so. */}
+        {standing && (
+          <Row icon={Activity} label="Health">
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <HealthMark health={standing.health} />
+              {standing.latest && (
+                <span className="text-muted-foreground">
+                  {standing.health === "no-update" ? "last posted" : "as of"}{" "}
+                  {formatDate(standing.latest.date)}
+                </span>
+              )}
+            </span>
+          </Row>
+        )}
         <Row icon={ArrowUpRight} label="Owner">
           <Link
             href={`/organizations/${c.ownerSlug}`}
@@ -100,17 +123,6 @@ export function CommitmentRecord({
         ) : (
           <Row icon={AlignLeft} label="Target">
             {c.target}
-          </Row>
-        )}
-        {announcement && (
-          <Row icon={ArrowUpRight} label="Announced">
-            <Link
-              href={`/changelog/${announcement.slug}`}
-              scroll={!overlay}
-              className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-            >
-              {announcement.title}
-            </Link>
           </Row>
         )}
         <Row icon={CircleChevronDown} label="Workstream">
@@ -187,6 +199,52 @@ export function CommitmentRecord({
         <p className="mt-10 border-t border-border pt-10 text-sm text-muted-foreground">
           No write-up yet.
         </p>
+      )}
+
+      {/* The trail: every update posted on this commitment, newest first,
+          the way Linear's activity runs under a project. Each is what its
+          lead said and when, with the health they chose beside the date and
+          the write-up beneath where there is one. Shown for work under way
+          even when empty, because "nothing posted yet" is the fact a reader
+          came for; hidden on shipped and committed work with no trail. */}
+      {(updates.length > 0 || standing) && (
+        <section className="mt-12 border-t border-border pt-10">
+          <h2 className="flex items-baseline justify-between text-sm font-medium">
+            Updates
+            {updates.length > 0 && (
+              <span className="font-mono text-xs font-normal text-muted-foreground tabular-nums">
+                {updates.length}
+              </span>
+            )}
+          </h2>
+          {updates.length === 0 ? (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Nothing posted yet. The lead posts one a month while the work is
+              under way.
+            </p>
+          ) : (
+            <ol className="mt-6 space-y-8">
+              {updates.map((u) => (
+                <li key={`${u.date}-${u.summary}`}>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                    <HealthMark health={u.health} />
+                    <time dateTime={u.date}>{formatDate(u.date)}</time>
+                    {u.author && <Credit person={u.author} />}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-pretty">
+                    {u.summary}
+                  </p>
+                  {u.html && (
+                    <div
+                      className="reading-prose mt-3"
+                      dangerouslySetInnerHTML={{ __html: u.html }}
+                    />
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
       )}
     </>
   );

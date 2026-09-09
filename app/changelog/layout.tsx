@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 const description =
-  "What shipped on the Livepeer network, the Agent, the protocol and livepeer.org, by day.";
+  "Month by month: what shipped on the Livepeer roadmap, how the work under way is going, and who has not reported.";
 
 export const metadata: Metadata = {
   title: "Changelog | Livepeer",

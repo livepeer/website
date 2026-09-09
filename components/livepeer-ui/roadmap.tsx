@@ -21,8 +21,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { HealthMark } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
+import type { Standing } from "@/lib/health";
+
+/**
+ * A commitment with where it stands, as the page computes it.
+ *
+ * Derived by the route from the updates posted on the record (lib/updates.ts)
+ * and handed in beside the commitment rather than stored on it: the register
+ * is a fact about the work, and health is a fact about the reporting.
+ */
+export type RoadmapItem = Commitment & { standing?: Standing };
 
 // The live quarter, read on the client and cached: useSyncExternalStore
 // needs a stable snapshot, and the quarter does not change within a visit.
@@ -77,22 +88,45 @@ function Label({
  * --color-brand to exactly this use. Light mode darkens it with the same mix
  * the home hero's chip uses, because display-p3 green on white is illegible.
  */
-function StateMark({ state }: { state: Commitment["state"] }) {
+function StateMark({
+  state,
+  standing,
+}: {
+  state: Commitment["state"];
+  standing?: Standing;
+}) {
   const building = state === "building";
   return (
-    <span className="flex items-center gap-2">
-      <span
-        aria-hidden="true"
-        className={cn(
-          "size-1.5 shrink-0 rounded-full",
-          building
-            ? "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand"
-            : "bg-muted-foreground/40"
-        )}
-      />
-      <span className={cn(building && "text-foreground")}>
-        {building ? "In progress" : state === "next" ? "Committed" : "Shipped"}
+    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+      <span className="flex items-center gap-2">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "size-1.5 shrink-0 rounded-full",
+            building
+              ? "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand"
+              : "bg-muted-foreground/40"
+          )}
+        />
+        <span className={cn(building && "text-foreground")}>
+          {building
+            ? "In progress"
+            : state === "next"
+              ? "Committed"
+              : "Shipped"}
+        </span>
       </span>
+      {/* Health beside the state, for work under way: what the lead last
+          said about it, or that nothing has been said lately. Linear puts
+          the same word on a project's row. See lib/updates.ts. */}
+      {building && standing && (
+        <>
+          <span aria-hidden="true" className="text-muted-foreground/50">
+            ·
+          </span>
+          <HealthMark health={standing.health} />
+        </>
+      )}
     </span>
   );
 }
@@ -359,7 +393,7 @@ function LinkRow({ label, href }: { label: string; href: string }) {
  * foreground wash, because muted is the darkest surface role light has and the
  * hover has to go somewhere. Dark rests on `card` and steps to `secondary`.
  */
-function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
+function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
   // The record's URL carries the register's current query.
   //
   // View and workstream live in the search params, and the overlay renders
@@ -451,7 +485,7 @@ function CommitmentCard({ commitment: c }: { commitment: Commitment }) {
           roster exists when it does not. They sit above the stretched link so
           a face still goes to its own profile. */}
         <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
-          <StateMark state={c.state} />
+          <StateMark state={c.state} standing={c.standing} />
           {/* z-[1], not z-10. This only has to clear the stretched link's
               ::before, which carries no z-index of its own — at z-10 it tied
               with the sticky quarter band above and won on document order,
@@ -506,7 +540,7 @@ function Group({
   current,
 }: {
   period: string;
-  commitments: Commitment[];
+  commitments: RoadmapItem[];
   current?: boolean;
 }) {
   return (
@@ -961,7 +995,7 @@ export function Roadmap({
   workstreams,
   suggestionsHref,
 }: {
-  commitments: Commitment[];
+  commitments: RoadmapItem[];
   workstreams: string[];
   suggestionsHref: string;
 }) {

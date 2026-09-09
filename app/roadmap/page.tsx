@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
-import { getRegister } from "@/lib/register";
+import { getRegister, getUpdates } from "@/lib/register";
 import { getWorkstreamsInUse } from "@/lib/roadmap";
+import { standingOf } from "@/lib/updates";
 
 /**
  * Named, then claimed.
@@ -85,7 +86,18 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 export default async function RoadmapPage() {
-  const commitments = await getRegister();
+  const [commitments, updates] = await Promise.all([
+    getRegister(),
+    getUpdates(),
+  ]);
+  // Where each piece of work under way stands, from what its lead last
+  // posted. Computed here, at request time, so a card's health is as fresh
+  // as the page: the route revalidates on the same minute the register does.
+  const now = new Date();
+  const items = commitments.map((c) => ({
+    ...c,
+    standing: standingOf(c, updates, now),
+  }));
 
   return (
     <div className="pt-10 pb-32">
@@ -190,7 +202,7 @@ export default async function RoadmapPage() {
             it, which keeps the h1 in the prerendered HTML. */}
           <Suspense fallback={<div className="mt-20 h-10 lg:mt-28" />}>
             <Roadmap
-              commitments={commitments}
+              commitments={items}
               workstreams={getWorkstreamsInUse(commitments)}
               suggestionsHref={SUGGESTIONS_HREF}
             />

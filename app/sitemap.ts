@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { getBlogRegister, getChangelog } from "@/lib/register";
+import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
+import { roundups } from "@/lib/changelog";
 import { categoriesInUse, categorySlug } from "@/lib/blog";
 import { getAppSlugs } from "@/lib/ecosystem";
 
@@ -13,14 +14,22 @@ const BASE_URL = "https://livepeer.org";
  * the destination the long way round. Their replacements are listed directly.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [posts, changes] = await Promise.all([
+  const [posts, commitments, updates] = await Promise.all([
     getBlogRegister(),
-    getChangelog(),
+    getRegister(),
+    getUpdates(),
   ]);
-  const changelogEntries: MetadataRoute.Sitemap = changes.map((entry) => ({
-    url: `${BASE_URL}/changelog/${entry.slug}`,
-    lastModified: new Date(entry.date),
-    changeFrequency: "monthly",
+  // One page per month with something in it. The month under way changes
+  // whenever an update is posted; a finished month is settled.
+  const now = new Date();
+  const changelogEntries: MetadataRoute.Sitemap = roundups(
+    commitments,
+    updates,
+    now
+  ).map((r) => ({
+    url: `${BASE_URL}/changelog/${r.month}`,
+    lastModified: r.current ? now : new Date(`${r.month}-01T00:00:00Z`),
+    changeFrequency: r.current ? "weekly" : "monthly",
     priority: 0.5,
   }));
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({

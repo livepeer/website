@@ -1,5 +1,7 @@
 import type { LatestLink } from "@/components/livepeer-ui/latest-nav";
+import type { RoundupView } from "@/components/livepeer-ui/changelog-listing";
 import type { BlogSummary } from "@/lib/blog";
+import type { Roundup } from "@/lib/changelog";
 
 import { blog, categoryLinks } from "../blog/listing";
 
@@ -13,9 +15,11 @@ export const changelog = {
   href: "/changelog",
   feedHref: "/changelog/feed.xml",
   intro:
-    "What shipped on the network, the Agent, the protocol and this site, by day.",
-  searchPlaceholder: "Search changes",
-  emptyMessage: "No changes match that search.",
+    "Month by month: what shipped on the roadmap, how the work under way is going, and who has not reported.",
+  searchPlaceholder: "Search commitments",
+  emptyMessage: "Nothing matches that search.",
+  /** How many months the index shows in full before listing the rest. */
+  recentMonths: 3,
 };
 
 export function changelogRow(register: BlogSummary[]): {
@@ -27,5 +31,32 @@ export function changelogRow(register: BlogSummary[]): {
     allHref: blog.allHref,
     categories: categoryLinks(register),
     siblings: blog.siblings,
+  };
+}
+
+/**
+ * A roundup as the client component needs it: titles, owners and one line
+ * each, and none of the write-ups the register carries. A commitment's HTML
+ * body is the largest thing on a record and the list shows none of it.
+ */
+export function toView(r: Roundup): RoundupView {
+  const row = (c: Roundup["shipped"][number]) => ({
+    slug: c.slug,
+    title: c.title,
+    owner: c.owner,
+    ownerSlug: c.ownerSlug,
+  });
+  return {
+    month: r.month,
+    title: r.title,
+    current: r.current,
+    shipped: r.shipped.map((c) => ({ ...row(c), shippedAt: c.shippedAt! })),
+    reported: r.reported.map(({ commitment, update }) => ({
+      ...row(commitment),
+      health: update.health,
+      date: update.date,
+      summary: update.summary,
+    })),
+    quiet: r.quiet.map(row),
   };
 }

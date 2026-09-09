@@ -12,7 +12,6 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
-import type { ChangelogEntry, ChangelogSummary } from "./changelog";
 import {
   checkLadder,
   toFundingPath,
@@ -35,6 +34,7 @@ import {
   type OrgType,
 } from "./organizations";
 import type { PersonRecord } from "./people";
+import type { Health, Update, UpdateSummary } from "./health";
 
 /**
  * The commitment register, read from Notion.
@@ -92,8 +92,8 @@ const BLOG_DB =
   process.env.NOTION_BLOG_DB ?? "ed74ac33f630497d8c3cf23599de462b";
 const FUNDING_DB =
   process.env.NOTION_FUNDING_DB ?? "e2a8b7e07c92459f81e06af6e15a3440";
-const CHANGELOG_DB =
-  process.env.NOTION_CHANGELOG_DB ?? "a92a69121d784340b8806ae0031a3b3b";
+const UPDATES_DB =
+  process.env.NOTION_UPDATES_DB ?? "ce39b6c5bc8a404b9ea2aac237d5acf7";
 
 /**
  * How stale the page may be, in seconds.
@@ -1010,68 +1010,79 @@ export async function getNotionPost(slug: string): Promise<BlogPost | null> {
 }
 
 /**
- * One row of the changelog, without its write-up.
- *
- * The same shape and the same rules as a blog row, with less on it: no cover,
- * no category, and any number of authors rather than one. See toSummary.
- */
-/**
- * The roadmap's rows by page id, as the changelog needs them: the slug the
+ * The roadmap's rows by page id, as a relation needs them: the slug the
  * record page has (derived from the title by the one slugify, exactly as
- * toCommitment derives it) and whether it has shipped. Read from the rows
- * rather than through getNotionCommitments so a relation id can be matched;
- * the Commitment type carries no page id, by design.
+ * toCommitment derives it) and the title. Read from the rows rather than
+ * through getNotionCommitments so a relation id can be matched; the
+ * Commitment type carries no page id, by design.
  */
-type CommitmentRef = { slug: string; title: string; shipped: boolean };
+type CommitmentRef = { slug: string; title: string };
 
 async function readCommitmentRefs(): Promise<Map<string, CommitmentRef>> {
   const refs = new Map<string, CommitmentRef>();
   for (const row of await queryAll(COMMITMENTS_DB)) {
-    const p = props(row);
-    const title = text(p.Name);
-    refs.set(row.id as string, {
-      slug: slugify(title),
-      title,
-      shipped: selectName(p.Status) === "Shipped",
-    });
+    const title = text(props(row).Name);
+    refs.set(row.id as string, { slug: slugify(title), title });
   }
   return refs;
 }
 
-function toChangelogSummary(
+const HEALTH_BY_NOTION: Record<string, Health> = {
+  "On track": "on-track",
+  "At risk": "at-risk",
+  "Off track": "off-track",
+};
+
+/**
+ * One update, without its write-up — see lib/updates.ts.
+ *
+ * The row's title is the update: one line, in the lead's own words. The
+ * commitment is a relation, exactly one, resolved to the slug its record page
+ * has so the site never holds a Notion id.
+ */
+function toUpdateSummary(
   row: Json,
   people: Map<string, Person>,
   commitments: Map<string, CommitmentRef>
-): ChangelogSummary {
+): UpdateSummary {
   const p = props(row);
-  const title = text(p.Name);
-  const where = `Changelog → ${title || (row.url as string)}`;
+  const summary = text(p.Name);
+  const where = `Updates → ${summary || (row.url as string)}`;
 
-  if (!title) {
+  if (!summary) {
     throw new Error(
-      `Changelog row ${row.url as string} has no headline. Say what changed.`
+      `Updates row ${row.url as string} is empty. Say what moved, in one line.`
     );
   }
 
-  const slug = text(p.Slug);
-  if (!slug) {
+  const related = relationIds(p.Commitment);
+  if (related.length !== 1) {
     throw new Error(
-      `${where}: no slug. It is the entry's URL, so it has to be chosen ` +
-        `rather than guessed.`
+      `${where}: Commitment names ${related.length} commitments. An update ` +
+        `reports on exactly one.`
     );
   }
-  if (!SLUG.test(slug)) {
+  const ref = commitments.get(related[0]!);
+  if (!ref) {
     throw new Error(
-      `${where}: slug is "${slug}". Lowercase words joined by single hyphens — ` +
-        `it goes straight into livepeer.org/changelog/.`
+      `${where}: Commitment is a page that is not in Roadmap commitments.`
     );
   }
 
-  const date = dateStart(p["Published on"]);
+  const date = dateStart(p["Posted on"]);
   if (!date) {
     throw new Error(
-      `${where}: no date. The list is grouped by the day a change shipped, ` +
-        `so an entry without one has nowhere to sit.`
+      `${where}: no Posted on date. Health is only ever as recent as its ` +
+        `update, so an undated one says nothing.`
+    );
+  }
+
+  const healthName = selectName(p.Health);
+  const health = healthName ? HEALTH_BY_NOTION[healthName] : undefined;
+  if (!health) {
+    throw new Error(
+      `${where}: Health is ${JSON.stringify(healthName ?? null)}, not one of ` +
+        `${Object.keys(HEALTH_BY_NOTION).join(", ")}.`
     );
   }
 
@@ -1083,99 +1094,66 @@ function toChangelogSummary(
     );
   }
 
-  const authors = relationIds(p.Authors).map((id) => {
-    const person = people.get(id);
-    if (!person) {
-      throw new Error(
-        `${where}: an author is a page that is not in Livepeer people.`
-      );
-    }
-    return { name: person.name, slug: person.slug, avatar: person.avatar };
-  });
-
-  const related = relationIds(p.Commitment);
-  if (related.length > 1) {
+  const authorIds = relationIds(p.Author);
+  if (authorIds.length > 1) {
     throw new Error(
-      `${where}: Commitment names ${related.length} commitments. A change ` +
-        `delivers one, or none.`
+      `${where}: Author names ${authorIds.length} people. One posts an update.`
     );
   }
-  let commitment: ChangelogSummary["commitment"];
-  if (related[0]) {
-    const ref = commitments.get(related[0]);
-    if (!ref) {
-      throw new Error(
-        `${where}: Commitment is a page that is not in Roadmap commitments.`
-      );
-    }
-    if (!ref.shipped) {
-      throw new Error(
-        `${where}: announces "${ref.title}", which the roadmap does not call ` +
-          `Shipped. Move the commitment first, then publish the entry.`
-      );
-    }
-    commitment = { slug: ref.slug, title: ref.title };
+  const author = authorIds[0] ? people.get(authorIds[0]) : undefined;
+  if (authorIds[0] && !author) {
+    throw new Error(
+      `${where}: Author is a page that is not in Livepeer people.`
+    );
   }
 
   return {
-    slug,
-    title,
-    summary: text(p.Summary),
+    commitment: ref.slug,
     date,
-    authors,
-    commitment,
+    health,
+    summary,
+    author,
     draft: status === "Draft",
   };
 }
 
-/** The changelog, read from Notion. Throws rather than degrading. */
-export async function getNotionChangelog(): Promise<ChangelogSummary[]> {
+/** Every update, newest first. Throws rather than degrading. */
+export async function getNotionUpdates(): Promise<UpdateSummary[]> {
   const [rows, people, commitments] = await Promise.all([
-    queryAll(CHANGELOG_DB),
+    queryAll(UPDATES_DB),
     readPeople(),
     readCommitmentRefs(),
   ]);
-  const entries = byNewest(
-    rows.map((row) => toChangelogSummary(row, people, commitments))
-  );
-
-  const seen = new Map<string, string>();
-  for (const entry of entries) {
-    const first = seen.get(entry.slug);
-    if (first) {
-      throw new Error(
-        `Changelog: "${first}" and "${entry.title}" are both at ` +
-          `/changelog/${entry.slug}. Two entries cannot share a URL.`
-      );
-    }
-    seen.set(entry.slug, entry.title);
-  }
-
-  return entries;
+  return byNewest(rows.map((row) => toUpdateSummary(row, people, commitments)));
 }
 
 /**
- * One entry, with its write-up. Queried again rather than threaded from the
- * list, for the reason getNotionPost gives. An empty body is allowed here,
- * unlike a post: a one-line change is a headline and a summary, and the page
- * says so rather than failing.
+ * One commitment's updates with their write-ups, newest first.
+ *
+ * The bodies are read here and nowhere else: a record page shows the trail
+ * in full, and the roadmap and the roundup show one line each, so reading
+ * every body to render those would be a round-trip per update for nothing.
  */
-export async function getNotionChangelogEntry(
+export async function getNotionCommitmentUpdates(
   slug: string
-): Promise<ChangelogEntry | null> {
+): Promise<Update[]> {
   const [rows, people, commitments] = await Promise.all([
-    queryAll(CHANGELOG_DB),
+    queryAll(UPDATES_DB),
     readPeople(),
     readCommitmentRefs(),
   ]);
-
-  const row = rows.find((candidate) => text(props(candidate).Slug) === slug);
-  if (!row) return null;
-
-  const summary = toChangelogSummary(row, people, commitments);
-  const html =
-    (await readDetail(row.id as string, `Changelog → ${summary.title}`)) ?? "";
-  return { ...summary, html };
+  const mine = rows
+    .map((row) => ({ row, summary: toUpdateSummary(row, people, commitments) }))
+    .filter(({ summary }) => summary.commitment === slug);
+  const withBodies = await Promise.all(
+    mine.map(async ({ row, summary }) => ({
+      ...summary,
+      html:
+        (await readDetail(row.id as string, `Updates → ${summary.summary}`)) ??
+        "",
+    }))
+  );
+  return byNewest(withBodies);
 }
 
 /** A URL property's value. Not rich text, so `text` reads it as empty. */
