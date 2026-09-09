@@ -19,6 +19,7 @@ export const blog = {
   // footer say "Latest Updates" because their labels are all title case.
   heading: "Latest updates",
   allHref: "/blog",
+  feedHref: "/blog/feed.xml",
   searchPlaceholder: "Search posts",
   emptyMessage: "No posts match that search.",
   /**

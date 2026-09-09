@@ -18,6 +18,7 @@ export default async function BlogPage() {
       categories={categoryLinks(register)}
       active={null}
       siblings={blog.siblings}
+      feedHref={blog.feedHref}
       searchPlaceholder={blog.searchPlaceholder}
       emptyMessage={blog.emptyMessage}
     />

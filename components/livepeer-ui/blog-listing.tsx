@@ -59,6 +59,7 @@ export function BlogListing({
   categories,
   active,
   siblings,
+  feedHref,
   searchPlaceholder,
   emptyMessage,
 }: {
@@ -72,6 +73,8 @@ export function BlogListing({
   active: string | null;
   /** Surfaces that sit beside the categories without being one. */
   siblings: BlogListingLink[];
+  /** The blog's Atom feed, shown as an icon after the search. */
+  feedHref?: string;
   searchPlaceholder: string;
   emptyMessage: string;
 }) {
@@ -104,6 +107,7 @@ export function BlogListing({
           categories={categories}
           siblings={siblings}
           current={current}
+          feedHref={feedHref}
           query={query}
           onQueryChange={setQuery}
           searchPlaceholder={searchPlaceholder}

@@ -61,6 +61,7 @@ export default async function BlogCategoryPage({ params }: Props) {
       categories={categoryLinks(register)}
       active={category}
       siblings={blog.siblings}
+      feedHref={blog.feedHref}
       searchPlaceholder={blog.searchPlaceholder}
       emptyMessage={blog.emptyMessage}
     />

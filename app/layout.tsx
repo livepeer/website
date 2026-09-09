@@ -49,6 +49,13 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      // globals.css sets scroll-behavior: smooth on the root. Next needs
+      // telling, so it can switch to instant scrolling for the length of a
+      // route change: without this its scroll-to-top animates, its "is the
+      // new content visible" check runs before the animation finishes, and
+      // it falls back to scrolling the new segment into view under the
+      // header, so a page opened from a scrolled list started 64px down.
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${geistMono.variable}`}
     >
       <head>
