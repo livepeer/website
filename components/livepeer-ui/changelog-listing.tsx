@@ -55,9 +55,9 @@ function matches(row: RoundupRow, q: string): boolean {
  * A commitment in a roundup: the mark in a gutter on the left like a
  * bullet, the title with its state word beside it, and one muted line
  * beneath. No rules, no columns — the colour down the left and the order
- * of the list do the grouping, and the line beneath changes by state so
- * the owner is named only where it matters, which is where nothing has
- * been said.
+ * of the list do the grouping. The line beneath always opens with who
+ * owns it, then what the state has to say: the day it shipped and the
+ * lead's last word, the update, or that nothing was posted.
  */
 function Row({
   row,
@@ -147,9 +147,10 @@ function Month({ r }: { r: RoundupView }) {
     <ol className="flex flex-col gap-6">
       {r.shipped.map((row) => (
         <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
-          <time dateTime={row.shippedAt}>{formatDay(row.shippedAt)}</time>
+          {owner(row)}
           {" · "}
-          {row.summary ?? <>by {owner(row)}</>}
+          <time dateTime={row.shippedAt}>{formatDay(row.shippedAt)}</time>
+          {row.summary && <> · {row.summary}</>}
         </Row>
       ))}
       {r.reported.map((row) => (
@@ -159,12 +160,13 @@ function Month({ r }: { r: RoundupView }) {
           icon={<HealthIcon health={row.health} />}
           word={<HealthWord health={row.health} />}
         >
+          {owner(row)}
+          {" · "}
           {row.summary}
         </Row>
       ))}
       {/* The accountability half: under way, and nothing said that month.
-          The owner is named here and nowhere else in the list, because
-          this is the line that is about them. */}
+          The owner's line is the whole row. */}
       {r.quiet.map((row) => (
         <Row
           key={row.slug}
