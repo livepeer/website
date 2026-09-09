@@ -39,6 +39,30 @@ function byDay<T extends { date: string }>(entries: T[]) {
 }
 
 /**
+ * Days gathered into months, each month keyed yyyy-mm so it can be linked
+ * to as /changelog#2026-08 — the anchor a monthly wrap-up on the blog points
+ * at when it says "everything that shipped in August".
+ */
+function byMonth<T extends { date: string }>(days: T[]) {
+  const months = new Map<string, T[]>();
+  for (const day of days) {
+    const key = day.date.slice(0, 7);
+    const month = months.get(key);
+    if (month) month.push(day);
+    else months.set(key, [day]);
+  }
+  return [...months].map(([key, days]) => ({ key, days }));
+}
+
+function formatMonth(key: string): string {
+  return new Date(`${key}-01`).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/**
  * Who shipped it: overlapping faces, then the names as one line. A monogram
  * where there is no portrait, so a row never mixes pictures and gaps. Each
  * face is a link to the person's page, the same as a credited face on a
@@ -123,6 +147,7 @@ export function ChangelogListing({
   }, [entries, query]);
 
   const days = byDay(matches);
+  const months = byMonth(days);
 
   return (
     <div className="pt-16 pb-24">
@@ -150,39 +175,59 @@ export function ChangelogListing({
               {emptyMessage}
             </p>
           ) : (
-            <ol className="divide-y divide-border">
-              {days.map((day) => (
-                // The date sits in a column of its own on wide screens and
-                // stays put while the day's entries scroll past it, so a day
-                // with three changes still reads as one day. On a phone it is
-                // a line above them.
-                <li
-                  key={day.date}
-                  className="grid gap-4 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,40rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,40rem)]"
-                >
-                  <time
-                    dateTime={day.date}
-                    className="text-sm text-muted-foreground md:sticky md:top-24 md:self-start"
-                  >
-                    {formatDay(day.date)}
-                  </time>
-                  <ol className="flex flex-col gap-10">
-                    {day.entries.map((entry) => (
-                      <li key={entry.slug} className="flex flex-col gap-3">
-                        <h2 className="text-xl leading-snug font-medium tracking-tight text-pretty">
-                          <Link
-                            href={`/changelog/${entry.slug}`}
-                            className="transition-colors hover:text-muted-foreground"
-                          >
-                            {entry.title}
-                          </Link>
-                        </h2>
-                        {entry.summary && (
-                          <p className="text-reading-body text-pretty text-muted-foreground">
-                            {entry.summary}
-                          </p>
-                        )}
-                        <Authors people={entry.authors} />
+            <ol>
+              {months.map((month) => (
+                <li key={month.key} className="mt-16 first:mt-0">
+                  {/* A month marker only once the list spans more than one:
+                      over a single month it would only repeat the dates
+                      below it. The id is the anchor a wrap-up links to. */}
+                  {months.length > 1 && (
+                    <h2
+                      id={month.key}
+                      className="mb-8 scroll-mt-24 border-b border-border pb-3 font-mono text-xs text-muted-foreground"
+                    >
+                      {formatMonth(month.key)}
+                    </h2>
+                  )}
+                  <ol className="divide-y divide-border">
+                    {month.days.map((day) => (
+                      // The date sits in a column of its own on wide screens
+                      // and stays put while the day's entries scroll past it,
+                      // so a day with three changes still reads as one day.
+                      // On a phone it is a line above them.
+                      <li
+                        key={day.date}
+                        className="grid gap-4 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,40rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,40rem)]"
+                      >
+                        <time
+                          dateTime={day.date}
+                          className="text-sm text-muted-foreground md:sticky md:top-24 md:self-start"
+                        >
+                          {formatDay(day.date)}
+                        </time>
+                        <ol className="flex flex-col gap-10">
+                          {day.entries.map((entry) => (
+                            <li
+                              key={entry.slug}
+                              className="flex flex-col gap-3"
+                            >
+                              <h3 className="text-xl leading-snug font-medium tracking-tight text-pretty">
+                                <Link
+                                  href={`/changelog/${entry.slug}`}
+                                  className="transition-colors hover:text-muted-foreground"
+                                >
+                                  {entry.title}
+                                </Link>
+                              </h3>
+                              {entry.summary && (
+                                <p className="text-reading-body text-pretty text-muted-foreground">
+                                  {entry.summary}
+                                </p>
+                              )}
+                              <Authors people={entry.authors} />
+                            </li>
+                          ))}
+                        </ol>
                       </li>
                     ))}
                   </ol>
