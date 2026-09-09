@@ -388,3 +388,79 @@ export const PLACEHOLDER_INITIATIVES: Initiative[] = [
     updates: [],
   },
 ];
+
+// -- Wrap-ups ----------------------------------------------------------------
+
+/**
+ * The monthly wrap-up: one per month, posted when the month closes. The
+ * updates the bodies logged that month are listed by the site; the notes are
+ * the part only a person writes — proposals, RFCs, threads, applications.
+ */
+export type WrapUp = {
+  /** yyyy-mm. */
+  month: string;
+  /** The day it was posted. */
+  date: string;
+  notes: { text: string; href?: string }[];
+};
+
+/** Every update logged in a month, newest first, with its body. */
+export function updatesIn(
+  initiatives: Initiative[],
+  month: string
+): { initiative: Initiative; update: Update }[] {
+  return initiatives
+    .flatMap((initiative) =>
+      initiative.updates
+        .filter((update) => update.date.startsWith(month))
+        .map((update) => ({ initiative, update }))
+    )
+    .sort((a, b) => b.update.date.localeCompare(a.update.date));
+}
+
+/** Placeholder, from the August and July wrap-ups on roadmap.livepeer.org. */
+export const PLACEHOLDER_WRAPUPS: WrapUp[] = [
+  {
+    month: "2026-08",
+    date: "2026-09-08",
+    notes: [
+      {
+        text: "NE SPE II pre-proposal: $230k for Sep–Dec, four tracks with named owners; milestones land mid-September.",
+        href: forum("network-engineering-spe-ii-pre-proposal"),
+      },
+      {
+        text: "livepeer.bot: a shared LIP-118 reward caller on Arbitrum One; orchestrator keys can go cold.",
+        href: forum("livepeer-bot-reward-caller"),
+      },
+      {
+        text: "Treasury reward cut restart reopened. No pushback on restoring it; the debate is the cap.",
+        href: forum("treasury-reward-cut-restart"),
+      },
+    ],
+  },
+  {
+    month: "2026-07",
+    date: "2026-08-04",
+    notes: [
+      {
+        text: "LIP-118, Delegated Reward Calling: discussion thread opened by rickstaa.",
+        href: forum("lip-118-delegated-reward-calling"),
+      },
+      {
+        text: "Livepeer 2.0: “A Path to Livepeer 2.0” by dob, “The Initial Roadmap” by honestly_rich, and the Delegators, Node Operator and Validators 2.0 threads.",
+        href: forum("a-path-to-livepeer-2-0"),
+      },
+      {
+        text: "RFC: Agent Framework, The Five Milestones, by Qiang Han; comments open through August 10.",
+        href: forum("rfc-agent-framework"),
+      },
+      {
+        text: "New retroactive grant applications: Flux Klein over Trickle; vLLM real-time transcription.",
+      },
+      {
+        text: "Livepeer Testnet proposal posted by Sidestream.",
+        href: forum("livepeer-testnet-proposal"),
+      },
+    ],
+  },
+];

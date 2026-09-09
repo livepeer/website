@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { ReportingBoard } from "@/components/livepeer-ui/reporting-board";
-import { PLACEHOLDER_INITIATIVES } from "@/lib/reporting";
+import { PLACEHOLDER_INITIATIVES, PLACEHOLDER_WRAPUPS } from "@/lib/reporting";
 
 export const metadata: Metadata = {
   title: "Reporting | Livepeer",
@@ -17,6 +17,7 @@ export default function ReportingPage() {
   return (
     <ReportingBoard
       initiatives={PLACEHOLDER_INITIATIVES}
+      wrapUps={PLACEHOLDER_WRAPUPS}
       now={new Date("2026-09-09T00:00:00Z")}
     />
   );

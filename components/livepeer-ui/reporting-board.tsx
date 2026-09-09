@@ -13,9 +13,11 @@ import {
   daysSince,
   HEALTH_LABEL,
   statusOf,
+  updatesIn,
   type Health,
   type Initiative,
   type Status,
+  type WrapUp,
 } from "@/lib/reporting";
 import { cn } from "@/lib/utils";
 
@@ -213,11 +215,134 @@ function Group({
  * stakeholder reads the page once and knows where every funded body stands.
  * Silence is something the page shows, not something a person has to say.
  */
+function formatMonth(month: string): string {
+  return new Date(`${month}-01`).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/**
+ * The monthly wrap-ups, beneath the board. The same shape as the posts on
+ * roadmap.livepeer.org today, with one difference: the first section, the
+ * updates the bodies logged that month, is the site's, so a wrap-up starts
+ * written. The notes beneath are the part only a person writes.
+ */
+function WrapUps({
+  wrapUps,
+  initiatives,
+}: {
+  wrapUps: WrapUp[];
+  initiatives: Initiative[];
+}) {
+  return (
+    <section className="mt-24 border-t border-border pt-16">
+      <h2 className="text-page-title">Wrap-ups</h2>
+      <p className="mt-2 max-w-[52ch] text-sm text-muted-foreground">
+        One a month. What each body reported, then what else moved.
+      </p>
+      <ol className="mt-10 divide-y divide-border">
+        {wrapUps.map((wrap) => {
+          const updates = updatesIn(initiatives, wrap.month);
+          return (
+            <li
+              key={wrap.month}
+              id={wrap.month}
+              className="grid gap-4 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,44rem)] md:gap-12 lg:grid-cols-[18rem_minmax(0,44rem)]"
+            >
+              <div className="md:sticky md:top-24 md:self-start">
+                <h3 className="text-xl font-medium tracking-tight">
+                  {formatMonth(wrap.month)}
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Posted {formatDate(wrap.date)}
+                </p>
+              </div>
+              <div className="flex flex-col gap-8">
+                {updates.length > 0 && (
+                  <div>
+                    <h4 className="font-mono text-xs text-muted-foreground">
+                      Updates
+                    </h4>
+                    <ul className="mt-3 flex flex-col gap-3">
+                      {updates.map(({ initiative, update }) => (
+                        <li
+                          key={`${initiative.slug}-${update.date}`}
+                          className="text-sm leading-relaxed"
+                        >
+                          <span className="font-medium">{initiative.name}</span>
+                          <span className="text-muted-foreground">
+                            {" "}
+                            · {formatDate(update.date)}{" "}
+                          </span>
+                          <Chip tone={healthTone(update.health)}>
+                            {HEALTH_LABEL[update.health]}
+                          </Chip>
+                          <span className="mt-1 block text-muted-foreground">
+                            {update.summary}{" "}
+                            <a
+                              href={update.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-0.5 transition-colors hover:text-foreground"
+                            >
+                              Read
+                              <ArrowUpRightIcon
+                                className="size-3"
+                                aria-hidden
+                              />
+                            </a>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {wrap.notes.length > 0 && (
+                  <div>
+                    <h4 className="font-mono text-xs text-muted-foreground">
+                      Also this month
+                    </h4>
+                    <ul className="mt-3 flex flex-col gap-2">
+                      {wrap.notes.map((note) => (
+                        <li
+                          key={note.text}
+                          className="text-sm leading-relaxed text-muted-foreground"
+                        >
+                          {note.href ? (
+                            <a
+                              href={note.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                            >
+                              {note.text}
+                            </a>
+                          ) : (
+                            <span className="text-foreground">{note.text}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
 export function ReportingBoard({
   initiatives,
+  wrapUps,
   now,
 }: {
   initiatives: Initiative[];
+  wrapUps: WrapUp[];
   now: Date;
 }) {
   const rows = initiatives.map((initiative) => ({
@@ -272,6 +397,8 @@ export function ReportingBoard({
             now={now}
           />
         </div>
+
+        <WrapUps wrapUps={wrapUps} initiatives={initiatives} />
       </div>
     </div>
   );
