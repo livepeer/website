@@ -52,26 +52,6 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
           <div className="mt-6">
             <Authors people={entry.authors} />
           </div>
-
-          {/* The commitment this delivers, when it was one, as a small chip
-              rather than a sentence: a mono "Roadmap" label, the title, an
-              arrow. An object, so the link is seen, but sized to what it
-              is — a cross-reference, not the point of the page. */}
-          {entry.commitment && (
-            <Link
-              href={`/roadmap/${entry.commitment.slug}`}
-              className="group mt-5 inline-flex max-w-full items-center gap-3 rounded-md bg-muted py-2 pr-3 pl-3.5 text-sm transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
-            >
-              <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                Roadmap
-              </span>
-              <span className="min-w-0 truncate">{entry.commitment.title}</span>
-              <ArrowRightIcon
-                className="size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-          )}
         </header>
 
         {entry.html && (
@@ -79,6 +59,31 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
             className="article-prose"
             dangerouslySetInnerHTML={{ __html: entry.html }}
           />
+        )}
+
+        {/* The commitment this delivers, when it was one, after the write-up
+            rather than under the byline: it is where the reader goes next,
+            not what the entry is about. An object rather than a sentence,
+            because a reference to another record wants the treatment records
+            get on this site — a plate with an eyebrow, a title and an arrow. */}
+        {entry.commitment && (
+          <Link
+            href={`/roadmap/${entry.commitment.slug}`}
+            className="group mt-12 flex items-center justify-between gap-6 rounded-lg bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
+          >
+            <span className="min-w-0">
+              <span className="block font-mono text-xs text-muted-foreground">
+                Roadmap · Shipped
+              </span>
+              <span className="mt-1.5 block text-base font-medium text-pretty">
+                {entry.commitment.title}
+              </span>
+            </span>
+            <ArrowRightIcon
+              className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </Link>
         )}
 
         <div className="mt-16 border-t pt-10 text-center">
