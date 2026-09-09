@@ -65,11 +65,13 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
             rather than under the byline: it is where the reader goes next,
             not what the entry is about. An object rather than a sentence,
             because a reference to another record wants the treatment records
-            get on this site — a plate with an eyebrow, a title and an arrow. */}
+            get on this site — a plate with an eyebrow, a title and an arrow.
+            Hairlined, because muted sits a few steps off the background in
+            dark and a plate with no edge all but vanished there. */}
         {entry.commitment && (
           <Link
             href={`/roadmap/${entry.commitment.slug}`}
-            className="group mt-12 flex items-center justify-between gap-6 rounded-lg bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
+            className="group mt-12 flex items-center justify-between gap-6 rounded-lg border border-border bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
           >
             <span className="min-w-0">
               <span className="block font-mono text-xs text-muted-foreground">
