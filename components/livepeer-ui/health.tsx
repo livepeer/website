@@ -24,8 +24,11 @@ import { cn } from "@/lib/utils";
 const TONE: Record<HealthOrNone, string> = {
   "on-track":
     "[--health:color-mix(in_oklch,var(--color-brand),black_28%)] dark:[--health:var(--color-brand)]",
+  // One mix, no nesting — Tailwind drops an arbitrary value with a
+  // color-mix inside a color-mix. It still lands darker in light mode
+  // because `destructive` does, and that is the half that carries it.
   "at-risk":
-    "[--health:color-mix(in_oklch,color-mix(in_oklch,var(--color-brand),var(--destructive)_55%),black_22%)] dark:[--health:color-mix(in_oklch,var(--color-brand),var(--destructive)_55%)]",
+    "[--health:color-mix(in_oklch,var(--color-brand),var(--destructive)_55%)]",
   "off-track": "[--health:var(--destructive)]",
   "no-update": "[--health:var(--muted-foreground)]",
 };
