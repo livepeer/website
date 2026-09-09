@@ -52,8 +52,15 @@ const STATE_LABEL: Record<Commitment["state"], string> = {
 export function CommitmentRecord({
   commitment: c,
   overlay = false,
+  announcement,
 }: {
   commitment: Commitment;
+  /**
+   * The changelog entry that announced this, if there is one. Derived by the
+   * route from the changelog register rather than stored on the record: the
+   * entry names its commitment, and nothing keeps a second copy in step.
+   */
+  announcement?: { slug: string; title: string };
   /**
    * Whether this is the panel over the register rather than a page.
    *
@@ -93,6 +100,17 @@ export function CommitmentRecord({
         ) : (
           <Row icon={AlignLeft} label="Target">
             {c.target}
+          </Row>
+        )}
+        {announcement && (
+          <Row icon={ArrowUpRight} label="Announced">
+            <Link
+              href={`/changelog/${announcement.slug}`}
+              scroll={!overlay}
+              className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              {announcement.title}
+            </Link>
           </Row>
         )}
         <Row icon={CircleChevronDown} label="Workstream">

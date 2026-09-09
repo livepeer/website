@@ -48,8 +48,23 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
             </p>
           )}
 
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col gap-3">
             <Authors people={entry.authors} />
+            {/* The commitment this delivers, when it was one: the roadmap
+                holds what was promised, by whom and with what funding, and
+                this page holds that it landed. */}
+            {entry.commitment && (
+              <p className="text-sm text-muted-foreground">
+                Delivers{" "}
+                <Link
+                  href={`/roadmap/${entry.commitment.slug}`}
+                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                >
+                  {entry.commitment.title}
+                </Link>{" "}
+                on the roadmap.
+              </p>
+            )}
           </div>
         </header>
 

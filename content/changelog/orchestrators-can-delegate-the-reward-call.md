@@ -2,6 +2,7 @@
 title: Orchestrators can delegate the reward call
 summary: LIP-118 is live on-chain. An orchestrator can now hand the reward call to another address, removing a standing operational chore from running a node.
 date: "2026-07-30"
+commitment: lip-118-delegated-reward-calling
 authors:
   - name: Peter Lindqvist
     slug: peter-lindqvist

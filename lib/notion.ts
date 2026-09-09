@@ -1015,9 +1015,33 @@ export async function getNotionPost(slug: string): Promise<BlogPost | null> {
  * The same shape and the same rules as a blog row, with less on it: no cover,
  * no category, and any number of authors rather than one. See toSummary.
  */
+/**
+ * The roadmap's rows by page id, as the changelog needs them: the slug the
+ * record page has (derived from the title by the one slugify, exactly as
+ * toCommitment derives it) and whether it has shipped. Read from the rows
+ * rather than through getNotionCommitments so a relation id can be matched;
+ * the Commitment type carries no page id, by design.
+ */
+type CommitmentRef = { slug: string; title: string; shipped: boolean };
+
+async function readCommitmentRefs(): Promise<Map<string, CommitmentRef>> {
+  const refs = new Map<string, CommitmentRef>();
+  for (const row of await queryAll(COMMITMENTS_DB)) {
+    const p = props(row);
+    const title = text(p.Name);
+    refs.set(row.id as string, {
+      slug: slugify(title),
+      title,
+      shipped: selectName(p.Status) === "Shipped",
+    });
+  }
+  return refs;
+}
+
 function toChangelogSummary(
   row: Json,
-  people: Map<string, Person>
+  people: Map<string, Person>,
+  commitments: Map<string, CommitmentRef>
 ): ChangelogSummary {
   const p = props(row);
   const title = text(p.Name);
@@ -1069,23 +1093,51 @@ function toChangelogSummary(
     return { name: person.name, slug: person.slug, avatar: person.avatar };
   });
 
+  const related = relationIds(p.Commitment);
+  if (related.length > 1) {
+    throw new Error(
+      `${where}: Commitment names ${related.length} commitments. A change ` +
+        `delivers one, or none.`
+    );
+  }
+  let commitment: ChangelogSummary["commitment"];
+  if (related[0]) {
+    const ref = commitments.get(related[0]);
+    if (!ref) {
+      throw new Error(
+        `${where}: Commitment is a page that is not in Roadmap commitments.`
+      );
+    }
+    if (!ref.shipped) {
+      throw new Error(
+        `${where}: announces "${ref.title}", which the roadmap does not call ` +
+          `Shipped. Move the commitment first, then publish the entry.`
+      );
+    }
+    commitment = { slug: ref.slug, title: ref.title };
+  }
+
   return {
     slug,
     title,
     summary: text(p.Summary),
     date,
     authors,
+    commitment,
     draft: status === "Draft",
   };
 }
 
 /** The changelog, read from Notion. Throws rather than degrading. */
 export async function getNotionChangelog(): Promise<ChangelogSummary[]> {
-  const [rows, people] = await Promise.all([
+  const [rows, people, commitments] = await Promise.all([
     queryAll(CHANGELOG_DB),
     readPeople(),
+    readCommitmentRefs(),
   ]);
-  const entries = byNewest(rows.map((row) => toChangelogSummary(row, people)));
+  const entries = byNewest(
+    rows.map((row) => toChangelogSummary(row, people, commitments))
+  );
 
   const seen = new Map<string, string>();
   for (const entry of entries) {
@@ -1111,15 +1163,16 @@ export async function getNotionChangelog(): Promise<ChangelogSummary[]> {
 export async function getNotionChangelogEntry(
   slug: string
 ): Promise<ChangelogEntry | null> {
-  const [rows, people] = await Promise.all([
+  const [rows, people, commitments] = await Promise.all([
     queryAll(CHANGELOG_DB),
     readPeople(),
+    readCommitmentRefs(),
   ]);
 
   const row = rows.find((candidate) => text(props(candidate).Slug) === slug);
   if (!row) return null;
 
-  const summary = toChangelogSummary(row, people);
+  const summary = toChangelogSummary(row, people, commitments);
   const html =
     (await readDetail(row.id as string, `Changelog → ${summary.title}`)) ?? "";
   return { ...summary, html };

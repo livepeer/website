@@ -112,7 +112,7 @@ export async function getFundingPaths(): Promise<FundingPath[]> {
 export async function getChangelog(): Promise<ChangelogSummary[]> {
   const entries = hasNotionCredentials()
     ? await getNotionChangelog()
-    : getMarkdownChangelog();
+    : await getMarkdownChangelog();
   return entries.filter(isPublished);
 }
 

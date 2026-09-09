@@ -17,4 +17,5 @@ develop the list against. **Editing them does not change the deployed site.**
 
 Frontmatter: `title`, `summary`, `date` (yyyy-mm-dd), optional `authors` (a list
 of `{ name, slug, avatar }`, where `avatar` is a file in `public/people`), and
+optional `commitment` (the slug of a shipped record in `content/roadmap`), and
 optional `draft`. The body is the write-up, and may be empty.
