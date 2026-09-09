@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -88,20 +89,27 @@ export function BlogListing({
     );
   }, [posts, query]);
 
+  // The registry's ghost button, rendered as a link: transparent at rest, the
+  // muted fill on hover, and the same fill held on the current page — the
+  // toggle's pressed state, on an anchor, because these are routes. The
+  // system's radius rather than Vercel's full pill: the fill and the fade are
+  // what make the row feel right, and nothing else here is round.
   const railLink = (label: string, href: string, current: boolean) => (
-    <Link
+    <Button
       key={href}
-      href={href}
-      aria-current={current ? "page" : undefined}
+      variant="ghost"
+      size="sm"
+      nativeButton={false}
+      render={<Link href={href} aria-current={current ? "page" : undefined} />}
       className={cn(
-        "shrink-0 rounded-sm text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "shrink-0 font-normal duration-200 active:translate-y-0",
         current
-          ? "text-foreground"
-          : "text-muted-foreground hover:text-foreground"
+          ? "bg-muted text-foreground dark:bg-muted"
+          : "text-muted-foreground"
       )}
     >
       {label}
-    </Link>
+    </Button>
   );
 
   // Gutter and max-width on one element — see the note in app/brand/page.tsx.
@@ -110,11 +118,10 @@ export function BlogListing({
   return (
     <div className="pt-16 pb-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        {/* A step up from the page-title utility on both axes, by request: the
-            display-sm size with the regular weight rather than the 300 the
-            display utilities carry, so the heading holds its own over a row
-            of links and a search field. */}
-        <h1 className="text-display-sm font-normal">{heading}</h1>
+        {/* display-md at the regular weight rather than the 300 the display
+            utilities carry, so the heading holds its own over a row of
+            buttons and a search field. Vercel's heading measures the same. */}
+        <h1 className="text-display-md font-normal">{heading}</h1>
 
         {/* One row, on every screen: the places on the left, the search on
             the right. On a phone the row wraps, so the search drops under the
@@ -125,7 +132,7 @@ export function BlogListing({
         <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
           <nav
             aria-label="Categories"
-            className="-mx-4 flex min-w-0 gap-x-5 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex min-w-0 gap-x-1 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] sm:-mx-3 sm:px-3 [&::-webkit-scrollbar]:hidden"
           >
             {railLink("All", allHref, active === null)}
             {categories.map((category) =>

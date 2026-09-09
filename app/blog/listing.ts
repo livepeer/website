@@ -15,7 +15,9 @@ import {
  * this is the one place their inputs are built, so they cannot drift.
  */
 export const blog = {
-  heading: "Latest Updates",
+  // Sentence case, like every page heading on the site. The nav and the
+  // footer say "Latest Updates" because their labels are all title case.
+  heading: "Latest updates",
   allHref: "/blog",
   searchPlaceholder: "Search posts",
   emptyMessage: "No posts match that search.",
