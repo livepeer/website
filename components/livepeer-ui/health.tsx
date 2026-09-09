@@ -111,12 +111,9 @@ export function ShippedMark({ className }: { className?: string }) {
 
 export function HealthMark({
   health,
-  icon = true,
   className,
 }: {
   health: HealthOrNone;
-  /** False where the icon is already on the line, as on a roadmap card. */
-  icon?: boolean;
   className?: string;
 }) {
   return (
@@ -127,7 +124,7 @@ export function HealthMark({
         className
       )}
     >
-      {icon && <HealthIcon health={health} />}
+      <HealthIcon health={health} />
       {HEALTH_LABEL[health]}
     </span>
   );

@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
+import { HealthMark } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
 import type { Standing } from "@/lib/health";
@@ -99,23 +99,15 @@ function StateMark({
   return (
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <span className="flex items-center gap-2">
-        {/* One icon on the line. Where the work is under way and has a
-            standing, the health disc takes the dot's place — its colour is
-            the state's weather, and a green dot beside a green disc said
-            the same thing twice. */}
-        {building && standing ? (
-          <HealthIcon health={standing.health} />
-        ) : (
-          <span
-            aria-hidden="true"
-            className={cn(
-              "size-1.5 shrink-0 rounded-full",
-              building
-                ? "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand"
-                : "bg-muted-foreground/40"
-            )}
-          />
-        )}
+        <span
+          aria-hidden="true"
+          className={cn(
+            "size-1.5 shrink-0 rounded-full",
+            building
+              ? "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand"
+              : "bg-muted-foreground/40"
+          )}
+        />
         <span className={cn(building && "text-foreground")}>
           {building
             ? "In progress"
@@ -132,7 +124,7 @@ function StateMark({
           <span aria-hidden="true" className="text-muted-foreground/50">
             ·
           </span>
-          <HealthMark health={standing.health} icon={false} />
+          <HealthMark health={standing.health} />
         </>
       )}
     </span>
