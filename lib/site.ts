@@ -38,6 +38,10 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       title: "Resources",
       links: [
         { label: "Blog", href: "/blog" },
+        // Beside the blog in the footer and in the blog's own row; kept out of
+        // the header's Resources menu, which stays the five it was designed
+        // with — see getLivepeerOrgHeaderLinks.
+        { label: "Changelog", href: "/changelog" },
         // Roadmap is a reading destination — "see what's next for the
         // network" — like Blog and Documentation, not a network surface like
         // Provide GPUs. The header always listed it here; the footer had it

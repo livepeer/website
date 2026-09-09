@@ -103,8 +103,10 @@ export function getLivepeerOrgHeaderLinks(
         item.label !== "Foundation" &&
         // Footer-only: /contribute is reached from the footer and from the
         // roadmap's "Not on the roadmap?" block, and the header's Resources
-        // menu stays the five it was designed with.
-        item.label !== "Contribute"
+        // menu stays the five it was designed with. The changelog likewise:
+        // it is reached from the footer and from the blog's own row.
+        item.label !== "Contribute" &&
+        item.label !== "Changelog"
     )
     .sort((a, b) => {
       const order =

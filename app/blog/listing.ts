@@ -22,13 +22,11 @@ export const blog = {
   searchPlaceholder: "Search posts",
   emptyMessage: "No posts match that search.",
   /**
-   * Surfaces that sit in the rail beside the categories without being one.
-   * Empty until there is something real to put here: the changelog goes in
-   * as `{ label: "Changelog", href: "/changelog" }` the day that page ships,
-   * and not a day before, because a rail link to a page that does not exist
-   * is a dead end dressed as a destination.
+   * Surfaces that sit in the row beside the categories without being one.
+   * The changelog is a different shape of record with its own page, not a
+   * sixth category; it sits after a hairline so the row says so.
    */
-  siblings: [] as BlogListingLink[],
+  siblings: [{ label: "Changelog", href: "/changelog" }] as BlogListingLink[],
 };
 
 export function categoryHref(category: BlogCategory): string {

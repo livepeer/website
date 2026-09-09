@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SearchIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import {
+  LatestNav,
+  type LatestLink,
+} from "@/components/livepeer-ui/latest-nav";
 
 export type BlogListingPost = {
   slug: string;
@@ -20,7 +20,7 @@ export type BlogListingPost = {
   imageAlt?: string;
 };
 
-export type BlogListingLink = { label: string; href: string };
+export type BlogListingLink = LatestLink;
 
 /**
  * Frontmatter dates are plain yyyy-mm-dd, which Date parses as UTC midnight.
@@ -39,18 +39,14 @@ function formatDate(iso: string): string {
 /**
  * The blog index — "Latest" in the nav, /blog in the URL.
  *
- * A row and a grid, after Vercel's blog. The row is a list of places: every
- * category as its own URL, then any sibling surface that is not a category
- * (the changelog, when it exists), with a search box at its right end.
- * Categories used to live inside the search popover with the query, which
- * made one control do two jobs and left nowhere to put a page that was
- * neither. A category is a route now, so it can be linked to and indexed,
- * and search does one thing: it narrows the posts on the page you are on, by
- * title and description.
- *
- * A row rather than a sidebar, which this had for a day: with three to five
- * places a sidebar leaves a column mostly empty and takes width from the
- * covers, and the row is the same shape on every screen.
+ * A row and a grid, after Vercel's blog. The row (LatestNav) is a list of
+ * places: every category as its own URL, then any sibling surface that is not
+ * a category — the changelog — with a search box at its right end. Categories
+ * used to live inside the search popover with the query, which made one
+ * control do two jobs and left nowhere to put a page that was neither. A
+ * category is a route now, so it can be linked to and indexed, and search
+ * does one thing: it narrows the posts on the page you are on, by title and
+ * description.
  *
  * The grid stays. Vercel runs a dense date-and-title list because it ships
  * several posts a week; this blog has a dozen posts, each with a required
@@ -89,28 +85,8 @@ export function BlogListing({
     );
   }, [posts, query]);
 
-  // The registry's ghost button, rendered as a link: transparent at rest, the
-  // muted fill on hover, and the same fill held on the current page — the
-  // toggle's pressed state, on an anchor, because these are routes. The
-  // system's radius rather than Vercel's full pill: the fill and the fade are
-  // what make the row feel right, and nothing else here is round.
-  const railLink = (label: string, href: string, current: boolean) => (
-    <Button
-      key={href}
-      variant="ghost"
-      size="sm"
-      nativeButton={false}
-      render={<Link href={href} aria-current={current ? "page" : undefined} />}
-      className={cn(
-        "shrink-0 font-normal duration-200 active:translate-y-0",
-        current
-          ? "bg-muted text-foreground dark:bg-muted"
-          : "text-muted-foreground"
-      )}
-    >
-      {label}
-    </Button>
-  );
+  const current =
+    categories.find((category) => category.label === active)?.href ?? allHref;
 
   // Gutter and max-width on one element — see the note in app/brand/page.tsx.
   // Split across two, max-w-page bounds the content box instead of the padded
@@ -123,47 +99,15 @@ export function BlogListing({
             buttons and a search field. Vercel's heading measures the same. */}
         <h1 className="text-display-md font-normal">{heading}</h1>
 
-        {/* One row, on every screen: the places on the left, the search on
-            the right. On a phone the row wraps, so the search drops under the
-            categories at full width; the categories themselves scroll
-            sideways rather than wrap, so the row stays one line tall. The
-            sibling surfaces follow a hairline so they read as a second group
-            rather than more categories. */}
-        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-          <nav
-            aria-label="Categories"
-            className="-mx-4 flex min-w-0 gap-x-1 overflow-x-auto px-4 whitespace-nowrap [scrollbar-width:none] sm:-mx-3 sm:px-3 [&::-webkit-scrollbar]:hidden"
-          >
-            {railLink("All", allHref, active === null)}
-            {categories.map((category) =>
-              railLink(category.label, category.href, active === category.label)
-            )}
-            {siblings.length > 0 && (
-              <>
-                <span
-                  aria-hidden="true"
-                  className="w-px shrink-0 self-stretch bg-border"
-                />
-                {siblings.map((link) => railLink(link.label, link.href, false))}
-              </>
-            )}
-          </nav>
-
-          <label className="relative block w-full sm:ml-auto sm:w-64">
-            <SearchIcon
-              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={searchPlaceholder}
-              aria-label={searchPlaceholder}
-              className="pl-9"
-            />
-          </label>
-        </div>
+        <LatestNav
+          allHref={allHref}
+          categories={categories}
+          siblings={siblings}
+          current={current}
+          query={query}
+          onQueryChange={setQuery}
+          searchPlaceholder={searchPlaceholder}
+        />
 
         <div className="mt-12">
           <p className="sr-only" role="status" aria-live="polite">
@@ -186,10 +130,10 @@ export function BlogListing({
                     href={`/blog/${post.slug}`}
                     className="group flex min-w-0 flex-col gap-2"
                   >
-                    {/* Square, and the same tile whether or not the post
-                          has art: the bordered muted panel is the placeholder,
-                          so a post without a cover leaves a considered gap
-                          rather than a collapsed card. */}
+                    {/* Square, and the same tile whether or not the post has
+                        art: the bordered muted panel is the placeholder, so a
+                        post without a cover leaves a considered gap rather
+                        than a collapsed card. */}
                     <div className="relative aspect-square overflow-hidden rounded-sm border bg-muted">
                       {post.image && (
                         <Image
@@ -202,15 +146,15 @@ export function BlogListing({
                       )}
                     </div>
                     {/* font-medium: at 20px Inter's 300 goes thin and the
-                          title stops out-weighing the body copy beneath it.
-                          Matches the ecosystem card title. */}
+                        title stops out-weighing the body copy beneath it.
+                        Matches the ecosystem card title. */}
                     <h2 className="text-xl leading-snug font-medium tracking-tight text-pretty">
                       {post.title}
                     </h2>
                     {/* whitespace-nowrap with a truncating date: at 390px a
-                          two-column card is ~180px wide, and letting this row
-                          wrap would stagger every card in the row by a line.
-                          The category holds its width; the date gives way. */}
+                        two-column card is ~180px wide, and letting this row
+                        wrap would stagger every card in the row by a line.
+                        The category holds its width; the date gives way. */}
                     <div className="flex items-center gap-2 overflow-hidden pl-[1px] whitespace-nowrap">
                       <span className="shrink-0 text-xs text-foreground">
                         {post.category}

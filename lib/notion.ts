@@ -12,6 +12,7 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
+import type { ChangelogEntry, ChangelogSummary } from "./changelog";
 import {
   checkLadder,
   toFundingPath,
@@ -91,6 +92,8 @@ const BLOG_DB =
   process.env.NOTION_BLOG_DB ?? "ed74ac33f630497d8c3cf23599de462b";
 const FUNDING_DB =
   process.env.NOTION_FUNDING_DB ?? "e2a8b7e07c92459f81e06af6e15a3440";
+const CHANGELOG_DB =
+  process.env.NOTION_CHANGELOG_DB ?? "a92a69121d784340b8806ae0031a3b3b";
 
 /**
  * How stale the page may be, in seconds.
@@ -1004,6 +1007,122 @@ export async function getNotionPost(slug: string): Promise<BlogPost | null> {
     readingTime: readingTime(html.replace(/<[^>]*>/g, " ")).text,
     html,
   };
+}
+
+/**
+ * One row of the changelog, without its write-up.
+ *
+ * The same shape and the same rules as a blog row, with less on it: no cover,
+ * no category, and any number of authors rather than one. See toSummary.
+ */
+function toChangelogSummary(
+  row: Json,
+  people: Map<string, Person>
+): ChangelogSummary {
+  const p = props(row);
+  const title = text(p.Name);
+  const where = `Changelog → ${title || (row.url as string)}`;
+
+  if (!title) {
+    throw new Error(
+      `Changelog row ${row.url as string} has no headline. Say what changed.`
+    );
+  }
+
+  const slug = text(p.Slug);
+  if (!slug) {
+    throw new Error(
+      `${where}: no slug. It is the entry's URL, so it has to be chosen ` +
+        `rather than guessed.`
+    );
+  }
+  if (!SLUG.test(slug)) {
+    throw new Error(
+      `${where}: slug is "${slug}". Lowercase words joined by single hyphens — ` +
+        `it goes straight into livepeer.org/changelog/.`
+    );
+  }
+
+  const date = dateStart(p["Published on"]);
+  if (!date) {
+    throw new Error(
+      `${where}: no date. The list is grouped by the day a change shipped, ` +
+        `so an entry without one has nowhere to sit.`
+    );
+  }
+
+  const status = selectName(p.Status);
+  if (status !== "Draft" && status !== "Published") {
+    throw new Error(
+      `${where}: Status is ${JSON.stringify(status)}. It must be Draft or ` +
+        `Published.`
+    );
+  }
+
+  const authors = relationIds(p.Authors).map((id) => {
+    const person = people.get(id);
+    if (!person) {
+      throw new Error(
+        `${where}: an author is a page that is not in Livepeer people.`
+      );
+    }
+    return { name: person.name, slug: person.slug, avatar: person.avatar };
+  });
+
+  return {
+    slug,
+    title,
+    summary: text(p.Summary),
+    date,
+    authors,
+    draft: status === "Draft",
+  };
+}
+
+/** The changelog, read from Notion. Throws rather than degrading. */
+export async function getNotionChangelog(): Promise<ChangelogSummary[]> {
+  const [rows, people] = await Promise.all([
+    queryAll(CHANGELOG_DB),
+    readPeople(),
+  ]);
+  const entries = byNewest(rows.map((row) => toChangelogSummary(row, people)));
+
+  const seen = new Map<string, string>();
+  for (const entry of entries) {
+    const first = seen.get(entry.slug);
+    if (first) {
+      throw new Error(
+        `Changelog: "${first}" and "${entry.title}" are both at ` +
+          `/changelog/${entry.slug}. Two entries cannot share a URL.`
+      );
+    }
+    seen.set(entry.slug, entry.title);
+  }
+
+  return entries;
+}
+
+/**
+ * One entry, with its write-up. Queried again rather than threaded from the
+ * list, for the reason getNotionPost gives. An empty body is allowed here,
+ * unlike a post: a one-line change is a headline and a summary, and the page
+ * says so rather than failing.
+ */
+export async function getNotionChangelogEntry(
+  slug: string
+): Promise<ChangelogEntry | null> {
+  const [rows, people] = await Promise.all([
+    queryAll(CHANGELOG_DB),
+    readPeople(),
+  ]);
+
+  const row = rows.find((candidate) => text(props(candidate).Slug) === slug);
+  if (!row) return null;
+
+  const summary = toChangelogSummary(row, people);
+  const html =
+    (await readDetail(row.id as string, `Changelog → ${summary.title}`)) ?? "";
+  return { ...summary, html };
 }
 
 /** A URL property's value. Not rich text, so `text` reads it as empty. */

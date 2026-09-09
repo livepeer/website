@@ -5,8 +5,16 @@ import {
   type BlogPost,
   type BlogSummary,
 } from "./blog";
+import {
+  getMarkdownChangelog,
+  getMarkdownChangelogEntry,
+  type ChangelogEntry,
+  type ChangelogSummary,
+} from "./changelog";
 import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
 import {
+  getNotionChangelog,
+  getNotionChangelogEntry,
   getNotionCommitments,
   getNotionFundingPaths,
   getNotionOrganizations,
@@ -94,4 +102,26 @@ export async function getFundingPaths(): Promise<FundingPath[]> {
   return hasNotionCredentials()
     ? getNotionFundingPaths()
     : getMarkdownFundingPaths();
+}
+
+/**
+ * The changelog, from the same source as the blog and filtered the same way:
+ * a draft is visible on previews and in local dev, never on production, and
+ * the rule lives here rather than at the three routes that read an entry.
+ */
+export async function getChangelog(): Promise<ChangelogSummary[]> {
+  const entries = hasNotionCredentials()
+    ? await getNotionChangelog()
+    : getMarkdownChangelog();
+  return entries.filter(isPublished);
+}
+
+/** One entry with its write-up, or null — a bad slug and a hidden draft both 404. */
+export async function getChangelogEntry(
+  slug: string
+): Promise<ChangelogEntry | null> {
+  const entry = hasNotionCredentials()
+    ? await getNotionChangelogEntry(slug)
+    : await getMarkdownChangelogEntry(slug);
+  return entry && isPublished(entry) ? entry : null;
 }

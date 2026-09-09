@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBlogRegister } from "@/lib/register";
+import { getBlogRegister, getChangelog } from "@/lib/register";
 import { categoriesInUse, categorySlug } from "@/lib/blog";
 import { getAppSlugs } from "@/lib/ecosystem";
 
@@ -13,7 +13,16 @@ const BASE_URL = "https://livepeer.org";
  * the destination the long way round. Their replacements are listed directly.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getBlogRegister();
+  const [posts, changes] = await Promise.all([
+    getBlogRegister(),
+    getChangelog(),
+  ]);
+  const changelogEntries: MetadataRoute.Sitemap = changes.map((entry) => ({
+    url: `${BASE_URL}/changelog/${entry.slug}`,
+    lastModified: new Date(entry.date),
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -42,6 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/agent`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/ecosystem`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/blog`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/changelog`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE_URL}/compute`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/roadmap`, changeFrequency: "weekly", priority: 0.7 },
     // The destination the forum's welcome post and the Foundation's Notion
@@ -71,5 +81,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...ecosystemEntries,
     ...categoryEntries,
     ...blogEntries,
+    ...changelogEntries,
   ];
 }
