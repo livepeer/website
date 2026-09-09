@@ -20,7 +20,7 @@ const BLOG_DIR = path.join(process.cwd(), "content/blog");
  * pick from, and both readers reject anything else, so a typo fails the build
  * instead of quietly splitting the archive in two.
  *
- * Order is the order they appear in the filter panel, and it is editorial
+ * Order is the order they appear in the index's rail, and it is editorial
  * rather than alphabetical: what the network did, then the two product
  * surfaces, then the people and the governance around them.
  */
@@ -102,9 +102,22 @@ export function byNewest<T extends { date: string }>(posts: T[]): T[] {
  * dressed as a choice. Engineering appears the moment a post uses it — no code
  * change needed.
  */
-export function categoriesInUse(posts: BlogSummary[]): string[] {
+export function categoriesInUse(posts: BlogSummary[]): BlogCategory[] {
   const used = new Set(posts.map((post) => post.category));
   return BLOG_CATEGORIES.filter((name) => used.has(name));
+}
+
+/**
+ * A category's place in a URL: /blog/category/<slug>. Lower-cased and
+ * hyphenated from the display name, so the closed set above is also the
+ * closed set of category pages and nothing about them is typed twice.
+ */
+export function categorySlug(category: BlogCategory): string {
+  return category.toLowerCase().replace(/\s+/g, "-");
+}
+
+export function categoryFromSlug(slug: string): BlogCategory | undefined {
+  return BLOG_CATEGORIES.find((name) => categorySlug(name) === slug);
 }
 
 /** The shape a slug has to have to be a URL, checked by both readers. */

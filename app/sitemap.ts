@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getBlogRegister } from "@/lib/register";
+import { categoriesInUse, categorySlug } from "@/lib/blog";
 import { getAppSlugs } from "@/lib/ecosystem";
 
 const BASE_URL = "https://livepeer.org";
@@ -19,6 +20,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "monthly",
     priority: 0.6,
   }));
+
+  // One page per category with a post in it, matching the index's rail.
+  const categoryEntries: MetadataRoute.Sitemap = categoriesInUse(posts).map(
+    (name) => ({
+      url: `${BASE_URL}/blog/category/${categorySlug(name)}`,
+      changeFrequency: "weekly",
+      priority: 0.5,
+    })
+  );
 
   const ecosystemEntries: MetadataRoute.Sitemap = getAppSlugs().map((slug) => ({
     url: `${BASE_URL}/ecosystem/${slug}`,
@@ -56,5 +66,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/brand`, changeFrequency: "monthly", priority: 0.3 },
   ];
 
-  return [...staticRoutes, ...ecosystemEntries, ...blogEntries];
+  return [
+    ...staticRoutes,
+    ...ecosystemEntries,
+    ...categoryEntries,
+    ...blogEntries,
+  ];
 }

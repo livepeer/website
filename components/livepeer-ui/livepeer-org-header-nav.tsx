@@ -126,10 +126,7 @@ export function getLivepeerOrgAgentHref(site: LivepeerOrgSite) {
   return resolveHref(site, "Livepeer Agent", `${site.homeHref}/agent`);
 }
 
-function getLivepeerOrgLinkHref(
-  site: LivepeerOrgSite,
-  title: HeaderLink
-) {
+function getLivepeerOrgLinkHref(site: LivepeerOrgSite, title: HeaderLink) {
   return title === "Agent"
     ? getLivepeerOrgAgentHref(site)
     : getLivepeerOrgFoundationHref(site);
