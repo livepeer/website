@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Activity,
   AlignLeft,
   ArrowUpRight,
   CalendarDays,
@@ -252,6 +253,25 @@ export function CommitmentRecord({
         <Row icon={CircleChevronDown} label="Status">
           {STATE_LABEL[c.state]}
         </Row>
+        {/* Where the work stands, as a property beside its status, for work
+            under way. The latest update below says the same at length; this
+            is the one-word answer in the place a reader scanning the facts
+            looks for it, with the date the word is good as of. Past six
+            weeks the word is withdrawn and the row says when it was last
+            said instead. */}
+        {standing && (
+          <Row icon={Activity} label="Health">
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <HealthMark health={standing.health} />
+              {standing.latest && (
+                <span className="text-muted-foreground">
+                  {standing.health === "no-update" ? "last posted" : "as of"}{" "}
+                  {formatDate(standing.latest.date)}
+                </span>
+              )}
+            </span>
+          </Row>
+        )}
         <Row icon={ArrowUpRight} label="Owner">
           <Link
             href={`/organizations/${c.ownerSlug}`}
@@ -325,39 +345,6 @@ export function CommitmentRecord({
         )}
       </dl>
 
-      {/* The latest update, above the write-up, where Linear puts a
-          project's. It is the one thing about work under way that changes
-          from month to month, so it leads: the health its lead chose, who
-          said so and when, and what they said. Past six weeks of silence
-          the card says so on its right — the word the lead chose is still
-          the last word, but it is no longer a current one — and with
-          nothing ever posted the card says that instead of hiding. */}
-      {standing &&
-        (latest ? (
-          <div className="mt-8">
-            <UpdateCard
-              update={latest}
-              when={ago(latest.date, now)}
-              eyebrow="Latest update"
-              note={
-                standing.health === "no-update"
-                  ? `No update in ${Math.round(STALE_AFTER_DAYS / 7)} weeks`
-                  : undefined
-              }
-            />
-          </div>
-        ) : (
-          <div className="mt-8 rounded-xl border border-border p-5 sm:p-6">
-            <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-              Latest update
-            </h2>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Nothing posted yet. The lead posts one a month while the work is
-              under way.
-            </p>
-          </div>
-        ))}
-
       {/* The write-up, unlabelled and below a rule, exactly where Notion puts
           a page body. On the card it needed the word "Context" to explain why
           a paragraph sat among facts; here it is the content and the
@@ -379,15 +366,56 @@ export function CommitmentRecord({
         </p>
       )}
 
+      {/* The latest update, under the write-up and above the log, so the
+          record reads as what it is, then how it is going. It sat above the
+          write-up first, where Linear puts a project's, but Linear's
+          activity is a sidebar; in one column that left the write-up
+          sandwiched between two kinds of update. The card is the health its
+          lead chose, who said so and when, and what they said. Past six weeks of silence
+          the card says so on its right — the word the lead chose is still
+          the last word, but it is no longer a current one — and with
+          nothing ever posted the card says that instead of hiding. */}
+      {standing &&
+        (latest ? (
+          <div className="mt-10 border-t border-border pt-10">
+            <UpdateCard
+              update={latest}
+              when={ago(latest.date, now)}
+              eyebrow="Latest update"
+              note={
+                standing.health === "no-update"
+                  ? `No update in ${Math.round(STALE_AFTER_DAYS / 7)} weeks`
+                  : undefined
+              }
+            />
+          </div>
+        ) : (
+          <div className="mt-10 border-t border-border pt-10">
+            <div className="rounded-xl border border-border p-5 sm:p-6">
+              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+                Latest update
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Nothing posted yet. The lead posts one a month while the work is
+                under way.
+              </p>
+            </div>
+          </div>
+        ))}
+
       {/* Activity, the way Linear keeps it beside a project: one line per
           event, newest first — every update posted, with its health as the
           icon and its text a click away, and the record's own milestones
           around them. The latest update is in the log too, even though it
           is the card above; a log with its newest entry missing is not one.
           Shown whenever there is anything to log, which for committed work
-          with no updates is only the day it was committed. */}
+          with no updates is only the day it was committed. Directly under
+          the latest card where there is one, with no rule between: the two
+          are one subject. */}
       {(updates.length > 0 || c.shippedAt || c.issued) && (
-        <section className="mt-12 border-t border-border pt-10">
+        <section
+          className={standing ? "mt-10" : "mt-10 border-t border-border pt-10"}
+        >
           <h2 className="text-sm font-medium">Activity</h2>
           <ol className="mt-4">
             {c.shippedAt && (
