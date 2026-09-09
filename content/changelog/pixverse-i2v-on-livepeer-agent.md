@@ -2,6 +2,14 @@
 title: Image-to-video with pixverse-i2v on Livepeer Agent
 summary: Turn a still into a short clip from any agent runtime. pixverse-i2v takes a source image and a prompt and returns up to eight seconds of video, priced per second of output and metered like every other capability.
 date: "2026-08-20"
+commitment: network-readiness-for-livepeer-agent
+authors:
+  - name: Qiang Han
+    slug: qiang-han
+    avatar: placeholder-2.jpg
+  - name: Mei Tanaka
+    slug: mei-tanaka
+    avatar: mei-tanaka.jpg
 ---
 
 Call it as `run_capability` with `capability: "pixverse-i2v"`, a `prompt`, a
