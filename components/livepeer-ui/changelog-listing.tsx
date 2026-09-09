@@ -148,7 +148,8 @@ function Owner({ row }: { row: RoundupRow }) {
 /**
  * Who and when, set in the foreground so they read as the facts of the
  * row, with what was said following in the muted voice. The break in
- * colour is the boundary between the record and the words.
+ * colour and a wider gap are the boundary between the record and the
+ * words; a third middot gave the words the weight of a third field.
  */
 function Meta({ row, date }: { row: RoundupRow; date: string }) {
   return (
@@ -171,7 +172,7 @@ function Month({ r }: { r: RoundupView }) {
       {r.shipped.map((row) => (
         <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
           <Meta row={row} date={row.shippedAt} />
-          {row.summary && <> · {row.summary}</>}
+          {row.summary && <span className="ml-2">{row.summary}</span>}
         </Row>
       ))}
       {r.reported.map((row) => (
@@ -182,8 +183,7 @@ function Month({ r }: { r: RoundupView }) {
           word={<HealthWord health={row.health} />}
         >
           <Meta row={row} date={row.date} />
-          {" · "}
-          {row.summary}
+          <span className="ml-2">{row.summary}</span>
         </Row>
       ))}
       {/* The accountability half: under way, and nothing said that month.
