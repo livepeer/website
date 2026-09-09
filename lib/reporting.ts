@@ -44,58 +44,76 @@ export type Initiative = {
   updates: Update[];
 };
 
-export type Group = "open" | "silent" | "closed";
+/**
+ * Where a project stands, in Linear's terms.
+ *
+ * Status is what the project says about itself: in progress, or completed
+ * with or without a retrospective. Health is what its latest update said,
+ * On track, At risk or Off track — and "No update" when there is none, or
+ * when the last one is old enough that repeating it would be a claim nobody
+ * has made lately. Overdue is the calendar's: an update was expected and has
+ * not arrived.
+ */
+export type HealthOrNone = Health | "no-update";
 
-export type Status =
-  | { group: "open"; label: "Updated" | "Update due" | "Preparing" }
-  | { group: "silent"; label: string; months: number }
-  | { group: "closed"; label: "Retro done" | "No retro" };
+export type Standing =
+  | {
+      status: "in-progress";
+      health: HealthOrNone;
+      /** Past the cadence with no new update. */
+      overdue: boolean;
+      /** Days since the last update, or since funding if there is none. */
+      age: number;
+      latest?: Update;
+    }
+  | { status: "completed"; retrospective?: string };
 
 const DAY = 86_400_000;
 
-/** After this long with no update, a body is silent rather than merely late. */
-const SILENT_AFTER_DAYS = 90;
+/** Past this, a reported health is stale and the project reads as No update. */
+const STALE_AFTER_DAYS = 90;
 
 export function daysSince(iso: string, now: Date): number {
   return Math.floor((now.getTime() - new Date(iso).getTime()) / DAY);
 }
 
-/**
- * Where a body stands, from its updates and the date. Closed is a fact the
- * body states (an end date); everything else is the calendar's verdict.
- */
-export function statusOf(initiative: Initiative, now: Date): Status {
-  if (initiative.ended) {
+export function standingOf(project: Initiative, now: Date): Standing {
+  if (project.ended) {
+    return { status: "completed", retrospective: project.retrospective };
+  }
+  const latest = project.updates[0];
+  if (!latest) {
+    const age = daysSince(project.started, now);
     return {
-      group: "closed",
-      label: initiative.retrospective ? "Retro done" : "No retro",
+      status: "in-progress",
+      health: "no-update",
+      overdue: age > project.cadenceDays,
+      age,
     };
   }
-  const latest = initiative.updates[0];
-  if (!latest) {
-    // Funded but has not reported yet. Preparing until the first update is
-    // due; after that it is late like anyone else.
-    const age = daysSince(initiative.started, now);
-    if (age <= initiative.cadenceDays)
-      return { group: "open", label: "Preparing" };
-    return silent(age);
-  }
   const age = daysSince(latest.date, now);
-  if (age >= SILENT_AFTER_DAYS) return silent(age);
-  if (age > initiative.cadenceDays)
-    return { group: "open", label: "Update due" };
-  return { group: "open", label: "Updated" };
+  return {
+    status: "in-progress",
+    health: age >= STALE_AFTER_DAYS ? "no-update" : latest.health,
+    overdue: age > project.cadenceDays,
+    age,
+    latest,
+  };
 }
 
-function silent(ageDays: number): Status {
-  const months = Math.max(3, Math.floor(ageDays / 30));
-  return { group: "silent", label: `${months} months silent`, months };
-}
+/** The order the in-progress table sorts by: what needs attention first. */
+export const HEALTH_ORDER: HealthOrNone[] = [
+  "off-track",
+  "at-risk",
+  "no-update",
+  "on-track",
+];
 
-export const HEALTH_LABEL: Record<Health, string> = {
+export const HEALTH_LABEL: Record<HealthOrNone, string> = {
   "on-track": "On track",
   "at-risk": "At risk",
   "off-track": "Off track",
+  "no-update": "No update",
 };
 
 const forum = (thread: string) => `https://forum.livepeer.org/t/${thread}`;
@@ -386,81 +404,5 @@ export const PLACEHOLDER_INITIATIVES: Initiative[] = [
     ended: "2025-10-31",
     cadenceDays: 31,
     updates: [],
-  },
-];
-
-// -- Wrap-ups ----------------------------------------------------------------
-
-/**
- * The monthly wrap-up: one per month, posted when the month closes. The
- * updates the bodies logged that month are listed by the site; the notes are
- * the part only a person writes — proposals, RFCs, threads, applications.
- */
-export type WrapUp = {
-  /** yyyy-mm. */
-  month: string;
-  /** The day it was posted. */
-  date: string;
-  notes: { text: string; href?: string }[];
-};
-
-/** Every update logged in a month, newest first, with its body. */
-export function updatesIn(
-  initiatives: Initiative[],
-  month: string
-): { initiative: Initiative; update: Update }[] {
-  return initiatives
-    .flatMap((initiative) =>
-      initiative.updates
-        .filter((update) => update.date.startsWith(month))
-        .map((update) => ({ initiative, update }))
-    )
-    .sort((a, b) => b.update.date.localeCompare(a.update.date));
-}
-
-/** Placeholder, from the August and July wrap-ups on roadmap.livepeer.org. */
-export const PLACEHOLDER_WRAPUPS: WrapUp[] = [
-  {
-    month: "2026-08",
-    date: "2026-09-08",
-    notes: [
-      {
-        text: "NE SPE II pre-proposal: $230k for Sep–Dec, four tracks with named owners; milestones land mid-September.",
-        href: forum("network-engineering-spe-ii-pre-proposal"),
-      },
-      {
-        text: "livepeer.bot: a shared LIP-118 reward caller on Arbitrum One; orchestrator keys can go cold.",
-        href: forum("livepeer-bot-reward-caller"),
-      },
-      {
-        text: "Treasury reward cut restart reopened. No pushback on restoring it; the debate is the cap.",
-        href: forum("treasury-reward-cut-restart"),
-      },
-    ],
-  },
-  {
-    month: "2026-07",
-    date: "2026-08-04",
-    notes: [
-      {
-        text: "LIP-118, Delegated Reward Calling: discussion thread opened by rickstaa.",
-        href: forum("lip-118-delegated-reward-calling"),
-      },
-      {
-        text: "Livepeer 2.0: “A Path to Livepeer 2.0” by dob, “The Initial Roadmap” by honestly_rich, and the Delegators, Node Operator and Validators 2.0 threads.",
-        href: forum("a-path-to-livepeer-2-0"),
-      },
-      {
-        text: "RFC: Agent Framework, The Five Milestones, by Qiang Han; comments open through August 10.",
-        href: forum("rfc-agent-framework"),
-      },
-      {
-        text: "New retroactive grant applications: Flux Klein over Trickle; vLLM real-time transcription.",
-      },
-      {
-        text: "Livepeer Testnet proposal posted by Sidestream.",
-        href: forum("livepeer-testnet-proposal"),
-      },
-    ],
   },
 ];

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 import { ReportingBoard } from "@/components/livepeer-ui/reporting-board";
-import { PLACEHOLDER_INITIATIVES, PLACEHOLDER_WRAPUPS } from "@/lib/reporting";
+import { PLACEHOLDER_INITIATIVES } from "@/lib/reporting";
 
 export const metadata: Metadata = {
   title: "Reporting | Livepeer",
   description:
-    "Every body the Livepeer network funds, and whether it is reporting.",
+    "Every project the Livepeer network funds, its health, and when its lead last reported.",
 };
 
 // A mock to be looked at before it is decided: placeholder rows in
@@ -16,8 +16,7 @@ export const metadata: Metadata = {
 export default function ReportingPage() {
   return (
     <ReportingBoard
-      initiatives={PLACEHOLDER_INITIATIVES}
-      wrapUps={PLACEHOLDER_WRAPUPS}
+      projects={PLACEHOLDER_INITIATIVES}
       now={new Date("2026-09-09T00:00:00Z")}
     />
   );
