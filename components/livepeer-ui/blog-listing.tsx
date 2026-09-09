@@ -108,9 +108,13 @@ export function BlogListing({
   // Split across two, max-w-page bounds the content box instead of the padded
   // box and the column runs 40px wider each side than the header and footer.
   return (
-    <div className="pt-16 pb-24">
+    <div className="pt-6 pb-24 sm:pt-8">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <h1 className="pt-8 text-page-title lg:pt-12">{heading}</h1>
+        {/* A step up from the page-title utility on both axes, by request: the
+            display-sm size with the regular weight rather than the 300 the
+            display utilities carry, so the heading holds its own over a row
+            of links and a search field. */}
+        <h1 className="text-display-sm font-normal">{heading}</h1>
 
         {/* One row, on every screen: the places on the left, the search on
             the right. On a phone the row wraps, so the search drops under the
