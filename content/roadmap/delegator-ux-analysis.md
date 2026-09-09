@@ -12,8 +12,8 @@ contributors:
     avatar: anjali-raman.jpg
   - name: Tom Whitfield
     avatar: tom-whitfield.jpg
-target: July 2026
-shippedAt: 2026-07-31
+target: August 2026
+shippedAt: 2026-08-21
 # Verbatim from the board item, not paraphrased.
 funding: "Network Engineering SPE, Priority 2 — Explorer: Participation & Observability"
 

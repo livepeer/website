@@ -10,7 +10,7 @@ contributors:
   - name: Andre Okafor
     avatar: andre-okafor.jpg
 target: Q3 2026
-shippedAt: 2026-07-31
+shippedAt: 2026-08-12
 related:
   - label: Livepeer on GitHub
     href: https://github.com/livepeer
