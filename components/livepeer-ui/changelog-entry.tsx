@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRightIcon } from "lucide-react";
 
 import { Authors } from "@/components/livepeer-ui/changelog-listing";
 import type { ChangelogEntry as Entry } from "@/lib/changelog";
@@ -48,24 +49,35 @@ export function ChangelogEntry({ entry }: { entry: Entry }) {
             </p>
           )}
 
-          <div className="mt-6 flex flex-col gap-3">
+          <div className="mt-6">
             <Authors people={entry.authors} />
-            {/* The commitment this delivers, when it was one: the roadmap
-                holds what was promised, by whom and with what funding, and
-                this page holds that it landed. */}
-            {entry.commitment && (
-              <p className="text-sm text-muted-foreground">
-                Delivers{" "}
-                <Link
-                  href={`/roadmap/${entry.commitment.slug}`}
-                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                >
-                  {entry.commitment.title}
-                </Link>{" "}
-                on the roadmap.
-              </p>
-            )}
           </div>
+
+          {/* The commitment this delivers, when it was one, as an object
+              rather than a sentence: the roadmap holds what was promised,
+              by whom and with what funding, and a reference to another
+              record wants the treatment records get on this site — a plate
+              with an eyebrow, a title and an arrow — not a caption under
+              the byline that a reader skims past. */}
+          {entry.commitment && (
+            <Link
+              href={`/roadmap/${entry.commitment.slug}`}
+              className="group mt-8 flex items-center justify-between gap-6 rounded-lg bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
+            >
+              <span className="min-w-0">
+                <span className="block font-mono text-xs text-muted-foreground">
+                  Roadmap · Shipped
+                </span>
+                <span className="mt-1.5 block text-base font-medium text-pretty">
+                  {entry.commitment.title}
+                </span>
+              </span>
+              <ArrowRightIcon
+                className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          )}
         </header>
 
         {entry.html && (
