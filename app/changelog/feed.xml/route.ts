@@ -7,8 +7,8 @@ import { HEALTH_LABEL } from "@/lib/updates";
  *
  * The one page on the site worth subscribing to. Built from the same
  * register and updates the page reads, so the feed and the page cannot
- * disagree, and revalidated on the same minute. The month under way is
- * republished as it fills in — a reader sees it change, which is the point.
+ * disagree, and revalidated on the same minute. A month is published when
+ * it ends, so a subscriber gets one entry a month and never a draft.
  */
 export const revalidate = 60;
 
@@ -20,6 +20,13 @@ function escape(text: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** The last day of a month, as an Atom timestamp. */
+function lastDay(month: string): string {
+  const [y, m] = month.split("-").map(Number);
+  const day = new Date(Date.UTC(y!, m!, 0)).getUTCDate();
+  return `${month}-${String(day).padStart(2, "0")}T00:00:00Z`;
 }
 
 function item(slug: string, title: string, note?: string): string {
@@ -54,7 +61,7 @@ function content(r: Roundup): string {
   }
   if (r.quiet.length > 0) {
     parts.push(
-      `<h3>${r.current ? "No update yet" : "No update"}</h3><ul>${r.quiet
+      `<h3>No update</h3><ul>${r.quiet
         .map((c) => item(c.slug, c.title, c.owner))
         .join("")}</ul>`
     );
@@ -67,17 +74,13 @@ export async function GET() {
     getRegister(),
     getUpdates(),
   ]);
-  const now = new Date();
-  const months = roundups(commitments, updates, now);
+  const months = roundups(commitments, updates, new Date());
 
   const items = months
     .map((r) => {
       const url = `${SITE}/changelog/${r.month}`;
-      // A finished month is dated to its last day; the one under way to now,
-      // since it is still being written.
-      const updated = r.current
-        ? now.toISOString()
-        : `${r.month}-${new Date(Date.UTC(Number(r.month.slice(0, 4)), Number(r.month.slice(5)), 0)).getUTCDate()}T00:00:00Z`;
+      // Dated to its last day, which is when it was published.
+      const updated = lastDay(r.month);
       return [
         "  <entry>",
         `    <title>${escape(r.title)}</title>`,
@@ -98,7 +101,7 @@ export async function GET() {
   <link href="${SITE}/changelog/feed.xml" rel="self"/>
   <link href="${SITE}/changelog"/>
   <id>${SITE}/changelog</id>
-  <updated>${now.toISOString()}</updated>
+  <updated>${months[0] ? lastDay(months[0].month) : new Date().toISOString()}</updated>
 ${items}
 </feed>
 `;

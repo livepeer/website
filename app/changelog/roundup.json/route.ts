@@ -1,4 +1,4 @@
-import { MONTH, roundupFor, roundups } from "@/lib/changelog";
+import { MONTH, roundupFor } from "@/lib/changelog";
 import { HEALTH_LABEL } from "@/lib/health";
 import { getRegister, getUpdates } from "@/lib/register";
 import type { Commitment } from "@/lib/roadmap";
@@ -9,8 +9,10 @@ import type { Commitment } from "@/lib/roadmap";
  * The page shows who has not reported; nobody is told they are on that
  * list. A weekly post to a Discord channel, or a reminder in Notion, is
  * where a roundup turns into a habit, and this is the list such a thing
- * reads. The month under way by default, or `?month=yyyy-mm`. Built from
- * the same register and updates the page reads, on the same minute.
+ * reads. The month under way by default — the one month the page does not
+ * publish, because a nudge is only useful before the month closes — or
+ * `?month=yyyy-mm`. Built from the same register and updates the page
+ * reads, on the same minute.
  */
 export const revalidate = 60;
 
@@ -36,10 +38,12 @@ export async function GET(request: Request) {
   if (wanted && !MONTH.test(wanted)) {
     return Response.json({ error: "month must be yyyy-mm" }, { status: 400 });
   }
-  const r = wanted
-    ? roundupFor(wanted, commitments, updates, now)
-    : (roundups(commitments, updates, now)[0] ??
-      roundupFor(now.toISOString().slice(0, 7), commitments, updates, now));
+  const r = roundupFor(
+    wanted ?? now.toISOString().slice(0, 7),
+    commitments,
+    updates,
+    now
+  );
 
   return Response.json(
     {

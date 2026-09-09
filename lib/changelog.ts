@@ -13,6 +13,11 @@ import { HEALTH_ORDER, type HealthOrNone, type UpdateSummary } from "./health";
  * where a missed month is visible.
  *
  * Months are addressed as yyyy-mm, so /changelog/2026-08 is August 2026.
+ * A month is published when it ends: a roundup is a report on a finished
+ * month, and one that changed under the reader as the month went on would
+ * be a dashboard, not a log. `roundups` therefore stops at last month;
+ * `roundupFor` will still compose the month under way for whatever nudges
+ * the silent before it closes (app/changelog/roundup.json).
  */
 
 export const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
@@ -22,7 +27,7 @@ export type Roundup = {
   month: string;
   /** "August 2026". */
   title: string;
-  /** The month `now` falls in, which is not over yet. */
+  /** The month `now` falls in, which is not over yet. Never published. */
   current: boolean;
   /**
    * Commitments that shipped this month, newest first, each with the last
@@ -90,7 +95,8 @@ function healthRank(health: HealthOrNone): number {
 }
 
 /**
- * Every month with something to say, newest first.
+ * Every finished month with something to say, newest first. The month
+ * under way is left out: it is published when it ends.
  *
  * A commitment is under way in a month if its history had begun by the end
  * of it and it had not shipped by then. Committed work that has not started
@@ -113,7 +119,7 @@ export function roundups(
   if (!firstMonth) return [];
 
   const months: string[] = [];
-  for (let m = firstMonth; m <= thisMonth; m = nextMonth(m)) months.push(m);
+  for (let m = firstMonth; m < thisMonth; m = nextMonth(m)) months.push(m);
 
   return months
     .map((month) => roundupFor(month, commitments, updates, now))

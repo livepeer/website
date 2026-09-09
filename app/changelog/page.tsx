@@ -29,6 +29,7 @@ export default async function ChangelogPage() {
       feedHref={changelog.feedHref}
       searchPlaceholder={changelog.searchPlaceholder}
       emptyMessage={changelog.emptyMessage}
+      noMonthsMessage={changelog.noMonthsMessage}
     />
   );
 }

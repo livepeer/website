@@ -28,8 +28,6 @@ export type RoundupView = {
   month: string;
   /** "August 2026". */
   title: string;
-  /** Still being written: the month `now` falls in. */
-  current: boolean;
   shipped: (RoundupRow & { shippedAt: string; summary?: string })[];
   reported: (RoundupRow & {
     health: Health;
@@ -121,7 +119,7 @@ function Tally({ r }: { r: RoundupView }) {
       {r.quiet.length > 0 && (
         <li className="flex items-center gap-1.5 tabular-nums">
           <HealthIcon health="no-update" />
-          {r.quiet.length} {r.current ? "not yet reported" : "no update"}
+          {r.quiet.length} no update
         </li>
       )}
     </ul>
@@ -164,10 +162,9 @@ function Month({ r }: { r: RoundupView }) {
           {row.summary}
         </Row>
       ))}
-      {/* The accountability half: under way, and nothing said this month.
+      {/* The accountability half: under way, and nothing said that month.
           The owner is named here and nowhere else in the list, because
-          this is the line that is about them. Softer in the month under
-          way, which is not over. */}
+          this is the line that is about them. */}
       {r.quiet.map((row) => (
         <Row
           key={row.slug}
@@ -175,7 +172,7 @@ function Month({ r }: { r: RoundupView }) {
           icon={<HealthIcon health="no-update" />}
           word={<HealthWord health="no-update" />}
         >
-          {owner(row)} has not posted {r.current ? "yet " : ""}this month.
+          {owner(row)} did not post this month.
         </Row>
       ))}
     </ol>
@@ -208,6 +205,7 @@ export function ChangelogListing({
   feedHref,
   searchPlaceholder,
   emptyMessage,
+  noMonthsMessage,
 }: {
   roundups: RoundupView[];
   /** Months not shown in full, as links. The index passes these. */
@@ -223,6 +221,8 @@ export function ChangelogListing({
   feedHref?: string;
   searchPlaceholder: string;
   emptyMessage: string;
+  /** For a site with no finished month yet: when the first one lands. */
+  noMonthsMessage: string;
 }) {
   const [query, setQuery] = useState("");
 
@@ -262,7 +262,7 @@ export function ChangelogListing({
 
           {shown.length === 0 ? (
             <p className="py-16 text-center text-reading-body text-muted-foreground">
-              {emptyMessage}
+              {roundups.length === 0 ? noMonthsMessage : emptyMessage}
             </p>
           ) : (
             <ol className="divide-y divide-border">
@@ -282,9 +282,6 @@ export function ChangelogListing({
                       >
                         {r.title}
                       </Link>
-                      {r.current && (
-                        <span className="text-muted-foreground"> so far</span>
-                      )}
                     </h2>
                     <Tally r={r} />
                   </div>

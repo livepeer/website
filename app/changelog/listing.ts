@@ -18,6 +18,8 @@ export const changelog = {
     "Month by month: what shipped on the roadmap, how the work under way is going, and who has not reported.",
   searchPlaceholder: "Search commitments",
   emptyMessage: "Nothing matches that search.",
+  noMonthsMessage:
+    "The first roundup is published when this month ends. Until then, the roadmap shows how each commitment is going.",
   /** How many months the index shows in full before listing the rest. */
   recentMonths: 3,
 };
@@ -49,7 +51,6 @@ export function toView(r: Roundup): RoundupView {
   return {
     month: r.month,
     title: r.title,
-    current: r.current,
     shipped: r.shipped.map(({ commitment: c, update }) => ({
       ...row(c),
       shippedAt: c.shippedAt!,

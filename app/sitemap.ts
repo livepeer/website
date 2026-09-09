@@ -19,17 +19,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getRegister(),
     getUpdates(),
   ]);
-  // One page per month with something in it. The month under way changes
-  // whenever an update is posted; a finished month is settled.
-  const now = new Date();
+  // One page per finished month with something in it; a month is
+  // published when it ends and settled from then on.
   const changelogEntries: MetadataRoute.Sitemap = roundups(
     commitments,
     updates,
-    now
+    new Date()
   ).map((r) => ({
     url: `${BASE_URL}/changelog/${r.month}`,
-    lastModified: r.current ? now : new Date(`${r.month}-01T00:00:00Z`),
-    changeFrequency: r.current ? "weekly" : "monthly",
+    lastModified: new Date(`${r.month}-01T00:00:00Z`),
+    changeFrequency: "yearly",
     priority: 0.5,
   }));
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
