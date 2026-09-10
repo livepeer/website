@@ -54,7 +54,11 @@ const HEALTH_FACET: HealthOrNone[] = [
  * and handed in beside the commitment rather than stored on it: the register
  * is a fact about the work, and health is a fact about the reporting.
  */
-export type RoadmapItem = Commitment & { standing?: Standing };
+export type RoadmapItem = Commitment & {
+  standing?: Standing;
+  /** For shipped work: whether a retrospective has been posted. */
+  retro?: boolean;
+};
 
 // The live quarter, read on the client and cached: useSyncExternalStore
 // needs a stable snapshot, and the quarter does not change within a visit.
@@ -120,9 +124,11 @@ function Label({
 function StateMark({
   state,
   standing,
+  retro,
 }: {
   state: Commitment["state"];
   standing?: Standing;
+  retro?: boolean;
 }) {
   const building = state === "building";
   return (
@@ -154,6 +160,19 @@ function StateMark({
             ·
           </span>
           <HealthMark health={standing.health} />
+        </>
+      )}
+      {/* Behind us the question is whether the closing post was written.
+          "No retro" in the foreground, since it is the one that asks
+          something of someone. */}
+      {state === "shipped" && retro !== undefined && (
+        <>
+          <span aria-hidden="true" className="text-muted-foreground/50">
+            ·
+          </span>
+          <span className={cn(!retro && "text-foreground")}>
+            {retro ? "Retro done" : "No retro"}
+          </span>
         </>
       )}
     </span>
@@ -514,7 +533,7 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
           roster exists when it does not. They sit above the stretched link so
           a face still goes to its own profile. */}
         <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
-          <StateMark state={c.state} standing={c.standing} />
+          <StateMark state={c.state} standing={c.standing} retro={c.retro} />
           {/* z-[1], not z-10. This only has to clear the stretched link's
               ::before, which carries no z-index of its own — at z-10 it tied
               with the sticky quarter band above and won on document order,

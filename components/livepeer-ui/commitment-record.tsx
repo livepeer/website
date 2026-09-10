@@ -10,6 +10,7 @@ import {
   CircleDot,
   Clock,
   Link2,
+  NotebookPen,
 } from "lucide-react";
 
 import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
@@ -22,8 +23,8 @@ import { shippedPeriod } from "@/lib/roadmap";
 import {
   HEALTH_LABEL,
   STALE_AFTER_DAYS,
+  type Post,
   type Standing,
-  type Update,
 } from "@/lib/health";
 
 /**
@@ -132,7 +133,7 @@ function UpdateCard({
   eyebrow,
   note,
 }: {
-  update: Update;
+  update: Post;
   when: string;
   /** "Latest update", on the card that leads the record. */
   eyebrow?: string;
@@ -159,7 +160,14 @@ function UpdateCard({
       )}
       <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
         <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <HealthMark health={u.health} className="font-medium" />
+          {u.kind === "update" ? (
+            <HealthMark health={u.health} className="font-medium" />
+          ) : (
+            <span className="inline-flex items-center gap-1.5 font-medium">
+              <NotebookPen className="size-4" aria-hidden />
+              Retrospective
+            </span>
+          )}
           {u.author && (
             <span className="text-muted-foreground">
               <Credit person={u.author} />
@@ -204,8 +212,8 @@ export function CommitmentRecord({
    * Absent for shipped and committed work, which has no health to report.
    */
   standing?: Standing;
-  /** The updates posted on this commitment, newest first, with write-ups. */
-  updates?: Update[];
+  /** The posts on this commitment, newest first, with write-ups. */
+  updates?: Post[];
   /**
    * Whether this is the panel over the register rather than a page.
    *
@@ -221,7 +229,14 @@ export function CommitmentRecord({
   // The card that leads the record is the newest update, for work under way.
   // Everything older runs under the write-up. Shipped and committed work has
   // no standing, so its updates, if any, are all history.
-  const latest = standing ? updates[0] : undefined;
+  const latest = standing
+    ? updates.find((u) => u.kind === "update")
+    : undefined;
+  // Shipped work leads with its retrospective instead, or with the fact
+  // that none has been written: the closing post is what a finished
+  // commitment owes, the way an open one owes a monthly update.
+  const retro =
+    c.state === "shipped" ? updates.find((u) => u.kind === "retro") : undefined;
   return (
     <>
       {/* Notion's page title: heavy, tight, and the largest thing on the
@@ -356,6 +371,30 @@ export function CommitmentRecord({
           the card says so on its right — the word the lead chose is still
           the last word, but it is no longer a current one — and with
           nothing ever posted the card says that instead of hiding. */}
+      {c.state === "shipped" &&
+        (retro ? (
+          <div className="mt-10 border-t border-border pt-10">
+            <UpdateCard
+              update={retro}
+              when={shortDate(retro.date, now)}
+              eyebrow="Retrospective"
+            />
+          </div>
+        ) : (
+          <div className="mt-10 border-t border-border pt-10">
+            <div className="rounded-xl border border-border p-5 sm:p-6">
+              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+                Retrospective
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                None posted yet. A retrospective closes a shipped commitment:
+                what was delivered against what was committed, what it cost,
+                what was learned.
+              </p>
+            </div>
+          </div>
+        ))}
+
       {standing &&
         (latest ? (
           <div className="mt-10 border-t border-border pt-10">
@@ -395,43 +434,87 @@ export function CommitmentRecord({
           are one subject. */}
       {(updates.length > 0 || c.shippedAt || c.issued) && (
         <section
-          className={standing ? "mt-10" : "mt-10 border-t border-border pt-10"}
+          className={
+            standing || c.state === "shipped"
+              ? "mt-10"
+              : "mt-10 border-t border-border pt-10"
+          }
         >
           <h2 className="text-sm font-medium">Activity</h2>
           <ol className="mt-4">
-            {c.shippedAt && (
-              <ActivityRow
-                icon={<CircleCheck className="size-4" aria-hidden />}
-                actor={c.owner}
-                verb="shipped it"
-                date={shortDate(c.shippedAt, now)}
-              />
-            )}
-            {updates.map((u) => (
-              <ActivityRow
-                key={`${u.date}-${u.summary}`}
-                icon={<HealthIcon health={u.health} />}
-                actor={u.author?.name ?? c.owner}
-                verb={`posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`}
-                date={shortDate(u.date, now)}
-              >
-                <p className="text-sm text-pretty">{u.summary}</p>
-                {u.html && (
-                  <div
-                    className="reading-prose mt-2 text-sm!"
-                    dangerouslySetInnerHTML={{ __html: u.html }}
-                  />
-                )}
-              </ActivityRow>
-            ))}
-            {c.issued && (
-              <ActivityRow
-                icon={<CircleDot className="size-4" aria-hidden />}
-                actor={c.owner}
-                verb="committed to it"
-                date={shortDate(c.issued, now)}
-              />
-            )}
+            {/* One log in date order, newest first: the posts, and the
+                record's own milestones among them. Pinning "shipped it" to
+                the top put it above a retrospective written the day after,
+                which is not the order things happened in. */}
+            {[
+              ...(c.shippedAt
+                ? [
+                    {
+                      key: "shipped",
+                      date: c.shippedAt,
+                      node: (
+                        <ActivityRow
+                          key="shipped"
+                          icon={<CircleCheck className="size-4" aria-hidden />}
+                          actor={c.owner}
+                          verb="shipped it"
+                          date={shortDate(c.shippedAt, now)}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+              ...updates.map((u) => ({
+                key: `${u.kind}-${u.date}-${u.summary}`,
+                date: u.date,
+                node: (
+                  <ActivityRow
+                    key={`${u.kind}-${u.date}-${u.summary}`}
+                    icon={
+                      u.kind === "update" ? (
+                        <HealthIcon health={u.health} />
+                      ) : (
+                        <NotebookPen className="size-4" aria-hidden />
+                      )
+                    }
+                    actor={u.author?.name ?? c.owner}
+                    verb={
+                      u.kind === "update"
+                        ? `posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`
+                        : "posted a retrospective"
+                    }
+                    date={shortDate(u.date, now)}
+                  >
+                    <p className="text-sm text-pretty">{u.summary}</p>
+                    {u.html && (
+                      <div
+                        className="reading-prose mt-2 text-sm!"
+                        dangerouslySetInnerHTML={{ __html: u.html }}
+                      />
+                    )}
+                  </ActivityRow>
+                ),
+              })),
+              ...(c.issued
+                ? [
+                    {
+                      key: "issued",
+                      date: c.issued,
+                      node: (
+                        <ActivityRow
+                          key="issued"
+                          icon={<CircleDot className="size-4" aria-hidden />}
+                          actor={c.owner}
+                          verb="committed to it"
+                          date={shortDate(c.issued, now)}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+            ]
+              .sort((a, b) => b.date.localeCompare(a.date))
+              .map((e) => e.node)}
           </ol>
         </section>
       )}

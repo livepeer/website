@@ -41,21 +41,39 @@ export const HEALTH_ORDER: HealthOrNone[] = [
   "on-track",
 ];
 
-/** One update, without its write-up. What every list needs. */
-export type UpdateSummary = {
+/** What every post has, whichever kind it is; without its write-up. */
+type PostBase = {
   /** The commitment it reports on, by the slug its record page has. */
   commitment: string;
   /** ISO yyyy-mm-dd: the day it was posted. */
   date: string;
-  health: Health;
-  /** The update in one line, in the lead's own words. */
+  /** The post in one line, in the lead's own words. */
   summary: string;
   /** Who posted it. Optional — a team can post as itself. */
   author?: Person;
   draft: boolean;
 };
 
-/** An update with its write-up, rendered. Empty when there is none. */
+/**
+ * The monthly post while the work is under way. Carries a health, and is
+ * what the roadmap reads a commitment's standing from.
+ */
+export type UpdateSummary = PostBase & { kind: "update"; health: Health };
+
+/**
+ * The one closing post once the work has shipped: what was delivered
+ * against what was committed, what it cost, what was learned. No health —
+ * "on track" means nothing about something finished — which is why it is a
+ * kind of its own rather than an update that happens to come last. Marked,
+ * not inferred: a retro is often written the day something ships and an
+ * ordinary "it's out" lands after, so no date rule would sort them.
+ */
+export type RetroSummary = PostBase & { kind: "retro" };
+
+export type PostSummary = UpdateSummary | RetroSummary;
+
+/** A post with its write-up, rendered. Empty when there is none. */
+export type Post = PostSummary & { html: string };
 export type Update = UpdateSummary & { html: string };
 
 /**
@@ -89,14 +107,30 @@ export type Standing = {
 
 export function standingOf(
   commitment: Commitment,
-  updates: UpdateSummary[],
+  posts: PostSummary[],
   now: Date
 ): Standing | undefined {
   if (commitment.state !== "building") return undefined;
-  const latest = updates
-    .filter((u) => u.commitment === commitment.slug)
+  const latest = posts
+    .filter(
+      (u): u is UpdateSummary =>
+        u.kind === "update" && u.commitment === commitment.slug
+    )
     .sort((a, b) => b.date.localeCompare(a.date))[0];
   if (!latest) return { health: "no-update" };
   const stale = daysBetween(latest.date, now) > STALE_AFTER_DAYS;
   return { health: stale ? "no-update" : latest.health, latest };
+}
+
+/** The retrospective on a shipped commitment, if one has been posted. */
+export function retroOf(
+  commitment: Commitment,
+  posts: PostSummary[]
+): RetroSummary | undefined {
+  return posts
+    .filter(
+      (u): u is RetroSummary =>
+        u.kind === "retro" && u.commitment === commitment.slug
+    )
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
 }

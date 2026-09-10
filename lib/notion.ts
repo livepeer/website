@@ -34,7 +34,7 @@ import {
   type OrgType,
 } from "./organizations";
 import type { PersonRecord } from "./people";
-import type { Health, Update, UpdateSummary } from "./health";
+import type { Health, Post, PostSummary } from "./health";
 
 /**
  * The commitment register, read from Notion.
@@ -1044,7 +1044,7 @@ function toUpdateSummary(
   row: Json,
   people: Map<string, Person>,
   commitments: Map<string, CommitmentRef>
-): UpdateSummary {
+): PostSummary {
   const p = props(row);
   const summary = text(p.Name);
   const where = `Roadmap updates → ${summary || (row.url as string)}`;
@@ -1078,9 +1078,19 @@ function toUpdateSummary(
     );
   }
 
+  // Empty means Update: the column arrived after the first rows did.
+  const kindName = selectName(p.Kind) ?? "Update";
+  if (kindName !== "Update" && kindName !== "Retrospective") {
+    throw new Error(
+      `${where}: Kind is ${JSON.stringify(kindName)}. It must be Update or ` +
+        `Retrospective.`
+    );
+  }
+
+  // A retrospective carries no health; see RetroSummary in lib/health.ts.
   const healthName = selectName(p.Health);
   const health = healthName ? HEALTH_BY_NOTION[healthName] : undefined;
-  if (!health) {
+  if (kindName === "Update" && !health) {
     throw new Error(
       `${where}: Health is ${JSON.stringify(healthName ?? null)}, not one of ` +
         `${Object.keys(HEALTH_BY_NOTION).join(", ")}.`
@@ -1108,18 +1118,20 @@ function toUpdateSummary(
     );
   }
 
-  return {
+  const base = {
     commitment: ref.slug,
     date,
-    health,
     summary,
     author,
     draft: status === "Draft",
   };
+  return kindName === "Retrospective"
+    ? { ...base, kind: "retro" }
+    : { ...base, kind: "update", health: health! };
 }
 
 /** Every update, newest first. Throws rather than degrading. */
-export async function getNotionUpdates(): Promise<UpdateSummary[]> {
+export async function getNotionUpdates(): Promise<PostSummary[]> {
   const [rows, people, commitments] = await Promise.all([
     queryAll(UPDATES_DB),
     readPeople(),
@@ -1137,7 +1149,7 @@ export async function getNotionUpdates(): Promise<UpdateSummary[]> {
  */
 export async function getNotionCommitmentUpdates(
   slug: string
-): Promise<Update[]> {
+): Promise<Post[]> {
   const [rows, people, commitments] = await Promise.all([
     queryAll(UPDATES_DB),
     readPeople(),

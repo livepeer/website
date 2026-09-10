@@ -23,8 +23,8 @@ import { getCommitments, type Commitment } from "./roadmap";
 import {
   getMarkdownCommitmentUpdates,
   getMarkdownUpdates,
-  type Update,
-  type UpdateSummary,
+  type Post,
+  type PostSummary,
 } from "./updates";
 
 /**
@@ -112,7 +112,7 @@ export async function getFundingPaths(): Promise<FundingPath[]> {
  * a register read from markdown would report on records the page has never
  * heard of. Drafts are filtered here, as posts are, and by the same rule.
  */
-export async function getUpdates(): Promise<UpdateSummary[]> {
+export async function getUpdates(): Promise<PostSummary[]> {
   const updates = hasNotionCredentials()
     ? await getNotionUpdates()
     : getMarkdownUpdates();
@@ -120,7 +120,7 @@ export async function getUpdates(): Promise<UpdateSummary[]> {
 }
 
 /** One commitment's updates with their write-ups, newest first. */
-export async function getCommitmentUpdates(slug: string): Promise<Update[]> {
+export async function getCommitmentUpdates(slug: string): Promise<Post[]> {
   const updates = hasNotionCredentials()
     ? await getNotionCommitmentUpdates(slug)
     : await getMarkdownCommitmentUpdates(slug);

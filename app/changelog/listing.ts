@@ -51,10 +51,11 @@ export function toView(r: Roundup): RoundupView {
   return {
     month: r.month,
     title: r.title,
-    shipped: r.shipped.map(({ commitment: c, update }) => ({
+    // The retro's line where there is one, else the lead's last update.
+    shipped: r.shipped.map(({ commitment: c, retro, update }) => ({
       ...row(c),
       shippedAt: c.shippedAt!,
-      summary: update?.summary,
+      summary: retro?.summary ?? update?.summary,
     })),
     reported: r.reported.map(({ commitment, update }) => ({
       ...row(commitment),

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Roadmap } from "@/components/livepeer-ui/roadmap";
 import { getRegister, getUpdates } from "@/lib/register";
 import { getWorkstreamsInUse } from "@/lib/roadmap";
-import { standingOf } from "@/lib/updates";
+import { retroOf, standingOf } from "@/lib/updates";
 
 /**
  * Named, then claimed.
@@ -97,6 +97,7 @@ export default async function RoadmapPage() {
   const items = commitments.map((c) => ({
     ...c,
     standing: standingOf(c, updates, now),
+    retro: c.state === "shipped" ? Boolean(retroOf(c, updates)) : undefined,
   }));
 
   return (

@@ -5,7 +5,7 @@ import matter from "gray-matter";
 import { byNewest, renderMarkdown } from "./blog";
 import { slugify } from "./organizations";
 import type { Person } from "./roadmap";
-import type { Health, Update, UpdateSummary } from "./health";
+import type { Health, Post, PostSummary } from "./health";
 
 export * from "./health";
 
@@ -50,7 +50,7 @@ function readAuthor(value: unknown, where: string): Person | undefined {
   };
 }
 
-function readFile(file: string): { summary: UpdateSummary; body: string } {
+function readFile(file: string): { summary: PostSummary; body: string } {
   const where = `content/updates/${file}`;
   const { data, content } = matter(
     fs.readFileSync(path.join(UPDATES_DIR, file), "utf8")
@@ -68,6 +68,30 @@ function readFile(file: string): { summary: UpdateSummary; body: string } {
   if (!data.date) throw new Error(`${where}: no date.`);
   const date = new Date(data.date).toISOString().slice(0, 10);
 
+  const summary = String(data.summary ?? "").trim();
+  if (!summary) throw new Error(`${where}: no summary.`);
+
+  const kindName = String(data.kind ?? "update").toLowerCase();
+  if (!["update", "retrospective", "retro"].includes(kindName)) {
+    throw new Error(
+      `${where}: kind ${JSON.stringify(data.kind)} is not update or ` +
+        `retrospective.`
+    );
+  }
+  const base = {
+    commitment,
+    date,
+    summary,
+    author: readAuthor(data.author, where),
+    draft: data.draft ?? false,
+  };
+  const body = content.trim();
+
+  // A retrospective carries no health; see RetroSummary.
+  if (kindName !== "update") {
+    return { summary: { ...base, kind: "retro" }, body };
+  }
+
   const health = HEALTH_BY_NAME[String(data.health ?? "").toLowerCase()];
   if (!health) {
     throw new Error(
@@ -75,31 +99,17 @@ function readFile(file: string): { summary: UpdateSummary; body: string } {
         `on track, at risk, off track.`
     );
   }
-
-  const summary = String(data.summary ?? "").trim();
-  if (!summary) throw new Error(`${where}: no summary.`);
-
-  return {
-    summary: {
-      commitment,
-      date,
-      health,
-      summary,
-      author: readAuthor(data.author, where),
-      draft: data.draft ?? false,
-    },
-    body: content.trim(),
-  };
+  return { summary: { ...base, kind: "update", health }, body };
 }
 
-export function getMarkdownUpdates(): UpdateSummary[] {
+export function getMarkdownUpdates(): PostSummary[] {
   return byNewest(filesOnDisk().map((file) => readFile(file).summary));
 }
 
 /** One commitment's updates with their write-ups, newest first. */
 export async function getMarkdownCommitmentUpdates(
   slug: string
-): Promise<Update[]> {
+): Promise<Post[]> {
   const mine = filesOnDisk()
     .map(readFile)
     .filter(({ summary }) => summary.commitment === slug);

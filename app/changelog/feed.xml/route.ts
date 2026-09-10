@@ -40,8 +40,8 @@ function content(r: Roundup): string {
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped
-        .map(({ commitment: c, update }) =>
-          item(c.slug, c.title, update ? update.summary : c.owner)
+        .map(({ commitment: c, retro, update }) =>
+          item(c.slug, c.title, retro?.summary ?? update?.summary ?? c.owner)
         )
         .join("")}</ul>`
     );

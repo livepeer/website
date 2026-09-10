@@ -1,5 +1,11 @@
 import type { Commitment } from "./roadmap";
-import { HEALTH_ORDER, type HealthOrNone, type UpdateSummary } from "./health";
+import {
+  HEALTH_ORDER,
+  type HealthOrNone,
+  type PostSummary,
+  type RetroSummary,
+  type UpdateSummary,
+} from "./health";
 
 /**
  * The changelog: one roundup per month, generated.
@@ -30,10 +36,15 @@ export type Roundup = {
   /** The month `now` falls in, which is not over yet. Never published. */
   current: boolean;
   /**
-   * Commitments that shipped this month, newest first, each with the last
-   * thing its lead said before it shipped, if anything was said.
+   * Commitments that shipped this month, newest first, each with its
+   * retrospective if one had been posted by the month's end, and the last
+   * update its lead posted before it shipped, if anything was said.
    */
-  shipped: { commitment: Commitment; update?: UpdateSummary }[];
+  shipped: {
+    commitment: Commitment;
+    retro?: RetroSummary;
+    update?: UpdateSummary;
+  }[];
   /** Under way with an update posted this month, what needs attention first. */
   reported: { commitment: Commitment; update: UpdateSummary }[];
   /** Under way with nothing posted this month. */
@@ -77,7 +88,7 @@ function nextMonth(month: string): string {
  */
 function activeFrom(
   c: Commitment,
-  updates: UpdateSummary[],
+  updates: PostSummary[],
   today: string
 ): string | undefined {
   if (c.issued) return c.issued;
@@ -104,7 +115,7 @@ function healthRank(health: HealthOrNone): number {
  */
 export function roundups(
   commitments: Commitment[],
-  updates: UpdateSummary[],
+  updates: PostSummary[],
   now: Date
 ): Roundup[] {
   const today = now.toISOString().slice(0, 10);
@@ -130,7 +141,7 @@ export function roundups(
 export function roundupFor(
   month: string,
   commitments: Commitment[],
-  updates: UpdateSummary[],
+  updates: PostSummary[],
   now: Date
 ): Roundup {
   const today = now.toISOString().slice(0, 10);
@@ -141,19 +152,32 @@ export function roundupFor(
     .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!))
     .map((commitment) => ({
       commitment,
+      // The retrospective, if one had been posted by the month's end: an
+      // entry is the month as it ended, so a retro written later belongs to
+      // the record page, not to this month.
+      retro: updates
+        .filter(
+          (u): u is RetroSummary =>
+            u.kind === "retro" &&
+            u.commitment === commitment.slug &&
+            u.date <= end
+        )
+        .sort((a, b) => b.date.localeCompare(a.date))[0],
       // The newest update posted up to the day it shipped — the lead's last
       // word on it, from whichever month it was said in.
       update: updates
         .filter(
-          (u) =>
-            u.commitment === commitment.slug && u.date <= commitment.shippedAt!
+          (u): u is UpdateSummary =>
+            u.kind === "update" &&
+            u.commitment === commitment.slug &&
+            u.date <= commitment.shippedAt!
         )
         .sort((a, b) => b.date.localeCompare(a.date))[0],
     }));
 
   const posted = new Map<string, UpdateSummary>();
   for (const u of updates) {
-    if (monthOf(u.date) !== month) continue;
+    if (u.kind !== "update" || monthOf(u.date) !== month) continue;
     const held = posted.get(u.commitment);
     if (!held || held.date < u.date) posted.set(u.commitment, u);
   }

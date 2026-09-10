@@ -51,11 +51,17 @@ export async function GET(request: Request) {
       title: r.title,
       current: r.current,
       url: `${SITE}/changelog/${r.month}`,
-      shipped: r.shipped.map(({ commitment, update }) => ({
+      shipped: r.shipped.map(({ commitment, retro, update }) => ({
         ...ref(commitment),
         shippedAt: commitment.shippedAt,
+        retro: retro?.summary,
         lastWord: update?.summary,
       })),
+      // Shipped that month with no retrospective posted: the other thing
+      // worth a nudge, beside the silent.
+      noRetro: r.shipped
+        .filter(({ retro }) => !retro)
+        .map(({ commitment }) => ref(commitment)),
       reported: r.reported.map(({ commitment, update }) => ({
         ...ref(commitment),
         health: update.health,
