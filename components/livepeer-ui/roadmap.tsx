@@ -21,10 +21,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HealthMark } from "@/components/livepeer-ui/health";
+import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
-import { HEALTH_ORDER, type Standing } from "@/lib/health";
+import {
+  HEALTH_LABEL,
+  HEALTH_ORDER,
+  type HealthOrNone,
+  type Standing,
+} from "@/lib/health";
+
+/**
+ * The health facet, in reading order rather than attention order: a facet
+ * is a key as much as a filter, and On track first is how the scale reads.
+ * All four are always offered, with their counts — "Off track 0" is news.
+ */
+const HEALTH_FACET: HealthOrNone[] = [
+  "on-track",
+  "at-risk",
+  "off-track",
+  "no-update",
+];
 
 /**
  * A commitment with where it stands, as the page computes it.
@@ -687,11 +704,14 @@ function Group({
  */
 function FilterRow({
   label,
+  icon,
   count,
   active,
   onChange,
 }: {
   label: string;
+  /** The row's mark, between the box and the word — the health facet's disc. */
+  icon?: React.ReactNode;
   count: number;
   active: boolean;
   onChange: (v: boolean) => void;
@@ -715,6 +735,7 @@ function FilterRow({
         disabled={empty}
         onCheckedChange={(checked) => onChange(checked === true)}
       />
+      {icon}
       <span className="whitespace-nowrap">{label}</span>
       <span
         className={cn(
@@ -788,6 +809,9 @@ function Filters({
   buildingOnly,
   onBuildingOnlyChange,
   buildingCount,
+  healths,
+  healthCounts,
+  onToggleHealth,
   query,
   onQueryChange,
   workstreams,
@@ -803,6 +827,9 @@ function Filters({
   buildingOnly: boolean;
   onBuildingOnlyChange: (v: boolean) => void;
   buildingCount: number;
+  healths: HealthOrNone[];
+  healthCounts: Record<HealthOrNone, number>;
+  onToggleHealth: (h: HealthOrNone) => void;
   query: string;
   onQueryChange: (v: string) => void;
   workstreams: string[];
@@ -812,9 +839,16 @@ function Filters({
   onClear: () => void;
   suggestionsHref: string;
 }) {
-  const filtering = selected.length > 0 || query.length > 0 || buildingOnly;
+  const filtering =
+    selected.length > 0 ||
+    healths.length > 0 ||
+    query.length > 0 ||
+    buildingOnly;
   const active =
-    selected.length + (buildingOnly ? 1 : 0) + (query.length > 0 ? 1 : 0);
+    selected.length +
+    healths.length +
+    (buildingOnly ? 1 : 0) +
+    (query.length > 0 ? 1 : 0);
 
   // Collapsed on a phone, open from lg up where the rail has its own column.
   //
@@ -911,6 +945,32 @@ function Filters({
           onChange={onGroupingChange}
           className="mt-3 -ml-3 lg:hidden lg:mt-4"
         />
+
+        {/* Health, the way Linear filters projects: the four words of the
+            scale with their counts, which is also the tally Mehrdad's board
+            put in its footer — "4 up to date · 4 silent" — read here as a
+            facet, so the silent ones are one click away. Roadmap only:
+            health is a fact about work under way, and selecting one narrows
+            the list to that. */}
+        {view === "roadmap" && (
+          <div className="mt-6 lg:mt-8">
+            <div className="mb-1.5">
+              <Label>Health</Label>
+            </div>
+            <div role="group" aria-label="Filter by health">
+              {HEALTH_FACET.map((h) => (
+                <FilterRow
+                  key={h}
+                  label={HEALTH_LABEL[h]}
+                  icon={<HealthIcon health={h} />}
+                  count={healthCounts[h]}
+                  active={healths.includes(h)}
+                  onChange={() => onToggleHealth(h)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Broad, then narrow. "In progress" cuts the whole register in half and
           the workstreams divide what is left, so it is read first — and it
@@ -1103,6 +1163,18 @@ export function Roadmap({
   // In the URL like the rest, so a by-owner roadmap is a link you can send.
   const grouping: Grouping =
     params.get("group") === "owner" ? "owner" : "quarter";
+  // Health is a fact about work under way, so it is read on the roadmap view
+  // only and dropped on the way to Shipped, like the state flag.
+  const healthParam = view === "roadmap" ? (params.get("health") ?? "") : "";
+  const healths = useMemo(
+    () =>
+      healthParam
+        .split(",")
+        .filter((h): h is HealthOrNone =>
+          HEALTH_FACET.includes(h as HealthOrNone)
+        ),
+    [healthParam]
+  );
   const selected = (params.get("workstream") ?? "")
     .split(",")
     .filter((w) => workstreams.includes(w));
@@ -1124,9 +1196,14 @@ export function Roadmap({
       workstream: string[];
       buildingOnly: boolean;
       grouping: Grouping;
+      health: HealthOrNone[];
     }>
   ) => {
     const p = new URLSearchParams(params.toString());
+    if (next.health) {
+      if (next.health.length === 0) p.delete("health");
+      else p.set("health", next.health.join(","));
+    }
     if (next.grouping) {
       if (next.grouping === "quarter") p.delete("group");
       else p.set("group", next.grouping);
@@ -1135,7 +1212,10 @@ export function Roadmap({
       if (next.view === "roadmap") p.delete("view");
       else p.set("view", next.view);
       // Shipped holds nothing that is still being built.
-      if (next.view === "shipped") p.delete("state");
+      if (next.view === "shipped") {
+        p.delete("state");
+        p.delete("health");
+      }
     }
     if (next.buildingOnly !== undefined) {
       if (next.buildingOnly) p.set("state", "building");
@@ -1158,13 +1238,18 @@ export function Roadmap({
         .join(" ")
         .toLowerCase()
         .includes(q);
+    const healthy = (c: RoadmapItem) =>
+      healths.length === 0 ||
+      (c.state === "building" &&
+        healths.includes(c.standing?.health ?? "no-update"));
     return commitments.filter(
       (c) =>
         hit(c) &&
         (selected.length === 0 || selected.includes(c.workstream)) &&
-        (!buildingOnly || c.state === "building")
+        (!buildingOnly || c.state === "building") &&
+        healthy(c)
     );
-  }, [commitments, query, selected, buildingOnly]);
+  }, [commitments, query, selected, buildingOnly, healths]);
 
   // Counted against the query and the workstream selection but not against
   // itself — a toggle whose own count fell to 0 the moment you switched it off
@@ -1208,10 +1293,43 @@ export function Roadmap({
           .includes(q)
       )
         continue;
+      if (
+        healths.length > 0 &&
+        !(
+          c.state === "building" &&
+          healths.includes(c.standing?.health ?? "no-update")
+        )
+      )
+        continue;
       tally[c.workstream] = (tally[c.workstream] ?? 0) + 1;
     }
     return tally;
-  }, [commitments, query, view, buildingOnly]);
+  }, [commitments, query, view, buildingOnly, healths]);
+
+  // The health facet's numbers: every other filter applied, this one not,
+  // for the reason the workstream counts leave their own facet out — a
+  // count promises what the next click delivers.
+  const healthCounts = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const tally = Object.fromEntries(HEALTH_FACET.map((h) => [h, 0])) as Record<
+      HealthOrNone,
+      number
+    >;
+    for (const c of commitments) {
+      if (c.state !== "building") continue;
+      if (selected.length > 0 && !selected.includes(c.workstream)) continue;
+      if (
+        q &&
+        ![c.title, c.outcome, c.workstream, c.owner]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      )
+        continue;
+      tally[c.standing?.health ?? "no-update"] += 1;
+    }
+    return tally;
+  }, [commitments, query, selected]);
 
   const building = matches.filter((c) => c.state === "building");
   const next = matches.filter((c) => c.state === "next");
@@ -1356,6 +1474,15 @@ export function Roadmap({
             buildingOnly={buildingOnly}
             onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
             buildingCount={buildingCount}
+            healths={healths}
+            healthCounts={healthCounts}
+            onToggleHealth={(h) =>
+              setParams({
+                health: healths.includes(h)
+                  ? healths.filter((x) => x !== h)
+                  : [...healths, h],
+              })
+            }
             query={query}
             onQueryChange={setQuery}
             workstreams={workstreams}
@@ -1370,7 +1497,7 @@ export function Roadmap({
             }
             onClear={() => {
               setQuery("");
-              setParams({ workstream: [], buildingOnly: false });
+              setParams({ workstream: [], buildingOnly: false, health: [] });
             }}
             suggestionsHref={suggestionsHref}
           />
@@ -1407,7 +1534,11 @@ export function Roadmap({
                 type="button"
                 onClick={() => {
                   setQuery("");
-                  setParams({ workstream: [], buildingOnly: false });
+                  setParams({
+                    workstream: [],
+                    buildingOnly: false,
+                    health: [],
+                  });
                 }}
                 className="mt-4 inline-flex items-center gap-1.5 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring"
               >
