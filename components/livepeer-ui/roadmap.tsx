@@ -4,7 +4,11 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowUpRightIcon,
+  Building2Icon,
+  CalendarDaysIcon,
   ChevronDownIcon,
+  CircleCheckIcon,
+  RouteIcon,
   SearchIcon,
   SlidersHorizontalIcon,
   XIcon,
@@ -1071,12 +1075,19 @@ function GroupBy({
           aria-checked={grouping === g}
           onClick={() => onChange(g)}
           className={cn(
-            "rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "flex items-center gap-2 rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
             grouping === g
               ? "bg-secondary font-medium text-foreground"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
+          {/* A glyph per cut, the way Linear marks its filters: the
+              calendar for when, the building for who. */}
+          {g === "quarter" ? (
+            <CalendarDaysIcon className="size-4" aria-hidden />
+          ) : (
+            <Building2Icon className="size-4" aria-hidden />
+          )}
           {g === "quarter" ? "Quarter" : "Owner"}
         </button>
       ))}
@@ -1117,6 +1128,11 @@ function ViewTabs({
               : "text-muted-foreground hover:text-foreground"
           )}
         >
+          {v === "roadmap" ? (
+            <RouteIcon className="size-4" aria-hidden />
+          ) : (
+            <CircleCheckIcon className="size-4" aria-hidden />
+          )}
           {v === "roadmap" ? "Roadmap" : "Shipped"}
           <span
             className={cn(
