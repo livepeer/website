@@ -116,7 +116,7 @@ function ActivityRow({
             aria-hidden
           />
         </summary>
-        <div className="pt-1 pb-4 pl-8">{children}</div>
+        <div className="pt-3 pb-6 pl-8">{children}</div>
       </details>
     </li>
   );
@@ -490,7 +490,7 @@ export function CommitmentRecord({
                         as well as a weight, or the write-up's own bold
                         lead-ins outrank it. At the body's size it was a
                         paragraph in a different colour. */}
-                    <p className="mb-3 text-base font-medium text-pretty">
+                    <p className="mb-4 text-base leading-snug font-medium text-pretty">
                       {u.summary}
                     </p>
                     {u.html && (
