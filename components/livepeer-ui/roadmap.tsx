@@ -24,7 +24,7 @@ import {
 import { HealthMark } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
-import type { Standing } from "@/lib/health";
+import { HEALTH_ORDER, type Standing } from "@/lib/health";
 
 /**
  * A commitment with where it stands, as the page computes it.
@@ -48,6 +48,14 @@ function readCurrentQuarter() {
 }
 
 type View = "roadmap" | "shipped";
+
+/**
+ * How the roadmap view is cut: by target window, or by the body answerable
+ * for each commitment. The second is the accountability view — every funded
+ * body as a heading, its commitments and their health beneath.
+ */
+const GROUPINGS = ["quarter", "owner"] as const;
+type Grouping = (typeof GROUPINGS)[number];
 
 /**
  * The page's only small-type role.
@@ -536,10 +544,13 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
  */
 function Group({
   period,
+  href,
   commitments,
   current,
 }: {
   period: string;
+  /** Where the heading goes, when it names a body rather than a quarter. */
+  href?: string;
   commitments: RoadmapItem[];
   current?: boolean;
 }) {
@@ -598,7 +609,17 @@ function Group({
                 : "text-2xl"
             )}
           >
-            {period}
+            {href ? (
+              <Link
+                href={href}
+                scroll={false}
+                className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+              >
+                {period}
+              </Link>
+            ) : (
+              period
+            )}
           </span>
           {/* The one thing a roadmap has to know and this page did not: where
               today falls on it. Without it a reader has to bring the date
@@ -762,6 +783,8 @@ function SuggestBlock({
  */
 function Filters({
   view,
+  grouping,
+  onGroupingChange,
   buildingOnly,
   onBuildingOnlyChange,
   buildingCount,
@@ -775,6 +798,8 @@ function Filters({
   suggestionsHref,
 }: {
   view: View;
+  grouping: Grouping;
+  onGroupingChange: (g: Grouping) => void;
   buildingOnly: boolean;
   onBuildingOnlyChange: (v: boolean) => void;
   buildingCount: number;
@@ -876,6 +901,13 @@ function Filters({
               active={buildingOnly}
               onChange={onBuildingOnlyChange}
             />
+            {/* Here below lg, where the tab row has no room for it; see
+                GroupBy. -ml-3 lines its first pill's text up with the rows. */}
+            <GroupBy
+              grouping={grouping}
+              onChange={onGroupingChange}
+              className="mt-3 -ml-3 lg:hidden"
+            />
           </div>
         )}
 
@@ -946,14 +978,63 @@ function Filters({
  * register rather than the filtered set: a label that shrank as you filtered
  * would report on the filter instead of on the run it switches to.
  */
+/**
+ * How the register is cut: by when, which is what a roadmap answers first,
+ * or by who, which is what a reader asking after a funded body's health
+ * needs — every owner as a heading with its commitments and their health
+ * beneath, worst first. Roadmap only: Shipped runs on months and there is
+ * no health behind us to sort by. A radio group, not tabs — it does not
+ * swap the register, it re-sorts it.
+ */
+function GroupBy({
+  grouping,
+  onChange,
+  className,
+}: {
+  grouping: Grouping;
+  onChange: (g: Grouping) => void;
+  className?: string;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Group by"
+      className={cn("flex items-center gap-1 text-sm", className)}
+    >
+      <span className="mr-1 text-muted-foreground">Group by</span>
+      {GROUPINGS.map((g) => (
+        <button
+          key={g}
+          type="button"
+          role="radio"
+          aria-checked={grouping === g}
+          onClick={() => onChange(g)}
+          className={cn(
+            "rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            grouping === g
+              ? "bg-secondary font-medium text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {g === "quarter" ? "Quarter" : "Owner"}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function ViewTabs({
   view,
   onViewChange,
   counts,
+  grouping,
+  onGroupingChange,
 }: {
   view: View;
   onViewChange: (v: View) => void;
   counts: { roadmap: number; shipped: number };
+  grouping: Grouping;
+  onGroupingChange: (g: Grouping) => void;
 }) {
   return (
     <div
@@ -986,6 +1067,16 @@ function ViewTabs({
           </span>
         </button>
       ))}
+      {/* The cut, at the row's far end from lg up; below that the tab row
+          would wrap to two lines and the sticky bands beneath are sized for
+          one, so the same control lives in the Filters panel instead. */}
+      {view === "roadmap" && (
+        <GroupBy
+          grouping={grouping}
+          onChange={onGroupingChange}
+          className="ml-auto hidden lg:flex"
+        />
+      )}
     </div>
   );
 }
@@ -1010,6 +1101,9 @@ export function Roadmap({
   // whole view away — and one carried across a tab switch would blank the list
   // with nothing on screen to explain why.
   const buildingOnly = view === "roadmap" && params.get("state") === "building";
+  // In the URL like the rest, so a by-owner roadmap is a link you can send.
+  const grouping: Grouping =
+    params.get("group") === "owner" ? "owner" : "quarter";
   const selected = (params.get("workstream") ?? "")
     .split(",")
     .filter((w) => workstreams.includes(w));
@@ -1030,9 +1124,14 @@ export function Roadmap({
       view: View;
       workstream: string[];
       buildingOnly: boolean;
+      grouping: Grouping;
     }>
   ) => {
     const p = new URLSearchParams(params.toString());
+    if (next.grouping) {
+      if (next.grouping === "quarter") p.delete("group");
+      else p.set("group", next.grouping);
+    }
     if (next.view) {
       if (next.view === "roadmap") p.delete("view");
       else p.set("view", next.view);
@@ -1176,6 +1275,29 @@ export function Roadmap({
       return acc;
     }, {});
 
+  // The same records cut by owner instead: every body as a heading, its
+  // commitments beneath with what needs attention first — off track, at
+  // risk, silent, on track, then the committed work with no health yet by
+  // target. Bodies are ordered the same way, by the worst thing under them,
+  // so the register opens on whoever has something to answer for.
+  const rank = (c: RoadmapItem) =>
+    c.state === "building"
+      ? HEALTH_ORDER.indexOf(c.standing?.health ?? "no-update")
+      : HEALTH_ORDER.length;
+  const roadmapByOwner = [...building, ...next]
+    .sort((a, b) => rank(a) - rank(b) || a.targetSort - b.targetSort)
+    .reduce<Record<string, { slug: string; items: RoadmapItem[] }>>(
+      (acc, c) => {
+        (acc[c.owner] ??= { slug: c.ownerSlug, items: [] }).items.push(c);
+        return acc;
+      },
+      {}
+    );
+  const owners = Object.entries(roadmapByOwner).sort(
+    ([a, ga], [b, gb]) =>
+      rank(ga.items[0]!) - rank(gb.items[0]!) || a.localeCompare(b)
+  );
+
   // Read from the whole register, never from what is on screen.
   //
   // "Nothing is committed past X" is a claim about Livepeer's commitments, not
@@ -1213,6 +1335,8 @@ export function Roadmap({
         <div>
           <Filters
             view={view}
+            grouping={grouping}
+            onGroupingChange={(g) => setParams({ grouping: g })}
             buildingOnly={buildingOnly}
             onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
             buildingCount={buildingCount}
@@ -1240,6 +1364,8 @@ export function Roadmap({
           <ViewTabs
             view={view}
             onViewChange={(v) => setParams({ view: v })}
+            grouping={grouping}
+            onGroupingChange={(g) => setParams({ grouping: g })}
             counts={{
               roadmap: commitments.filter((c) => c.state !== "shipped").length,
               shipped: commitments.filter((c) => c.state === "shipped").length,
@@ -1278,14 +1404,23 @@ export function Roadmap({
                 ? Object.entries(shippedByPeriod).map(([period, items]) => (
                     <Group key={period} period={period} commitments={items} />
                   ))
-                : Object.entries(roadmapByPeriod).map(([period, items]) => (
-                    <Group
-                      key={period}
-                      period={period}
-                      commitments={items}
-                      current={period === currentQuarter}
-                    />
-                  ))}
+                : grouping === "owner"
+                  ? owners.map(([owner, { slug, items }]) => (
+                      <Group
+                        key={owner}
+                        period={owner}
+                        href={`/organizations/${slug}`}
+                        commitments={items}
+                      />
+                    ))
+                  : Object.entries(roadmapByPeriod).map(([period, items]) => (
+                      <Group
+                        key={period}
+                        period={period}
+                        commitments={items}
+                        current={period === currentQuarter}
+                      />
+                    ))}
 
               {/* The closing line, set to answer the opening one.
                 The page opens on what every entry has and ends on where the
