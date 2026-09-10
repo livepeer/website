@@ -182,7 +182,8 @@ function UpdateCard({
           {when}
         </time>
       </header>
-      <p className="mt-4 font-medium text-pretty">{u.summary}</p>
+      {/* The title, a size above the write-up beneath; see the log. */}
+      <p className="mt-4 text-lg font-medium text-pretty">{u.summary}</p>
       {u.html && (
         <div
           className="reading-prose mt-3"
@@ -485,12 +486,11 @@ export function CommitmentRecord({
                     }
                     date={shortDate(u.date, now)}
                   >
-                    {/* The lede, in the write-up's own voice: the row's
-                        header has already said who, what and when, and a
-                        second title here fought the write-up's bold
-                        lead-ins. The card keeps the title treatment, having
-                        no header row to lean on. */}
-                    <p className="text-sm text-pretty text-muted-foreground">
+                    {/* The post's title: a size step above its write-up
+                        as well as a weight, or the write-up's own bold
+                        lead-ins outrank it. At the body's size it was a
+                        paragraph in a different colour. */}
+                    <p className="mb-3 text-base font-medium text-pretty">
                       {u.summary}
                     </p>
                     {u.html && (
