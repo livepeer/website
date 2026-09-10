@@ -901,15 +901,16 @@ function Filters({
               active={buildingOnly}
               onChange={onBuildingOnlyChange}
             />
-            {/* Here below lg, where the tab row has no room for it; see
-                GroupBy. -ml-3 lines its first pill's text up with the rows. */}
-            <GroupBy
-              grouping={grouping}
-              onChange={onGroupingChange}
-              className="mt-3 -ml-3 lg:hidden"
-            />
           </div>
         )}
+
+        {/* Here below lg, where the tab row has no room for it; see GroupBy.
+            -ml-3 lines its first pill's text up with the rows. */}
+        <GroupBy
+          grouping={grouping}
+          onChange={onGroupingChange}
+          className="mt-3 -ml-3 lg:hidden lg:mt-4"
+        />
 
         {/* Broad, then narrow. "In progress" cuts the whole register in half and
           the workstreams divide what is left, so it is read first — and it
@@ -982,9 +983,9 @@ function Filters({
  * How the register is cut: by when, which is what a roadmap answers first,
  * or by who, which is what a reader asking after a funded body's health
  * needs — every owner as a heading with its commitments and their health
- * beneath, worst first. Roadmap only: Shipped runs on months and there is
- * no health behind us to sort by. A radio group, not tabs — it does not
- * swap the register, it re-sorts it.
+ * beneath, worst first. On Shipped the same cut is a track record per
+ * body, most recent first. A radio group, not tabs — it does not swap the
+ * register, it re-sorts it.
  */
 function GroupBy({
   grouping,
@@ -1070,13 +1071,11 @@ function ViewTabs({
       {/* The cut, at the row's far end from lg up; below that the tab row
           would wrap to two lines and the sticky bands beneath are sized for
           one, so the same control lives in the Filters panel instead. */}
-      {view === "roadmap" && (
-        <GroupBy
-          grouping={grouping}
-          onChange={onGroupingChange}
-          className="ml-auto hidden lg:flex"
-        />
-      )}
+      <GroupBy
+        grouping={grouping}
+        onChange={onGroupingChange}
+        className="ml-auto hidden lg:flex"
+      />
     </div>
   );
 }
@@ -1298,6 +1297,23 @@ export function Roadmap({
       rank(ga.items[0]!) - rank(gb.items[0]!) || a.localeCompare(b)
   );
 
+  // Shipped by owner: a track record per body, most recent first, and the
+  // bodies in order of their most recent ship. Nothing to sort by health;
+  // behind us the question is who delivered, and when.
+  const shippedByOwner = Object.entries(
+    [...shipped]
+      .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!))
+      .reduce<Record<string, { slug: string; items: RoadmapItem[] }>>(
+        (acc, c) => {
+          (acc[c.owner] ??= { slug: c.ownerSlug, items: [] }).items.push(c);
+          return acc;
+        },
+        {}
+      )
+  ).sort(([, ga], [, gb]) =>
+    gb.items[0]!.shippedAt!.localeCompare(ga.items[0]!.shippedAt!)
+  );
+
   // Read from the whole register, never from what is on screen.
   //
   // "Nothing is committed past X" is a claim about Livepeer's commitments, not
@@ -1401,9 +1417,18 @@ export function Roadmap({
           ) : (
             <>
               {view === "shipped"
-                ? Object.entries(shippedByPeriod).map(([period, items]) => (
-                    <Group key={period} period={period} commitments={items} />
-                  ))
+                ? grouping === "owner"
+                  ? shippedByOwner.map(([owner, { slug, items }]) => (
+                      <Group
+                        key={owner}
+                        period={owner}
+                        href={`/organizations/${slug}`}
+                        commitments={items}
+                      />
+                    ))
+                  : Object.entries(shippedByPeriod).map(([period, items]) => (
+                      <Group key={period} period={period} commitments={items} />
+                    ))
                 : grouping === "owner"
                   ? owners.map(([owner, { slug, items }]) => (
                       <Group
@@ -1431,7 +1456,9 @@ export function Roadmap({
 
                 Shipped has no closing line: it runs backwards, and its end is
                 just where the register started being kept. */}
-              {view === "roadmap" && lastPeriod && (
+              {/* Under the quarter cut only: it answers "when", and the
+                  owner cut is answering "who". */}
+              {view === "roadmap" && grouping === "quarter" && lastPeriod && (
                 <div className="mt-16 max-w-[46ch]">
                   <p className="text-2xl font-normal tracking-[-0.02em] text-balance text-muted-foreground">
                     Nothing is committed past {lastPeriod}.
