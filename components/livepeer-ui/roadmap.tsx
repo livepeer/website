@@ -4,7 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowUpRightIcon,
-  Building2Icon,
+  UserRoundIcon,
   CalendarDaysIcon,
   ChevronDownIcon,
   CircleCheckIcon,
@@ -1082,11 +1082,11 @@ function GroupBy({
           )}
         >
           {/* A glyph per cut, the way Linear marks its filters: the
-              calendar for when, the building for who. */}
+              calendar for when, the person for who, as Linear marks a lead. */}
           {g === "quarter" ? (
             <CalendarDaysIcon className="size-4" aria-hidden />
           ) : (
-            <Building2Icon className="size-4" aria-hidden />
+            <UserRoundIcon className="size-4" aria-hidden />
           )}
           {g === "quarter" ? "Quarter" : "Owner"}
         </button>
