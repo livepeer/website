@@ -485,7 +485,12 @@ export function CommitmentRecord({
                     }
                     date={shortDate(u.date, now)}
                   >
-                    <p className="text-sm font-medium text-pretty">
+                    {/* The lede, in the write-up's own voice: the row's
+                        header has already said who, what and when, and a
+                        second title here fought the write-up's bold
+                        lead-ins. The card keeps the title treatment, having
+                        no header row to lean on. */}
+                    <p className="text-sm text-pretty text-muted-foreground">
                       {u.summary}
                     </p>
                     {u.html && (
