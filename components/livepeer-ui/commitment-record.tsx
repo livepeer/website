@@ -182,7 +182,7 @@ function UpdateCard({
           {when}
         </time>
       </header>
-      <p className="mt-4 text-pretty">{u.summary}</p>
+      <p className="mt-4 font-medium text-pretty">{u.summary}</p>
       {u.html && (
         <div
           className="reading-prose mt-3"
@@ -485,7 +485,9 @@ export function CommitmentRecord({
                     }
                     date={shortDate(u.date, now)}
                   >
-                    <p className="text-sm text-pretty">{u.summary}</p>
+                    <p className="text-sm font-medium text-pretty">
+                      {u.summary}
+                    </p>
                     {u.html && (
                       <div
                         className="reading-prose mt-2 text-sm!"
