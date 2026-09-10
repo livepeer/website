@@ -1,10 +1,5 @@
 import type { Commitment } from "./roadmap";
-import {
-  HEALTH_ORDER,
-  standingOf,
-  type HealthOrNone,
-  type UpdateSummary,
-} from "./health";
+import { HEALTH_ORDER, type HealthOrNone, type UpdateSummary } from "./health";
 
 /**
  * The changelog: one roundup per month, generated.
@@ -27,26 +22,6 @@ import {
 
 export const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
 
-/**
- * Where a commitment stands today, beside where it stood in the month.
- *
- * A month's entry is a record and does not change; but a reader who sees
- * "At risk" in August and opens a record that says On track feels the site
- * contradict itself. So a row carries what has happened since — shipped,
- * or the health it reads now — and says so only where it differs.
- */
-export type Since = { shippedAt: string } | { health: HealthOrNone };
-
-export function sinceOf(
-  c: Commitment,
-  updates: UpdateSummary[],
-  now: Date
-): Since | undefined {
-  if (c.shippedAt) return { shippedAt: c.shippedAt };
-  const standing = standingOf(c, updates, now);
-  return standing ? { health: standing.health } : undefined;
-}
-
 export type Roundup = {
   /** yyyy-mm. */
   month: string;
@@ -60,9 +35,9 @@ export type Roundup = {
    */
   shipped: { commitment: Commitment; update?: UpdateSummary }[];
   /** Under way with an update posted this month, what needs attention first. */
-  reported: { commitment: Commitment; update: UpdateSummary; since?: Since }[];
+  reported: { commitment: Commitment; update: UpdateSummary }[];
   /** Under way with nothing posted this month. */
-  quiet: { commitment: Commitment; since?: Since }[];
+  quiet: Commitment[];
 };
 
 /** "2026-08-19" → "2026-08". */
@@ -193,11 +168,7 @@ export function roundupFor(
 
   const reported = underWay
     .filter((c) => posted.has(c.slug))
-    .map((commitment) => ({
-      commitment,
-      update: posted.get(commitment.slug)!,
-      since: sinceOf(commitment, updates, now),
-    }))
+    .map((commitment) => ({ commitment, update: posted.get(commitment.slug)! }))
     .sort(
       (a, b) =>
         healthRank(a.update.health) - healthRank(b.update.health) ||
@@ -206,11 +177,7 @@ export function roundupFor(
 
   const quiet = underWay
     .filter((c) => !posted.has(c.slug))
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((commitment) => ({
-      commitment,
-      since: sinceOf(commitment, updates, now),
-    }));
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return {
     month,

@@ -62,7 +62,7 @@ function content(r: Roundup): string {
   if (r.quiet.length > 0) {
     parts.push(
       `<h3>No update</h3><ul>${r.quiet
-        .map(({ commitment: c }) => item(c.slug, c.title, c.owner))
+        .map((c) => item(c.slug, c.title, c.owner))
         .join("")}</ul>`
     );
   }

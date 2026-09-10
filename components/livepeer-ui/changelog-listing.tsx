@@ -13,15 +13,7 @@ import {
   LatestNav,
   type LatestLink,
 } from "@/components/livepeer-ui/latest-nav";
-import {
-  HEALTH_LABEL,
-  HEALTHS,
-  type Health,
-  type HealthOrNone,
-} from "@/lib/health";
-
-/** What has happened to a row's commitment since the month closed. */
-export type SinceView = { shipped: true } | { health: HealthOrNone };
+import { HEALTH_LABEL, HEALTHS, type Health } from "@/lib/health";
 
 export type RoundupRow = {
   slug: string;
@@ -41,9 +33,8 @@ export type RoundupView = {
     health: Health;
     date: string;
     summary: string;
-    since?: SinceView;
   })[];
-  quiet: (RoundupRow & { since?: SinceView })[];
+  quiet: RoundupRow[];
 };
 
 export type MonthLink = { month: string; title: string };
@@ -68,36 +59,15 @@ function matches(row: RoundupRow, q: string): boolean {
  * owns it, then what the state has to say: the day it shipped and the
  * lead's last word, the update, or that nothing was posted.
  */
-/**
- * The story since the month closed, after the month's own word: "now on
- * track", "now shipped". Only where it differs — the record stays what it
- * was, and a reader who opens the commitment is not met by a contradiction.
- */
-function Since({ since }: { since?: SinceView }) {
-  if (!since) return null;
-  return (
-    <span className="ml-2 text-sm whitespace-nowrap text-muted-foreground">
-      now{" "}
-      {"shipped" in since ? (
-        "shipped"
-      ) : (
-        <HealthWord health={since.health} className="lowercase" />
-      )}
-    </span>
-  );
-}
-
 function Row({
   row,
   icon,
   word,
-  since,
   children,
 }: {
   row: RoundupRow;
   icon: React.ReactNode;
   word: React.ReactNode;
-  since?: SinceView;
   children: React.ReactNode;
 }) {
   return (
@@ -112,7 +82,6 @@ function Row({
             {row.title}
           </Link>
           <span className="ml-2 text-sm whitespace-nowrap">{word}</span>
-          <Since since={since} />
         </h3>
         <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
           {children}
@@ -212,7 +181,6 @@ function Month({ r }: { r: RoundupView }) {
           row={row}
           icon={<HealthIcon health={row.health} />}
           word={<HealthWord health={row.health} />}
-          since={row.since}
         >
           <Meta row={row} date={row.date} />
           <span className="ml-2">{row.summary}</span>
@@ -226,7 +194,6 @@ function Month({ r }: { r: RoundupView }) {
           row={row}
           icon={<HealthIcon health="no-update" />}
           word={<HealthWord health="no-update" />}
-          since={row.since}
         >
           {owner(row)} did not post this month.
         </Row>
