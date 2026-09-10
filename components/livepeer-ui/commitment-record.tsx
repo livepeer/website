@@ -20,6 +20,7 @@ import {
 } from "@/components/livepeer-ui/record-parts";
 import type { Commitment } from "@/lib/roadmap";
 import { shippedPeriod } from "@/lib/roadmap";
+import { cn } from "@/lib/utils";
 import {
   HEALTH_LABEL,
   STALE_AFTER_DAYS,
@@ -490,7 +491,14 @@ export function CommitmentRecord({
                         as well as a weight, or the write-up's own bold
                         lead-ins outrank it. At the body's size it was a
                         paragraph in a different colour. */}
-                    <p className="mb-4 text-base leading-snug font-medium text-pretty">
+                    <p
+                      className={cn(
+                        "text-base leading-snug font-medium text-pretty",
+                        // Air beneath only when there is a write-up to hold
+                        // off; on its own the title sat over an empty band.
+                        u.html && "mb-4"
+                      )}
+                    >
                       {u.summary}
                     </p>
                     {u.html && (
