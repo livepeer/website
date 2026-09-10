@@ -109,6 +109,41 @@ export function ShippedMark({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Whether shipped work has its retrospective, in the same idiom as health:
+ * the tick disc and the word where one exists, a hollow ring and the word
+ * where not. The ring is set in the foreground because absence is the one
+ * that asks something of someone — the way No update reads on open work.
+ * Not a checkbox: on a card a box looks clickable, and this is a fact.
+ */
+export function RetroMark({
+  done,
+  className,
+}: {
+  done: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5",
+        !done && "text-foreground",
+        className
+      )}
+    >
+      {done ? (
+        <ShippedIcon />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="inline-block size-4 shrink-0 rounded-full border border-muted-foreground/70"
+        />
+      )}
+      {done ? "Retrospective" : "No retrospective"}
+    </span>
+  );
+}
+
 /** The word alone, in its colour, for where the icon sits elsewhere. */
 export function HealthWord({
   health,

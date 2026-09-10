@@ -25,7 +25,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
+import {
+  HealthIcon,
+  HealthMark,
+  RetroMark,
+} from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
 import type { Commitment, Person } from "@/lib/roadmap";
 import {
@@ -162,17 +166,14 @@ function StateMark({
           <HealthMark health={standing.health} />
         </>
       )}
-      {/* Behind us the question is whether the closing post was written.
-          "No retro" in the foreground, since it is the one that asks
-          something of someone. */}
+      {/* Behind us the question is whether the closing post was written,
+          in the same idiom as the health beside open work. */}
       {state === "shipped" && retro !== undefined && (
         <>
           <span aria-hidden="true" className="text-muted-foreground/50">
             ·
           </span>
-          <span className={cn(!retro && "text-foreground")}>
-            {retro ? "Retro done" : "No retro"}
-          </span>
+          <RetroMark done={retro} />
         </>
       )}
     </span>
