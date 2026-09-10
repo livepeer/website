@@ -64,7 +64,7 @@ export async function GET(request: Request) {
         summary: update.summary,
         author: update.author?.name,
       })),
-      quiet: r.quiet.map(ref),
+      quiet: r.quiet.map(({ commitment }) => ref(commitment)),
     },
     { headers: { "Cache-Control": "public, max-age=60" } }
   );

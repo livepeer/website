@@ -1,7 +1,8 @@
 import type { LatestLink } from "@/components/livepeer-ui/latest-nav";
 import type { RoundupView } from "@/components/livepeer-ui/changelog-listing";
 import type { BlogSummary } from "@/lib/blog";
-import type { Roundup } from "@/lib/changelog";
+import type { Roundup, Since } from "@/lib/changelog";
+import type { HealthOrNone } from "@/lib/health";
 
 import { blog, categoryLinks } from "../blog/listing";
 
@@ -36,13 +37,23 @@ export function changelogRow(register: BlogSummary[]): {
   };
 }
 
+/** What has happened since, only where it differs from the month's word. */
+function sinceView(
+  then: HealthOrNone,
+  since: Since | undefined
+): RoundupView["reported"][number]["since"] {
+  if (!since) return undefined;
+  if ("shippedAt" in since) return { shipped: true };
+  return since.health === then ? undefined : { health: since.health };
+}
+
 /**
  * A roundup as the client component needs it: titles, owners and one line
  * each, and none of the write-ups the register carries. A commitment's HTML
  * body is the largest thing on a record and the list shows none of it.
  */
 export function toView(r: Roundup): RoundupView {
-  const row = (c: Roundup["quiet"][number]) => ({
+  const row = (c: Roundup["shipped"][number]["commitment"]) => ({
     slug: c.slug,
     title: c.title,
     owner: c.owner,
@@ -56,12 +67,16 @@ export function toView(r: Roundup): RoundupView {
       shippedAt: c.shippedAt!,
       summary: update?.summary,
     })),
-    reported: r.reported.map(({ commitment, update }) => ({
+    reported: r.reported.map(({ commitment, update, since }) => ({
       ...row(commitment),
       health: update.health,
       date: update.date,
       summary: update.summary,
+      since: sinceView(update.health, since),
     })),
-    quiet: r.quiet.map(row),
+    quiet: r.quiet.map(({ commitment, since }) => ({
+      ...row(commitment),
+      since: sinceView("no-update", since),
+    })),
   };
 }
