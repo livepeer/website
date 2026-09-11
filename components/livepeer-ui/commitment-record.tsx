@@ -491,19 +491,25 @@ export function CommitmentRecord({
                         as well as a weight, or the write-up's own bold
                         lead-ins outrank it. At the body's size it was a
                         paragraph in a different colour. */}
+                    {/* The title at the log's own size — a size above it
+                        outranked the row header, which is its parent — and
+                        the only dark text in the expansion: the write-up
+                        below runs entirely in the muted voice, its bold
+                        lead-ins included, so weight and colour carry the
+                        hierarchy without a size step. */}
                     <p
                       className={cn(
-                        "text-base leading-snug font-medium text-pretty",
+                        "text-sm leading-snug font-medium text-pretty",
                         // Air beneath only when there is a write-up to hold
                         // off; on its own the title sat over an empty band.
-                        u.html && "mb-4"
+                        u.html && "mb-3"
                       )}
                     >
                       {u.summary}
                     </p>
                     {u.html && (
                       <div
-                        className="reading-prose mt-2 text-sm!"
+                        className="reading-prose mt-2 text-sm! [&_strong]:font-medium [&_strong]:text-muted-foreground!"
                         dangerouslySetInnerHTML={{ __html: u.html }}
                       />
                     )}
