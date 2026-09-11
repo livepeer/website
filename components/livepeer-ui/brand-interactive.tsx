@@ -124,7 +124,7 @@ function InkSwitch({
           aria-checked={value === ink}
           onClick={() => onChange(ink)}
           className={cn(
-            "rounded-full px-3 py-1 text-xs capitalize transition-colors",
+            "cursor-pointer rounded-full px-3 py-1 text-xs capitalize transition-colors",
             value === ink
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"

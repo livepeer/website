@@ -1033,7 +1033,7 @@ function Filters({
           <button
             type="button"
             onClick={onClear}
-            className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-6"
+            className="mt-5 inline-flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring lg:mt-6"
           >
             <XIcon className="size-3.5" aria-hidden="true" />
             Clear filters
@@ -1095,7 +1095,7 @@ function GroupBy({
           aria-checked={grouping === g}
           onClick={() => onChange(g)}
           className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
             grouping === g
               ? "bg-secondary font-medium text-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -1142,7 +1142,7 @@ function ViewTabs({
           aria-selected={view === v}
           onClick={() => onViewChange(v)}
           className={cn(
-            "flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
             view === v
               ? "bg-secondary font-medium text-foreground"
               : "text-muted-foreground hover:text-foreground"
@@ -1576,7 +1576,7 @@ export function Roadmap({
                     health: [],
                   });
                 }}
-                className="mt-4 inline-flex items-center gap-1.5 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-sm text-foreground underline decoration-border underline-offset-4 transition-colors outline-none hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Clear filters
               </button>
