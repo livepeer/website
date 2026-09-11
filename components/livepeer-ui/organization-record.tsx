@@ -38,7 +38,7 @@ import { shippedPeriod, type Commitment } from "@/lib/roadmap";
  */
 const SECTIONS: { state: Commitment["state"]; label: string }[] = [
   { state: "building", label: "In progress" },
-  { state: "next", label: "Committed" },
+  { state: "next", label: "Planned" },
   { state: "shipped", label: "Shipped" },
 ];
 

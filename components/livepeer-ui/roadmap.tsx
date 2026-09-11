@@ -185,11 +185,7 @@ function StateMark({
           )}
         />
         <span className={cn(building && "text-foreground")}>
-          {building
-            ? "In progress"
-            : state === "next"
-              ? "Committed"
-              : "Shipped"}
+          {building ? "In progress" : state === "next" ? "Planned" : "Shipped"}
         </span>
       </span>
       {/* Health beside the state, for work under way: what the lead last
@@ -663,7 +659,7 @@ function CommitmentRow({ commitment: c }: { commitment: RoadmapItem }) {
                 aria-hidden="true"
                 className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40"
               />
-              Committed
+              Planned
             </>
           )}
         </span>
@@ -1854,7 +1850,7 @@ export function Roadmap({
                           <Group
                             key={key}
                             period={
-                              key === "next" ? "Committed" : HEALTH_LABEL[key]
+                              key === "next" ? "Planned" : HEALTH_LABEL[key]
                             }
                             mark={
                               key === "next" ? (
@@ -1863,7 +1859,7 @@ export function Roadmap({
                                     aria-hidden="true"
                                     className="size-2 shrink-0 rounded-full bg-muted-foreground/40"
                                   />
-                                  Committed
+                                  Planned
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-2.5">

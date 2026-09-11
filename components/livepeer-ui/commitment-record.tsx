@@ -196,7 +196,7 @@ function UpdateCard({
 }
 
 const STATE_LABEL: Record<Commitment["state"], string> = {
-  next: "Committed",
+  next: "Planned",
   building: "In progress",
   shipped: "Shipped",
 };

@@ -291,12 +291,18 @@ function relationIds(prop: Json | undefined): string[] {
 /**
  * Notion's labels, mapped to the keys the type has always used.
  *
- * The labels and the page's badges now read the same — Committed, In progress,
+ * The labels and the page's badges read the same — Planned, In progress,
  * Shipped. The keys underneath do not, because they predate Notion and are
  * what the markdown register, the URL's ?state= filter and the component all
  * spell. Renaming them would be a data migration to win nothing.
+ *
+ * Planned was Committed, which said nothing: everything on the register is
+ * a commitment, and the state means one not started yet. Linear's word for
+ * the same stage. The old name is read too until the Notion option is
+ * renamed, so the two edits need not land together.
  */
 const STATE_BY_NOTION: Record<string, CommitmentState> = {
+  Planned: "next",
   Committed: "next",
   "In progress": "building",
   Shipped: "shipped",
