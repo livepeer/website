@@ -3,11 +3,14 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
+  ActivityIcon,
   ArrowUpRightIcon,
   UserRoundIcon,
   CalendarDaysIcon,
   ChevronDownIcon,
   CircleCheckIcon,
+  LayoutListIcon,
+  ListIcon,
   RouteIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -28,6 +31,7 @@ import {
 import {
   HealthIcon,
   HealthMark,
+  HealthWord,
   RetroMark,
 } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
@@ -79,12 +83,43 @@ function readCurrentQuarter() {
 type View = "roadmap" | "shipped";
 
 /**
- * How the roadmap view is cut: by target window, or by the body answerable
- * for each commitment. The second is the accountability view — every funded
- * body as a heading, its commitments and their health beneath.
+ * How the roadmap view is cut: by target window, by the body answerable
+ * for each commitment, or by health. The second is the accountability view —
+ * every funded body as a heading, its commitments and their health beneath.
+ * The third is the status report — the four words of the scale as headings,
+ * worst first, then the committed work that has no health yet. Health is a
+ * fact about work under way, so the third cut is offered on the Roadmap
+ * view only.
  */
-const GROUPINGS = ["quarter", "owner"] as const;
+const GROUPINGS = ["quarter", "owner", "health"] as const;
 type Grouping = (typeof GROUPINGS)[number];
+
+/**
+ * How dense the register is drawn: as cards, each with its cover and its
+ * teaser, or as a list, one line per commitment with its fields in columns
+ * so the whole register fits on a screen. The list is Linear's projects
+ * view; the cards are the site's. Same rows, same groupings, same links.
+ */
+const DISPLAYS = ["cards", "list"] as const;
+type Display = (typeof DISPLAYS)[number];
+
+/**
+ * The list's columns from md up: the title takes what is left after where
+ * it stands, who owns it and when. One template, shared by every row and
+ * the header over them, so the names sit over their columns.
+ */
+const ROW_GRID = "gap-x-6 md:grid-cols-[minmax(0,1fr)_10.5rem_12rem_6rem]";
+
+/** "Sep 5", or "Sep 5, 2025" once it is not this year. */
+function shortDate(iso: string): string {
+  const sameYear = iso.slice(0, 4) === String(new Date().getFullYear());
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
 
 /**
  * The page's only small-type role.
@@ -572,6 +607,99 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
 }
 
 /**
+ * One commitment as a line, for the list display.
+ *
+ * The card with the picture and the paragraph taken off it and the fields
+ * pulled out into columns: the title, where it stands, who owns it, and
+ * when. Where it stands is the health mark and the day it was posted for
+ * work under way — Linear's "Off track · 2min", with a date where Linear
+ * has an age, because this page is read weeks apart — the state word for
+ * committed work, and the retrospective mark behind us. The whole row
+ * opens the record, the same stretched link the card uses, and the owner
+ * still goes to its own page.
+ *
+ * Below md the columns fold into one muted line under the title.
+ */
+function CommitmentRow({ commitment: c }: { commitment: RoadmapItem }) {
+  // The record's URL carries the register's query; see CommitmentCard.
+  const rowParams = useSearchParams();
+  const rowQuery = rowParams.toString();
+  const href = `/roadmap/${c.slug}${rowQuery ? `?${rowQuery}` : ""}`;
+  const shipped = c.state === "shipped";
+  return (
+    <li
+      className={cn(
+        "group relative -mx-2 grid grid-cols-1 gap-y-1 px-2 py-2.5 text-sm transition-colors hover:bg-foreground/[0.04] md:items-center dark:hover:bg-secondary/60",
+        ROW_GRID
+      )}
+    >
+      <h3 className="min-w-0 font-medium">
+        <Link
+          href={href}
+          scroll={false}
+          className="rounded-sm outline-none before:absolute before:inset-0 focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {c.title}
+        </Link>
+      </h3>
+      {/* md:contents hands the three fields to the row's grid from md up;
+          below it they are one wrapped line. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground md:contents">
+        <span className="flex items-center gap-1.5 whitespace-nowrap">
+          {shipped ? (
+            <RetroMark done={c.retro ?? false} />
+          ) : c.state === "building" ? (
+            <>
+              <HealthMark health={c.standing?.health ?? "no-update"} />
+              {c.standing?.latest && (
+                <span>· {shortDate(c.standing.latest.date)}</span>
+              )}
+            </>
+          ) : (
+            <>
+              <span
+                aria-hidden="true"
+                className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40"
+              />
+              Committed
+            </>
+          )}
+        </span>
+        {/* Each separator travels with the field after it, so a wrapped
+            line never ends on a dot. From md the wrappers dissolve and the
+            dots go. */}
+        <span className="flex min-w-0 items-center gap-3 md:contents">
+          <span
+            aria-hidden="true"
+            className="text-muted-foreground/50 md:hidden"
+          >
+            ·
+          </span>
+          <Link
+            href={`/organizations/${c.ownerSlug}`}
+            scroll={false}
+            className="relative z-[1] truncate text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+          >
+            {c.owner}
+          </Link>
+        </span>
+        <span className="flex items-center gap-3 whitespace-nowrap tabular-nums md:contents">
+          <span
+            aria-hidden="true"
+            className="text-muted-foreground/50 md:hidden"
+          >
+            ·
+          </span>
+          <span className="whitespace-nowrap tabular-nums md:text-right">
+            {shipped ? shortDate(c.shippedAt!) : c.target}
+          </span>
+        </span>
+      </div>
+    </li>
+  );
+}
+
+/**
  * A quarter, and the work inside it.
  *
  * The heading pins under the site header while its own quarter scrolls beneath
@@ -586,15 +714,21 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
 function Group({
   period,
   href,
+  mark,
   commitments,
   current,
+  display = "cards",
 }: {
   period: string;
   /** Where the heading goes, when it names a body rather than a quarter. */
   href?: string;
+  /** Drawn in place of the period, when the heading is a health. */
+  mark?: React.ReactNode;
   commitments: RoadmapItem[];
   current?: boolean;
+  display?: Display;
 }) {
+  const list = display === "list";
   return (
     // first-of-type, not first: the column opens with a screen-reader-only
     // status paragraph, so `first` never matches a section and every quarter
@@ -604,8 +738,9 @@ function Group({
     <section
       className={cn(
         "first-of-type:mt-0",
-        // A month nothing landed in is a thinner beat than a month that did.
-        commitments.length === 0 ? "mt-8" : "mt-16"
+        // A month nothing landed in is a thinner beat than a month that did,
+        // and rows want less air between groups than cards do.
+        commitments.length === 0 ? "mt-8" : list ? "mt-10" : "mt-16"
       )}
     >
       {/* The band is generous, and the arithmetic is what lets it be.
@@ -629,7 +764,7 @@ function Group({
       <h2
         className={cn(
           "sticky top-30 z-10 -mx-2 flex items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2",
-          commitments.length === 0 ? "py-2" : "py-6"
+          commitments.length === 0 ? "py-2" : list ? "py-4" : "py-6"
         )}
       >
         {/* whitespace-nowrap on all three. As flex siblings they were free to
@@ -647,20 +782,23 @@ function Group({
               // a heading for content that had failed to load.
               commitments.length === 0
                 ? "text-sm text-muted-foreground/50"
-                : "text-2xl"
+                : list
+                  ? "text-lg"
+                  : "text-2xl"
             )}
           >
-            {href ? (
-              <Link
-                href={href}
-                scroll={false}
-                className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
-              >
-                {period}
-              </Link>
-            ) : (
-              period
-            )}
+            {mark ??
+              (href ? (
+                <Link
+                  href={href}
+                  scroll={false}
+                  className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+                >
+                  {period}
+                </Link>
+              ) : (
+                period
+              ))}
           </span>
           {/* The one thing a roadmap has to know and this page did not: where
               today falls on it. Without it a reader has to bring the date
@@ -700,13 +838,20 @@ function Group({
           It costs ~64px across the current nine cards, and more as the register
           grows. Worth it: this is separation doing a job, unlike the hero
           spacing above it, which was air doing nothing. */}
-      {commitments.length > 0 && (
-        <div className="mt-2 space-y-4">
-          {commitments.map((c) => (
-            <CommitmentCard key={c.slug} commitment={c} />
-          ))}
-        </div>
-      )}
+      {commitments.length > 0 &&
+        (list ? (
+          <ol className="divide-y divide-border">
+            {commitments.map((c) => (
+              <CommitmentRow key={c.slug} commitment={c} />
+            ))}
+          </ol>
+        ) : (
+          <div className="mt-2 space-y-4">
+            {commitments.map((c) => (
+              <CommitmentCard key={c.slug} commitment={c} />
+            ))}
+          </div>
+        ))}
     </section>
   );
 }
@@ -830,6 +975,8 @@ function Filters({
   view,
   grouping,
   onGroupingChange,
+  display,
+  onDisplayChange,
   buildingOnly,
   onBuildingOnlyChange,
   buildingCount,
@@ -848,6 +995,8 @@ function Filters({
   view: View;
   grouping: Grouping;
   onGroupingChange: (g: Grouping) => void;
+  display: Display;
+  onDisplayChange: (d: Display) => void;
   buildingOnly: boolean;
   onBuildingOnlyChange: (v: boolean) => void;
   buildingCount: number;
@@ -965,9 +1114,17 @@ function Filters({
         {/* Here below lg, where the tab row has no room for it; see GroupBy.
             -ml-3 lines its first pill's text up with the rows. */}
         <GroupBy
+          stacked
+          view={view}
           grouping={grouping}
           onChange={onGroupingChange}
-          className="mt-3 -ml-3 lg:hidden lg:mt-4"
+          className="mt-6 lg:hidden"
+        />
+        <DisplayToggle
+          stacked
+          display={display}
+          onChange={onDisplayChange}
+          className="mt-6 lg:hidden"
         />
 
         {/* Health, the way Linear filters projects: the four words of the
@@ -1071,46 +1228,149 @@ function Filters({
  * body, most recent first. A radio group, not tabs — it does not swap the
  * register, it re-sorts it.
  */
+const GROUPING_LABEL: Record<Grouping, string> = {
+  quarter: "Quarter",
+  owner: "Owner",
+  health: "Health",
+};
+
 function GroupBy({
+  view,
   grouping,
   onChange,
   className,
+  stacked = false,
 }: {
+  view: View;
   grouping: Grouping;
   onChange: (g: Grouping) => void;
   className?: string;
+  /** The label over the pills, as a facet heading, for the Filters panel. */
+  stacked?: boolean;
 }) {
+  // Behind us nothing has a health, so that cut is not offered on Shipped.
+  const options =
+    view === "shipped" ? GROUPINGS.filter((g) => g !== "health") : GROUPINGS;
   return (
     <div
       role="radiogroup"
       aria-label="Group by"
-      className={cn("flex items-center gap-1 text-sm", className)}
+      className={cn(
+        stacked ? "flex flex-col items-start" : "flex items-center gap-1",
+        "text-sm",
+        className
+      )}
     >
-      <span className="mr-1 text-muted-foreground">Group by</span>
-      {GROUPINGS.map((g) => (
-        <button
-          key={g}
-          type="button"
-          role="radio"
-          aria-checked={grouping === g}
-          onClick={() => onChange(g)}
-          className={cn(
-            "flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            grouping === g
-              ? "bg-secondary font-medium text-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {/* A glyph per cut, the way Linear marks its filters: the
-              calendar for when, the person for who, as Linear marks a lead. */}
-          {g === "quarter" ? (
-            <CalendarDaysIcon className="size-4" aria-hidden />
-          ) : (
-            <UserRoundIcon className="size-4" aria-hidden />
-          )}
-          {g === "quarter" ? "Quarter" : "Owner"}
-        </button>
-      ))}
+      {stacked ? (
+        <div className="mb-1.5">
+          <Label>Group by</Label>
+        </div>
+      ) : (
+        <span className="mr-1 text-muted-foreground">Group by</span>
+      )}
+      <div
+        className={
+          stacked ? "-ml-3 flex flex-wrap items-center gap-1" : "contents"
+        }
+      >
+        {options.map((g) => (
+          <button
+            key={g}
+            type="button"
+            role="radio"
+            aria-checked={grouping === g}
+            onClick={() => onChange(g)}
+            className={cn(
+              "flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              grouping === g
+                ? "bg-secondary font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {/* A glyph per cut, the way Linear marks its filters: the
+              calendar for when, the person for who, as Linear marks a lead,
+              and the pulse the record page puts beside its Health row. */}
+            {g === "quarter" ? (
+              <CalendarDaysIcon className="size-4" aria-hidden />
+            ) : g === "owner" ? (
+              <UserRoundIcon className="size-4" aria-hidden />
+            ) : (
+              <ActivityIcon className="size-4" aria-hidden />
+            )}
+            {GROUPING_LABEL[g]}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Cards or list. Glyphs alone in the tab row, where the words would push
+ * the row onto two lines at lg; with their words under a facet heading in
+ * the Filters panel, where there is room and no glyph to lean on.
+ */
+function DisplayToggle({
+  display,
+  onChange,
+  className,
+  stacked = false,
+}: {
+  display: Display;
+  onChange: (d: Display) => void;
+  className?: string;
+  stacked?: boolean;
+}) {
+  const labelled = stacked;
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Display"
+      className={cn(
+        stacked ? "flex flex-col items-start" : "flex items-center gap-1",
+        "text-sm",
+        className
+      )}
+    >
+      {stacked && (
+        <div className="mb-1.5">
+          <Label>Display</Label>
+        </div>
+      )}
+      <div
+        className={
+          stacked ? "-ml-3 flex flex-wrap items-center gap-1" : "contents"
+        }
+      >
+        {DISPLAYS.map((d) => {
+          const word = d === "cards" ? "Cards" : "List";
+          return (
+            <button
+              key={d}
+              type="button"
+              role="radio"
+              aria-checked={display === d}
+              aria-label={labelled ? undefined : word}
+              title={labelled ? undefined : word}
+              onClick={() => onChange(d)}
+              className={cn(
+                "flex cursor-pointer items-center gap-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                labelled ? "px-3 py-1.5" : "p-2",
+                display === d
+                  ? "bg-secondary font-medium text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {d === "cards" ? (
+                <LayoutListIcon className="size-4" aria-hidden />
+              ) : (
+                <ListIcon className="size-4" aria-hidden />
+              )}
+              {labelled && word}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -1121,12 +1381,16 @@ function ViewTabs({
   counts,
   grouping,
   onGroupingChange,
+  display,
+  onDisplayChange,
 }: {
   view: View;
   onViewChange: (v: View) => void;
   counts: { roadmap: number; shipped: number };
   grouping: Grouping;
   onGroupingChange: (g: Grouping) => void;
+  display: Display;
+  onDisplayChange: (d: Display) => void;
 }) {
   return (
     <div
@@ -1168,9 +1432,17 @@ function ViewTabs({
           would wrap to two lines and the sticky bands beneath are sized for
           one, so the same control lives in the Filters panel instead. */}
       <GroupBy
+        view={view}
         grouping={grouping}
         onChange={onGroupingChange}
         className="ml-auto hidden lg:flex"
+      />
+      {/* A hairline between the two pairs, so the glyphs read as their own
+          control and not as two more cuts. */}
+      <DisplayToggle
+        display={display}
+        onChange={onDisplayChange}
+        className="ml-2 hidden border-l border-border pl-2 lg:flex"
       />
     </div>
   );
@@ -1197,8 +1469,16 @@ export function Roadmap({
   // with nothing on screen to explain why.
   const buildingOnly = view === "roadmap" && params.get("state") === "building";
   // In the URL like the rest, so a by-owner roadmap is a link you can send.
+  // The health cut is a fact about work under way, so on Shipped it reads
+  // as the default.
+  const groupParam = params.get("group");
   const grouping: Grouping =
-    params.get("group") === "owner" ? "owner" : "quarter";
+    groupParam === "owner"
+      ? "owner"
+      : groupParam === "health" && view === "roadmap"
+        ? "health"
+        : "quarter";
+  const display: Display = params.get("display") === "list" ? "list" : "cards";
   // Health is a fact about work under way, so it is read on the roadmap view
   // only and dropped on the way to Shipped, like the state flag.
   const healthParam = view === "roadmap" ? (params.get("health") ?? "") : "";
@@ -1232,10 +1512,15 @@ export function Roadmap({
       workstream: string[];
       buildingOnly: boolean;
       grouping: Grouping;
+      display: Display;
       health: HealthOrNone[];
     }>
   ) => {
     const p = new URLSearchParams(params.toString());
+    if (next.display) {
+      if (next.display === "cards") p.delete("display");
+      else p.set("display", next.display);
+    }
     if (next.health) {
       if (next.health.length === 0) p.delete("health");
       else p.set("health", next.health.join(","));
@@ -1247,10 +1532,12 @@ export function Roadmap({
     if (next.view) {
       if (next.view === "roadmap") p.delete("view");
       else p.set("view", next.view);
-      // Shipped holds nothing that is still being built.
+      // Shipped holds nothing that is still being built, and nothing with
+      // a health to cut by.
       if (next.view === "shipped") {
         p.delete("state");
         p.delete("health");
+        if (p.get("group") === "health") p.delete("group");
       }
     }
     if (next.buildingOnly !== undefined) {
@@ -1451,6 +1738,22 @@ export function Roadmap({
       rank(ga.items[0]!) - rank(gb.items[0]!) || a.localeCompare(b)
   );
 
+  // The same records cut by health: the four words of the scale as
+  // headings, worst first, each holding its work by target, then the
+  // committed work that has no health yet. Only headings with something
+  // under them — the facet in the rail already says which are empty.
+  const byTarget = (a: RoadmapItem, b: RoadmapItem) =>
+    a.targetSort - b.targetSort;
+  const roadmapByHealth: [HealthOrNone | "next", RoadmapItem[]][] = [
+    ...HEALTH_ORDER.map((h): [HealthOrNone, RoadmapItem[]] => [
+      h,
+      building
+        .filter((c) => (c.standing?.health ?? "no-update") === h)
+        .sort(byTarget),
+    ]),
+    ["next", [...next].sort(byTarget)],
+  ];
+
   // Shipped by owner: a track record per body, most recent first, and the
   // bodies in order of their most recent ship. Nothing to sort by health;
   // behind us the question is who delivered, and when.
@@ -1496,7 +1799,7 @@ export function Roadmap({
           same line. Deliberately no items-start — the rail has to stretch to
           the register's height, because that is the containing block it sticks
           inside. */}
-      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[13rem_1fr] lg:gap-x-20">
+      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[12rem_1fr] lg:gap-x-12 xl:grid-cols-[13rem_1fr] xl:gap-x-20">
         {/* The wrapper is the grid item, and the rail sticks inside it.
           Grid items stretch by default, so a sticky element that IS the item
           fills the row and has nowhere to travel — it reports position:sticky
@@ -1507,6 +1810,8 @@ export function Roadmap({
             view={view}
             grouping={grouping}
             onGroupingChange={(g) => setParams({ grouping: g })}
+            display={display}
+            onDisplayChange={(d) => setParams({ display: d })}
             buildingOnly={buildingOnly}
             onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
             buildingCount={buildingCount}
@@ -1545,6 +1850,8 @@ export function Roadmap({
             onViewChange={(v) => setParams({ view: v })}
             grouping={grouping}
             onGroupingChange={(g) => setParams({ grouping: g })}
+            display={display}
+            onDisplayChange={(d) => setParams({ display: d })}
             counts={{
               roadmap: commitments.filter((c) => c.state !== "shipped").length,
               shipped: commitments.filter((c) => c.state === "shipped").length,
@@ -1555,6 +1862,29 @@ export function Roadmap({
           <p className="sr-only" role="status" aria-live="polite">
             {shown} of {total} commitments shown
           </p>
+
+          {/* The list's column names, once, the way Linear heads its
+              projects — the same small-type role as the quarter bands'
+              counts, on the rows' own grid. A visual key rather than a
+              table header: the rows are a list, and each cell says what it
+              is. Below md the rows fold to one line and there are no
+              columns to name. */}
+          {display === "list" && shown > 0 && (
+            <div
+              aria-hidden="true"
+              className={cn(
+                "-mx-2 mt-4 hidden border-b border-border px-2 pb-2.5 md:grid",
+                ROW_GRID
+              )}
+            >
+              <Label>Commitment</Label>
+              <Label>{view === "shipped" ? "Retrospective" : "Health"}</Label>
+              <Label>Owner</Label>
+              <Label className="text-right">
+                {view === "shipped" ? "Shipped" : "Target"}
+              </Label>
+            </div>
+          )}
 
           {shown === 0 ? (
             /* An empty result is a place to act, not a place to apologise.
@@ -1591,10 +1921,16 @@ export function Roadmap({
                         period={owner}
                         href={`/organizations/${slug}`}
                         commitments={items}
+                        display={display}
                       />
                     ))
                   : Object.entries(shippedByPeriod).map(([period, items]) => (
-                      <Group key={period} period={period} commitments={items} />
+                      <Group
+                        key={period}
+                        period={period}
+                        commitments={items}
+                        display={display}
+                      />
                     ))
                 : grouping === "owner"
                   ? owners.map(([owner, { slug, items }]) => (
@@ -1603,16 +1939,50 @@ export function Roadmap({
                         period={owner}
                         href={`/organizations/${slug}`}
                         commitments={items}
+                        display={display}
                       />
                     ))
-                  : Object.entries(roadmapByPeriod).map(([period, items]) => (
-                      <Group
-                        key={period}
-                        period={period}
-                        commitments={items}
-                        current={period === currentQuarter}
-                      />
-                    ))}
+                  : grouping === "health"
+                    ? roadmapByHealth
+                        .filter(([, items]) => items.length > 0)
+                        .map(([key, items]) => (
+                          <Group
+                            key={key}
+                            period={
+                              key === "next" ? "Committed" : HEALTH_LABEL[key]
+                            }
+                            mark={
+                              key === "next" ? (
+                                <span className="inline-flex items-center gap-2.5">
+                                  <span
+                                    aria-hidden="true"
+                                    className="size-2 shrink-0 rounded-full bg-muted-foreground/40"
+                                  />
+                                  Committed
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-2.5">
+                                  <HealthIcon
+                                    health={key}
+                                    className="size-5 [&>svg]:size-3.5"
+                                  />
+                                  <HealthWord health={key} />
+                                </span>
+                              )
+                            }
+                            commitments={items}
+                            display={display}
+                          />
+                        ))
+                    : Object.entries(roadmapByPeriod).map(([period, items]) => (
+                        <Group
+                          key={period}
+                          period={period}
+                          commitments={items}
+                          current={period === currentQuarter}
+                          display={display}
+                        />
+                      ))}
 
               {/* The closing line, set to answer the opening one.
                 The page opens on what every entry has and ends on where the
