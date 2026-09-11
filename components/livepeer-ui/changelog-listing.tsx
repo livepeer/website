@@ -62,12 +62,10 @@ function matches(row: RoundupRow, q: string): boolean {
 function Row({
   row,
   icon,
-  word,
   children,
 }: {
   row: RoundupRow;
   icon: React.ReactNode;
-  word: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -81,7 +79,6 @@ function Row({
           >
             {row.title}
           </Link>
-          <span className="ml-2 text-sm whitespace-nowrap">{word}</span>
         </h3>
         <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
           {children}
@@ -146,56 +143,63 @@ function Owner({ row }: { row: RoundupRow }) {
 }
 
 /**
- * Who and when, set in the foreground so they read as the facts of the
- * row, with what was said following in the muted voice. The break in
- * colour and a wider gap are the boundary between the record and the
- * words; a third middot gave the words the weight of a third field.
+ * Who, when, and what they said it was — set in the foreground so they
+ * read as the facts of the row, with the words following in the muted
+ * voice after a wider gap. The health sits here beside the date rather
+ * than beside the title, so it reads as what was said on that day and
+ * not as what the item is now: an entry is the month as it ended.
  */
-function Meta({ row, date }: { row: RoundupRow; date: string }) {
+function Meta({
+  row,
+  date,
+  word,
+}: {
+  row: RoundupRow;
+  date?: string;
+  word: React.ReactNode;
+}) {
   return (
     <span className="text-foreground">
       <Owner row={row} />
-      {" · "}
-      <time dateTime={date}>{formatDay(date)}</time>
+      {/* Each separator is held to the field after it, so a line that
+          wraps never ends on a dot. */}
+      {date && (
+        <>
+          {" "}
+          <span className="whitespace-nowrap">
+            · <time dateTime={date}>{formatDay(date)}</time>
+          </span>
+        </>
+      )}{" "}
+      <span className="whitespace-nowrap">· {word}</span>
     </span>
   );
 }
 
 function Month({ r }: { r: RoundupView }) {
-  const owner = (row: RoundupRow) => (
-    <span className="text-foreground">
-      <Owner row={row} />
-    </span>
-  );
   return (
     <ol className="flex flex-col gap-6">
       {r.shipped.map((row) => (
-        <Row key={row.slug} row={row} icon={<ShippedIcon />} word="Shipped">
-          <Meta row={row} date={row.shippedAt} />
+        <Row key={row.slug} row={row} icon={<ShippedIcon />}>
+          <Meta row={row} date={row.shippedAt} word="Shipped" />
           {row.summary && <span className="ml-2">{row.summary}</span>}
         </Row>
       ))}
       {r.reported.map((row) => (
-        <Row
-          key={row.slug}
-          row={row}
-          icon={<HealthIcon health={row.health} />}
-          word={<HealthWord health={row.health} />}
-        >
-          <Meta row={row} date={row.date} />
+        <Row key={row.slug} row={row} icon={<HealthIcon health={row.health} />}>
+          <Meta
+            row={row}
+            date={row.date}
+            word={<HealthWord health={row.health} />}
+          />
           <span className="ml-2">{row.summary}</span>
         </Row>
       ))}
       {/* The accountability half: under way, and nothing said that month.
           The owner's line is the whole row. */}
       {r.quiet.map((row) => (
-        <Row
-          key={row.slug}
-          row={row}
-          icon={<HealthIcon health="no-update" />}
-          word={<HealthWord health="no-update" />}
-        >
-          {owner(row)} did not post this month.
+        <Row key={row.slug} row={row} icon={<HealthIcon health="no-update" />}>
+          <Meta row={row} word={<HealthWord health="no-update" />} />
         </Row>
       ))}
     </ol>
