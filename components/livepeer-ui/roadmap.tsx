@@ -9,8 +9,6 @@ import {
   CalendarDaysIcon,
   ChevronDownIcon,
   CircleCheckIcon,
-  LayoutListIcon,
-  ListIcon,
   RouteIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -99,9 +97,13 @@ type Grouping = (typeof GROUPINGS)[number];
  * teaser, or as a list, one line per commitment with its fields in columns
  * so the whole register fits on a screen. The list is Linear's projects
  * view; the cards are the site's. Same rows, same groupings, same links.
+ *
+ * The list is kept but not offered: it reads from `?display=list` and has
+ * no control on the page, so it can be tried by link and brought back
+ * with one — the toggle it had, a pair of glyphs after the group-by pair
+ * and a facet in the Filters panel, is in the history.
  */
-const DISPLAYS = ["cards", "list"] as const;
-type Display = (typeof DISPLAYS)[number];
+type Display = "cards" | "list";
 
 /**
  * The list's columns from md up: the title takes what is left after where
@@ -975,8 +977,6 @@ function Filters({
   view,
   grouping,
   onGroupingChange,
-  display,
-  onDisplayChange,
   buildingOnly,
   onBuildingOnlyChange,
   buildingCount,
@@ -995,8 +995,6 @@ function Filters({
   view: View;
   grouping: Grouping;
   onGroupingChange: (g: Grouping) => void;
-  display: Display;
-  onDisplayChange: (d: Display) => void;
   buildingOnly: boolean;
   onBuildingOnlyChange: (v: boolean) => void;
   buildingCount: number;
@@ -1118,12 +1116,6 @@ function Filters({
           view={view}
           grouping={grouping}
           onChange={onGroupingChange}
-          className="mt-6 lg:hidden"
-        />
-        <DisplayToggle
-          stacked
-          display={display}
-          onChange={onDisplayChange}
           className="mt-6 lg:hidden"
         />
 
@@ -1305,92 +1297,18 @@ function GroupBy({
   );
 }
 
-/**
- * Cards or list. Glyphs alone in the tab row, where the words would push
- * the row onto two lines at lg; with their words under a facet heading in
- * the Filters panel, where there is room and no glyph to lean on.
- */
-function DisplayToggle({
-  display,
-  onChange,
-  className,
-  stacked = false,
-}: {
-  display: Display;
-  onChange: (d: Display) => void;
-  className?: string;
-  stacked?: boolean;
-}) {
-  const labelled = stacked;
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Display"
-      className={cn(
-        stacked ? "flex flex-col items-start" : "flex items-center gap-1",
-        "text-sm",
-        className
-      )}
-    >
-      {stacked && (
-        <div className="mb-1.5">
-          <Label>Display</Label>
-        </div>
-      )}
-      <div
-        className={
-          stacked ? "-ml-3 flex flex-wrap items-center gap-1" : "contents"
-        }
-      >
-        {DISPLAYS.map((d) => {
-          const word = d === "cards" ? "Cards" : "List";
-          return (
-            <button
-              key={d}
-              type="button"
-              role="radio"
-              aria-checked={display === d}
-              aria-label={labelled ? undefined : word}
-              title={labelled ? undefined : word}
-              onClick={() => onChange(d)}
-              className={cn(
-                "flex cursor-pointer items-center gap-2 rounded-full transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                labelled ? "px-3 py-1.5" : "p-2",
-                display === d
-                  ? "bg-secondary font-medium text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {d === "cards" ? (
-                <LayoutListIcon className="size-4" aria-hidden />
-              ) : (
-                <ListIcon className="size-4" aria-hidden />
-              )}
-              {labelled && word}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 function ViewTabs({
   view,
   onViewChange,
   counts,
   grouping,
   onGroupingChange,
-  display,
-  onDisplayChange,
 }: {
   view: View;
   onViewChange: (v: View) => void;
   counts: { roadmap: number; shipped: number };
   grouping: Grouping;
   onGroupingChange: (g: Grouping) => void;
-  display: Display;
-  onDisplayChange: (d: Display) => void;
 }) {
   return (
     <div
@@ -1437,13 +1355,6 @@ function ViewTabs({
         onChange={onGroupingChange}
         className="ml-auto hidden lg:flex"
       />
-      {/* A hairline between the two pairs, so the glyphs read as their own
-          control and not as two more cuts. */}
-      <DisplayToggle
-        display={display}
-        onChange={onDisplayChange}
-        className="ml-2 hidden border-l border-border pl-2 lg:flex"
-      />
     </div>
   );
 }
@@ -1478,6 +1389,7 @@ export function Roadmap({
       : groupParam === "health" && view === "roadmap"
         ? "health"
         : "quarter";
+  // By link only, for now; see Display.
   const display: Display = params.get("display") === "list" ? "list" : "cards";
   // Health is a fact about work under way, so it is read on the roadmap view
   // only and dropped on the way to Shipped, like the state flag.
@@ -1512,15 +1424,10 @@ export function Roadmap({
       workstream: string[];
       buildingOnly: boolean;
       grouping: Grouping;
-      display: Display;
       health: HealthOrNone[];
     }>
   ) => {
     const p = new URLSearchParams(params.toString());
-    if (next.display) {
-      if (next.display === "cards") p.delete("display");
-      else p.set("display", next.display);
-    }
     if (next.health) {
       if (next.health.length === 0) p.delete("health");
       else p.set("health", next.health.join(","));
@@ -1799,7 +1706,7 @@ export function Roadmap({
           same line. Deliberately no items-start — the rail has to stretch to
           the register's height, because that is the containing block it sticks
           inside. */}
-      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[12rem_1fr] lg:gap-x-12 xl:grid-cols-[13rem_1fr] xl:gap-x-20">
+      <div className="mt-8 lg:mt-10 lg:grid lg:grid-cols-[13rem_1fr] lg:gap-x-20">
         {/* The wrapper is the grid item, and the rail sticks inside it.
           Grid items stretch by default, so a sticky element that IS the item
           fills the row and has nowhere to travel — it reports position:sticky
@@ -1810,8 +1717,6 @@ export function Roadmap({
             view={view}
             grouping={grouping}
             onGroupingChange={(g) => setParams({ grouping: g })}
-            display={display}
-            onDisplayChange={(d) => setParams({ display: d })}
             buildingOnly={buildingOnly}
             onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
             buildingCount={buildingCount}
@@ -1850,8 +1755,6 @@ export function Roadmap({
             onViewChange={(v) => setParams({ view: v })}
             grouping={grouping}
             onGroupingChange={(g) => setParams({ grouping: g })}
-            display={display}
-            onDisplayChange={(d) => setParams({ display: d })}
             counts={{
               roadmap: commitments.filter((c) => c.state !== "shipped").length,
               shipped: commitments.filter((c) => c.state === "shipped").length,
