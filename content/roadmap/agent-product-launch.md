@@ -10,7 +10,8 @@ contributors:
   # than guessed.
   - name: Steph Alinsug
     avatar: placeholder-1.jpg
-target: Q3 2026
+targetDate: 2026-09-30
+targetPrecision: quarter
 # Verbatim from the board item, not paraphrased.
 funding: "Foundation & Inc funded + go-to-market funding proposal, informed by validation evidence"
 

@@ -46,7 +46,13 @@ owner: Name or team
 contributors:
   - name: Full name or handle
     avatar: their-file.jpg
-target: Q4 2026 # month | quarter | half | year — the real precision, no more
+# When it is meant to land: a date and the precision it is stated at, the
+# pair Notion holds as Target date and Target precision. Any day in the
+# window places it; write the last day, so it reads as the deadline. The
+# precision is day | month | quarter | half | year, and quarter when left
+# off — use day only when a real date exists. See lib/target.ts.
+targetDate: 2026-12-31 # shows as Q4 2026
+targetPrecision: quarter
 
 # The banner at the top of the record, from Peace Node's stock library:
 #   https://livepeer.peaceno.de/marketing/stock-images
@@ -68,7 +74,7 @@ target: Q4 2026 # month | quarter | half | year — the real precision, no more
 # funding: "Network Engineering SPE, Priority 2"
 
 # The board's "Opportunity Issued" — when the commitment was made, as opposed
-# to `target` (when it lands) or `lastUpdated` (when the record last changed).
+# to `targetDate` (when it lands) or `lastUpdated` (when the record last changed).
 # A target that has moved is only legible as a slip against this.
 # issued: 2026-04-17
 

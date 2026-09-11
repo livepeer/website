@@ -13,7 +13,8 @@ contributors:
   # it to Livepeer — so it and its portrait are gone until someone confirms it.
   - name: Rich O'Grady
     avatar: rich-ogrady.jpg
-target: Q3 2026
+targetDate: 2026-09-30
+targetPrecision: quarter
 # Verbatim from the board item, not paraphrased.
 funding: "Funding from Livepeer Inc / Foundation"
 

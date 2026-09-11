@@ -11,7 +11,8 @@ contributors:
     avatar: mei-tanaka.jpg
   - name: Anjali Raman
     avatar: anjali-raman.jpg
-target: May 2026
+targetDate: 2026-05-31
+targetPrecision: month
 shippedAt: 2026-05-04
 related:
   - label: Livepeer Docs

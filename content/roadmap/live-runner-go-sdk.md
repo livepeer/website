@@ -9,7 +9,8 @@ contributors:
     avatar: tom-whitfield.jpg
   - name: Andre Okafor
     avatar: andre-okafor.jpg
-target: Q3 2026
+targetDate: 2026-09-30
+targetPrecision: quarter
 shippedAt: 2026-08-12
 related:
   - label: Livepeer on GitHub

@@ -9,7 +9,8 @@ contributors:
     avatar: peter-lindqvist.jpg
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-target: July 2026
+targetDate: 2026-07-31
+targetPrecision: month
 shippedAt: 2026-07-30
 related:
   - label: LIPs repository

@@ -9,7 +9,8 @@ contributors:
     avatar: andre-okafor.jpg
   - name: Mei Tanaka
     avatar: mei-tanaka.jpg
-target: Q1 2027
+targetDate: 2027-03-31
+targetPrecision: quarter
 related:
   - label: Livepeer Forum
     href: https://forum.livepeer.org

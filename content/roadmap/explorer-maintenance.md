@@ -9,7 +9,8 @@ contributors:
     avatar: tom-whitfield.jpg
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-target: May 2026
+targetDate: 2026-05-31
+targetPrecision: month
 shippedAt: 2026-05-04
 related:
   - label: Livepeer Forum

@@ -18,9 +18,9 @@ import {
   type FundingBody,
   type FundingPath,
 } from "./contribute";
+import { readPrecision, targetWindow } from "./target";
 import {
   WORKSTREAMS,
-  targetSortKey,
   type Commitment,
   type CommitmentLink,
   type CommitmentState,
@@ -561,10 +561,18 @@ function toCommitment(
     );
   }
 
-  const target = text(p.Target);
-  if (!target) {
-    throw new Error(`${where}: Target is empty.`);
+  // A date from Notion's picker and the precision it is stated at, so the
+  // value cannot be malformed; an empty precision means Quarter. See
+  // lib/target.ts.
+  const targetDate = dateStart(p["Target date"]);
+  if (!targetDate) {
+    throw new Error(`${where}: Target date is empty.`);
   }
+  const target = targetWindow(
+    targetDate,
+    readPrecision(selectName(p["Target precision"]), where),
+    where
+  );
 
   const related = readLinks(p.Links, where);
   if (related.length === 0) {
@@ -622,8 +630,9 @@ function toCommitment(
     ownerSlug: slugify(owner),
     contributors: roster.length > 0 ? roster : undefined,
     lead,
-    target,
-    targetSort: targetSortKey(target, where),
+    target: target.label,
+    targetPeriod: target.period,
+    targetSort: target.sort,
     shippedAt,
     related,
     funding: text(p.Funding) || undefined,

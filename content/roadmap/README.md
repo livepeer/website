@@ -37,8 +37,8 @@ commitment is never copied when it lands: it gains a ship date and changes view.
 Copy `content/roadmap-template.md`, fill the frontmatter, save it as
 `content/roadmap/<slug>.md`. `lib/roadmap.ts` validates at build time and fails
 loudly rather than rendering a half-record: an unknown workstream, a missing
-owner, a list where one owner belongs, no checkable link, an unparseable
-target, or a `state`/`shippedAt` disagreement all stop the build.
+owner, a list where one owner belongs, no checkable link, a missing
+target date or an unknown precision, or a `state`/`shippedAt` disagreement all stop the build.
 
 `lib/notion.ts` enforces the same rules against the Notion rows, so the two
 readers cannot accept different things. Marking something shipped is two edits

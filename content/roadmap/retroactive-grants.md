@@ -9,7 +9,8 @@ contributors:
     avatar: elena-vargas.jpg
   - name: Andre Okafor
     avatar: andre-okafor.jpg
-target: July 2026
+targetDate: 2026-07-31
+targetPrecision: month
 shippedAt: 2026-07-31
 related:
   - label: Livepeer Forum

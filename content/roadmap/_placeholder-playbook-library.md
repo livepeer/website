@@ -11,7 +11,8 @@ contributors:
     avatar: tom-whitfield.jpg
   - name: Elena Vargas
     avatar: elena-vargas.jpg
-target: Q1 2027
+targetDate: 2027-03-31
+targetPrecision: quarter
 related:
   - label: Livepeer Forum
     href: https://forum.livepeer.org

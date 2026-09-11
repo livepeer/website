@@ -9,7 +9,8 @@ contributors:
     avatar: peter-lindqvist.jpg
   - name: Anjali Raman
     avatar: anjali-raman.jpg
-target: Q4 2026
+targetDate: 2026-12-31
+targetPrecision: quarter
 related:
   - label: A Path to Livepeer 2.0
     href: https://forum.livepeer.org/t/a-path-to-livepeer-2-0/3291

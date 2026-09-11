@@ -4,6 +4,7 @@ import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
 import { slugify } from "./organizations";
+import { readPrecision, targetWindow } from "./target";
 
 /**
  * The canonical commitment register.
@@ -75,54 +76,6 @@ export type Person = {
   profile?: string;
 };
 
-const MONTHS = [
-  "january",
-  "february",
-  "march",
-  "april",
-  "may",
-  "june",
-  "july",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december",
-];
-
-/**
- * A sortable key for a target window, so the roadmap can run chronologically
- * without the target itself pretending to more precision than it has.
- *
- * Targets are deliberately written at whatever precision is real — "Q4 2026",
- * "July 2026", "H1 2027", "2027" — which means they cannot be sorted as text:
- * "H1 2027" would land before "Q4 2026", and "July" before "March". This maps
- * each to the first month it could land in, and throws on anything it does not
- * recognise rather than silently sorting it to the top.
- */
-export function targetSortKey(target: string, where = "a commitment"): number {
-  const t = target.trim();
-  const year = Number(t.match(/\b(20\d{2})\b/)?.[1]);
-  if (!year) {
-    throw new Error(`${where}: target ${JSON.stringify(target)} has no year.`);
-  }
-  const quarter = t.match(/\bQ([1-4])\b/i)?.[1];
-  if (quarter) return year * 100 + (Number(quarter) - 1) * 3 + 1;
-
-  const half = t.match(/\bH([12])\b/i)?.[1];
-  if (half) return year * 100 + (Number(half) - 1) * 6 + 1;
-
-  const month = MONTHS.findIndex((m) => t.toLowerCase().includes(m));
-  if (month >= 0) return year * 100 + month + 1;
-
-  // A bare year is a real commitment window — the loosest one we accept.
-  if (/^20\d{2}$/.test(t)) return year * 100 + 1;
-
-  throw new Error(
-    `${where}: target ${JSON.stringify(target)} is not a window we can place. Use a month, quarter (Q4 2026), half (H1 2027) or year.`
-  );
-}
-
 export type Commitment = {
   slug: string;
   title: string;
@@ -151,9 +104,16 @@ export type Commitment = {
    *  card's "by" line — `Contributors` in Notion. Optional: many records name
    *  an organisation and no individuals, and an empty roster is normal. */
   contributors?: Person[];
-  /** The real precision — "Q4 2026", "July 2026", "H1 2027", "2027". */
+  /**
+   * When it is meant to land, at the precision it is stated at — "Q4 2026",
+   * "July 2026", "H1 2027", "2027", "September 15, 2026". Read from a date
+   * and a precision; see lib/target.ts.
+   */
   target: string;
-  /** Derived from target, so the roadmap can run in chronological order. */
+  /** The heading it sits under when the roadmap is cut by quarter: the
+   *  quarter a day or a month falls in, the window itself otherwise. */
+  targetPeriod: string;
+  /** Orders targets by where their window starts, then where it ends. */
   targetSort: number;
   /**
    * The individual to ask about this — shown in the expanded panel as
@@ -413,6 +373,25 @@ function parse(file: string): Commitment {
   }
   assertNoRepeats(related, file);
 
+  // The same pair Notion holds: a date, and the precision it is stated at,
+  // empty meaning quarter. YAML reads an unquoted date as a Date.
+  const targetDate = new Date(
+    at("targetDate", data.targetDate) as string | Date
+  );
+  if (Number.isNaN(targetDate.getTime())) {
+    throw new Error(
+      `content/roadmap/${file}: targetDate ${JSON.stringify(data.targetDate)} is not a date.`
+    );
+  }
+  const target = targetWindow(
+    targetDate.toISOString().slice(0, 10),
+    readPrecision(
+      data.targetPrecision ? String(data.targetPrecision) : undefined,
+      `content/roadmap/${file}`
+    ),
+    `content/roadmap/${file}`
+  );
+
   return {
     slug,
     title: String(at("title", data.title)),
@@ -423,11 +402,9 @@ function parse(file: string): Commitment {
     ownerSlug: slugify(owner),
     contributors: readPeople(data.contributors, file),
     lead: readPeople(data.lead ? [data.lead] : undefined, file)?.[0],
-    target: String(at("target", data.target)),
-    targetSort: targetSortKey(
-      String(at("target", data.target)),
-      `content/roadmap/${file}`
-    ),
+    target: target.label,
+    targetPeriod: target.period,
+    targetSort: target.sort,
     shippedAt,
     related,
     funding: data.funding ? String(data.funding) : undefined,

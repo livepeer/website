@@ -1617,8 +1617,10 @@ export function Roadmap({
   // rather than as an honest edge; the closing line says that once.
   const roadmapByPeriod = [...building, ...next]
     .sort((a, b) => a.targetSort - b.targetSort)
+    // By the quarter it falls in, so a target set to a day or a month sits
+    // under its quarter rather than under a heading of its own.
     .reduce<Record<string, Commitment[]>>((acc, c) => {
-      (acc[c.target] ??= []).push(c);
+      (acc[c.targetPeriod] ??= []).push(c);
       return acc;
     }, {});
 
