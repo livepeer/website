@@ -298,12 +298,10 @@ function relationIds(prop: Json | undefined): string[] {
  *
  * Planned was Committed, which said nothing: everything on the register is
  * a commitment, and the state means one not started yet. Linear's word for
- * the same stage. The old name is read too until the Notion option is
- * renamed, so the two edits need not land together.
+ * the same stage.
  */
 const STATE_BY_NOTION: Record<string, CommitmentState> = {
   Planned: "next",
-  Committed: "next",
   "In progress": "building",
   Shipped: "shipped",
 };
