@@ -2,10 +2,10 @@
 title: "Introducing the Livepeer Foundation"
 description: "A new, neutral entity to steward the next phase of growth, decentralization, and ecosystem participation across the Livepeer network."
 date: "2025-06-05"
-category: "News"
+category: "Proposals"
 tags: ["governance", "foundation", "announcement"]
-image: "/images/blog/introducing-the-livepeer-foundation.svg"
-imageAlt: "Livepeer Foundation announcement banner"
+image: "https://cdn.sanity.io/images/l36s876e/production/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png?fm=webp&q=82"
+imageAlt: "Layered green reflective architecture"
 draft: false
 ---
 
@@ -97,4 +97,4 @@ The initial team includes:
 
 This is just the beginning! If you're building in Web3, exploring real-time video AI, or care about open infrastructure—Livepeer is where you can shape what's next.
 
-[Join The Community](https://discord.gg/55SZFEEH5y)
+[Join The Community](https://livepeer.org/discord)

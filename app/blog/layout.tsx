@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Blog | Livepeer",
   description:
     "News, insights, and updates from across the Livepeer ecosystem.",
+  alternates: {
+    types: { "application/atom+xml": "/blog/feed.xml" },
+  },
   openGraph: {
     title: "Blog | Livepeer",
     description:

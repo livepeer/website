@@ -1,27 +1,26 @@
-import Container from "@/components/ui/Container";
-import SectionHeader from "@/components/ui/SectionHeader";
-import BlogListingClient from "@/components/blog/BlogListingClient";
-import PageHero from "@/components/ui/PageHero";
-import { getAllPosts, getCategories } from "@/lib/blog";
+import { BlogListing } from "@/components/livepeer-ui/blog-listing";
+import { getBlogRegister } from "@/lib/register";
 
-export default function BlogPage() {
-  const posts = getAllPosts();
-  const categories = getCategories();
+import { blog, categoryLinks, toListingPosts } from "./listing";
+
+// The posts come from the register — Notion when there is a token,
+// content/blog when there is not (see CLAUDE.md → Content). Metadata lives in
+// layout.tsx, which this route already had; the copy and the rail are built
+// in listing.ts, shared with the category pages.
+export default async function BlogPage() {
+  const register = await getBlogRegister();
 
   return (
-    <PageHero>
-      <Container>
-        <SectionHeader
-          label="Blog"
-          title="Latest Updates"
-          description="News, insights, and updates from across the Livepeer ecosystem."
-          align="left"
-        />
-
-        <div className="mt-12">
-          <BlogListingClient posts={posts} categories={categories} />
-        </div>
-      </Container>
-    </PageHero>
+    <BlogListing
+      posts={toListingPosts(register)}
+      heading={blog.heading}
+      allHref={blog.allHref}
+      categories={categoryLinks(register)}
+      active={null}
+      siblings={blog.siblings}
+      feedHref={blog.feedHref}
+      searchPlaceholder={blog.searchPlaceholder}
+      emptyMessage={blog.emptyMessage}
+    />
   );
 }
