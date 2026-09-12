@@ -115,6 +115,8 @@ export type Commitment = {
   targetPeriod: string;
   /** Orders targets by where their window starts, then where it ends. */
   targetSort: number;
+  /** The last day of the window, ISO: past it, unshipped work is late. */
+  targetEnd: string;
   /**
    * The individual to ask about this — shown in the expanded panel as
    * "Lead".
@@ -405,6 +407,7 @@ function parse(file: string): Commitment {
     target: target.label,
     targetPeriod: target.period,
     targetSort: target.sort,
+    targetEnd: target.end,
     shippedAt,
     related,
     funding: data.funding ? String(data.funding) : undefined,

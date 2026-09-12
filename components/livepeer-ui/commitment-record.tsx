@@ -286,6 +286,11 @@ export function CommitmentRecord({
         ) : (
           <Row icon={AlignLeft} label="Target">
             {c.target}
+            {/* The one objective check on a self-reported health: the
+                window has closed and the work has not shipped. */}
+            {c.targetEnd < now.toISOString().slice(0, 10) && (
+              <span className="text-muted-foreground"> · passed</span>
+            )}
           </Row>
         )}
         <Row icon={CircleChevronDown} label="Workstream">

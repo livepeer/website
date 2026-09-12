@@ -78,6 +78,28 @@ function readCurrentQuarter() {
   return quarterSnapshot;
 }
 
+// Today, read the same way, for the one comparison the register makes
+// against the calendar: whether a target window has closed.
+let todaySnapshot: string | null = null;
+function readToday() {
+  if (todaySnapshot === null) {
+    todaySnapshot = new Date().toISOString().slice(0, 10);
+  }
+  return todaySnapshot;
+}
+
+/**
+ * Past its target: under way or planned, and the window has closed. The
+ * one objective check on a health the lead reports themselves — "On
+ * track" a month after the quarter ended is a claim the calendar can
+ * answer. A fact rather than a fifth health, so it sits beside the health
+ * instead of replacing it. Unknown until the browser can say what day it
+ * is, like the current quarter.
+ */
+function pastTarget(c: Commitment, today: string | null): boolean {
+  return today !== null && c.state !== "shipped" && c.targetEnd < today;
+}
+
 type View = "roadmap" | "shipped";
 
 /**
@@ -716,6 +738,8 @@ function Group({
   commitments,
   current,
   display = "cards",
+  tally,
+  today,
 }: {
   period: string;
   /** Where the heading goes, when it names a body rather than a quarter. */
@@ -725,8 +749,15 @@ function Group({
   commitments: RoadmapItem[];
   current?: boolean;
   display?: Display;
+  /** In place of the count, when the heading is a body: how its work stands. */
+  tally?: React.ReactNode;
+  today: string | null;
 }) {
   const list = display === "list";
+  // Windows that have closed with their work unshipped, counted on the
+  // band's own label — the calendar's word beside the leads' health on the
+  // cards below, said once for the band rather than on each card.
+  const late = commitments.filter((c) => pastTarget(c, today)).length;
   return (
     // first-of-type, not first: the column opens with a screen-reader-only
     // status paragraph, so `first` never matches a section and every quarter
@@ -761,7 +792,7 @@ function Group({
           offset is that row's height — change one and the other has to move. */}
       <h2
         className={cn(
-          "sticky top-30 z-10 -mx-2 flex items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2",
+          "sticky top-30 z-10 -mx-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2",
           commitments.length === 0 ? "py-2" : list ? "py-4" : "py-6"
         )}
       >
@@ -817,12 +848,14 @@ function Group({
             end of it. The count gives the other end something true to hold, and
             it tracks the filters — so it doubles as the answer to "did that
             narrow anything?" */}
-        {commitments.length > 0 && (
-          <Label className="shrink-0 whitespace-nowrap">
-            {commitments.length}{" "}
-            {commitments.length === 1 ? "commitment" : "commitments"}
-          </Label>
-        )}
+        {commitments.length > 0 &&
+          (tally ?? (
+            <Label className="shrink-0 whitespace-nowrap">
+              {commitments.length}{" "}
+              {commitments.length === 1 ? "commitment" : "commitments"}
+              {late > 0 && ` · ${late} past target`}
+            </Label>
+          ))}
       </h2>
       {/* 16px between cards, against 28px of padding inside one.
           At 8 the gap between two separate commitments was less than a third
@@ -851,6 +884,46 @@ function Group({
           </div>
         ))}
     </section>
+  );
+}
+
+/**
+ * How a body's work stands, on its heading under the owner cut: its
+ * commitments by health, worst first, then the planned ones — the
+ * changelog's tally, per owner, so the accountability view reads as a
+ * report without opening a card, with how many are past their target at
+ * the end. In the count's own small type and its place, with no icons or
+ * colour: the cards beneath carry those, and a heading that repeated them
+ * read as busy.
+ */
+function OwnerTally({
+  items,
+  today,
+}: {
+  items: RoadmapItem[];
+  today: string | null;
+}) {
+  const building = items.filter((c) => c.state === "building");
+  const parts = HEALTH_ORDER.map((health) => ({
+    n: building.filter((c) => (c.standing?.health ?? "no-update") === health)
+      .length,
+    word: HEALTH_LABEL[health],
+  })).filter(({ n }) => n > 0);
+  const planned = items.filter((c) => c.state === "next").length;
+  if (planned > 0) parts.push({ n: planned, word: "Planned" });
+  const late = items.filter((c) => pastTarget(c, today)).length;
+  if (late > 0) parts.push({ n: late, word: "Past target" });
+  return (
+    // Each part held whole, and the whole line under the name on a phone,
+    // where beside it the numbers broke away from their words.
+    <Label className="w-full sm:w-auto sm:text-right">
+      {parts.map(({ n, word }, i) => (
+        <span key={word} className="whitespace-nowrap">
+          {i > 0 && " · "}
+          {n} {word}
+        </span>
+      ))}
+    </Label>
   );
 }
 
@@ -976,6 +1049,9 @@ function Filters({
   buildingOnly,
   onBuildingOnlyChange,
   buildingCount,
+  lateOnly,
+  onLateOnlyChange,
+  lateCount,
   healths,
   healthCounts,
   onToggleHealth,
@@ -994,6 +1070,9 @@ function Filters({
   buildingOnly: boolean;
   onBuildingOnlyChange: (v: boolean) => void;
   buildingCount: number;
+  lateOnly: boolean;
+  onLateOnlyChange: (v: boolean) => void;
+  lateCount: number;
   healths: HealthOrNone[];
   healthCounts: Record<HealthOrNone, number>;
   onToggleHealth: (h: HealthOrNone) => void;
@@ -1010,11 +1089,13 @@ function Filters({
     selected.length > 0 ||
     healths.length > 0 ||
     query.length > 0 ||
-    buildingOnly;
+    buildingOnly ||
+    lateOnly;
   const active =
     selected.length +
     healths.length +
     (buildingOnly ? 1 : 0) +
+    (lateOnly ? 1 : 0) +
     (query.length > 0 ? 1 : 0);
 
   // Collapsed on a phone, open from lg up where the rail has its own column.
@@ -1101,6 +1182,16 @@ function Filters({
               count={buildingCount}
               active={buildingOnly}
               onChange={onBuildingOnlyChange}
+            />
+            {/* The calendar's own facet: work whose window has closed
+                without shipping. Beside In progress because both are
+                one yes-or-no question about the state of the work, and
+                unlike health it is not the lead's word. */}
+            <FilterRow
+              label="Past target"
+              count={lateCount}
+              active={lateOnly}
+              onChange={onLateOnlyChange}
             />
           </div>
         )}
@@ -1375,6 +1466,8 @@ export function Roadmap({
   // whole view away — and one carried across a tab switch would blank the list
   // with nothing on screen to explain why.
   const buildingOnly = view === "roadmap" && params.get("state") === "building";
+  // Forward only, like the state flag: behind us nothing is late.
+  const lateOnly = view === "roadmap" && params.get("target") === "past";
   // In the URL like the rest, so a by-owner roadmap is a link you can send.
   // The health cut is a fact about work under way, so on Shipped it reads
   // as the default.
@@ -1413,12 +1506,14 @@ export function Roadmap({
     readCurrentQuarter,
     () => null
   );
+  const today = useSyncExternalStore(subscribeToNothing, readToday, () => null);
 
   const setParams = (
     next: Partial<{
       view: View;
       workstream: string[];
       buildingOnly: boolean;
+      lateOnly: boolean;
       grouping: Grouping;
       health: HealthOrNone[];
     }>
@@ -1439,6 +1534,7 @@ export function Roadmap({
       // a health to cut by.
       if (next.view === "shipped") {
         p.delete("state");
+        p.delete("target");
         p.delete("health");
         if (p.get("group") === "health") p.delete("group");
       }
@@ -1446,6 +1542,10 @@ export function Roadmap({
     if (next.buildingOnly !== undefined) {
       if (next.buildingOnly) p.set("state", "building");
       else p.delete("state");
+    }
+    if (next.lateOnly !== undefined) {
+      if (next.lateOnly) p.set("target", "past");
+      else p.delete("target");
     }
     if (next.workstream) {
       if (next.workstream.length === 0) p.delete("workstream");
@@ -1473,9 +1573,12 @@ export function Roadmap({
         hit(c) &&
         (selected.length === 0 || selected.includes(c.workstream)) &&
         (!buildingOnly || c.state === "building") &&
+        // Not applied until the browser knows the date, so the page does
+        // not open on "Nothing matches" and then fill in.
+        (!lateOnly || today === null || pastTarget(c, today)) &&
         healthy(c)
     );
-  }, [commitments, query, selected, buildingOnly, healths]);
+  }, [commitments, query, selected, buildingOnly, lateOnly, today, healths]);
 
   // Counted against the query and the workstream selection but not against
   // itself — a toggle whose own count fell to 0 the moment you switched it off
@@ -1494,6 +1597,21 @@ export function Roadmap({
     ).length;
   }, [commitments, query, selected]);
 
+  // The same scoping for Past target, and 0 until the date is known.
+  const lateCount = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return commitments.filter(
+      (c) =>
+        pastTarget(c, today) &&
+        (selected.length === 0 || selected.includes(c.workstream)) &&
+        (!q ||
+          [c.title, c.outcome, c.workstream, c.owner]
+            .join(" ")
+            .toLowerCase()
+            .includes(q))
+    ).length;
+  }, [commitments, query, selected, today]);
+
   // Rail counts are scoped to the view, the query and the state toggle, but NOT
   // to the workstream selection — a facet that recounted itself as you selected
   // would show every unselected workstream as 0, which is exactly when the
@@ -1511,6 +1629,7 @@ export function Roadmap({
         view === "shipped" ? c.state === "shipped" : c.state !== "shipped";
       if (!inView) continue;
       if (buildingOnly && c.state !== "building") continue;
+      if (lateOnly && today !== null && !pastTarget(c, today)) continue;
       if (
         q &&
         ![c.title, c.outcome, c.workstream, c.owner]
@@ -1530,7 +1649,7 @@ export function Roadmap({
       tally[c.workstream] = (tally[c.workstream] ?? 0) + 1;
     }
     return tally;
-  }, [commitments, query, view, buildingOnly, healths]);
+  }, [commitments, query, view, buildingOnly, lateOnly, today, healths]);
 
   // The health facet's numbers: every other filter applied, this one not,
   // for the reason the workstream counts leave their own facet out — a
@@ -1543,6 +1662,7 @@ export function Roadmap({
     >;
     for (const c of commitments) {
       if (c.state !== "building") continue;
+      if (lateOnly && today !== null && !pastTarget(c, today)) continue;
       if (selected.length > 0 && !selected.includes(c.workstream)) continue;
       if (
         q &&
@@ -1555,7 +1675,7 @@ export function Roadmap({
       tally[c.standing?.health ?? "no-update"] += 1;
     }
     return tally;
-  }, [commitments, query, selected]);
+  }, [commitments, query, selected, lateOnly, today]);
 
   const building = matches.filter((c) => c.state === "building");
   const next = matches.filter((c) => c.state === "next");
@@ -1718,6 +1838,9 @@ export function Roadmap({
             buildingOnly={buildingOnly}
             onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
             buildingCount={buildingCount}
+            lateOnly={lateOnly}
+            onLateOnlyChange={(v) => setParams({ lateOnly: v })}
+            lateCount={lateCount}
             healths={healths}
             healthCounts={healthCounts}
             onToggleHealth={(h) =>
@@ -1741,7 +1864,12 @@ export function Roadmap({
             }
             onClear={() => {
               setQuery("");
-              setParams({ workstream: [], buildingOnly: false, health: [] });
+              setParams({
+                workstream: [],
+                buildingOnly: false,
+                lateOnly: false,
+                health: [],
+              });
             }}
             suggestionsHref={suggestionsHref}
           />
@@ -1804,6 +1932,7 @@ export function Roadmap({
                   setParams({
                     workstream: [],
                     buildingOnly: false,
+                    lateOnly: false,
                     health: [],
                   });
                 }}
@@ -1823,6 +1952,7 @@ export function Roadmap({
                         href={`/organizations/${slug}`}
                         commitments={items}
                         display={display}
+                        today={today}
                       />
                     ))
                   : Object.entries(shippedByPeriod).map(([period, items]) => (
@@ -1831,6 +1961,7 @@ export function Roadmap({
                         period={period}
                         commitments={items}
                         display={display}
+                        today={today}
                       />
                     ))
                 : grouping === "owner"
@@ -1840,7 +1971,9 @@ export function Roadmap({
                         period={owner}
                         href={`/organizations/${slug}`}
                         commitments={items}
+                        tally={<OwnerTally items={items} today={today} />}
                         display={display}
+                        today={today}
                       />
                     ))
                   : grouping === "health"
@@ -1873,6 +2006,7 @@ export function Roadmap({
                             }
                             commitments={items}
                             display={display}
+                            today={today}
                           />
                         ))
                     : Object.entries(roadmapByPeriod).map(([period, items]) => (
@@ -1882,6 +2016,7 @@ export function Roadmap({
                           commitments={items}
                           current={period === currentQuarter}
                           display={display}
+                          today={today}
                         />
                       ))}
 

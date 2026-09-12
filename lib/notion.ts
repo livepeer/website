@@ -637,6 +637,7 @@ function toCommitment(
     target: target.label,
     targetPeriod: target.period,
     targetSort: target.sort,
+    targetEnd: target.end,
     shippedAt,
     related,
     funding: text(p.Funding) || undefined,
