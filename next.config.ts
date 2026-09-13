@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  async rewrites() {
+    return [
+      // Standalone Product → Hero 3D playbook, served as a raw HTML file from
+      // public/hero-3d-playbook.html (kept outside the app/ design system).
+      {
+        source: "/hero-3d-playbook",
+        destination: "/hero-3d-playbook.html",
+      },
+    ];
+  },
   async redirects() {
     return [
       // Old livepeer.org routes → new site equivalents
