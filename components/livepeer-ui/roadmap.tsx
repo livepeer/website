@@ -1052,7 +1052,7 @@ function SuggestBlock({
       <div className="mt-6 border-t border-border pt-5">
         <Label>Own something on it?</Label>
         <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-          An update every month, and a retrospective at the end.
+          Owners post an update every month and a retrospective at the end.
         </p>
         <p className="mt-3 text-sm">
           <LinkRow label="How to report" href={REPORTING_HREF} />
