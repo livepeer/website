@@ -1201,7 +1201,9 @@ function Filters({
     // travels within its parent's box, so wrapping this in a div sized to its
     // own height pinned it nowhere — the rail has to be a direct child of the
     // column that stretches to the register's height.
-    <div ref={rail} className="lg:sticky lg:top-16 lg:pt-5">
+    // pb to match the pt: with the rail pinned to the window's bottom edge,
+    // the last link sat flush against it.
+    <div ref={rail} className="lg:sticky lg:top-16 lg:pt-5 lg:pb-6">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
