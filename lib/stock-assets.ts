@@ -1,4 +1,9 @@
-export const sanityStaticAssets = {
+/**
+ * Logos, stills and clips a few page sections show, from Peace Node's
+ * stock library on cdn.sanity.io. Plain URLs, no CMS behind them; the
+ * name said "Sanity" once and read as a dependency the site does not have.
+ */
+export const stockAssets = {
   agentCompatibility: {
     claude:
       "https://cdn.sanity.io/images/l36s876e/production/843589279f32cb437a71effa113f23bfe8477282-1200x1200.svg",

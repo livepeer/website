@@ -11,7 +11,7 @@ import { LivepeerLogo } from "@/components/brand";
 import { LivepeerOrgHeaderNav } from "@/components/livepeer-ui/livepeer-org-header-nav";
 import { LivepeerOrgMenu } from "@/components/livepeer-ui/livepeer-org-menu";
 import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
-import type { LivepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
+import type { LivepeerOrgNavigationImages } from "@/lib/navigation-images";
 import { Button } from "@/components/ui/button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { ExternalArrow } from "@/components/ui/external-arrow";

@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { ArrowUpIcon, PaperclipIcon, PlayIcon } from "lucide-react";
 
-import { sanityStaticAssets } from "@/components/static-assets";
+import { stockAssets } from "@/lib/stock-assets";
 import {
   Conversation,
   ConversationContent,
@@ -190,7 +190,7 @@ function Attachment() {
     <span className="flex w-fit items-center gap-2 rounded-md bg-background/40 py-1 pr-2.5 pl-1 text-xs">
       <span className="relative size-6 overflow-hidden rounded-sm">
         <Image
-          src={sanityStaticAssets.playbooks.generateVideo}
+          src={stockAssets.playbooks.generateVideo}
           alt=""
           fill
           sizes="24px"
@@ -308,7 +308,7 @@ function Result() {
     <div className="flex w-full max-w-[32rem] items-start gap-3">
       <div className="relative aspect-video w-36 shrink-0 overflow-hidden rounded-md bg-background/60 sm:w-44">
         <Image
-          src={sanityStaticAssets.playbooks.generateVideo}
+          src={stockAssets.playbooks.generateVideo}
           alt=""
           fill
           sizes="176px"

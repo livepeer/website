@@ -6,7 +6,7 @@ import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer"
 import { getDiscord, withDiscordInvite } from "@/lib/discord";
 import { livepeerOrgSite } from "@/lib/site";
 import { SectionRule } from "@/components/ui/section-rule";
-import { livepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
+import { livepeerOrgNavigationImages } from "@/lib/navigation-images";
 import "./globals.css";
 
 export const metadata: Metadata = {

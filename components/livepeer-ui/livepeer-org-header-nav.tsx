@@ -12,7 +12,7 @@ import type {
 } from "@/components/livepeer-ui/contracts";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { LivepeerOrgNavigationImages } from "@/sanity/lib/livepeer-org-navigation";
+import type { LivepeerOrgNavigationImages } from "@/lib/navigation-images";
 
 export const livepeerOrgHeaderGroups = ["Network", "Resources"] as const;
 

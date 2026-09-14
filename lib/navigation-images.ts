@@ -1,9 +1,12 @@
-// Nav dropdown thumbnails, sourced from Peace Node's stock-image system
-// (https://livepeer.peaceno.de/marketing/stock-images). These are static
-// image URLs on the Sanity CDN — no CMS query, no `next-sanity` client — so
-// they honor the in-repo/no-CMS decision (see CLAUDE.md). Keyed by nav item
-// label; mirrors what the public-beta mockup renders. cdn.sanity.io is
-// allowlisted in next.config.ts → images.remotePatterns.
+// Nav dropdown thumbnails, from Peace Node's stock-image library
+// (https://livepeer.peaceno.de/marketing/stock-images), which serves from
+// cdn.sanity.io — the same host every cover on the site comes from. Static
+// URLs, no CMS query and no client: the registry's header components take
+// this map as data (see CLAUDE.md). Keyed by nav item label; mirrors what
+// the public-beta mockup renders. The host is allowlisted in next.config.ts.
+// This file lived at sanity/lib/ because that was the import path the
+// registry components shipped with; the folder implied a CMS that was never
+// installed, so it moved here.
 export type LivepeerOrgNavigationImages = Record<string, string | null>;
 
 const CDN = "https://cdn.sanity.io/images/l36s876e/production";

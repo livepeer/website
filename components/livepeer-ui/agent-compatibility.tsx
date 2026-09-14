@@ -1,35 +1,35 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { sanityStaticAssets } from "@/components/static-assets";
+import { stockAssets } from "@/lib/stock-assets";
 
 const agents = [
   {
     name: "Claude",
-    src: sanityStaticAssets.agentCompatibility.claude,
+    src: stockAssets.agentCompatibility.claude,
   },
   {
     name: "Claude Code",
-    src: sanityStaticAssets.agentCompatibility.claudeCode,
+    src: stockAssets.agentCompatibility.claudeCode,
   },
   {
     name: "Codex",
-    src: sanityStaticAssets.agentCompatibility.codex,
+    src: stockAssets.agentCompatibility.codex,
     monochrome: true,
     opticalScale: true,
   },
   {
     name: "Hermes",
-    src: sanityStaticAssets.agentCompatibility.hermes,
+    src: stockAssets.agentCompatibility.hermes,
     monochrome: true,
   },
   {
     name: "OpenClaw",
-    src: sanityStaticAssets.agentCompatibility.openClaw,
+    src: stockAssets.agentCompatibility.openClaw,
   },
   {
     name: "Pi",
-    src: sanityStaticAssets.agentCompatibility.pi,
+    src: stockAssets.agentCompatibility.pi,
     monochrome: true,
   },
 ];

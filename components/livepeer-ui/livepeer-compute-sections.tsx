@@ -11,7 +11,7 @@ import { LivepeerSymbol } from "@/components/brand";
 import { ComputeMetrics } from "@/components/livepeer-ui/compute-metrics";
 import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
 import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream";
-import { sanityStaticAssets } from "@/components/static-assets";
+import { stockAssets } from "@/lib/stock-assets";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -245,7 +245,7 @@ export function ComputeOnchainSection({
           {/* Raw <img>: brand SVG on a fixed black panel, no variants to serve
             and nothing for the optimiser to do. */}
           <img
-            src={sanityStaticAssets.arbitrum}
+            src={stockAssets.arbitrum}
             alt={content.arbitrum.imageAlt}
             className="size-10 sm:size-14"
           />
