@@ -250,283 +250,111 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
 }
 
 /**
- * Every way work gets paid for, ordered by size.
+ * The ladder's cells, and nothing around them: the page sets the heading
+ * and the sentences as prose and embeds this where a Notion page would
+ * embed a database.
  *
- * The order is the design. A newcomer's real question is "how big is my
- * thing", and a list that climbs from a bounty to a treasury vote lets them
- * read down the ceiling column and stop at their rung — which is why that
- * column is set in mono and right-aligned, so the figures line up under each
- * other. Everything that explains the process (discussion windows, quorum)
- * is behind the link on the row, where it is read by the one person who has
- * already chosen that path.
+ * Cells, not rows. A table was the first form, and it was right about the
+ * order — a newcomer's real question is "how big is my thing", and the
+ * ladder climbs from a bounty to a treasury vote — but five rows of four
+ * columns spent a lot of typography on five facts. A cell gives each path
+ * its own ground: the name, who it is for, who decides, the ceiling, and
+ * where to go. Reading order is the ladder, left to right and down, so the
+ * numbers went with the rows; the treasury, the top rung, spans the width.
+ * The body that decides was a mono caption over each group first, and read
+ * as one more device; it is a quiet line in the cell now, linked to its
+ * page in Organizations — "who is the Network Engineering SPE" is a fair
+ * question here.
  *
- * One flat grid in ladder order. It was grouped under the body that decides,
- * with a mono caption per group; the captions read as one more device and
- * went, and the body is a quiet line in each cell instead — see below.
- * Retired programmes are not rungs: they render as one line at the foot, for
- * the reader who followed an old link and would otherwise wait on a dead end.
- *
- * A rule and space above it, not a tinted band. A band was tried: it is the
- * most generic device a page can reach for, and in dark it vanished against
- * the page anyway. The h2, the captions and the ruled rows are what set this
- * apart, and they work in both themes. Below sm the rows stack; the header
- * goes to screen readers. The display change strips table semantics in
- * Chrome and Safari, so the roles are set explicitly and survive the reflow.
+ * The rules are Compute's requirements-grid logic: border-b on every cell
+ * but the last row, a vertical rule carried by the left cell of each pair,
+ * no outer rules, so the block reads as structure rather than as cards.
  */
-export function ContributeLadder({
-  title,
-  intro,
+export function LadderGrid({
   paths,
-  note,
+  className,
 }: {
-  title: string;
-  intro: React.ReactNode;
   paths: FundingPath[];
-  /** The one thing true of every rung, which would be wrong to say five times. */
-  note: React.ReactNode;
+  className?: string;
 }) {
   const active = paths.filter(isActive);
-  const retired = paths.filter((p) => p.retired);
-  const prose =
-    "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
-
+  const n = active.length;
+  const odd = n % 2 === 1;
+  const lastRowStart = odd ? n - 1 : n - 2;
   return (
-    // No rule of its own: the path strip above ends on one, and a second
-    // rule here left the two with dead air between them. When the ladder
-    // sat directly under the hero it drew the rule the hero's ground faded
-    // out to; the path took that seat, and its top rule is that seam now.
-    <section className="mt-12 sm:mt-16">
-      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        {/* 3xl: the hero's text block is about 600px wide, and at 4xl this
-            was the widest thing on the page between two centred blocks. Some
-            "best for" cells wrap to two lines at this width; that costs less
-            than the column reading as a different page. */}
-        <div className="mx-auto max-w-3xl">
-          {/* Page-title size at every width, not display: at display size
-              this sat a few hundred pixels under a headline of nearly the
-              same scale, and two headlines read as two pages. The hero is
-              the page's one big statement; this is a section of it. */}
-          <h2 className="text-page-title text-balance">{title}</h2>
-          <p
-            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
-          >
-            {intro}
-          </p>
-
-          {/* Cells, not rows. A table was the first form, and it was right
-              about the order — a newcomer's real question is "how big is my
-              thing", and the ladder climbs from a bounty to a treasury vote —
-              but five rows of four columns spent a lot of typography on five
-              facts. A cell gives each path its own ground: the name, who it
-              is for, who decides, the ceiling, and where to go. Reading order is the ladder, left to right and
-              down, so the numbers went with the rows; the treasury, the top
-              rung, spans the width. The body that decides was a mono caption
-              over each group first, and read as one more device; it is a
-              quiet line in the cell now, linked to its page in Organizations
-              — "who is the Network Engineering SPE" is a fair question here.
-
-              The rules are Compute's requirements-grid logic: border-b on
-              every cell but the last row, a vertical rule carried by the
-              left cell of each pair, no outer rules, so the block reads as
-              structure rather than as cards. */}
-          <div className="mt-8 grid sm:grid-cols-2">
-            {active.map((rung, i) => {
-              const n = active.length;
-              const odd = n % 2 === 1;
-              const lastRowStart = odd ? n - 1 : n - 2;
-              const spans = odd && i === n - 1;
-              const left = !spans && i % 2 === 0;
-              return (
-                <div
-                  key={rung.name}
-                  className={cn(
-                    "py-6",
-                    i < n - 1 && "border-b border-border",
-                    i >= lastRowStart && i < n - 1 && "sm:border-b-0",
-                    spans
-                      ? "sm:col-span-2"
-                      : left
-                        ? "sm:border-r sm:border-border sm:pr-7"
-                        : "sm:pl-7"
-                  )}
-                >
-                  <h3 className="text-lg font-light">{rung.name}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {rung.bestFor}
-                  </p>
-                  {/* Two facts under the description, set as facts: a small
-                      muted label of one width, then the value, so they read
-                      as a pair of rows rather than as more prose — "Decided
-                      by" directly under the description, in the same colour,
-                      read as its third line. The ceiling is the one value
-                      that floated without a name; the link shares its line.
-                      Labelled rows for every field were tried and spent the
-                      cell's whole quietness on it. */}
-                  <div className="mt-4 space-y-1 text-sm">
-                    <p className="flex items-baseline gap-3">
-                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                        Decided by
-                      </span>
-                      <Link
-                        href={`/organizations/${rung.decidedBy.slug}`}
-                        className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                      >
-                        {rung.decidedBy.name}
-                      </Link>
-                    </p>
-                    <p className="flex items-baseline gap-3">
-                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                        Ceiling
-                      </span>
-                      {/* Sans, like the body beside it. The mono was the
-                          table's, where figures lined up in a column; in a
-                          cell there is nothing to align, and two fact rows
-                          in two faces read as two kinds of thing. */}
-                      <span>{rung.ceiling}</span>
-                    </p>
-                  </div>
-                  {/* The action on its own line, on the left edge with
-                      everything else. It rode the ceiling row's right end
-                      first, which made it read as part of that fact and, in
-                      the spanning treasury cell, stranded it a column away
-                      from anything. A little more air above it than between
-                      the facts, so it reads as the cell's last step. */}
-                  <p className="mt-5 text-sm">
-                    <Ref
-                      label={rung.linkLabel}
-                      href={rung.link}
-                      className="text-foreground"
-                    />
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Small, and not a section: a rule and a heading would promise
-              more than two lines deliver. */}
+    <div className={cn("grid sm:grid-cols-2", className)}>
+      {active.map((rung, i) => {
+        const spans = odd && i === n - 1;
+        const left = !spans && i % 2 === 0;
+        return (
           <div
-            className={`mt-8 grid max-w-[60ch] gap-2 text-xs leading-relaxed text-muted-foreground ${prose}`}
-          >
-            <p>{note}</p>
-            {retired.length > 0 && (
-              <p>
-                <RetiredNames paths={retired} />{" "}
-                {retired.length === 1 ? "no longer takes" : "no longer take"}{" "}
-                requests.
-              </p>
+            key={rung.name}
+            className={cn(
+              "py-6",
+              i < n - 1 && "border-b border-border",
+              i >= lastRowStart && i < n - 1 && "sm:border-b-0",
+              spans
+                ? "sm:col-span-2"
+                : left
+                  ? "sm:border-r sm:border-border sm:pr-7"
+                  : "sm:pl-7"
             )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * The path
- * ------------------------------------------------------------------ */
-
-export type PathStep = { title: string; body: React.ReactNode };
-
-/**
- * From an idea to a commitment, in three steps, between the hero and the
- * ladder: the hero says go and talk, the ladder says how work gets paid
- * for, and this is the middle the old help site's "get involved" articles
- * covered and the page did not. Three cells in a row on a wide screen, one
- * sentence each, in the ladder's hairline idiom — a first pass stacked
- * them as rows with a paragraph each and stood taller than the ladder it
- * was meant to introduce. Close under the hero: its ground fades out to
- * exactly this section's rule (the canvas reaches the same 3rem/4rem past
- * the hero), so the fade and the rule are one seam. The strip's bottom
- * rule is the only rule between this and the ladder.
- */
-export function ContributePath({
-  title,
-  steps,
-}: {
-  title: string;
-  steps: PathStep[];
-}) {
-  const prose =
-    "[&_a]:text-foreground [&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
-  return (
-    <section className="mt-12 sm:mt-16">
-      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-3xl border-t border-border pt-12 sm:pt-16">
-          <h2 className="text-page-title text-balance">{title}</h2>
-          <ol className="mt-8 grid border-y border-border sm:grid-cols-3">
-            {steps.map((step, i) => (
-              <li
-                key={step.title}
-                className={cn(
-                  "py-5 sm:py-6",
-                  // Hairlines between cells, carried by the cell after the
-                  // gap: a top rule below sm, a left rule with padding from sm.
-                  i > 0 &&
-                    "border-t border-border sm:border-t-0 sm:border-l sm:pl-6",
-                  i < steps.length - 1 && "sm:pr-6"
-                )}
-              >
-                <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
+          >
+            <h3 className="text-lg font-light">{rung.name}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {rung.bestFor}
+            </p>
+            {/* Two facts under the description, set as facts: a small muted
+                label of one width, then the value, so they read as a pair
+                of rows rather than as more prose. Labelled rows for every
+                field were tried and spent the cell's whole quietness. */}
+            <div className="mt-4 space-y-1 text-sm">
+              <p className="flex items-baseline gap-3">
+                <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                  Decided by
                 </span>
-                <h3 className="mt-2 font-medium">{step.title}</h3>
-                <p
-                  className={`mt-1.5 text-sm leading-relaxed text-muted-foreground ${prose}`}
+                <Link
+                  href={`/organizations/${rung.decidedBy.slug}`}
+                  className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
                 >
-                  {step.body}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * Owners
- * ------------------------------------------------------------------ */
-
-/**
- * The other reader the page can answer: the one already funded, who wants
- * the rules. A block of its own after the ladder rather than a sentence in
- * its note — the note is read by nobody in a hurry, and this reader is.
- * The same shape as the roadmap rail's "Own something on it?" block, so
- * the two doors to one page look alike.
- */
-export function ContributeOwners({
-  label,
-  body,
-  link,
-}: {
-  label: string;
-  body: string;
-  link: Ref;
-}) {
-  return (
-    <section className="mt-12 sm:mt-16">
-      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
-        <div className="mx-auto max-w-3xl border-t border-border pt-8">
-          <div className="grid gap-x-12 gap-y-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline">
-            <div>
-              <h2 className="font-medium">{label}</h2>
-              <p className="mt-1.5 max-w-[60ch] text-sm leading-relaxed text-muted-foreground">
-                {body}
+                  {rung.decidedBy.name}
+                </Link>
+              </p>
+              <p className="flex items-baseline gap-3">
+                <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                  Ceiling
+                </span>
+                <span>{rung.ceiling}</span>
               </p>
             </div>
-            <p className="text-sm">
+            {/* The action on its own line, on the left edge with everything
+                else, with a little more air above it than between the
+                facts, so it reads as the cell's last step. */}
+            <p className="mt-5 text-sm">
               <Ref
-                label={link.label}
-                href={link.href}
+                label={rung.linkLabel}
+                href={rung.link}
                 className="text-foreground"
               />
             </p>
           </div>
-        </div>
-      </div>
-    </section>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * "X and Y no longer take requests", for the reader who followed an old
+ * link; nothing when nothing is retired.
+ */
+export function RetiredLine({ paths }: { paths: FundingPath[] }) {
+  const retired = paths.filter((p) => p.retired);
+  if (retired.length === 0) return null;
+  return (
+    <>
+      <RetiredNames paths={retired} />{" "}
+      {retired.length === 1 ? "no longer takes" : "no longer take"} requests.
+    </>
   );
 }
