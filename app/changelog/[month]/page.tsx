@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 
 import { ChangelogListing } from "@/components/livepeer-ui/changelog-listing";
 import { MONTH, monthTitle, roundups } from "@/lib/changelog";
-import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
+import {
+  getBlogRegister,
+  getHeadlines,
+  getRegister,
+  getUpdates,
+} from "@/lib/register";
 
 import { changelog, changelogRow, toView } from "../listing";
 
@@ -49,7 +54,11 @@ export default async function ChangelogMonthPage({ params }: Props) {
   const { month } = await params;
   if (!MONTH.test(month)) notFound();
 
-  const [all, posts] = await Promise.all([months(), getBlogRegister()]);
+  const [all, posts, headlines] = await Promise.all([
+    months(),
+    getBlogRegister(),
+    getHeadlines(),
+  ]);
   const at = all.findIndex((r) => r.month === month);
   if (at < 0) notFound();
 
@@ -59,7 +68,7 @@ export default async function ChangelogMonthPage({ params }: Props) {
 
   return (
     <ChangelogListing
-      roundups={[toView(all[at]!)]}
+      roundups={[toView(all[at]!, headlines.get(month))]}
       neighbours={{ previous: link(all[at + 1]), next: link(all[at - 1]) }}
       heading={changelog.heading}
       intro={changelog.intro}

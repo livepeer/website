@@ -1,6 +1,11 @@
 import { ChangelogListing } from "@/components/livepeer-ui/changelog-listing";
 import { roundups } from "@/lib/changelog";
-import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
+import {
+  getBlogRegister,
+  getHeadlines,
+  getRegister,
+  getUpdates,
+} from "@/lib/register";
 
 import { changelog, changelogRow, toView } from "./listing";
 
@@ -9,16 +14,19 @@ import { changelog, changelogRow, toView } from "./listing";
 // read only for the row — the categories beside Changelog are the blog's,
 // and the row is the same one /blog shows.
 export default async function ChangelogPage() {
-  const [commitments, updates, posts] = await Promise.all([
+  const [commitments, updates, posts, headlines] = await Promise.all([
     getRegister(),
     getUpdates(),
     getBlogRegister(),
+    getHeadlines(),
   ]);
   const months = roundups(commitments, updates, new Date());
 
   return (
     <ChangelogListing
-      roundups={months.slice(0, changelog.recentMonths).map(toView)}
+      roundups={months
+        .slice(0, changelog.recentMonths)
+        .map((r) => toView(r, headlines.get(r.month)))}
       earlier={months
         .slice(changelog.recentMonths)
         .map(({ month, title }) => ({ month, title }))}

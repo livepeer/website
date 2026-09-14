@@ -14,6 +14,7 @@
     "build:brand-kit": "node scripts/build-brand-kit.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
     "@base-ui/react": "^1.7.0",
     "@radix-ui/react-avatar": "^1.2.6",
     "@vgpu/wgsl": "^0.4.0",

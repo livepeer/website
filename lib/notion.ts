@@ -3,6 +3,7 @@ import path from "node:path";
 
 import readingTime from "reading-time";
 
+import { MONTH } from "./changelog";
 import { blocksToHtml } from "./notion-blocks";
 import { resolveMediaSource } from "./notion-media";
 import {
@@ -94,6 +95,8 @@ const FUNDING_DB =
   process.env.NOTION_FUNDING_DB ?? "e2a8b7e07c92459f81e06af6e15a3440";
 const UPDATES_DB =
   process.env.NOTION_UPDATES_DB ?? "ce39b6c5bc8a404b9ea2aac237d5acf7";
+const CHANGELOG_DB =
+  process.env.NOTION_CHANGELOG_DB ?? "5691c5dfc92b41ee88139ae81510f7d9";
 
 /**
  * How stale the page may be, in seconds.
@@ -1249,4 +1252,27 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
   });
 
   return checkLadder(paths, "Funding paths");
+}
+
+/**
+ * The changelog's headlines, keyed by period: one row per published entry
+ * in _Changelog entries_, written by a model when the period closes and
+ * editable by anyone (lib/headlines.ts). A row with no headline is
+ * skipped rather than shown blank.
+ */
+export async function getNotionHeadlines(): Promise<Map<string, string>> {
+  const headlines = new Map<string, string>();
+  for (const row of await queryAll(CHANGELOG_DB)) {
+    const p = props(row);
+    const period = text(p.Period).trim();
+    const headline = text(p.Headline).trim();
+    if (!period || !headline) continue;
+    if (!MONTH.test(period)) {
+      throw new Error(
+        `Changelog entries → ${JSON.stringify(period)}: Period is not yyyy-mm.`
+      );
+    }
+    if (!headlines.has(period)) headlines.set(period, headline);
+  }
+  return headlines;
 }

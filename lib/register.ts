@@ -6,10 +6,12 @@ import {
   type BlogSummary,
 } from "./blog";
 import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
+import { getMarkdownHeadlines, type Headlines } from "./headlines";
 import {
   getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
+  getNotionHeadlines,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -125,4 +127,9 @@ export async function getCommitmentUpdates(slug: string): Promise<Post[]> {
     ? await getNotionCommitmentUpdates(slug)
     : await getMarkdownCommitmentUpdates(slug);
   return updates.filter(isPublished);
+}
+
+/** The changelog's headlines by period; see lib/headlines.ts. */
+export async function getHeadlines(): Promise<Headlines> {
+  return hasNotionCredentials() ? getNotionHeadlines() : getMarkdownHeadlines();
 }

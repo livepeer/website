@@ -1,5 +1,5 @@
-import { headline, roundups, type Roundup } from "@/lib/changelog";
-import { getRegister, getUpdates } from "@/lib/register";
+import { roundups, type Roundup } from "@/lib/changelog";
+import { getHeadlines, getRegister, getUpdates } from "@/lib/register";
 import { HEALTH_LABEL } from "@/lib/updates";
 
 /**
@@ -35,8 +35,8 @@ function item(slug: string, title: string, note?: string): string {
 }
 
 /** The roundup as HTML for a reader, which is what an Atom content is. */
-function content(r: Roundup): string {
-  const parts: string[] = [`<p>${escape(headline(r))}</p>`];
+function content(r: Roundup, headline?: string): string {
+  const parts: string[] = headline ? [`<p>${escape(headline)}</p>`] : [];
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped
@@ -70,9 +70,10 @@ function content(r: Roundup): string {
 }
 
 export async function GET() {
-  const [commitments, updates] = await Promise.all([
+  const [commitments, updates, headlines] = await Promise.all([
     getRegister(),
     getUpdates(),
+    getHeadlines(),
   ]);
   const months = roundups(commitments, updates, new Date());
 
@@ -88,7 +89,7 @@ export async function GET() {
         `    <id>${url}</id>`,
         `    <updated>${updated}</updated>`,
         `    <published>${r.month}-01T00:00:00Z</published>`,
-        `    <content type="html">${escape(content(r))}</content>`,
+        `    <content type="html">${escape(content(r, headlines.get(r.month)))}</content>`,
         "  </entry>",
       ].join("\n");
     })

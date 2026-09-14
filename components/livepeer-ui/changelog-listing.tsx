@@ -28,8 +28,9 @@ export type RoundupView = {
   month: string;
   /** "August 2026". */
   title: string;
-  /** The month in one line, composed from its facts; see lib/changelog.ts. */
-  headline: string;
+  /** The entry's title, written by a model when the month closed and
+   *  stored in Notion (lib/headlines.ts). None until then. */
+  headline?: string;
   shipped: (RoundupRow & { shippedAt: string; summary?: string })[];
   reported: (RoundupRow & {
     health: Health;
@@ -181,12 +182,15 @@ function Meta({
 function Month({ r }: { r: RoundupView }) {
   return (
     <div>
-      {/* The entry's title, over its rows: the month in one line, which
-          is what makes a month read as an entry rather than a list. Set a
-          size above the rows, like a record's title over its fields. */}
-      <p className="mb-6 text-lg font-medium tracking-[-0.015em] text-pretty">
-        {r.headline}
-      </p>
+      {/* The entry's title, over its rows, which is what makes a month read
+          as an entry rather than a list. Set a size above the rows, like a
+          record's title over its fields. Absent until written: the month
+          and its tally carry an untitled entry, as they did before. */}
+      {r.headline && (
+        <p className="mb-6 text-lg font-medium tracking-[-0.015em] text-pretty">
+          {r.headline}
+        </p>
+      )}
       <ol className="flex flex-col gap-6">
         {r.shipped.map((row) => (
           <Row key={row.slug} row={row} icon={<ShippedIcon />}>

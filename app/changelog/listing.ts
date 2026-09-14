@@ -1,7 +1,7 @@
 import type { LatestLink } from "@/components/livepeer-ui/latest-nav";
 import type { RoundupView } from "@/components/livepeer-ui/changelog-listing";
 import type { BlogSummary } from "@/lib/blog";
-import { headline, type Roundup } from "@/lib/changelog";
+import type { Roundup } from "@/lib/changelog";
 
 import { blog, categoryLinks } from "../blog/listing";
 
@@ -41,7 +41,7 @@ export function changelogRow(register: BlogSummary[]): {
  * each, and none of the write-ups the register carries. A commitment's HTML
  * body is the largest thing on a record and the list shows none of it.
  */
-export function toView(r: Roundup): RoundupView {
+export function toView(r: Roundup, headline?: string): RoundupView {
   const row = (c: Roundup["quiet"][number]) => ({
     slug: c.slug,
     title: c.title,
@@ -51,7 +51,7 @@ export function toView(r: Roundup): RoundupView {
   return {
     month: r.month,
     title: r.title,
-    headline: headline(r),
+    headline,
     // The retro's line where there is one, else the lead's last update.
     shipped: r.shipped.map(({ commitment: c, retro, update }) => ({
       ...row(c),

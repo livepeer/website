@@ -1,0 +1,3 @@
+{
+  "crons": [{ "path": "/changelog/headline", "schedule": "0 9 1 * *" }]
+}
