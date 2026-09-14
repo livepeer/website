@@ -1,6 +1,12 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ActivityIcon,
@@ -1061,6 +1067,63 @@ function SuggestBlock({
 /** The owners' rules; see app/roadmap/reporting. */
 const REPORTING_HREF = "/roadmap/reporting";
 
+/** The site header's height, which is what `lg:top-16` on the rail says. */
+const HEADER_PX = 64;
+
+/**
+ * A sticky rail that is never taller than it can be read.
+ *
+ * `position: sticky; top: 64px` pins the rail's top under the header, which
+ * is right while the rail is shorter than the window and wrong the moment
+ * it is not: everything past the fold can only be reached by scrolling to
+ * the end of the register, because the rail never moves. The rail grows
+ * with the register — every facet and workstream is a row, and the two
+ * prompts at its foot are the first to go.
+ *
+ * So the pin moves. Scrolling down, the offset shrinks by the distance
+ * scrolled, which holds the rail still against the page until its last
+ * line reaches the bottom edge, where it pins; scrolling up, the offset
+ * grows until the top is back under the header, where it pins again. The
+ * way GitHub's and MDN's sidebars behave. A rail that fits keeps the plain
+ * pin and this does nothing. Measured again on resize and whenever the
+ * rail's height changes (a facet opening, a filter clearing).
+ */
+function useTallSticky(
+  ref: React.RefObject<HTMLDivElement | null>,
+  headerPx: number
+) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let top = headerPx;
+    let lastY = window.scrollY;
+    const place = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      // The offset at which the rail's foot sits on the window's bottom
+      // edge; above headerPx when the rail fits, and then the plain pin.
+      const floor = window.innerHeight - el.offsetHeight;
+      top =
+        floor >= headerPx
+          ? headerPx
+          : Math.max(floor, Math.min(headerPx, top - delta));
+      el.style.top = `${top}px`;
+    };
+    place();
+    window.addEventListener("scroll", place, { passive: true });
+    window.addEventListener("resize", place);
+    const sizes = new ResizeObserver(place);
+    sizes.observe(el);
+    return () => {
+      window.removeEventListener("scroll", place);
+      window.removeEventListener("resize", place);
+      sizes.disconnect();
+      el.style.top = "";
+    };
+  }, [ref, headerPx]);
+}
+
 /**
  * The filter rail.
  *
@@ -1132,13 +1195,15 @@ function Filters({
   // filtered URL is shared: a short register under a collapsed panel reads as
   // a short register, and the reason for it should not be one tap away.
   const [open, setOpen] = useState(filtering);
+  const rail = useRef<HTMLDivElement>(null);
+  useTallSticky(rail, HEADER_PX);
 
   return (
     // The margins live here rather than on a wrapper. A sticky element only
     // travels within its parent's box, so wrapping this in a div sized to its
     // own height pinned it nowhere — the rail has to be a direct child of the
     // column that stretches to the register's height.
-    <div className="lg:sticky lg:top-16 lg:pt-5">
+    <div ref={rail} className="lg:sticky lg:top-16 lg:pt-5">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
