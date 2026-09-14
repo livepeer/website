@@ -10,7 +10,8 @@ headline: Delegators get a clear view of their rewards
 ---
 ```
 
-The headline is written by a model when the period closes — see
-`lib/headline-draft.ts` and the `/changelog/headline` route — and stored in
-Notion, where anyone can rewrite it. Nothing else lives here: the entry itself
-is composed from the roadmap register and the updates posted on it.
+A person writes the headline once the month has closed — with whatever model
+they like, from the month's facts at `/changelog/roundup.json?month=yyyy-mm` —
+and puts it in Notion, where the site reads it. _Posting an update_, the skill
+page beside the database, has the recipe. Nothing else lives here: the entry
+itself is composed from the roadmap register and the updates posted on it.

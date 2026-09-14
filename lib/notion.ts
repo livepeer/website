@@ -1256,9 +1256,9 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
 
 /**
  * The changelog's headlines, keyed by period: one row per published entry
- * in _Changelog entries_, written by a model when the period closes and
- * editable by anyone (lib/headlines.ts). A row with no headline is
- * skipped rather than shown blank.
+ * in _Changelog entries_, written by a person once the period closes
+ * (lib/headlines.ts). A row with no headline is skipped rather than shown
+ * blank.
  */
 export async function getNotionHeadlines(): Promise<Map<string, string>> {
   const headlines = new Map<string, string>();

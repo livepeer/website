@@ -28,7 +28,7 @@ export type RoundupView = {
   month: string;
   /** "August 2026". */
   title: string;
-  /** The entry's title, written by a model when the month closed and
+  /** The entry's title, written by a person once the month closed and
    *  stored in Notion (lib/headlines.ts). None until then. */
   headline?: string;
   shipped: (RoundupRow & { shippedAt: string; summary?: string })[];

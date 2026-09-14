@@ -5,10 +5,10 @@ import matter from "gray-matter";
 import { MONTH } from "./changelog";
 
 /**
- * The changelog's headlines: one per published entry, written by a model
- * when the period closes and stored in the _Changelog entries_ database,
- * where anyone can rewrite it. The site reads them; it never writes one
- * at render time, so a headline cannot change under a reader.
+ * The changelog's headlines: one per published entry, written by a person
+ * once the period closes — with whatever model they like, from the
+ * month's facts — and stored in the _Changelog entries_ database. The
+ * site only reads them, so a headline cannot change under a reader.
  *
  * Keyed by period — today a month, yyyy-mm. An entry with no headline has
  * no line: the month heading and the tally carry it, as they did before.
