@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  async rewrites() {
+    return [
+      // Standalone consistency cheat sheet, served as a raw HTML file from
+      // public/consistency-cheatsheet.html (kept outside the app/ design system).
+      {
+        source: "/consistency-cheatsheet",
+        destination: "/consistency-cheatsheet.html",
+      },
+    ];
+  },
   async redirects() {
     return [
       // Old livepeer.org routes → new site equivalents
