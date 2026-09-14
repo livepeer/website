@@ -9,7 +9,7 @@ Everything on the roadmap is owned, and owning it means three things: the work i
 
 Keep a GitHub project board with every active task and issue on it. Milestones are the delivery checkpoints — the phases of the proposal, its deliverables, or quarterly checkpoints — each with a due date, and every issue belongs to one. Keep task status current as things move.
 
-Put the board in the commitment's **Links** on the roadmap, beside the proposal thread and the repo. That is where a claim on the record gets checked.
+The board belongs in the commitment's **Links** on the roadmap, beside the proposal thread and the repo. That is where a claim on the record gets checked.
 
 ## Post an update every month
 
@@ -24,7 +24,9 @@ An update carries:
 - Completed deliverables, grouped by milestone, each with its link
 - What is planned for the next update, and when it is due
 
-On the roadmap: one row in **Roadmap updates** the day you post — the summary as its one line, the status as its Health, the forum post as its Link. The roadmap shows the newest update's health beside the card and the changelog rolls the month up. After six weeks with nothing posted the card reads _No update_, whatever the last one said.
+The roadmap shows each post as one line, its status, and a link to the post, and each month's changelog entry lists who posted and who did not. Write the summary so its first sentence stands alone; that is the line the roadmap shows. After six weeks with nothing posted the card reads _No update_, whatever the last one said. If you have access to the register you can post there instead of the forum, with the write-up in the page body.
+
+When the work ships, say so in the update. The commitment moves to Shipped with the date, and the retrospective is the next post.
 
 ## Close with a retrospective
 
@@ -38,4 +40,4 @@ When the scoped work is done, the commitment owes one more post in the same thre
 - Key learnings — what should shape the next proposal
 - Conclusion and what is next — follow-up work, handoffs, recommended next steps
 
-On the roadmap: a row in **Roadmap updates** with Kind set to Retrospective, its one line as the summary and the forum post as its Link. A shipped record leads with its retrospective; until one is posted, the card says _No retrospective_.
+On the roadmap, the retrospective is the record's closing post: a shipped record leads with it, and until one is posted the card says _No retrospective_.
