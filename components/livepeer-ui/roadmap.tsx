@@ -1201,9 +1201,11 @@ function Filters({
     // travels within its parent's box, so wrapping this in a div sized to its
     // own height pinned it nowhere — the rail has to be a direct child of the
     // column that stretches to the register's height.
-    // pb to match the pt: with the rail pinned to the window's bottom edge,
-    // the last link sat flush against it.
-    <div ref={rail} className="lg:sticky lg:top-16 lg:pt-5 lg:pb-6">
+    // pt-2.5 puts the search field's centre on the view tabs' centre — the
+    // tab row carries py-3 around 32px pills, the field is 36px, and at pt-5
+    // it sat 10px lower than the tabs it opens beside. pb so that with the
+    // rail pinned to the window's bottom edge the last link has air.
+    <div ref={rail} className="lg:sticky lg:top-16 lg:pt-2.5 lg:pb-6">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -1265,7 +1267,12 @@ function Filters({
            In Progress, Now, Next, Beyond, Under Review, and a page that renames
            the one it shows makes the two surfaces disagree in the vocabulary a
            reader carries between them. */
-          <div className="mt-3 lg:mt-4">
+          <div className="mt-6 lg:mt-8">
+            {/* Under a heading like the facets below it: a lone row with no
+                heading read as loose, not as a group of one. */}
+            <div className="mb-1.5">
+              <Label>Status</Label>
+            </div>
             <FilterRow
               label="In progress"
               count={buildingCount}
