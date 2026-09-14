@@ -3,7 +3,7 @@
 **Updates live in Notion**, in **Roadmap updates** under _Livepeer.org content_, one row
 per update posted on a roadmap commitment. That is what the roadmap reads a
 commitment's health from, and what `/changelog` rolls up month by month.
-_Posting an update_ beside the database explains how.
+_Posting a roadmap update_ beside the database explains how.
 
 Every file beside this one is a handful of updates as they stood when the site
 was built. `lib/register.ts` reads them **only when `NOTION_TOKEN` is absent**,
