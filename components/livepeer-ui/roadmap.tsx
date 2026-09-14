@@ -1065,6 +1065,18 @@ function SuggestBlock({
 /** The owners' rules; see app/roadmap/reporting. */
 const REPORTING_HREF = "/roadmap/reporting";
 
+/**
+ * The Status facet: the two states the Roadmap view holds. Shipped is the
+ * other tab, not a box. Keyed the way the URL and the register spell them
+ * (`?state=building,next`); labelled the way the cards do.
+ */
+const STATE_FACET = ["building", "next"] as const;
+type RoadmapState = (typeof STATE_FACET)[number];
+const STATE_FACET_LABEL: Record<RoadmapState, string> = {
+  building: "In progress",
+  next: "Planned",
+};
+
 /** The site header's height, which is what `lg:top-16` on the rail says. */
 const HEADER_PX = 64;
 
@@ -1139,9 +1151,9 @@ function Filters({
   view,
   grouping,
   onGroupingChange,
-  buildingOnly,
-  onBuildingOnlyChange,
-  buildingCount,
+  states,
+  onToggleState,
+  stateCounts,
   healths,
   healthCounts,
   onToggleHealth,
@@ -1157,9 +1169,9 @@ function Filters({
   view: View;
   grouping: Grouping;
   onGroupingChange: (g: Grouping) => void;
-  buildingOnly: boolean;
-  onBuildingOnlyChange: (v: boolean) => void;
-  buildingCount: number;
+  states: RoadmapState[];
+  onToggleState: (s: RoadmapState) => void;
+  stateCounts: Record<RoadmapState, number>;
   healths: HealthOrNone[];
   healthCounts: Record<HealthOrNone, number>;
   onToggleHealth: (h: HealthOrNone) => void;
@@ -1176,11 +1188,11 @@ function Filters({
     selected.length > 0 ||
     healths.length > 0 ||
     query.length > 0 ||
-    buildingOnly;
+    states.length > 0;
   const active =
     selected.length +
     healths.length +
-    (buildingOnly ? 1 : 0) +
+    states.length +
     (query.length > 0 ? 1 : 0);
 
   // Collapsed on a phone, open from lg up where the rail has its own column.
@@ -1268,17 +1280,25 @@ function Filters({
            the one it shows makes the two surfaces disagree in the vocabulary a
            reader carries between them. */
           <div className="mt-6 lg:mt-8">
-            {/* Under a heading like the facets below it: a lone row with no
-                heading read as loose, not as a group of one. */}
+            {/* Under a heading like the facets below it, and two rows, not
+                one: "In progress" stood alone as a toggle first, and under
+                a heading a group of one read as a list missing something —
+                which was Planned, the other state this view holds. Same
+                rule as the other facets: none ticked is everything. */}
             <div className="mb-1.5">
               <Label>Status</Label>
             </div>
-            <FilterRow
-              label="In progress"
-              count={buildingCount}
-              active={buildingOnly}
-              onChange={onBuildingOnlyChange}
-            />
+            <div role="group" aria-label="Filter by status">
+              {STATE_FACET.map((st) => (
+                <FilterRow
+                  key={st}
+                  label={STATE_FACET_LABEL[st]}
+                  count={stateCounts[st]}
+                  active={states.includes(st)}
+                  onChange={() => onToggleState(st)}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -1551,7 +1571,16 @@ export function Roadmap({
   // Forward only. Behind us every record shipped, so the flag would filter the
   // whole view away — and one carried across a tab switch would blank the list
   // with nothing on screen to explain why.
-  const buildingOnly = view === "roadmap" && params.get("state") === "building";
+  const stateParam = view === "roadmap" ? (params.get("state") ?? "") : "";
+  const states = useMemo(
+    () =>
+      stateParam
+        .split(",")
+        .filter((st): st is RoadmapState =>
+          STATE_FACET.includes(st as RoadmapState)
+        ),
+    [stateParam]
+  );
   // In the URL like the rest, so a by-owner roadmap is a link you can send.
   // The health cut is a fact about work under way, so on Shipped it reads
   // as the default.
@@ -1596,7 +1625,7 @@ export function Roadmap({
     next: Partial<{
       view: View;
       workstream: string[];
-      buildingOnly: boolean;
+      states: RoadmapState[];
       grouping: Grouping;
       health: HealthOrNone[];
     }>
@@ -1621,9 +1650,9 @@ export function Roadmap({
         if (p.get("group") === "health") p.delete("group");
       }
     }
-    if (next.buildingOnly !== undefined) {
-      if (next.buildingOnly) p.set("state", "building");
-      else p.delete("state");
+    if (next.states) {
+      if (next.states.length === 0) p.delete("state");
+      else p.set("state", next.states.join(","));
     }
     if (next.workstream) {
       if (next.workstream.length === 0) p.delete("workstream");
@@ -1650,26 +1679,32 @@ export function Roadmap({
       (c) =>
         hit(c) &&
         (selected.length === 0 || selected.includes(c.workstream)) &&
-        (!buildingOnly || c.state === "building") &&
+        (states.length === 0 || states.includes(c.state as RoadmapState)) &&
         healthy(c)
     );
-  }, [commitments, query, selected, buildingOnly, healths]);
+  }, [commitments, query, selected, states, healths]);
 
   // Counted against the query and the workstream selection but not against
-  // itself — a toggle whose own count fell to 0 the moment you switched it off
-  // would be reporting on its own state rather than on what it would give you.
-  const buildingCount = useMemo(() => {
+  // its own facet — a box whose count fell to 0 the moment you ticked the
+  // other would be reporting on the facet's state rather than on what the
+  // click would give you.
+  const stateCounts = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return commitments.filter(
-      (c) =>
-        c.state === "building" &&
-        (selected.length === 0 || selected.includes(c.workstream)) &&
-        (!q ||
-          [c.title, c.outcome, c.workstream, c.owner]
-            .join(" ")
-            .toLowerCase()
-            .includes(q))
-    ).length;
+    const tally: Record<RoadmapState, number> = { building: 0, next: 0 };
+    for (const c of commitments) {
+      if (c.state !== "building" && c.state !== "next") continue;
+      if (selected.length > 0 && !selected.includes(c.workstream)) continue;
+      if (
+        q &&
+        ![c.title, c.outcome, c.workstream, c.owner]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      )
+        continue;
+      tally[c.state] += 1;
+    }
+    return tally;
   }, [commitments, query, selected]);
 
   // Rail counts are scoped to the view, the query and the state toggle, but NOT
@@ -1688,7 +1723,8 @@ export function Roadmap({
       const inView =
         view === "shipped" ? c.state === "shipped" : c.state !== "shipped";
       if (!inView) continue;
-      if (buildingOnly && c.state !== "building") continue;
+      if (states.length > 0 && !states.includes(c.state as RoadmapState))
+        continue;
       if (
         q &&
         ![c.title, c.outcome, c.workstream, c.owner]
@@ -1708,7 +1744,7 @@ export function Roadmap({
       tally[c.workstream] = (tally[c.workstream] ?? 0) + 1;
     }
     return tally;
-  }, [commitments, query, view, buildingOnly, healths]);
+  }, [commitments, query, view, states, healths]);
 
   // The health facet's numbers: every other filter applied, this one not,
   // for the reason the workstream counts leave their own facet out — a
@@ -1721,6 +1757,9 @@ export function Roadmap({
     >;
     for (const c of commitments) {
       if (c.state !== "building") continue;
+      // Planned alone ticked: every health count is 0, which is the truth —
+      // health is a fact about work under way — and greys the facet out.
+      if (states.length > 0 && !states.includes("building")) continue;
       if (selected.length > 0 && !selected.includes(c.workstream)) continue;
       if (
         q &&
@@ -1733,7 +1772,7 @@ export function Roadmap({
       tally[c.standing?.health ?? "no-update"] += 1;
     }
     return tally;
-  }, [commitments, query, selected]);
+  }, [commitments, query, selected, states]);
 
   const building = matches.filter((c) => c.state === "building");
   const next = matches.filter((c) => c.state === "next");
@@ -1893,9 +1932,15 @@ export function Roadmap({
             view={view}
             grouping={grouping}
             onGroupingChange={(g) => setParams({ grouping: g })}
-            buildingOnly={buildingOnly}
-            onBuildingOnlyChange={(v) => setParams({ buildingOnly: v })}
-            buildingCount={buildingCount}
+            states={states}
+            onToggleState={(st) =>
+              setParams({
+                states: states.includes(st)
+                  ? states.filter((x) => x !== st)
+                  : [...states, st],
+              })
+            }
+            stateCounts={stateCounts}
             healths={healths}
             healthCounts={healthCounts}
             onToggleHealth={(h) =>
@@ -1919,7 +1964,7 @@ export function Roadmap({
             }
             onClear={() => {
               setQuery("");
-              setParams({ workstream: [], buildingOnly: false, health: [] });
+              setParams({ workstream: [], states: [], health: [] });
             }}
             suggestionsHref={suggestionsHref}
           />
@@ -1981,7 +2026,7 @@ export function Roadmap({
                   setQuery("");
                   setParams({
                     workstream: [],
-                    buildingOnly: false,
+                    states: [],
                     health: [],
                   });
                 }}
