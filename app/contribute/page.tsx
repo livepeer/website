@@ -4,7 +4,7 @@ import Link from "next/link";
 import {
   ContributeContributors,
   ContributeHero,
-  LadderGrid,
+  LadderTable,
   RetiredLine,
 } from "@/components/livepeer-ui/contribute-sections";
 import { getContributors } from "@/lib/contributors";
@@ -86,7 +86,7 @@ export default async function ContributePage() {
       />
       {/* Everything between the hero and the people is one document, set
           as a Notion page would set it: headings, paragraphs and a list in
-          the reading column, with the ladder's grid embedded where a page
+          the reading column, with the ladder as a table embedded where a page
           would embed a database. It was three designed sections — a
           three-cell strip, the ladder under a page-title, an owners' block
           — and read as three pages under one hero. The rule at the top is
@@ -130,7 +130,7 @@ export default async function ContributePage() {
               </p>
             </div>
 
-            <LadderGrid paths={paths} className="mt-6" />
+            <LadderTable paths={paths} className="mt-6" />
 
             <div className="reading-prose mt-6">
               <p>

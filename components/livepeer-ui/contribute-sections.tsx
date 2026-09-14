@@ -250,27 +250,28 @@ function RetiredNames({ paths }: { paths: FundingPath[] }) {
 }
 
 /**
- * The ladder's cells, and nothing around them: the page sets the heading
+ * The ladder as a table, and nothing around it: the page sets the heading
  * and the sentences as prose and embeds this where a Notion page would
- * embed a database.
+ * embed a database — which Notion, too, would show as a table.
  *
- * Cells, not rows. A table was the first form, and it was right about the
- * order — a newcomer's real question is "how big is my thing", and the
- * ladder climbs from a bounty to a treasury vote — but five rows of four
- * columns spent a lot of typography on five facts. A cell gives each path
- * its own ground: the name, who it is for, who decides, the ceiling, and
- * where to go. Reading order is the ladder, left to right and down, so the
- * numbers went with the rows; the treasury, the top rung, spans the width.
- * The body that decides was a mono caption over each group first, and read
- * as one more device; it is a quiet line in the cell now, linked to its
- * page in Organizations — "who is the Network Engineering SPE" is a fair
- * question here.
+ * Four columns, not five: the "best for" line sits under the name, since
+ * it describes the path rather than measuring it, and the three measures
+ * — who decides, the ceiling, where to go — read across. Smallest rung
+ * first, so the eye climbs. Hairlines between rows and none around, the
+ * header in the small muted caps the record pages use for a label.
  *
- * The rules are Compute's requirements-grid logic: border-b on every cell
- * but the last row, a vertical rule carried by the left cell of each pair,
- * no outer rules, so the block reads as structure rather than as cards.
+ * Below sm the columns cannot fit, so each row folds into a stack — name
+ * and description, then the two facts with their labels, then the link —
+ * which is roughly the cell the ladder used to be drawn as. That earlier
+ * form, a two-column grid of cells with the treasury spanning the width,
+ * was the pricing-tier idiom: right for three options weighed against
+ * each other, odd for five rungs read in order, where the spanning cell
+ * made the top rung look like a special case and the reading order ran
+ * left-to-right then down. A table was the very first form and was cut
+ * for spending "a lot of typography on five facts" — under a page-title
+ * heading as a section of its own; inside a document it is the quiet one.
  */
-export function LadderGrid({
+export function LadderTable({
   paths,
   className,
 }: {
@@ -278,69 +279,69 @@ export function LadderGrid({
   className?: string;
 }) {
   const active = paths.filter(isActive);
-  const n = active.length;
-  const odd = n % 2 === 1;
-  const lastRowStart = odd ? n - 1 : n - 2;
+  const label =
+    "text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase";
   return (
-    <div className={cn("grid sm:grid-cols-2", className)}>
-      {active.map((rung, i) => {
-        const spans = odd && i === n - 1;
-        const left = !spans && i % 2 === 0;
-        return (
-          <div
+    <table className={cn("block w-full sm:table", className)}>
+      <thead className="hidden sm:table-header-group">
+        <tr className="border-b border-border">
+          <th scope="col" className={cn("pb-3 text-left", label)}>
+            Path
+          </th>
+          <th scope="col" className={cn("pb-3 pl-6 text-left", label)}>
+            Decided by
+          </th>
+          <th scope="col" className={cn("pb-3 pl-6 text-left", label)}>
+            Ceiling
+          </th>
+          <th scope="col" className="pb-3">
+            <span className="sr-only">Where to go</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody className="block sm:table-row-group">
+        {active.map((rung) => (
+          <tr
             key={rung.name}
-            className={cn(
-              "py-6",
-              i < n - 1 && "border-b border-border",
-              i >= lastRowStart && i < n - 1 && "sm:border-b-0",
-              spans
-                ? "sm:col-span-2"
-                : left
-                  ? "sm:border-r sm:border-border sm:pr-7"
-                  : "sm:pl-7"
-            )}
+            className="block border-b border-border py-5 sm:table-row sm:py-0 last:border-b-0"
           >
-            <h3 className="text-lg font-light">{rung.name}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {rung.bestFor}
-            </p>
-            {/* Two facts under the description, set as facts: a small muted
-                label of one width, then the value, so they read as a pair
-                of rows rather than as more prose. Labelled rows for every
-                field were tried and spent the cell's whole quietness. */}
-            <div className="mt-4 space-y-1 text-sm">
-              <p className="flex items-baseline gap-3">
-                <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                  Decided by
-                </span>
-                <Link
-                  href={`/organizations/${rung.decidedBy.slug}`}
-                  className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                >
-                  {rung.decidedBy.name}
-                </Link>
-              </p>
-              <p className="flex items-baseline gap-3">
-                <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                  Ceiling
-                </span>
-                <span>{rung.ceiling}</span>
-              </p>
-            </div>
-            {/* The action on its own line, on the left edge with everything
-                else, with a little more air above it than between the
-                facts, so it reads as the cell's last step. */}
-            <p className="mt-5 text-sm">
+            <th
+              scope="row"
+              className="block text-left font-normal sm:table-cell sm:py-5 sm:pr-6 sm:align-top"
+            >
+              <span className="block text-base">{rung.name}</span>
+              <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                {rung.bestFor}
+              </span>
+            </th>
+            <td className="mt-4 block text-sm sm:mt-0 sm:table-cell sm:py-5 sm:pl-6 sm:align-top sm:whitespace-nowrap">
+              <span className={cn("mr-3 inline-block w-20 sm:hidden", label)}>
+                Decided by
+              </span>
+              <Link
+                href={`/organizations/${rung.decidedBy.slug}`}
+                className="underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+              >
+                {rung.decidedBy.name}
+              </Link>
+            </td>
+            <td className="mt-1 block text-sm sm:mt-0 sm:table-cell sm:py-5 sm:pl-6 sm:align-top sm:whitespace-nowrap">
+              <span className={cn("mr-3 inline-block w-20 sm:hidden", label)}>
+                Ceiling
+              </span>
+              {rung.ceiling}
+            </td>
+            <td className="mt-4 block text-sm sm:mt-0 sm:table-cell sm:py-5 sm:pl-6 sm:text-right sm:align-top sm:whitespace-nowrap">
               <Ref
                 label={rung.linkLabel}
                 href={rung.link}
                 className="text-foreground"
               />
-            </p>
-          </div>
-        );
-      })}
-    </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
