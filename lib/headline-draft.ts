@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { getVercelOidcToken } from "@vercel/oidc";
 
 import { monthTitle, type Roundup } from "./changelog";
 import { HEALTH_LABEL } from "./health";
@@ -15,6 +16,38 @@ import { HEALTH_LABEL } from "./health";
  * them, so the title can be checked against the entry beneath it.
  */
 export const HEADLINE_MODEL = "claude-opus-5";
+
+/**
+ * The model is reached through Vercel's AI Gateway by default, which
+ * bills the Vercel account and needs no key of its own: on a deployment
+ * the gateway trusts the deployment's OIDC token, fetched here at request
+ * time so a months-old deployment's cron still has a live one; locally,
+ * `vercel env pull` writes a twelve-hour one into .env.local. An
+ * AI_GATEWAY_API_KEY works anywhere the OIDC token does not, and an
+ * ANTHROPIC_API_KEY, if set, goes to Anthropic directly instead. The
+ * gateway wants the model named with its provider.
+ */
+async function connect(): Promise<{ client: Anthropic; model: string }> {
+  if (process.env.ANTHROPIC_API_KEY) {
+    return { client: new Anthropic(), model: HEADLINE_MODEL };
+  }
+  const token =
+    process.env.AI_GATEWAY_API_KEY ??
+    (await getVercelOidcToken().catch(() => undefined));
+  if (!token) {
+    throw new Error(
+      "No way to reach the model: run on Vercel (OIDC), or set " +
+        "AI_GATEWAY_API_KEY or ANTHROPIC_API_KEY."
+    );
+  }
+  return {
+    client: new Anthropic({
+      apiKey: token,
+      baseURL: "https://ai-gateway.vercel.sh",
+    }),
+    model: `anthropic/${HEADLINE_MODEL}`,
+  };
+}
 
 const SYSTEM = `You write the title of one entry on livepeer.org/changelog, a public monthly record of what the Livepeer roadmap delivered and how the work under way is going. You are given the month's facts and nothing else.
 
@@ -50,17 +83,13 @@ export function factsOf(r: Roundup): string {
 }
 
 export async function draftHeadline(r: Roundup): Promise<string> {
-  const client = new Anthropic();
-  const response = await client.beta.messages.create({
-    model: HEADLINE_MODEL,
+  const { client, model } = await connect();
+  // The plain Messages call, with nothing the gateway might not pass
+  // through: no beta headers, no effort setting. A title is a small ask.
+  const response = await client.messages.create({
+    model,
     max_tokens: 256,
     system: SYSTEM,
-    output_config: { effort: "low" },
-    // A refusal on a roadmap summary is unlikely; if the classifiers do
-    // decline, the request re-runs on the default fallback model rather
-    // than leaving the entry untitled.
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
     messages: [{ role: "user", content: factsOf(r) }],
   });
 
