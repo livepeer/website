@@ -1042,14 +1042,18 @@ function SuggestBlock({
         <LinkRow label="How to contribute" href={href} />
       </p>
       {/* The other reader the rail can answer: the one who owns something
-          here and wants the rules — the page the old help site kept under
-          "I'm a roadmap item owner". One link, not a block of its own: a
-          second label and sentence made the sticky rail taller than an
-          800px viewport, and this line sat below the fold until the end of
-          the register. Contribute and the record's empty states explain. */}
-      <p className="mt-1.5 text-sm">
-        <LinkRow label="Reporting on a commitment" href={REPORTING_HREF} />
-      </p>
+          here and wants the rules. The page is what the old help site kept
+          under "I'm a roadmap item owner". */}
+      <div className="mt-6 border-t border-border pt-5">
+        <Label>Own something on it?</Label>
+        <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+          Its owner keeps the work trackable, posts an update every month, and
+          closes it with a retrospective.
+        </p>
+        <p className="mt-3 text-sm">
+          <LinkRow label="How to report" href={REPORTING_HREF} />
+        </p>
+      </div>
     </div>
   );
 }
