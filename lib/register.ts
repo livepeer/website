@@ -6,12 +6,17 @@ import {
   type BlogSummary,
 } from "./blog";
 import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
-import { getMarkdownEntries, type Entry } from "./entries";
+import {
+  getMarkdownEntries,
+  getMarkdownEntryBody,
+  type Entry,
+} from "./entries";
 import {
   getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
   getNotionEntries,
+  getNotionEntryBody,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -138,4 +143,17 @@ export async function getEntries(): Promise<Entry[]> {
     ? await getNotionEntries()
     : getMarkdownEntries();
   return entries.filter(isPublished);
+}
+
+/**
+ * One entry's intro, rendered; see lib/entries.ts. Only for a period whose
+ * entry is being shown in full — the caller has already found it among
+ * the published entries, so no draft rule applies here.
+ */
+export async function getEntryBody(
+  period: string
+): Promise<string | undefined> {
+  return hasNotionCredentials()
+    ? getNotionEntryBody(period)
+    : getMarkdownEntryBody(period);
 }

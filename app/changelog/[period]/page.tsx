@@ -7,6 +7,7 @@ import { PERIOD, parsePeriod } from "@/lib/period";
 import {
   getBlogRegister,
   getEntries,
+  getEntryBody,
   getRegister,
   getUpdates,
 } from "@/lib/register";
@@ -59,6 +60,7 @@ export default async function ChangelogMonthPage({ params }: Props) {
   const [all, posts] = await Promise.all([months(), getBlogRegister()]);
   const at = all.findIndex((r) => r.key === period);
   if (at < 0) notFound();
+  const intro = await getEntryBody(period);
 
   // Newest first, so the entry before this one is the next index along.
   const link = (r?: (typeof all)[number]) =>
@@ -66,7 +68,7 @@ export default async function ChangelogMonthPage({ params }: Props) {
 
   return (
     <ChangelogListing
-      roundups={[toView(all[at]!)]}
+      roundups={[toView(all[at]!, intro)]}
       neighbours={{ previous: link(all[at + 1]), next: link(all[at - 1]) }}
       heading={changelog.heading}
       intro={changelog.intro}

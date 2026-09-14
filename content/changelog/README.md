@@ -17,4 +17,6 @@ draft: false
 A person writes the headline once the period has closed — with whatever model
 they like, from the period's facts at `/changelog/roundup.json?period=<key>` —
 and the recipe is on _Publishing a changelog entry_, the skill page beside the database.
-Nothing else lives here.
+The file's body, if any, is the entry's **intro**: a few sentences in a
+person's words, shown between the headline and the generated rows (in Notion,
+the row's page body). Nothing else lives here.

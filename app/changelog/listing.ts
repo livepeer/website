@@ -42,7 +42,7 @@ export function changelogRow(register: BlogSummary[]): {
  * each, and none of the write-ups the register carries. A commitment's HTML
  * body is the largest thing on a record and the list shows none of it.
  */
-export function toView(r: Roundup): RoundupView {
+export function toView(r: Roundup, intro?: string): RoundupView {
   const row = (c: Roundup["quiet"][number]) => ({
     slug: c.slug,
     title: c.title,
@@ -53,6 +53,7 @@ export function toView(r: Roundup): RoundupView {
     period: r.key,
     title: r.label,
     headline: r.headline,
+    intro,
     // The retro's line where there is one, else the lead's last update.
     shipped: r.shipped.map(({ commitment: c, retro, update }) => {
       const post = retro ?? update;

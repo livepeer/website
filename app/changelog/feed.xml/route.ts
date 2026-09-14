@@ -1,5 +1,10 @@
 import { roundups, type Roundup } from "@/lib/changelog";
-import { getEntries, getRegister, getUpdates } from "@/lib/register";
+import {
+  getEntries,
+  getEntryBody,
+  getRegister,
+  getUpdates,
+} from "@/lib/register";
 import { HEALTH_LABEL, postHref, type PostSummary } from "@/lib/updates";
 
 /**
@@ -46,8 +51,9 @@ function item(
 }
 
 /** The roundup as HTML for a reader, which is what an Atom content is. */
-function content(r: Roundup): string {
+function content(r: Roundup, intro?: string): string {
   const parts: string[] = r.headline ? [`<p>${escape(r.headline)}</p>`] : [];
+  if (intro) parts.push(intro);
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped
@@ -89,9 +95,10 @@ export async function GET() {
     getUpdates(),
   ]);
   const months = roundups(entries, commitments, updates, new Date());
+  const intros = await Promise.all(months.map((r) => getEntryBody(r.key)));
 
   const items = months
-    .map((r) => {
+    .map((r, i) => {
       const url = `${SITE}/changelog/${r.key}`;
       // Dated to its last day, the earliest it could have been published.
       const updated = stamp(r.end);
@@ -102,7 +109,7 @@ export async function GET() {
         `    <id>${url}</id>`,
         `    <updated>${updated}</updated>`,
         `    <published>${stamp(r.start)}</published>`,
-        `    <content type="html">${escape(content(r))}</content>`,
+        `    <content type="html">${escape(content(r, intros[i]))}</content>`,
         "  </entry>",
       ].join("\n");
     })

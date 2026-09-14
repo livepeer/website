@@ -1268,6 +1268,23 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
  * production while it is being prepared, and an empty Status means
  * Published, so a row added by hand with two cells filled counts.
  */
+/**
+ * One entry's intro: the row's page body, rendered, or nothing when the
+ * page is empty. Read on its own rather than with the rows, the way a
+ * blog post's body is (see getNotionPost): the index shows three entries
+ * in full and lists the rest, and Next dedupes the table query across
+ * the two reads inside a render.
+ */
+export async function getNotionEntryBody(
+  period: string
+): Promise<string | undefined> {
+  const row = (await queryAll(CHANGELOG_DB)).find(
+    (candidate) => text(props(candidate).Period).trim() === period
+  );
+  if (!row) return undefined;
+  return readDetail(row.id as string, `Changelog entries → ${period}`);
+}
+
 export async function getNotionEntries(): Promise<Entry[]> {
   return (await queryAll(CHANGELOG_DB)).flatMap((row) => {
     const p = props(row);

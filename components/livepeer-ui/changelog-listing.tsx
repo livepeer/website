@@ -14,6 +14,7 @@ import {
   type LatestLink,
 } from "@/components/livepeer-ui/latest-nav";
 import { HEALTH_LABEL, HEALTHS, type Health } from "@/lib/health";
+import { cn } from "@/lib/utils";
 
 export type RoundupRow = {
   slug: string;
@@ -28,9 +29,11 @@ export type RoundupView = {
   period: string;
   /** "August 2026", "Q3 2026". */
   title: string;
-  /** The entry's title, written by a person once the month closed and
-   *  stored in Notion (lib/headlines.ts). None until then. */
+  /** The entry's title, written by a person once the period closed and
+   *  put on the row (lib/entries.ts). None until then. */
   headline?: string;
+  /** The entry's intro, the row's page body rendered. Optional. */
+  intro?: string;
   /** `href` is the post the line was taken from, on its record page. */
   shipped: (RoundupRow & {
     shippedAt: string;
@@ -212,9 +215,23 @@ function Month({ r }: { r: RoundupView }) {
           written: the month and its tally carry an untitled entry, as
           they did before. */}
       {r.headline && (
-        <p className="mb-6 text-xl leading-snug font-medium tracking-[-0.02em] text-pretty">
+        <p
+          className={cn(
+            "text-xl leading-snug font-medium tracking-[-0.02em] text-pretty",
+            r.intro ? "mb-4" : "mb-6"
+          )}
+        >
           {r.headline}
         </p>
+      )}
+      {/* A person's few sentences on the period, between the title and
+          the generated rows, in the reading voice. The one prose on the
+          page; the rows beneath stay the leads' own lines. */}
+      {r.intro && (
+        <div
+          className="reading-prose mb-8"
+          dangerouslySetInnerHTML={{ __html: r.intro }}
+        />
       )}
       <ol className="flex flex-col gap-6">
         {r.shipped.map((row) => (

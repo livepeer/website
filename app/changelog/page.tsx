@@ -3,6 +3,7 @@ import { roundups } from "@/lib/changelog";
 import {
   getBlogRegister,
   getEntries,
+  getEntryBody,
   getRegister,
   getUpdates,
 } from "@/lib/register";
@@ -22,10 +23,13 @@ export default async function ChangelogPage() {
     getBlogRegister(),
   ]);
   const months = roundups(entries, commitments, updates, new Date());
+  // The intros of the entries shown in full, and no others.
+  const shown = months.slice(0, changelog.recentMonths);
+  const intros = await Promise.all(shown.map((r) => getEntryBody(r.key)));
 
   return (
     <ChangelogListing
-      roundups={months.slice(0, changelog.recentMonths).map(toView)}
+      roundups={shown.map((r, i) => toView(r, intros[i]))}
       earlier={months
         .slice(changelog.recentMonths)
         .map(({ key, label }) => ({ period: key, title: label }))}
