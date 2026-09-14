@@ -423,3 +423,65 @@ export function ContributeLadder({
     </section>
   );
 }
+
+/* ------------------------------------------------------------------ *
+ * The path
+ * ------------------------------------------------------------------ */
+
+export type PathStep = { title: string; body: React.ReactNode };
+
+/**
+ * From an idea to a commitment, in three steps, between the hero and the
+ * ladder: the hero says go and talk, the ladder says how work gets paid
+ * for, and this is the middle the old help site's "get involved" articles
+ * covered and the page did not — where to propose, what happens to a
+ * proposal, and what a funded item owes once it is on the roadmap. Numbered
+ * rows in the ladder's hairline idiom, so it reads as one page with the
+ * ladder rather than a second design above it.
+ */
+export function ContributePath({
+  title,
+  intro,
+  steps,
+}: {
+  title: string;
+  intro: React.ReactNode;
+  steps: PathStep[];
+}) {
+  const prose =
+    "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
+  return (
+    <section className="mt-12 sm:mt-16">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-3xl border-t border-border pt-12 sm:pt-16">
+          <h2 className="text-page-title text-balance">{title}</h2>
+          <p
+            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
+          >
+            {intro}
+          </p>
+          <ol className="mt-8 divide-y divide-border border-y border-border">
+            {steps.map((step, i) => (
+              <li
+                key={step.title}
+                className="grid gap-x-6 gap-y-2 py-5 sm:grid-cols-[3rem_minmax(0,1fr)]"
+              >
+                <span className="font-mono text-xs leading-6 text-muted-foreground tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="font-medium">{step.title}</h3>
+                  <p
+                    className={`mt-1.5 max-w-[60ch] text-sm leading-relaxed text-muted-foreground [&_a]:text-foreground ${prose}`}
+                  >
+                    {step.body}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  );
+}

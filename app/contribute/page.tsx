@@ -5,6 +5,7 @@ import {
   ContributeContributors,
   ContributeHero,
   ContributeLadder,
+  ContributePath,
 } from "@/components/livepeer-ui/contribute-sections";
 import { getContributors } from "@/lib/contributors";
 import { getDiscord } from "@/lib/discord";
@@ -18,14 +19,17 @@ import { getFundingPaths } from "@/lib/register";
  * the barrier is too high: a newcomer had to already know that SPEs exist,
  * that grants come in four sizes, and which forum category takes which.
  *
- * So the page is two things. The hero is the answer — one sentence and a
+ * So the page is three things. The hero is the answer — one sentence and a
  * Discord button, because "go and say hello" is what getting involved means
- * here today. The ladder is the one piece of reference the answer needs:
- * every way work gets paid for, ordered by size, read from the Funding paths
- * database so a cap that changed last week is true here without a deploy.
- * Nothing between them explains what the ladder already shows. The page
- * closes on the people: the contributors strip, lifted from the old home
- * page, with the GitHub call for the reader who has just read the ladder.
+ * here today. The path is the middle the old help site's "get involved"
+ * articles covered: where an idea is proposed, what happens to it, and what
+ * a funded item owes once it is on the roadmap (the owner's rules are their
+ * own page, /roadmap/reporting). The ladder is the one piece of reference
+ * the answer needs: every way work gets paid for, ordered by size, read from
+ * the Funding paths database so a cap that changed last week is true here
+ * without a deploy. The page closes on the people: the contributors strip,
+ * lifted from the old home page, with the GitHub call for the reader who
+ * has just read the ladder.
  *
  * The copy here is the site's voice and stays in the repo (CLAUDE.md →
  * Content); the rows are the Foundation's data and live in Notion.
@@ -79,14 +83,67 @@ export default async function ContributePage() {
         primary={{ ...hero.primary, href: discord.invite }}
         online={discord.online}
       />
+      <ContributePath
+        title="From an idea to the roadmap"
+        intro={
+          <>
+            Ideas become commitments in the open, and none of the steps needs
+            permission to start.
+          </>
+        }
+        steps={[
+          {
+            title: "Say it on the forum.",
+            body: (
+              <>
+                Check <Link href="/roadmap">the roadmap</Link> first, then post
+                the idea on{" "}
+                <a
+                  href="https://forum.livepeer.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  the forum
+                </a>
+                . A good proposal answers three questions: what problem it
+                solves, what success looks like, and why it matters to the
+                network. If someone has already proposed it, add your use case
+                to their thread; a specific comment moves a proposal further
+                than a general one.
+              </>
+            ),
+          },
+          {
+            title: "It gets reviewed.",
+            body: (
+              <>
+                Proposals are shortlisted and discussed on the monthly community
+                call. Each one is taken forward, sent back for more information,
+                or declined with a reason, and the proposer hears which.
+              </>
+            ),
+          },
+          {
+            title: "It becomes a commitment.",
+            body: (
+              <>
+                Once it has an owner, a target and funding through one of the
+                paths below, it appears on the roadmap. From then on its owner{" "}
+                <Link href="/roadmap/reporting">reports on it</Link>: the work
+                tracked in the open, an update every month, and a retrospective
+                at the end.
+              </>
+            ),
+          },
+        ]}
+      />
       <ContributeLadder
         title="How work gets funded"
         intro={
           <>
-            Check <Link href="/roadmap">the roadmap</Link> first. Everything
-            below exists to fund work that moves it forward. A good proposal
-            answers three questions: what problem it solves, what success looks
-            like, and why it matters to the network.
+            Every way work on the network gets paid for, smallest first. Which
+            rung fits depends on how big the thing is; the proposal is the same
+            one at every height.
           </>
         }
         paths={paths}
@@ -101,7 +158,8 @@ export default async function ContributePage() {
             >
               governance process
             </a>
-            .
+            . Whatever the rung, funded work goes on the roadmap and its owner{" "}
+            <Link href="/roadmap/reporting">reports on it</Link>.
           </>
         }
       />

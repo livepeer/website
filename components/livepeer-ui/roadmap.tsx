@@ -1041,9 +1041,25 @@ function SuggestBlock({
       <p className="mt-3 text-sm">
         <LinkRow label="How to contribute" href={href} />
       </p>
+      {/* The other reader the rail can answer: the one who owns something
+          here and wants the rules. The page is what the old help site kept
+          under "I'm a roadmap item owner". */}
+      <div className="mt-6 border-t border-border pt-5">
+        <Label>Own something on it?</Label>
+        <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+          Its owner keeps the work trackable, posts an update every month, and
+          closes it with a retrospective.
+        </p>
+        <p className="mt-3 text-sm">
+          <LinkRow label="How to report" href={REPORTING_HREF} />
+        </p>
+      </div>
     </div>
   );
 }
+
+/** The owners' rules; see app/roadmap/reporting. */
+const REPORTING_HREF = "/roadmap/reporting";
 
 /**
  * The filter rail.

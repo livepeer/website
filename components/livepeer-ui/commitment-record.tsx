@@ -466,7 +466,13 @@ export function CommitmentRecord({
               <p className="mt-3 text-sm text-muted-foreground">
                 None posted yet. A retrospective closes a shipped commitment:
                 what was delivered against what was committed, what it cost,
-                what was learned.
+                what was learned.{" "}
+                <Link
+                  href="/roadmap/reporting#retrospective"
+                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                >
+                  What one covers
+                </Link>
               </p>
             </div>
           </div>
@@ -494,7 +500,13 @@ export function CommitmentRecord({
               </h2>
               <p className="mt-3 text-sm text-muted-foreground">
                 Nothing posted yet. The lead posts one a month while the work is
-                under way.
+                under way.{" "}
+                <Link
+                  href="/roadmap/reporting#updates"
+                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                >
+                  What one carries
+                </Link>
               </p>
             </div>
           </div>
