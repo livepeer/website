@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { HealthIcon, HealthMark } from "@/components/livepeer-ui/health";
+import { RevealPost } from "@/components/livepeer-ui/reveal-post";
 import {
   RecordCredit as Credit,
   RecordRow as Row,
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 import {
   HEALTH_LABEL,
   STALE_AFTER_DAYS,
+  postAnchor,
   type Post,
   type Standing,
 } from "@/lib/health";
@@ -68,20 +70,41 @@ function shortDate(iso: string, now: Date): string {
 }
 
 /**
+ * A post's address in the log. Two posts of one kind on one day would share
+ * one, so the ones after the first (the log is newest first, and so is
+ * `updates`) take a number: "update-2026-08-27-2".
+ */
+function anchorOf(post: Post, before: Post[]): string {
+  const anchor = postAnchor(post);
+  const n = before.filter((p) => postAnchor(p) === anchor).length;
+  return n === 0 ? anchor : `${anchor}-${n + 1}`;
+}
+
+/**
  * One line of the activity log: an icon, who did what, and when.
  *
  * Linear's sidebar, not its feed: "ads1018 posted an update · Sep 9". A
  * row with a body is a native <details>, so the text is one click away and
  * the log stays a log. The marker is hidden and a chevron stands in, on
  * the right where the eye is not.
+ *
+ * A post's row carries an id, which is the post's address on the site
+ * (postAnchor in lib/health.ts): the changelog links to it, and so does
+ * the date on the row itself, the way a timestamp is the permalink on
+ * GitHub — hover shows the underline, and the link is what a lead copies
+ * to point someone at what they said. A link inside a <summary> takes
+ * the click; the row does not toggle under it.
  */
 function ActivityRow({
+  id,
   icon,
   actor,
   verb,
   date,
   children,
 }: {
+  /** The row's address, for a post; a milestone has none. */
+  id?: string;
   icon: React.ReactNode;
   actor: string;
   verb: string;
@@ -96,19 +119,31 @@ function ActivityRow({
       <span className="min-w-0">
         <span className="text-foreground">{actor}</span> {verb}
         <span aria-hidden="true"> · </span>
-        {date}
+        {id ? (
+          <a
+            href={`#${id}`}
+            className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+          >
+            {date}
+          </a>
+        ) : (
+          date
+        )}
       </span>
     </>
   );
   if (!children) {
     return (
-      <li className="flex items-center gap-3 py-2 text-sm text-muted-foreground">
+      <li
+        id={id}
+        className="flex scroll-mt-24 items-center gap-3 py-2 text-sm text-muted-foreground"
+      >
         {line}
       </li>
     );
   }
   return (
-    <li>
+    <li id={id} className="scroll-mt-24">
       <details className="group">
         <summary className="flex cursor-pointer list-none items-center gap-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
           {line}
@@ -455,6 +490,7 @@ export function CommitmentRecord({
           }
         >
           <h2 className="text-sm font-medium">Activity</h2>
+          <RevealPost />
           <ol className="mt-4">
             {/* One log in date order, newest first: the posts, and the
                 record's own milestones among them. Pinning "shipped it" to
@@ -478,12 +514,13 @@ export function CommitmentRecord({
                     },
                   ]
                 : []),
-              ...updates.map((u) => ({
+              ...updates.map((u, i) => ({
                 key: `${u.kind}-${u.date}-${u.summary}`,
                 date: u.date,
                 node: (
                   <ActivityRow
                     key={`${u.kind}-${u.date}-${u.summary}`}
+                    id={anchorOf(u, updates.slice(0, i))}
                     icon={
                       u.kind === "update" ? (
                         <HealthIcon health={u.health} />

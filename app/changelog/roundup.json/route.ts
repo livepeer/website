@@ -1,6 +1,6 @@
 import { roundupFor } from "@/lib/changelog";
 import { PERIOD, monthOf } from "@/lib/period";
-import { HEALTH_LABEL } from "@/lib/health";
+import { HEALTH_LABEL, postHref } from "@/lib/health";
 import { getRegister, getUpdates } from "@/lib/register";
 import type { Commitment } from "@/lib/roadmap";
 
@@ -66,7 +66,9 @@ export async function GET(request: Request) {
         ...ref(commitment),
         shippedAt: commitment.shippedAt,
         retro: retro?.summary,
+        retroUrl: retro && `${SITE}${postHref(retro)}`,
         lastWord: update?.summary,
+        lastWordUrl: update && `${SITE}${postHref(update)}`,
       })),
       // Shipped that month with no retrospective posted: the other thing
       // worth a nudge, beside the silent.
@@ -80,6 +82,8 @@ export async function GET(request: Request) {
         date: update.date,
         summary: update.summary,
         author: update.author?.name,
+        // The post itself, on the record page.
+        updateUrl: `${SITE}${postHref(update)}`,
       })),
       quiet: r.quiet.map(ref),
     },

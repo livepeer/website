@@ -2,6 +2,7 @@ import type { LatestLink } from "@/components/livepeer-ui/latest-nav";
 import type { RoundupView } from "@/components/livepeer-ui/changelog-listing";
 import type { BlogSummary } from "@/lib/blog";
 import type { Roundup } from "@/lib/changelog";
+import { postHref } from "@/lib/health";
 
 import { blog, categoryLinks } from "../blog/listing";
 
@@ -53,16 +54,21 @@ export function toView(r: Roundup): RoundupView {
     title: r.label,
     headline: r.headline,
     // The retro's line where there is one, else the lead's last update.
-    shipped: r.shipped.map(({ commitment: c, retro, update }) => ({
-      ...row(c),
-      shippedAt: c.shippedAt!,
-      summary: retro?.summary ?? update?.summary,
-    })),
+    shipped: r.shipped.map(({ commitment: c, retro, update }) => {
+      const post = retro ?? update;
+      return {
+        ...row(c),
+        shippedAt: c.shippedAt!,
+        summary: post?.summary,
+        href: post && postHref(post),
+      };
+    }),
     reported: r.reported.map(({ commitment, update }) => ({
       ...row(commitment),
       health: update.health,
       date: update.date,
       summary: update.summary,
+      href: postHref(update),
     })),
     quiet: r.quiet.map(row),
   };

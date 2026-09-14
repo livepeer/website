@@ -1,6 +1,6 @@
 import { roundups, type Roundup } from "@/lib/changelog";
 import { getEntries, getRegister, getUpdates } from "@/lib/register";
-import { HEALTH_LABEL } from "@/lib/updates";
+import { HEALTH_LABEL, postHref, type PostSummary } from "@/lib/updates";
 
 /**
  * The changelog as an Atom feed: one entry per month.
@@ -27,9 +27,22 @@ function stamp(isoDate: string): string {
   return `${isoDate}T00:00:00Z`;
 }
 
-function item(slug: string, title: string, note?: string): string {
+/**
+ * One row: the commitment linked to its record, and what was said linked
+ * to the post it was said in, where there was one.
+ */
+function item(
+  slug: string,
+  title: string,
+  note?: string,
+  post?: PostSummary
+): string {
   const link = `<a href="${SITE}/roadmap/${slug}">${escape(title)}</a>`;
-  return `<li>${link}${note ? ` — ${escape(note)}` : ""}</li>`;
+  if (!note) return `<li>${link}</li>`;
+  const said = post
+    ? `<a href="${SITE}${postHref(post)}">${escape(note)}</a>`
+    : escape(note);
+  return `<li>${link} — ${said}</li>`;
 }
 
 /** The roundup as HTML for a reader, which is what an Atom content is. */
@@ -38,9 +51,10 @@ function content(r: Roundup): string {
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped
-        .map(({ commitment: c, retro, update }) =>
-          item(c.slug, c.title, retro?.summary ?? update?.summary ?? c.owner)
-        )
+        .map(({ commitment: c, retro, update }) => {
+          const post = retro ?? update;
+          return item(c.slug, c.title, post?.summary ?? c.owner, post);
+        })
         .join("")}</ul>`
     );
   }
@@ -51,7 +65,8 @@ function content(r: Roundup): string {
           item(
             commitment.slug,
             commitment.title,
-            `${HEALTH_LABEL[update.health]}. ${update.summary}`
+            `${HEALTH_LABEL[update.health]}. ${update.summary}`,
+            update
           )
         )
         .join("")}</ul>`

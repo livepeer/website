@@ -34,13 +34,25 @@ import { useEffect } from "react";
  *
  * Only the page does this. The intercepting routes render the panel instead
  * and never mount it, which is what keeps the register still while it is open.
+ *
+ * A record's beginning is the row a link named, when it named one: a post
+ * has an address on its record (postAnchor in lib/health.ts), and a reader
+ * who followed the changelog there wants the post, not the cover. The
+ * browser scrolls to a fragment on a full load; on a route change the
+ * scroll-to-top here was undoing what the router did, so the fragment is
+ * honoured here too.
  */
 export function StartAtTop() {
   useEffect(() => {
     const previous = history.scrollRestoration;
     history.scrollRestoration = "manual";
 
-    const top = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const top = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      const target = id ? document.getElementById(id) : null;
+      if (target) target.scrollIntoView({ behavior: "instant" });
+      else window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    };
     top();
     // A frame later as well: a restoration already queued for this frame can
     // still land after the call above, and manual is read when it runs.

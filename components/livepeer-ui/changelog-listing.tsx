@@ -31,11 +31,17 @@ export type RoundupView = {
   /** The entry's title, written by a person once the month closed and
    *  stored in Notion (lib/headlines.ts). None until then. */
   headline?: string;
-  shipped: (RoundupRow & { shippedAt: string; summary?: string })[];
+  /** `href` is the post the line was taken from, on its record page. */
+  shipped: (RoundupRow & {
+    shippedAt: string;
+    summary?: string;
+    href?: string;
+  })[];
   reported: (RoundupRow & {
     health: Health;
     date: string;
     summary: string;
+    href: string;
   })[];
   quiet: RoundupRow[];
 };
@@ -179,6 +185,23 @@ function Meta({
   );
 }
 
+/**
+ * What was said, linked to where it was said: the post's row on the
+ * record page, opened. The line here is the lead's one line and the
+ * write-up, when there is one, is a click away; a reader who wants the
+ * rest goes to the post, not to the top of the record.
+ */
+function Said({ href, children }: { href: string; children: string }) {
+  return (
+    <Link
+      href={href}
+      className="ml-2 underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {children}
+    </Link>
+  );
+}
+
 function Month({ r }: { r: RoundupView }) {
   return (
     <div>
@@ -195,7 +218,12 @@ function Month({ r }: { r: RoundupView }) {
         {r.shipped.map((row) => (
           <Row key={row.slug} row={row} icon={<ShippedIcon />}>
             <Meta row={row} date={row.shippedAt} word="Shipped" />
-            {row.summary && <span className="ml-2">{row.summary}</span>}
+            {row.summary &&
+              (row.href ? (
+                <Said href={row.href}>{row.summary}</Said>
+              ) : (
+                <span className="ml-2">{row.summary}</span>
+              ))}
           </Row>
         ))}
         {r.reported.map((row) => (
@@ -209,7 +237,7 @@ function Month({ r }: { r: RoundupView }) {
               date={row.date}
               word={<HealthWord health={row.health} />}
             />
-            <span className="ml-2">{row.summary}</span>
+            <Said href={row.href}>{row.summary}</Said>
           </Row>
         ))}
         {/* The accountability half: under way, and nothing said that month.

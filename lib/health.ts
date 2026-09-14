@@ -122,6 +122,25 @@ export function standingOf(
   return { health: stale ? "no-update" : latest.health, latest };
 }
 
+/**
+ * Where a post lives on its record page: the fragment of the row that holds
+ * it in the Activity log, so the changelog and anyone else can link straight
+ * to what was said. "update-2026-08-27", "retro-2026-09-10". Dated rather
+ * than keyed on a Notion id, which the site never holds; a lead who posts
+ * twice on one day gets the newer post at the bare address and the older at
+ * "-2" (see the record's log).
+ */
+export function postAnchor(post: Pick<PostSummary, "kind" | "date">): string {
+  return `${post.kind}-${post.date}`;
+}
+
+/** The record page, opened on one of its posts. */
+export function postHref(
+  post: Pick<PostSummary, "kind" | "date" | "commitment">
+): string {
+  return `/roadmap/${post.commitment}#${postAnchor(post)}`;
+}
+
 /** The retrospective on a shipped commitment, if one has been posted. */
 export function retroOf(
   commitment: Commitment,
