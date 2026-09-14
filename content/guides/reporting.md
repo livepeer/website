@@ -9,7 +9,7 @@ Everything on the roadmap is owned, and owning it means three things: the work i
 
 Keep a GitHub project board with every active task and issue on it. Milestones are the delivery checkpoints — the phases of the proposal, its deliverables, or quarterly checkpoints — each with a due date, and every issue belongs to one. Keep task status current as things move.
 
-The board belongs in the commitment's **Links** on the roadmap, beside the proposal thread and the repo. That is where a claim on the record gets checked.
+Share the board's address in the proposal thread. The commitment's page on the roadmap links to the board beside the thread and the repo, so anyone can check a claim against the work itself.
 
 ## Post an update every month
 
@@ -24,7 +24,7 @@ An update carries:
 - Completed deliverables, grouped by milestone, each with its link
 - What is planned for the next update, and when it is due
 
-The roadmap shows each post as one line, its status, and a link to the post, and each month's changelog entry lists who posted and who did not. Write the summary so its first sentence stands alone; that is the line the roadmap shows. After six weeks with nothing posted the card reads _No update_, whatever the last one said. If you have access to the register you can post there instead of the forum, with the write-up in the page body.
+The roadmap shows each post as one line, its status, and a link to the post, and each month's changelog entry lists who posted and who did not. Write the summary so its first sentence stands alone; that is the line the roadmap shows. After six weeks with nothing posted the card reads _No update_, whatever the last one said. If you have access to the roadmap's Notion workspace, you can post the update there instead of the forum, with the write-up in the page body.
 
 When the work ships, say so in the update. The commitment moves to Shipped with the date, and the retrospective is the next post.
 

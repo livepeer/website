@@ -291,18 +291,17 @@ export function ContributeLadder({
     "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
 
   return (
-    // Close under the hero: its ground fades out to exactly this section's
-    // rule (the canvas reaches the same 3rem/4rem past the hero), so the fade
-    // and the rule are one seam rather than a fade, dead air, and a rule.
+    // No rule of its own: the path strip above ends on one, and a second
+    // rule here left the two with dead air between them. When the ladder
+    // sat directly under the hero it drew the rule the hero's ground faded
+    // out to; the path took that seat, and its top rule is that seam now.
     <section className="mt-12 sm:mt-16">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         {/* 3xl: the hero's text block is about 600px wide, and at 4xl this
             was the widest thing on the page between two centred blocks. Some
             "best for" cells wrap to two lines at this width; that costs less
-            than the column reading as a different page. The rule sits on
-            this column, not the page, so it is as wide as what it
-            introduces. */}
-        <div className="mx-auto max-w-3xl border-t border-border pt-12 sm:pt-16">
+            than the column reading as a different page. */}
+        <div className="mx-auto max-w-3xl">
           {/* Page-title size at every width, not display: at display size
               this sat a few hundred pixels under a headline of nearly the
               same scale, and two headlines read as two pages. The hero is
@@ -437,7 +436,10 @@ export type PathStep = { title: string; body: React.ReactNode };
  * covered and the page did not. Three cells in a row on a wide screen, one
  * sentence each, in the ladder's hairline idiom — a first pass stacked
  * them as rows with a paragraph each and stood taller than the ladder it
- * was meant to introduce.
+ * was meant to introduce. Close under the hero: its ground fades out to
+ * exactly this section's rule (the canvas reaches the same 3rem/4rem past
+ * the hero), so the fade and the rule are one seam. The strip's bottom
+ * rule is the only rule between this and the ladder.
  */
 export function ContributePath({
   title,
