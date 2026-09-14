@@ -218,7 +218,19 @@ function StateMark({
           <span aria-hidden="true" className="text-muted-foreground/50">
             ·
           </span>
-          <HealthMark health={standing.health} />
+          <HealthMark
+            health={standing.health}
+            // "No update" alone reads as though nothing was ever posted.
+            // When a post has gone stale the mark names the day it went
+            // quiet; when nothing was posted it says so.
+            word={
+              standing.health !== "no-update"
+                ? undefined
+                : standing.latest
+                  ? `No update since ${shortDate(standing.latest.date)}`
+                  : "No update yet"
+            }
+          />
         </>
       )}
       {/* Behind us the question is whether the closing post was written,

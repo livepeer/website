@@ -260,10 +260,17 @@ export function CommitmentRecord({
         {standing && (
           <Row icon={Activity} label="Health">
             <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <HealthMark health={standing.health} />
+              <HealthMark
+                health={standing.health}
+                word={
+                  standing.health === "no-update" && !standing.latest
+                    ? "No update yet"
+                    : undefined
+                }
+              />
               {standing.latest && (
                 <span className="text-muted-foreground">
-                  {standing.health === "no-update" ? "last posted" : "as of"}{" "}
+                  {standing.health === "no-update" ? "since" : "as of"}{" "}
                   {formatDate(standing.latest.date)}
                 </span>
               )}

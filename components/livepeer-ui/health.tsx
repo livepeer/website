@@ -161,9 +161,17 @@ export function HealthWord({
 
 export function HealthMark({
   health,
+  word,
   className,
 }: {
   health: HealthOrNone;
+  /**
+   * In place of the scale's word, where the mark can say more — "No
+   * update since Jul 15" on a card whose last post has gone stale, "No
+   * update yet" where nothing was ever posted. The facet and the headings
+   * keep the bare word, since one word has to cover both.
+   */
+  word?: string;
   className?: string;
 }) {
   return (
@@ -175,7 +183,7 @@ export function HealthMark({
       )}
     >
       <HealthIcon health={health} />
-      {HEALTH_LABEL[health]}
+      {word ?? HEALTH_LABEL[health]}
     </span>
   );
 }
