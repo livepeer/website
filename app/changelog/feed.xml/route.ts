@@ -1,4 +1,4 @@
-import { roundups, type Roundup } from "@/lib/changelog";
+import { headline, roundups, type Roundup } from "@/lib/changelog";
 import { getRegister, getUpdates } from "@/lib/register";
 import { HEALTH_LABEL } from "@/lib/updates";
 
@@ -36,7 +36,7 @@ function item(slug: string, title: string, note?: string): string {
 
 /** The roundup as HTML for a reader, which is what an Atom content is. */
 function content(r: Roundup): string {
-  const parts: string[] = [];
+  const parts: string[] = [`<p>${escape(headline(r))}</p>`];
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped

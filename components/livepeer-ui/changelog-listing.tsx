@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Link as LinkIcon } from "lucide-react";
 
 import {
   HealthIcon,
@@ -28,6 +28,8 @@ export type RoundupView = {
   month: string;
   /** "August 2026". */
   title: string;
+  /** The month in one line, composed from its facts; see lib/changelog.ts. */
+  headline: string;
   shipped: (RoundupRow & { shippedAt: string; summary?: string })[];
   reported: (RoundupRow & {
     health: Health;
@@ -178,31 +180,47 @@ function Meta({
 
 function Month({ r }: { r: RoundupView }) {
   return (
-    <ol className="flex flex-col gap-6">
-      {r.shipped.map((row) => (
-        <Row key={row.slug} row={row} icon={<ShippedIcon />}>
-          <Meta row={row} date={row.shippedAt} word="Shipped" />
-          {row.summary && <span className="ml-2">{row.summary}</span>}
-        </Row>
-      ))}
-      {r.reported.map((row) => (
-        <Row key={row.slug} row={row} icon={<HealthIcon health={row.health} />}>
-          <Meta
+    <div>
+      {/* The entry's title, over its rows: the month in one line, which
+          is what makes a month read as an entry rather than a list. Set a
+          size above the rows, like a record's title over its fields. */}
+      <p className="mb-6 text-lg font-medium tracking-[-0.015em] text-pretty">
+        {r.headline}
+      </p>
+      <ol className="flex flex-col gap-6">
+        {r.shipped.map((row) => (
+          <Row key={row.slug} row={row} icon={<ShippedIcon />}>
+            <Meta row={row} date={row.shippedAt} word="Shipped" />
+            {row.summary && <span className="ml-2">{row.summary}</span>}
+          </Row>
+        ))}
+        {r.reported.map((row) => (
+          <Row
+            key={row.slug}
             row={row}
-            date={row.date}
-            word={<HealthWord health={row.health} />}
-          />
-          <span className="ml-2">{row.summary}</span>
-        </Row>
-      ))}
-      {/* The accountability half: under way, and nothing said that month.
+            icon={<HealthIcon health={row.health} />}
+          >
+            <Meta
+              row={row}
+              date={row.date}
+              word={<HealthWord health={row.health} />}
+            />
+            <span className="ml-2">{row.summary}</span>
+          </Row>
+        ))}
+        {/* The accountability half: under way, and nothing said that month.
           The owner's line is the whole row. */}
-      {r.quiet.map((row) => (
-        <Row key={row.slug} row={row} icon={<HealthIcon health="no-update" />}>
-          <Meta row={row} word={<HealthWord health="no-update" />} />
-        </Row>
-      ))}
-    </ol>
+        {r.quiet.map((row) => (
+          <Row
+            key={row.slug}
+            row={row}
+            icon={<HealthIcon health="no-update" />}
+          >
+            <Meta row={row} word={<HealthWord health="no-update" />} />
+          </Row>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -302,12 +320,20 @@ export function ChangelogListing({
                   className="grid gap-6 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,46rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,46rem)]"
                 >
                   <div className="md:sticky md:top-24 md:self-start">
+                    {/* The month is the entry's permalink, and says so: a
+                        link glyph beside it and an underline on hover. It
+                        was a plain heading that dimmed on hover, and read
+                        as a heading. */}
                     <h2 className="text-sm">
                       <Link
                         href={`/changelog/${r.month}`}
-                        className="text-foreground transition-colors hover:text-muted-foreground"
+                        className="inline-flex items-center gap-1.5 text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
                       >
                         {r.title}
+                        <LinkIcon
+                          className="size-3.5 text-muted-foreground"
+                          aria-hidden
+                        />
                       </Link>
                     </h2>
                     <Tally r={r} />

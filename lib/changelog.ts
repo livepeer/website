@@ -212,3 +212,60 @@ export function roundupFor(
     quiet,
   };
 }
+
+/**
+ * A few titles as one phrase: "A", "A and B", "A, B and C", and past three
+ * "A, B and 2 more".
+ */
+function names(titles: string[]): string {
+  if (titles.length <= 3) {
+    return titles.length <= 1
+      ? (titles[0] ?? "")
+      : `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)}`;
+  }
+  return `${titles[0]}, ${titles[1]} and ${titles.length - 2} more`;
+}
+
+/**
+ * The month in one line, composed from its facts and nothing else: what
+ * shipped by name, then what needs attention by name — off track, at risk
+ * — then how many posted nothing, and when nothing needs attention, that
+ * the rest is on track. "Delegator UX analysis and Live Runner shipped ·
+ * Agent product launch at risk · 1 posted no update".
+ *
+ * Written by code rather than a model, so it is reproducible, checkable
+ * against the register line by line, and never characterises anyone's
+ * work in words they did not choose. It repeats the rows beneath it,
+ * which is the point of a headline.
+ */
+export function headline(r: Roundup): string {
+  const parts: string[] = [];
+  if (r.shipped.length > 0) {
+    parts.push(`${names(r.shipped.map((s) => s.commitment.title))} shipped`);
+  }
+  const by = (health: HealthOrNone) =>
+    r.reported
+      .filter(({ update }) => update.health === health)
+      .map(({ commitment }) => commitment.title);
+  const offTrack = by("off-track");
+  if (offTrack.length > 0) parts.push(`${names(offTrack)} off track`);
+  const atRisk = by("at-risk");
+  if (atRisk.length > 0) parts.push(`${names(atRisk)} at risk`);
+  if (r.quiet.length === 1) {
+    parts.push(`${r.quiet[0]!.title} posted no update`);
+  } else if (r.quiet.length > 1) {
+    parts.push(`${r.quiet.length} posted no update`);
+  }
+  if (
+    offTrack.length + atRisk.length + r.quiet.length === 0 &&
+    r.reported.length > 0
+  ) {
+    parts.push(
+      r.shipped.length > 0
+        ? "everything else on track"
+        : "everything under way on track"
+    );
+  }
+  const line = parts.join(" · ");
+  return line.charAt(0).toUpperCase() + line.slice(1);
+}

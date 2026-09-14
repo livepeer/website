@@ -1,7 +1,7 @@
 import type { LatestLink } from "@/components/livepeer-ui/latest-nav";
 import type { RoundupView } from "@/components/livepeer-ui/changelog-listing";
 import type { BlogSummary } from "@/lib/blog";
-import type { Roundup } from "@/lib/changelog";
+import { headline, type Roundup } from "@/lib/changelog";
 
 import { blog, categoryLinks } from "../blog/listing";
 
@@ -51,6 +51,7 @@ export function toView(r: Roundup): RoundupView {
   return {
     month: r.month,
     title: r.title,
+    headline: headline(r),
     // The retro's line where there is one, else the lead's last update.
     shipped: r.shipped.map(({ commitment: c, retro, update }) => ({
       ...row(c),
