@@ -16,5 +16,5 @@ draft: false
 
 A person writes the headline once the period has closed — with whatever model
 they like, from the period's facts at `/changelog/roundup.json?period=<key>` —
-and the recipe is on _Posting an update_, the skill page beside the database.
+and the recipe is on _Publishing a changelog entry_, the skill page beside the database.
 Nothing else lives here.
