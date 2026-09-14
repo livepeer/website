@@ -24,9 +24,9 @@ export type RoundupRow = {
 
 /** One month, as the list needs it. Built by app/changelog/listing.ts. */
 export type RoundupView = {
-  /** yyyy-mm. */
-  month: string;
-  /** "August 2026". */
+  /** The period's key, which is the entry's address: "2026-08", "2026-Q3". */
+  period: string;
+  /** "August 2026", "Q3 2026". */
   title: string;
   /** The entry's title, written by a person once the month closed and
    *  stored in Notion (lib/headlines.ts). None until then. */
@@ -40,7 +40,7 @@ export type RoundupView = {
   quiet: RoundupRow[];
 };
 
-export type MonthLink = { month: string; title: string };
+export type MonthLink = { period: string; title: string };
 
 function formatDay(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -320,7 +320,7 @@ export function ChangelogListing({
                 // wide screens and stay put while the roundup scrolls past.
                 // On a phone they are a block above it.
                 <li
-                  key={r.month}
+                  key={r.period}
                   className="grid gap-6 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,46rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,46rem)]"
                 >
                   <div className="md:sticky md:top-24 md:self-start">
@@ -330,7 +330,7 @@ export function ChangelogListing({
                         as a heading. */}
                     <h2 className="text-sm">
                       <Link
-                        href={`/changelog/${r.month}`}
+                        href={`/changelog/${r.period}`}
                         className="inline-flex items-center gap-1.5 text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
                       >
                         {r.title}
@@ -353,9 +353,9 @@ export function ChangelogListing({
               <h2 className="text-sm text-muted-foreground">Earlier</h2>
               <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
                 {earlier.map((m) => (
-                  <li key={m.month}>
+                  <li key={m.period}>
                     <Link
-                      href={`/changelog/${m.month}`}
+                      href={`/changelog/${m.period}`}
                       className="transition-colors hover:text-muted-foreground"
                     >
                       {m.title}
@@ -373,7 +373,7 @@ export function ChangelogListing({
             >
               {neighbours.previous ? (
                 <Link
-                  href={`/changelog/${neighbours.previous.month}`}
+                  href={`/changelog/${neighbours.previous.period}`}
                   className="group inline-flex items-center gap-2 transition-colors hover:text-foreground"
                 >
                   <ArrowLeft
@@ -393,7 +393,7 @@ export function ChangelogListing({
               </Link>
               {neighbours.next ? (
                 <Link
-                  href={`/changelog/${neighbours.next.month}`}
+                  href={`/changelog/${neighbours.next.period}`}
                   className="group inline-flex items-center gap-2 transition-colors hover:text-foreground"
                 >
                   {neighbours.next.title}

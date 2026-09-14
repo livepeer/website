@@ -19,8 +19,8 @@ export const changelog = {
   searchPlaceholder: "Search commitments",
   emptyMessage: "Nothing matches that search.",
   noMonthsMessage:
-    "The first roundup is published when this month ends. Until then, the roadmap shows how each commitment is going.",
-  /** How many months the index shows in full before listing the rest. */
+    "No entry has been published yet. Until one is, the roadmap shows how each commitment is going.",
+  /** How many entries the index shows in full before listing the rest. */
   recentMonths: 3,
 };
 
@@ -41,7 +41,7 @@ export function changelogRow(register: BlogSummary[]): {
  * each, and none of the write-ups the register carries. A commitment's HTML
  * body is the largest thing on a record and the list shows none of it.
  */
-export function toView(r: Roundup, headline?: string): RoundupView {
+export function toView(r: Roundup): RoundupView {
   const row = (c: Roundup["quiet"][number]) => ({
     slug: c.slug,
     title: c.title,
@@ -49,9 +49,9 @@ export function toView(r: Roundup, headline?: string): RoundupView {
     ownerSlug: c.ownerSlug,
   });
   return {
-    month: r.month,
-    title: r.title,
-    headline,
+    period: r.key,
+    title: r.label,
+    headline: r.headline,
     // The retro's line where there is one, else the lead's last update.
     shipped: r.shipped.map(({ commitment: c, retro, update }) => ({
       ...row(c),

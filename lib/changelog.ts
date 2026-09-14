@@ -1,4 +1,5 @@
 import type { Commitment } from "./roadmap";
+import type { Entry } from "./entries";
 import {
   HEALTH_ORDER,
   type HealthOrNone,
@@ -6,38 +7,35 @@ import {
   type RetroSummary,
   type UpdateSummary,
 } from "./health";
+import { parsePeriod, type Period } from "./period";
 
 /**
- * The changelog: one roundup per month, generated.
+ * The changelog: one entry per published period, generated.
  *
- * Nothing here is written. A month's roundup is composed from the roadmap
- * register and the updates posted on it: what shipped in the month, what was
- * under way and what its lead said about it, and what was under way with
- * nothing said. Linear's changelog is one entry per release; Vercel's is one
- * per change; this is one per month, because the thing it is accountable for
- * is a cadence — every funded commitment reports monthly, and the roundup is
- * where a missed month is visible.
+ * Nothing here is written but the headline. An entry's body is composed
+ * from the roadmap register and the updates posted on it: what shipped in
+ * the period, what was under way and what its lead said about it, and what
+ * was under way with nothing said. Linear's changelog is one entry per
+ * release; Vercel's is one per change; this is one per period the team
+ * publishes, because the thing it is accountable for is a reporting
+ * cadence — and the cadence is whatever the rows in _Changelog entries_
+ * say (lib/period.ts), month by month today.
  *
- * Months are addressed as yyyy-mm, so /changelog/2026-08 is August 2026.
- * A month is published when it ends: a roundup is a report on a finished
- * month, and one that changed under the reader as the month went on would
- * be a dashboard, not a log. `roundups` therefore stops at last month;
- * `roundupFor` will still compose the month under way for whatever nudges
- * the silent before it closes (app/changelog/roundup.json).
+ * A row is the act of publishing. An entry appears when its row does, and
+ * not before its period has closed: an entry that changed under the reader
+ * as the period went on would be a dashboard, not a log. `roundupFor` will
+ * still compose an open period for whatever nudges the silent before it
+ * closes (app/changelog/roundup.json).
  */
 
-export const MONTH = /^\d{4}-(?:0[1-9]|1[0-2])$/;
-
-export type Roundup = {
-  /** yyyy-mm. */
-  month: string;
-  /** "August 2026". */
-  title: string;
-  /** The month `now` falls in, which is not over yet. Never published. */
-  current: boolean;
+export type Roundup = Period & {
+  /** The row's headline, where one was written. */
+  headline?: string;
+  /** The period has not ended: composed for a nudge, never published. */
+  open: boolean;
   /**
-   * Commitments that shipped this month, newest first, each with its
-   * retrospective if one had been posted by the month's end, and the last
+   * Commitments that shipped in the period, newest first, each with its
+   * retrospective if one had been posted by the period's end, and the last
    * update its lead posted before it shipped, if anything was said.
    */
   shipped: {
@@ -45,37 +43,11 @@ export type Roundup = {
     retro?: RetroSummary;
     update?: UpdateSummary;
   }[];
-  /** Under way with an update posted this month, what needs attention first. */
+  /** Under way with an update posted in the period, what needs attention first. */
   reported: { commitment: Commitment; update: UpdateSummary }[];
-  /** Under way with nothing posted this month. */
+  /** Under way with nothing posted in the period. */
   quiet: Commitment[];
 };
-
-/** "2026-08-19" → "2026-08". */
-export function monthOf(iso: string): string {
-  return iso.slice(0, 7);
-}
-
-export function monthTitle(month: string): string {
-  return new Date(`${month}-01T00:00:00Z`).toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-/** The last day of a month, as ISO, so dates can be compared as text. */
-function endOf(month: string): string {
-  const [y, m] = month.split("-").map(Number);
-  const last = new Date(Date.UTC(y!, m!, 0)).getUTCDate();
-  return `${month}-${String(last).padStart(2, "0")}`;
-}
-
-function nextMonth(month: string): string {
-  const [y, m] = month.split("-").map(Number);
-  const d = new Date(Date.UTC(y!, m! - 1 + 1, 1));
-  return d.toISOString().slice(0, 7);
-}
 
 /**
  * When a commitment's history on this site begins.
@@ -106,55 +78,44 @@ function healthRank(health: HealthOrNone): number {
 }
 
 /**
- * Every finished month with something to say, newest first. The month
- * under way is left out: it is published when it ends.
- *
- * A commitment is under way in a month if its history had begun by the end
- * of it and it had not shipped by then. Committed work that has not started
- * is left out unless its lead posted on it, in which case the post counts.
+ * The published entries, newest first: one per row whose period has
+ * closed. A row for a period still under way waits until it ends. An
+ * entry with nothing in it is still an entry — publishing it was a choice.
  */
 export function roundups(
+  entries: Entry[],
   commitments: Commitment[],
   updates: PostSummary[],
   now: Date
 ): Roundup[] {
-  const today = now.toISOString().slice(0, 10);
-  const thisMonth = monthOf(today);
-
-  const starts = commitments
-    .map((c) => activeFrom(c, updates, today))
-    .filter((d): d is string => Boolean(d))
-    .map(monthOf)
-    .sort();
-  const firstMonth = starts[0];
-  if (!firstMonth) return [];
-
-  const months: string[] = [];
-  for (let m = firstMonth; m < thisMonth; m = nextMonth(m)) months.push(m);
-
-  return months
-    .map((month) => roundupFor(month, commitments, updates, now))
-    .filter((r) => r.shipped.length + r.reported.length + r.quiet.length > 0)
-    .reverse();
+  return entries
+    .map((e) => roundupFor(e.period, commitments, updates, now, e.headline))
+    .filter((r) => !r.open)
+    .sort(
+      (a, b) => b.start.localeCompare(a.start) || b.end.localeCompare(a.end)
+    );
 }
 
 export function roundupFor(
-  month: string,
+  key: string,
   commitments: Commitment[],
   updates: PostSummary[],
-  now: Date
+  now: Date,
+  headline?: string
 ): Roundup {
   const today = now.toISOString().slice(0, 10);
-  const end = endOf(month);
+  const period = parsePeriod(key);
+  const { start, end } = period;
+  const within = (iso: string) => iso >= start && iso <= end;
 
   const shipped = commitments
-    .filter((c) => c.shippedAt && monthOf(c.shippedAt) === month)
+    .filter((c) => c.shippedAt && within(c.shippedAt))
     .sort((a, b) => b.shippedAt!.localeCompare(a.shippedAt!))
     .map((commitment) => ({
       commitment,
-      // The retrospective, if one had been posted by the month's end: an
-      // entry is the month as it ended, so a retro written later belongs to
-      // the record page, not to this month.
+      // The retrospective, if one had been posted by the period's end: an
+      // entry is the period as it ended, so a retro written later belongs
+      // to the record page, not to this entry.
       retro: updates
         .filter(
           (u): u is RetroSummary =>
@@ -164,7 +125,7 @@ export function roundupFor(
         )
         .sort((a, b) => b.date.localeCompare(a.date))[0],
       // The newest update posted up to the day it shipped — the lead's last
-      // word on it, from whichever month it was said in.
+      // word on it, from whichever period it was said in.
       update: updates
         .filter(
           (u): u is UpdateSummary =>
@@ -177,7 +138,7 @@ export function roundupFor(
 
   const posted = new Map<string, UpdateSummary>();
   for (const u of updates) {
-    if (u.kind !== "update" || monthOf(u.date) !== month) continue;
+    if (u.kind !== "update" || !within(u.date)) continue;
     const held = posted.get(u.commitment);
     if (!held || held.date < u.date) posted.set(u.commitment, u);
   }
@@ -204,9 +165,9 @@ export function roundupFor(
     .sort((a, b) => a.title.localeCompare(b.title));
 
   return {
-    month,
-    title: monthTitle(month),
-    current: month === monthOf(today),
+    ...period,
+    headline,
+    open: end >= today,
     shipped,
     reported,
     quiet,

@@ -1,4 +1,5 @@
-import { MONTH, roundupFor } from "@/lib/changelog";
+import { roundupFor } from "@/lib/changelog";
+import { PERIOD, monthOf } from "@/lib/period";
 import { HEALTH_LABEL } from "@/lib/health";
 import { getRegister, getUpdates } from "@/lib/register";
 import type { Commitment } from "@/lib/roadmap";
@@ -9,9 +10,11 @@ import type { Commitment } from "@/lib/roadmap";
  * The page shows who has not reported; nobody is told they are on that
  * list. A weekly post to a Discord channel, or a reminder in Notion, is
  * where a roundup turns into a habit, and this is the list such a thing
- * reads. The month under way by default — the one month the page does not
- * publish, because a nudge is only useful before the month closes — or
- * `?month=yyyy-mm`. Built from the same register and updates the page
+ * reads. The month under way by default — which the page never publishes,
+ * because a nudge is only useful before a period closes — or any period
+ * by its key, `?period=2026-08`, `2026-Q3`, `2026-W36`, `2026`, whether or
+ * not a row has been published for it. It is also where the facts for a
+ * headline come from. Built from the same register and updates the page
  * reads, on the same minute.
  */
 export const revalidate = 60;
@@ -34,12 +37,18 @@ export async function GET(request: Request) {
     getUpdates(),
   ]);
   const now = new Date();
-  const wanted = new URL(request.url).searchParams.get("month");
-  if (wanted && !MONTH.test(wanted)) {
-    return Response.json({ error: "month must be yyyy-mm" }, { status: 400 });
+  const wanted = new URL(request.url).searchParams.get("period");
+  if (wanted && !PERIOD.test(wanted)) {
+    return Response.json(
+      {
+        error:
+          "period must be a month (2026-08), quarter (2026-Q3), week (2026-W36) or year (2026)",
+      },
+      { status: 400 }
+    );
   }
   const r = roundupFor(
-    wanted ?? now.toISOString().slice(0, 7),
+    wanted ?? monthOf(now.toISOString().slice(0, 10)),
     commitments,
     updates,
     now
@@ -47,10 +56,12 @@ export async function GET(request: Request) {
 
   return Response.json(
     {
-      month: r.month,
-      title: r.title,
-      current: r.current,
-      url: `${SITE}/changelog/${r.month}`,
+      period: r.key,
+      title: r.label,
+      start: r.start,
+      end: r.end,
+      open: r.open,
+      url: `${SITE}/changelog/${r.key}`,
       shipped: r.shipped.map(({ commitment, retro, update }) => ({
         ...ref(commitment),
         shippedAt: commitment.shippedAt,

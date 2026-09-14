@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
 import { roundups } from "@/lib/changelog";
+import { getEntries } from "@/lib/register";
 import { categoriesInUse, categorySlug } from "@/lib/blog";
 import { getAppSlugs } from "@/lib/ecosystem";
 
@@ -19,15 +20,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getRegister(),
     getUpdates(),
   ]);
-  // One page per finished month with something in it; a month is
-  // published when it ends and settled from then on.
+  // One page per published entry, settled from the day its period ends.
   const changelogEntries: MetadataRoute.Sitemap = roundups(
+    await getEntries(),
     commitments,
     updates,
     new Date()
   ).map((r) => ({
-    url: `${BASE_URL}/changelog/${r.month}`,
-    lastModified: new Date(`${r.month}-01T00:00:00Z`),
+    url: `${BASE_URL}/changelog/${r.key}`,
+    lastModified: new Date(`${r.end}T00:00:00Z`),
     changeFrequency: "yearly",
     priority: 0.5,
   }));

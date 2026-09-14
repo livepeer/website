@@ -6,12 +6,12 @@ import {
   type BlogSummary,
 } from "./blog";
 import { getMarkdownFundingPaths, type FundingPath } from "./contribute";
-import { getMarkdownHeadlines, type Headlines } from "./headlines";
+import { getMarkdownEntries, type Entry } from "./entries";
 import {
   getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
-  getNotionHeadlines,
+  getNotionEntries,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -129,7 +129,13 @@ export async function getCommitmentUpdates(slug: string): Promise<Post[]> {
   return updates.filter(isPublished);
 }
 
-/** The changelog's headlines by period; see lib/headlines.ts. */
-export async function getHeadlines(): Promise<Headlines> {
-  return hasNotionCredentials() ? getNotionHeadlines() : getMarkdownHeadlines();
+/**
+ * The changelog's published entries; see lib/entries.ts. Drafts are
+ * filtered here, as posts are, and by the same rule.
+ */
+export async function getEntries(): Promise<Entry[]> {
+  const entries = hasNotionCredentials()
+    ? await getNotionEntries()
+    : getMarkdownEntries();
+  return entries.filter(isPublished);
 }

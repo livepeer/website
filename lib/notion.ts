@@ -3,8 +3,9 @@ import path from "node:path";
 
 import readingTime from "reading-time";
 
-import { MONTH } from "./changelog";
+import type { Entry } from "./entries";
 import { blocksToHtml } from "./notion-blocks";
+import { parsePeriod } from "./period";
 import { resolveMediaSource } from "./notion-media";
 import {
   assertCategory,
@@ -1255,24 +1256,29 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
 }
 
 /**
- * The changelog's headlines, keyed by period: one row per published entry
- * in _Changelog entries_, written by a person once the period closes
- * (lib/headlines.ts). A row with no headline is skipped rather than shown
- * blank.
+ * The changelog's entries: one row per period someone has published in
+ * _Changelog entries_ (lib/entries.ts). The Period is the window and the
+ * address; the Headline is optional; Status Draft keeps a row off
+ * production while it is being prepared, and an empty Status means
+ * Published, so a row added by hand with two cells filled counts.
  */
-export async function getNotionHeadlines(): Promise<Map<string, string>> {
-  const headlines = new Map<string, string>();
-  for (const row of await queryAll(CHANGELOG_DB)) {
+export async function getNotionEntries(): Promise<Entry[]> {
+  return (await queryAll(CHANGELOG_DB)).flatMap((row) => {
     const p = props(row);
     const period = text(p.Period).trim();
-    const headline = text(p.Headline).trim();
-    if (!period || !headline) continue;
-    if (!MONTH.test(period)) {
+    if (!period) return [];
+    const where = `Changelog entries → ${JSON.stringify(period)}`;
+    parsePeriod(period, where);
+    const status = selectName(p.Status);
+    if (status && status !== "Draft" && status !== "Published") {
       throw new Error(
-        `Changelog entries → ${JSON.stringify(period)}: Period is not yyyy-mm.`
+        `${where}: Status is ${JSON.stringify(status)}. It must be Draft or ` +
+          `Published, or empty.`
       );
     }
-    if (!headlines.has(period)) headlines.set(period, headline);
-  }
-  return headlines;
+    const headline = text(p.Headline).trim();
+    return [
+      { period, headline: headline || undefined, draft: status === "Draft" },
+    ];
+  });
 }

@@ -1,5 +1,5 @@
 import { roundups, type Roundup } from "@/lib/changelog";
-import { getHeadlines, getRegister, getUpdates } from "@/lib/register";
+import { getEntries, getRegister, getUpdates } from "@/lib/register";
 import { HEALTH_LABEL } from "@/lib/updates";
 
 /**
@@ -22,11 +22,9 @@ function escape(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** The last day of a month, as an Atom timestamp. */
-function lastDay(month: string): string {
-  const [y, m] = month.split("-").map(Number);
-  const day = new Date(Date.UTC(y!, m!, 0)).getUTCDate();
-  return `${month}-${String(day).padStart(2, "0")}T00:00:00Z`;
+/** A day as an Atom timestamp. */
+function stamp(isoDate: string): string {
+  return `${isoDate}T00:00:00Z`;
 }
 
 function item(slug: string, title: string, note?: string): string {
@@ -35,8 +33,8 @@ function item(slug: string, title: string, note?: string): string {
 }
 
 /** The roundup as HTML for a reader, which is what an Atom content is. */
-function content(r: Roundup, headline?: string): string {
-  const parts: string[] = headline ? [`<p>${escape(headline)}</p>`] : [];
+function content(r: Roundup): string {
+  const parts: string[] = r.headline ? [`<p>${escape(r.headline)}</p>`] : [];
   if (r.shipped.length > 0) {
     parts.push(
       `<h3>Shipped</h3><ul>${r.shipped
@@ -70,26 +68,26 @@ function content(r: Roundup, headline?: string): string {
 }
 
 export async function GET() {
-  const [commitments, updates, headlines] = await Promise.all([
+  const [entries, commitments, updates] = await Promise.all([
+    getEntries(),
     getRegister(),
     getUpdates(),
-    getHeadlines(),
   ]);
-  const months = roundups(commitments, updates, new Date());
+  const months = roundups(entries, commitments, updates, new Date());
 
   const items = months
     .map((r) => {
-      const url = `${SITE}/changelog/${r.month}`;
-      // Dated to its last day, which is when it was published.
-      const updated = lastDay(r.month);
+      const url = `${SITE}/changelog/${r.key}`;
+      // Dated to its last day, the earliest it could have been published.
+      const updated = stamp(r.end);
       return [
         "  <entry>",
-        `    <title>${escape(r.title)}</title>`,
+        `    <title>${escape(r.label)}</title>`,
         `    <link href="${url}"/>`,
         `    <id>${url}</id>`,
         `    <updated>${updated}</updated>`,
-        `    <published>${r.month}-01T00:00:00Z</published>`,
-        `    <content type="html">${escape(content(r, headlines.get(r.month)))}</content>`,
+        `    <published>${stamp(r.start)}</published>`,
+        `    <content type="html">${escape(content(r))}</content>`,
         "  </entry>",
       ].join("\n");
     })
@@ -102,7 +100,7 @@ export async function GET() {
   <link href="${SITE}/changelog/feed.xml" rel="self"/>
   <link href="${SITE}/changelog"/>
   <id>${SITE}/changelog</id>
-  <updated>${months[0] ? lastDay(months[0].month) : new Date().toISOString()}</updated>
+  <updated>${months[0] ? stamp(months[0].end) : new Date().toISOString()}</updated>
 ${items}
 </feed>
 `;
