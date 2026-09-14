@@ -82,8 +82,10 @@ export async function GET(request: Request) {
         date: update.date,
         summary: update.summary,
         author: update.author?.name,
-        // The post itself, on the record page.
+        // The post itself, on the record page, and where the full update
+        // was posted if it was written somewhere else.
         updateUrl: `${SITE}${postHref(update)}`,
+        link: update.link,
       })),
       quiet: r.quiet.map(ref),
     },

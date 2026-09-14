@@ -5,7 +5,12 @@ import matter from "gray-matter";
 import { byNewest, renderMarkdown } from "./blog";
 import { slugify } from "./organizations";
 import type { Person } from "./roadmap";
-import type { Health, Post, PostSummary } from "./health";
+import {
+  readPostLink,
+  type Health,
+  type Post,
+  type PostSummary,
+} from "./health";
 
 export * from "./health";
 
@@ -83,6 +88,10 @@ function readFile(file: string): { summary: PostSummary; body: string } {
     date,
     summary,
     author: readAuthor(data.author, where),
+    link: readPostLink(
+      data.link === undefined ? undefined : String(data.link),
+      where
+    ),
     draft: data.draft ?? false,
   };
   const body = content.trim();

@@ -15,6 +15,8 @@ Frontmatter: `commitment` (the filename of a record in `content/roadmap`),
 (`update`, the default, or `retrospective` — the one closing post on a shipped
 commitment, which carries no health), `health` (`on track`, `at risk` or
 `off track`, required on an update), optional `author` (`{ name, avatar }`,
-where `avatar` is a file in `public/people`), and optional `draft`. The body
+where `avatar` is a file in `public/people`), optional `link` (where the full
+update was posted, if somewhere else — a forum thread, say; absolute http(s)),
+and optional `draft`. The body
 is the write-up, and may be empty. The filename is not read; date it so the
 folder sorts.

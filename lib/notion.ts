@@ -36,7 +36,12 @@ import {
   type OrgType,
 } from "./organizations";
 import type { PersonRecord } from "./people";
-import type { Health, Post, PostSummary } from "./health";
+import {
+  readPostLink,
+  type Health,
+  type Post,
+  type PostSummary,
+} from "./health";
 
 /**
  * The commitment register, read from Notion.
@@ -1141,6 +1146,7 @@ function toUpdateSummary(
     date,
     summary,
     author,
+    link: readPostLink(urlOf(p.Link), where),
     draft: status === "Draft",
   };
   return kindName === "Retrospective"

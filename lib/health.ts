@@ -51,6 +51,14 @@ type PostBase = {
   summary: string;
   /** Who posted it. Optional — a team can post as itself. */
   author?: Person;
+  /**
+   * Where the full update was posted, when it was written somewhere else —
+   * a forum thread, a blog post, a release. Optional. The one line here is
+   * still what the site shows; the link is offered beside it as the place
+   * to read the rest, so a lead who reports on the forum does not have to
+   * write twice. Absolute, http(s); readers check.
+   */
+  link?: string;
   draft: boolean;
 };
 
@@ -139,6 +147,35 @@ export function postHref(
   post: Pick<PostSummary, "kind" | "date" | "commitment">
 ): string {
   return `/roadmap/${post.commitment}#${postAnchor(post)}`;
+}
+
+/**
+ * A post's link as either source writes it: where the full update was
+ * posted, or nothing. Absolute and http(s), because it is rendered as a
+ * link off the site and a bare "forum.livepeer.org/t/…" would resolve
+ * under livepeer.org.
+ */
+export function readPostLink(
+  value: string | undefined,
+  where: string
+): string | undefined {
+  const link = value?.trim();
+  if (!link) return undefined;
+  let url: URL;
+  try {
+    url = new URL(link);
+  } catch {
+    throw new Error(`${where}: link ${JSON.stringify(link)} is not a URL.`);
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error(`${where}: link ${JSON.stringify(link)} is not http(s).`);
+  }
+  return url.href;
+}
+
+/** The host a link points at, for "on forum.livepeer.org". */
+export function linkHost(link: string): string {
+  return new URL(link).host.replace(/^www\./, "");
 }
 
 /** The retrospective on a shipped commitment, if one has been posted. */

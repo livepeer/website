@@ -206,11 +206,13 @@ function Month({ r }: { r: RoundupView }) {
   return (
     <div>
       {/* The entry's title, over its rows, which is what makes a month read
-          as an entry rather than a list. Set a size above the rows, like a
-          record's title over its fields. Absent until written: the month
-          and its tally carry an untitled entry, as they did before. */}
+          as an entry rather than a list. Two sizes above the rows — at one
+          it read as the first row in bold — and still under the page's
+          own title, like a record's title over its fields. Absent until
+          written: the month and its tally carry an untitled entry, as
+          they did before. */}
       {r.headline && (
-        <p className="mb-6 text-lg font-medium tracking-[-0.015em] text-pretty">
+        <p className="mb-6 text-xl leading-snug font-medium tracking-[-0.02em] text-pretty">
           {r.headline}
         </p>
       )}

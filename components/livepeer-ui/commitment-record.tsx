@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import {
   HEALTH_LABEL,
   STALE_AFTER_DAYS,
+  linkHost,
   postAnchor,
   type Post,
   type Standing,
@@ -159,6 +160,32 @@ function ActivityRow({
 }
 
 /**
+ * Where the rest of a post is, when it was written somewhere else: the
+ * forum thread, the release. Named by its host, so the reader knows where
+ * they are going, and set off the site the way the record's own Links
+ * row is. Under the one line and the write-up, if any: the line here is
+ * still the update, and this is where to read on.
+ */
+function ReadOn({ post, className }: { post: Post; className?: string }) {
+  if (!post.link) return null;
+  return (
+    <a
+      href={post.link}
+      target="_blank"
+      rel="noreferrer"
+      className={cn(
+        "inline-flex items-center gap-1 text-sm text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground",
+        className
+      )}
+    >
+      Read the full {post.kind === "update" ? "update" : "retrospective"} on{" "}
+      {linkHost(post.link)}
+      <ArrowUpRight className="size-3.5" aria-hidden />
+    </a>
+  );
+}
+
+/**
  * One update, the way Linear draws one: the health its lead chose, who
  * posted it and when on one line, then what they said. The write-up, when
  * there is one, runs beneath the line in the reading prose.
@@ -226,6 +253,7 @@ function UpdateCard({
           dangerouslySetInnerHTML={{ __html: u.html }}
         />
       )}
+      <ReadOn post={u} className="mt-4" />
     </article>
   );
 }
@@ -562,6 +590,7 @@ export function CommitmentRecord({
                         dangerouslySetInnerHTML={{ __html: u.html }}
                       />
                     )}
+                    <ReadOn post={u} className="mt-3" />
                   </ActivityRow>
                 ),
               })),
