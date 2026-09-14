@@ -804,7 +804,7 @@ function Group({
           offset is that row's height — change one and the other has to move. */}
       <h2
         className={cn(
-          "sticky top-30 z-10 -mx-2 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 bg-background px-2",
+          "sticky top-30 z-10 -mx-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-background px-2",
           commitments.length === 0 ? "py-2" : list ? "py-4" : "py-6"
         )}
       >
@@ -814,7 +814,11 @@ function Group({
             "Q3" over "2026", standing the band 112px tall against the 80px of
             every other quarter. Held whole they measure ~327px in a 343px row
             and fit. */}
-        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        {/* Centred on the heading, not on its baseline: a small-caps label
+            two sizes down shares no baseline a reader can see with 24px
+            capitals, and sat on theirs it looked dropped. Centred, it sits
+            where a badge sits. */}
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span
             className={cn(
               "font-normal tracking-[-0.02em] whitespace-nowrap tabular-nums",
