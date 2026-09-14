@@ -1041,8 +1041,7 @@ function SuggestBlock({
     <div className={cn("border-t border-border pt-5", className)}>
       <Label>Not on the roadmap?</Label>
       <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-        Ideas are proposed and discussed on the forum. They appear here once
-        they are owned and dated.
+        Ideas start on the forum and land here once they are owned and dated.
       </p>
       <p className="mt-3 text-sm">
         <LinkRow label="How to contribute" href={href} />
@@ -1053,8 +1052,7 @@ function SuggestBlock({
       <div className="mt-6 border-t border-border pt-5">
         <Label>Own something on it?</Label>
         <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-          Its owner keeps the work trackable, posts an update every month, and
-          closes it with a retrospective.
+          An update every month, and a retrospective at the end.
         </p>
         <p className="mt-3 text-sm">
           <LinkRow label="How to report" href={REPORTING_HREF} />
