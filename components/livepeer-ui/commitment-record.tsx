@@ -468,7 +468,7 @@ export function CommitmentRecord({
                 what was delivered against what was committed, what it cost,
                 what was learned.{" "}
                 <Link
-                  href="/roadmap/reporting#retrospective"
+                  href="/roadmap/reporting"
                   className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
                 >
                   What one covers
@@ -502,7 +502,7 @@ export function CommitmentRecord({
                 Nothing posted yet. The lead posts one a month while the work is
                 under way.{" "}
                 <Link
-                  href="/roadmap/reporting#updates"
+                  href="/roadmap/reporting"
                   className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
                 >
                   What one carries

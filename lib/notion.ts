@@ -36,6 +36,7 @@ import {
   type OrgType,
 } from "./organizations";
 import type { PersonRecord } from "./people";
+import { readGuideCover, type Guide } from "./guides";
 import {
   readPostLink,
   type Health,
@@ -103,6 +104,11 @@ const UPDATES_DB =
   process.env.NOTION_UPDATES_DB ?? "ce39b6c5bc8a404b9ea2aac237d5acf7";
 const CHANGELOG_DB =
   process.env.NOTION_CHANGELOG_DB ?? "5691c5dfc92b41ee88139ae81510f7d9";
+/** The guides, by name: one page each under Livepeer.org content. */
+const GUIDE_PAGES: Record<string, string> = {
+  reporting:
+    process.env.NOTION_REPORTING_PAGE ?? "3db660222d08818abb7df76d7a43edfa",
+};
 
 /**
  * How stale the page may be, in seconds.
@@ -1268,6 +1274,37 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
  * production while it is being prepared, and an empty Status means
  * Published, so a row added by hand with two cells filled counts.
  */
+/**
+ * A guide: one page, read whole — its title, its cover and its body — the
+ * way a record's write-up is. See lib/guides.ts. Throws on an empty page:
+ * a guide with nothing in it is a page that says nothing.
+ */
+export async function getNotionGuide(name: string): Promise<Guide> {
+  const id = GUIDE_PAGES[name];
+  if (!id)
+    throw new Error(`No Notion page is configured for the ${name} guide.`);
+  const page = await notion(`/pages/${id}`);
+  const where = `Guide → ${name}`;
+  const title = text(props(page).title).trim();
+  if (!title) throw new Error(`${where}: the page has no title.`);
+  const coverProp = page.cover as
+    { type?: string; external?: { url?: string } } | null | undefined;
+  // An uploaded cover is a signed URL that expires within the hour, so
+  // only an external one counts, as on a commitment.
+  const cover = readGuideCover(
+    coverProp?.type === "external" ? coverProp.external?.url : undefined,
+    where
+  );
+  const html = await readDetail(id, where);
+  if (!html) {
+    throw new Error(
+      `${where}: the page is empty. The guide is the page body — write it ` +
+        `in Notion, under the title.`
+    );
+  }
+  return { title, cover, html };
+}
+
 /**
  * One entry's intro: the row's page body, rendered, or nothing when the
  * page is empty. Read on its own rather than with the rows, the way a

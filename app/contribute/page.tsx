@@ -5,6 +5,7 @@ import {
   ContributeContributors,
   ContributeHero,
   ContributeLadder,
+  ContributeOwners,
   ContributePath,
 } from "@/components/livepeer-ui/contribute-sections";
 import { getContributors } from "@/lib/contributors";
@@ -85,19 +86,12 @@ export default async function ContributePage() {
       />
       <ContributePath
         title="From an idea to the roadmap"
-        intro={
-          <>
-            Ideas become commitments in the open, and none of the steps needs
-            permission to start.
-          </>
-        }
         steps={[
           {
             title: "Say it on the forum.",
             body: (
               <>
-                Check <Link href="/roadmap">the roadmap</Link> first, then post
-                the idea on{" "}
+                Check <Link href="/roadmap">the roadmap</Link>, then post on{" "}
                 <a
                   href="https://forum.livepeer.org"
                   target="_blank"
@@ -105,11 +99,8 @@ export default async function ContributePage() {
                 >
                   the forum
                 </a>
-                . A good proposal answers three questions: what problem it
-                solves, what success looks like, and why it matters to the
-                network. If someone has already proposed it, add your use case
-                to their thread; a specific comment moves a proposal further
-                than a general one.
+                : what problem it solves, what success looks like, and why it
+                matters to the network.
               </>
             ),
           },
@@ -117,9 +108,8 @@ export default async function ContributePage() {
             title: "It gets reviewed.",
             body: (
               <>
-                Proposals are shortlisted and discussed on the monthly community
-                call. Each one is taken forward, sent back for more information,
-                or declined with a reason, and the proposer hears which.
+                Proposals are shortlisted for the monthly community call and
+                taken forward, sent back for more, or declined with a reason.
               </>
             ),
           },
@@ -127,11 +117,9 @@ export default async function ContributePage() {
             title: "It becomes a commitment.",
             body: (
               <>
-                Once it has an owner, a target and funding through one of the
-                paths below, it appears on the roadmap. From then on its owner{" "}
-                <Link href="/roadmap/reporting">reports on it</Link>: the work
-                tracked in the open, an update every month, and a retrospective
-                at the end.
+                With an owner, a target and funding it appears on the roadmap,
+                and its owner{" "}
+                <Link href="/roadmap/reporting">reports on it</Link>.
               </>
             ),
           },
@@ -158,10 +146,17 @@ export default async function ContributePage() {
             >
               governance process
             </a>
-            . Whatever the rung, funded work goes on the roadmap and its owner{" "}
-            <Link href="/roadmap/reporting">reports on it</Link>.
+            .
           </>
         }
+      />
+      <ContributeOwners
+        label="Own something on the roadmap?"
+        body="Its owner keeps the work trackable, posts an update every month, and closes it with a retrospective. The rules, and what the roadmap reads from each."
+        link={{
+          label: "Reporting on a commitment",
+          href: "/roadmap/reporting",
+        }}
       />
       <ContributeContributors {...contributors} />
     </div>

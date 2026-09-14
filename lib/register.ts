@@ -11,12 +11,14 @@ import {
   getMarkdownEntryBody,
   type Entry,
 } from "./entries";
+import { getMarkdownGuide, type Guide } from "./guides";
 import {
   getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
   getNotionEntries,
   getNotionEntryBody,
+  getNotionGuide,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -156,4 +158,9 @@ export async function getEntryBody(
   return hasNotionCredentials()
     ? getNotionEntryBody(period)
     : getMarkdownEntryBody(period);
+}
+
+/** A guide page by name; see lib/guides.ts. The reporting rules are one. */
+export async function getGuide(name: string): Promise<Guide> {
+  return hasNotionCredentials() ? getNotionGuide(name) : getMarkdownGuide(name);
 }

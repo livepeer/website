@@ -434,52 +434,95 @@ export type PathStep = { title: string; body: React.ReactNode };
  * From an idea to a commitment, in three steps, between the hero and the
  * ladder: the hero says go and talk, the ladder says how work gets paid
  * for, and this is the middle the old help site's "get involved" articles
- * covered and the page did not — where to propose, what happens to a
- * proposal, and what a funded item owes once it is on the roadmap. Numbered
- * rows in the ladder's hairline idiom, so it reads as one page with the
- * ladder rather than a second design above it.
+ * covered and the page did not. Three cells in a row on a wide screen, one
+ * sentence each, in the ladder's hairline idiom — a first pass stacked
+ * them as rows with a paragraph each and stood taller than the ladder it
+ * was meant to introduce.
  */
 export function ContributePath({
   title,
-  intro,
   steps,
 }: {
   title: string;
-  intro: React.ReactNode;
   steps: PathStep[];
 }) {
   const prose =
-    "[&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
+    "[&_a]:text-foreground [&_a]:underline [&_a]:decoration-border [&_a]:underline-offset-4 [&_a]:transition-colors [&_a:hover]:decoration-foreground";
   return (
     <section className="mt-12 sm:mt-16">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-3xl border-t border-border pt-12 sm:pt-16">
           <h2 className="text-page-title text-balance">{title}</h2>
-          <p
-            className={`mt-4 max-w-[52ch] text-reading-body text-pretty text-muted-foreground [&_a]:text-foreground ${prose}`}
-          >
-            {intro}
-          </p>
-          <ol className="mt-8 divide-y divide-border border-y border-border">
+          <ol className="mt-8 grid border-y border-border sm:grid-cols-3">
             {steps.map((step, i) => (
               <li
                 key={step.title}
-                className="grid gap-x-6 gap-y-2 py-5 sm:grid-cols-[3rem_minmax(0,1fr)]"
+                className={cn(
+                  "py-5 sm:py-6",
+                  // Hairlines between cells, carried by the cell after the
+                  // gap: a top rule below sm, a left rule with padding from sm.
+                  i > 0 &&
+                    "border-t border-border sm:border-t-0 sm:border-l sm:pl-6",
+                  i < steps.length - 1 && "sm:pr-6"
+                )}
               >
-                <span className="font-mono text-xs leading-6 text-muted-foreground tabular-nums">
+                <span className="font-mono text-xs text-muted-foreground tabular-nums">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <div>
-                  <h3 className="font-medium">{step.title}</h3>
-                  <p
-                    className={`mt-1.5 max-w-[60ch] text-sm leading-relaxed text-muted-foreground [&_a]:text-foreground ${prose}`}
-                  >
-                    {step.body}
-                  </p>
-                </div>
+                <h3 className="mt-2 font-medium">{step.title}</h3>
+                <p
+                  className={`mt-1.5 text-sm leading-relaxed text-muted-foreground ${prose}`}
+                >
+                  {step.body}
+                </p>
               </li>
             ))}
           </ol>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Owners
+ * ------------------------------------------------------------------ */
+
+/**
+ * The other reader the page can answer: the one already funded, who wants
+ * the rules. A block of its own after the ladder rather than a sentence in
+ * its note — the note is read by nobody in a hurry, and this reader is.
+ * The same shape as the roadmap rail's "Own something on it?" block, so
+ * the two doors to one page look alike.
+ */
+export function ContributeOwners({
+  label,
+  body,
+  link,
+}: {
+  label: string;
+  body: string;
+  link: Ref;
+}) {
+  return (
+    <section className="mt-12 sm:mt-16">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-3xl border-t border-border pt-8">
+          <div className="grid gap-x-12 gap-y-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline">
+            <div>
+              <h2 className="font-medium">{label}</h2>
+              <p className="mt-1.5 max-w-[60ch] text-sm leading-relaxed text-muted-foreground">
+                {body}
+              </p>
+            </div>
+            <p className="text-sm">
+              <Ref
+                label={link.label}
+                href={link.href}
+                className="text-foreground"
+              />
+            </p>
+          </div>
         </div>
       </div>
     </section>
