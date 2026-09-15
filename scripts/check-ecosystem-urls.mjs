@@ -11,10 +11,32 @@ import matter from "gray-matter";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ecosystemDir = resolve(__dirname, "../content/ecosystem");
 
-const apps = readdirSync(ecosystemDir)
+/**
+ * Entries that live on this site are skipped, not checked.
+ *
+ * This guards against third-party project links rotting — an ecosystem project
+ * going offline is invisible until someone clicks. A first-party page ships
+ * from this repo, so it is already guarded by the build, and checking it here
+ * would fail for a page that is merely not deployed yet: a PR that adds
+ * /agent and an entry pointing at it cannot see that page on production.
+ */
+const SELF_HOSTS = new Set(["livepeer.org", "www.livepeer.org"]);
+
+const isSelf = (url) => {
+  try {
+    return SELF_HOSTS.has(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+};
+
+const entries = readdirSync(ecosystemDir)
   .filter((f) => f.endsWith(".md"))
   .map((f) => matter(readFileSync(join(ecosystemDir, f), "utf-8")).data)
   .filter((app) => app.url);
+
+const skipped = entries.filter((app) => isSelf(app.url));
+const apps = entries.filter((app) => !isSelf(app.url));
 
 const TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 2;
@@ -76,7 +98,14 @@ for (const result of results) {
   }
 }
 
-console.log(`\n${apps.length} URLs checked, ${failures.length} failed.`);
+for (const app of skipped) {
+  console.log(`  – ${app.name} — ${app.url} (skipped: on this site)`);
+}
+
+console.log(
+  `\n${apps.length} URLs checked, ${failures.length} failed` +
+    (skipped.length ? `, ${skipped.length} skipped.` : ".")
+);
 
 if (failures.length > 0) {
   process.exit(1);

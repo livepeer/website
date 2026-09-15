@@ -1,0 +1,462 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Link as LinkIcon } from "lucide-react";
+
+import {
+  HealthIcon,
+  HealthWord,
+  ShippedIcon,
+} from "@/components/livepeer-ui/health";
+import {
+  LatestNav,
+  type LatestLink,
+} from "@/components/livepeer-ui/latest-nav";
+import { HEALTH_LABEL, HEALTHS, type Health } from "@/lib/health";
+import { cn } from "@/lib/utils";
+
+export type RoundupRow = {
+  slug: string;
+  title: string;
+  owner: string;
+  ownerSlug: string;
+};
+
+/** One month, as the list needs it. Built by app/changelog/listing.ts. */
+export type RoundupView = {
+  /** The period's key, which is the entry's address: "2026-08", "2026-Q3". */
+  period: string;
+  /** "August 2026", "Q3 2026". */
+  title: string;
+  /** The entry's title, written by a person once the period closed and
+   *  put on the row (lib/entries.ts). None until then. */
+  headline?: string;
+  /** The entry's intro, the row's page body rendered. Optional. */
+  intro?: string;
+  /** `href` is the post the line was taken from, on its record page. */
+  shipped: (RoundupRow & {
+    shippedAt: string;
+    summary?: string;
+    href?: string;
+  })[];
+  reported: (RoundupRow & {
+    health: Health;
+    date: string;
+    summary: string;
+    href: string;
+  })[];
+  quiet: RoundupRow[];
+};
+
+export type MonthLink = { period: string; title: string };
+
+function formatDay(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function matches(row: RoundupRow, q: string): boolean {
+  return `${row.title} ${row.owner}`.toLowerCase().includes(q);
+}
+
+/**
+ * A commitment in a roundup: the mark in a gutter on the left like a
+ * bullet, the title with its state word beside it, and one muted line
+ * beneath. No rules, no columns — the colour down the left and the order
+ * of the list do the grouping. The line beneath always opens with who
+ * owns it, then what the state has to say: the day it shipped and the
+ * lead's last word, the update, or that nothing was posted.
+ */
+function Row({
+  row,
+  icon,
+  children,
+}: {
+  row: RoundupRow;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3">
+      <span className="flex h-6 items-center">{icon}</span>
+      <div className="min-w-0">
+        <h3 className="text-pretty">
+          <Link
+            href={`/roadmap/${row.slug}`}
+            className="font-medium transition-colors hover:text-muted-foreground"
+          >
+            {row.title}
+          </Link>
+        </h3>
+        <p className="mt-1 line-clamp-2 text-sm text-pretty text-muted-foreground">
+          {children}
+        </p>
+      </div>
+    </li>
+  );
+}
+
+/**
+ * The month's numbers, under its name in the rail: how many shipped, and
+ * how many were on track, at risk, off track or silent. The same icons the
+ * rows carry, so the tally is also the key. A month can be read from this
+ * alone, which is what a rail beside a long list is for.
+ */
+function Tally({ r }: { r: RoundupView }) {
+  const counts = HEALTHS.map((health) => ({
+    health,
+    n: r.reported.filter((row) => row.health === health).length,
+  })).filter(({ n }) => n > 0);
+  return (
+    <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground md:flex-col md:gap-y-1.5">
+      {r.shipped.length > 0 && (
+        <li className="flex items-center gap-1.5 tabular-nums">
+          <ShippedIcon />
+          {r.shipped.length} shipped
+        </li>
+      )}
+      {counts.map(({ health, n }) => (
+        <li key={health} className="flex items-center gap-1.5 tabular-nums">
+          <HealthIcon health={health} />
+          {n} {HEALTH_LABEL[health].toLowerCase()}
+        </li>
+      ))}
+      {r.quiet.length > 0 && (
+        <li className="flex items-center gap-1.5 tabular-nums">
+          <HealthIcon health="no-update" />
+          {r.quiet.length} no update
+        </li>
+      )}
+    </ul>
+  );
+}
+
+/**
+ * One month as a flat list: shipped first, then work under way with what
+ * needs attention first, then the silent. Nothing labels the groups —
+ * the marks do, and the tally in the rail carries the counts. A month
+ * with nothing shipped simply opens on the work under way: with
+ * quarter-sized targets that is most months, and a line announcing it
+ * read as a confession rather than a calendar.
+ */
+function Owner({ row }: { row: RoundupRow }) {
+  return (
+    <Link
+      href={`/organizations/${row.ownerSlug}`}
+      className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {row.owner}
+    </Link>
+  );
+}
+
+/**
+ * Who, when, and what they said it was — set in the foreground so they
+ * read as the facts of the row, with the words following in the muted
+ * voice after a wider gap. The health sits here beside the date rather
+ * than beside the title, so it reads as what was said on that day and
+ * not as what the item is now: an entry is the month as it ended.
+ */
+function Meta({
+  row,
+  date,
+  word,
+}: {
+  row: RoundupRow;
+  date?: string;
+  word: React.ReactNode;
+}) {
+  return (
+    <span className="text-foreground">
+      <Owner row={row} />
+      {/* Each separator is held to the field after it, so a line that
+          wraps never ends on a dot. */}
+      {date && (
+        <>
+          {" "}
+          <span className="whitespace-nowrap">
+            · <time dateTime={date}>{formatDay(date)}</time>
+          </span>
+        </>
+      )}{" "}
+      <span className="whitespace-nowrap">· {word}</span>
+    </span>
+  );
+}
+
+/**
+ * What was said, linked to where it was said: the post's row on the
+ * record page, opened. The line here is the lead's one line and the
+ * write-up, when there is one, is a click away; a reader who wants the
+ * rest goes to the post, not to the top of the record.
+ */
+function Said({ href, children }: { href: string; children: string }) {
+  return (
+    <Link
+      href={href}
+      className="ml-2 underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function Month({ r }: { r: RoundupView }) {
+  return (
+    <div>
+      {/* The entry's title, over its rows, which is what makes a month read
+          as an entry rather than a list. Two sizes above the rows — at one
+          it read as the first row in bold — and still under the page's
+          own title, like a record's title over its fields. Absent until
+          written: the month and its tally carry an untitled entry, as
+          they did before. */}
+      {r.headline && (
+        <p
+          className={cn(
+            "text-xl leading-snug font-medium tracking-[-0.02em] text-pretty",
+            r.intro ? "mb-4" : "mb-6"
+          )}
+        >
+          {r.headline}
+        </p>
+      )}
+      {/* A person's few sentences on the period, between the title and
+          the generated rows, in the reading voice. The one prose on the
+          page; the rows beneath stay the leads' own lines. */}
+      {r.intro && (
+        <div
+          className="reading-prose mb-8"
+          dangerouslySetInnerHTML={{ __html: r.intro }}
+        />
+      )}
+      <ol className="flex flex-col gap-6">
+        {r.shipped.map((row) => (
+          <Row key={row.slug} row={row} icon={<ShippedIcon />}>
+            <Meta row={row} date={row.shippedAt} word="Shipped" />
+            {row.summary &&
+              (row.href ? (
+                <Said href={row.href}>{row.summary}</Said>
+              ) : (
+                <span className="ml-2">{row.summary}</span>
+              ))}
+          </Row>
+        ))}
+        {r.reported.map((row) => (
+          <Row
+            key={row.slug}
+            row={row}
+            icon={<HealthIcon health={row.health} />}
+          >
+            <Meta
+              row={row}
+              date={row.date}
+              word={<HealthWord health={row.health} />}
+            />
+            <Said href={row.href}>{row.summary}</Said>
+          </Row>
+        ))}
+        {/* The accountability half: under way, and nothing said that month.
+          The owner's line is the whole row. */}
+        {r.quiet.map((row) => (
+          <Row
+            key={row.slug}
+            row={row}
+            icon={<HealthIcon health="no-update" />}
+          >
+            <Meta row={row} word={<HealthWord health="no-update" />} />
+          </Row>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/**
+ * The changelog: one roundup per month, newest first, generated from the
+ * roadmap register and the updates posted on it (see lib/changelog.ts).
+ *
+ * The same shape as the blog's row over a dated list — Vercel's changelog
+ * page — with the month where the day used to be: the month and its tally
+ * in a column of its own on the left, its roundup beside it as one flat
+ * list. Nothing here is written; a month is what the register and the
+ * updates say it was.
+ *
+ * Search narrows the rows on the page by commitment title and owner, and
+ * hides a month with nothing left in it.
+ */
+export function ChangelogListing({
+  roundups,
+  earlier = [],
+  neighbours,
+  heading,
+  intro,
+  allHref,
+  categories,
+  siblings,
+  current,
+  feedHref,
+  searchPlaceholder,
+  emptyMessage,
+  noMonthsMessage,
+}: {
+  roundups: RoundupView[];
+  /** Months not shown in full, as links. The index passes these. */
+  earlier?: MonthLink[];
+  /** The months either side, when this is one month's page. */
+  neighbours?: { previous?: MonthLink; next?: MonthLink };
+  heading: string;
+  intro: string;
+  allHref: string;
+  categories: LatestLink[];
+  siblings: LatestLink[];
+  current: string;
+  feedHref?: string;
+  searchPlaceholder: string;
+  emptyMessage: string;
+  /** For a site with no finished month yet: when the first one lands. */
+  noMonthsMessage: string;
+}) {
+  const [query, setQuery] = useState("");
+
+  const shown = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return roundups;
+    return roundups
+      .map((r) => ({
+        ...r,
+        shipped: r.shipped.filter((row) => matches(row, q)),
+        reported: r.reported.filter((row) => matches(row, q)),
+        quiet: r.quiet.filter((row) => matches(row, q)),
+      }))
+      .filter((r) => r.shipped.length + r.reported.length + r.quiet.length > 0);
+  }, [roundups, query]);
+
+  return (
+    <div className="pt-16 pb-24">
+      <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
+        <h1 className="text-display-md font-normal">{heading}</h1>
+
+        <LatestNav
+          allHref={allHref}
+          categories={categories}
+          siblings={siblings}
+          current={current}
+          feedHref={feedHref}
+          query={query}
+          onQueryChange={setQuery}
+          searchPlaceholder={searchPlaceholder}
+        />
+
+        <div className="mt-12">
+          <p className="sr-only" role="status" aria-live="polite">
+            {shown.length} of {roundups.length} months shown
+          </p>
+
+          {shown.length === 0 ? (
+            <p className="py-16 text-center text-reading-body text-muted-foreground">
+              {roundups.length === 0 ? noMonthsMessage : emptyMessage}
+            </p>
+          ) : (
+            <ol className="divide-y divide-border">
+              {shown.map((r) => (
+                // The month and its tally sit in a column of their own on
+                // wide screens and stay put while the roundup scrolls past.
+                // On a phone they are a block above it.
+                <li
+                  key={r.period}
+                  className="grid gap-6 py-10 first:pt-0 md:grid-cols-[14rem_minmax(0,46rem)] md:gap-12 md:py-12 lg:grid-cols-[18rem_minmax(0,46rem)]"
+                >
+                  <div className="md:sticky md:top-24 md:self-start">
+                    {/* The month is the entry's permalink, and says so: a
+                        link glyph beside it and an underline on hover. It
+                        was a plain heading that dimmed on hover, and read
+                        as a heading. */}
+                    <h2 className="text-sm">
+                      <Link
+                        href={`/changelog/${r.period}`}
+                        className="inline-flex items-center gap-1.5 text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+                      >
+                        {r.title}
+                        <LinkIcon
+                          className="size-3.5 text-muted-foreground"
+                          aria-hidden
+                        />
+                      </Link>
+                    </h2>
+                    <Tally r={r} />
+                  </div>
+                  <Month r={r} />
+                </li>
+              ))}
+            </ol>
+          )}
+
+          {earlier.length > 0 && (
+            <section className="mt-4 border-t border-border pt-8">
+              <h2 className="text-sm text-muted-foreground">Earlier</h2>
+              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                {earlier.map((m) => (
+                  <li key={m.period}>
+                    <Link
+                      href={`/changelog/${m.period}`}
+                      className="transition-colors hover:text-muted-foreground"
+                    >
+                      {m.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {neighbours && (
+            <nav
+              aria-label="Months"
+              className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8 text-sm text-muted-foreground"
+            >
+              {neighbours.previous ? (
+                <Link
+                  href={`/changelog/${neighbours.previous.period}`}
+                  className="group inline-flex items-center gap-2 transition-colors hover:text-foreground"
+                >
+                  <ArrowLeft
+                    className="size-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none"
+                    aria-hidden
+                  />
+                  {neighbours.previous.title}
+                </Link>
+              ) : (
+                <span />
+              )}
+              <Link
+                href="/changelog"
+                className="transition-colors hover:text-foreground"
+              >
+                All months
+              </Link>
+              {neighbours.next ? (
+                <Link
+                  href={`/changelog/${neighbours.next.period}`}
+                  className="group inline-flex items-center gap-2 transition-colors hover:text-foreground"
+                >
+                  {neighbours.next.title}
+                  <ArrowRight
+                    className="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+                    aria-hidden
+                  />
+                </Link>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )}
+        </div>
+        <p className="sr-only">{intro}</p>
+      </div>
+    </div>
+  );
+}

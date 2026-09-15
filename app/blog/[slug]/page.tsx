@@ -1,27 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import Container from "@/components/ui/Container";
-import BlogPostHeader from "@/components/blog/BlogPostHeader";
-import BlogPostContent from "@/components/blog/BlogPostContent";
-import { getAllPosts, getPublishedPost, renderMarkdown } from "@/lib/blog";
+
+import { BlogPost } from "@/components/livepeer-ui/blog-post";
+import { getBlogPost, getBlogRegister } from "@/lib/register";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamicParams = false;
-
+// No `dynamicParams = false` here, unlike the roadmap, people and
+// organization records: a post published in Notion after the last build must
+// be served on its first request, or publishing would need a deploy — the one
+// thing the Notion move was for. An unknown slug still 404s, because
+// getBlogPost returns null for it below.
 export async function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+  const posts = await getBlogRegister();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPublishedPost(slug);
-  if (!post) {
-    return { title: "Post Not Found — Livepeer Blog" };
-  }
+  const post = await getBlogPost(slug);
+  if (!post) return { title: "Post Not Found — Livepeer Blog" };
 
   return {
     title: `${post.title} | Livepeer Blog`,
@@ -32,44 +32,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: post.date,
       authors: post.author ? [post.author.name] : [],
-      images: post.image ? [post.image] : [],
+      // No `images` here: an explicit list wins over the file convention, and
+      // the card is now composited in opengraph-image.tsx — the post's art
+      // with the lockup and the headline over it, rather than the bare art.
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: post.image ? [post.image] : [],
     },
   };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = getPublishedPost(slug);
-  if (!post) {
-    notFound();
-  }
 
-  const html = await renderMarkdown(post.content);
+  // Null covers both a slug nobody published and a draft on production; the
+  // register decides which posts exist here. See lib/register.ts.
+  const post = await getBlogPost(slug);
+  if (!post) notFound();
 
   return (
-    <article className="pt-24 pb-16 lg:pt-32 lg:pb-24">
-      <Container className="max-w-[680px]">
-        <BlogPostHeader post={post} />
-
-        <BlogPostContent html={html} />
-
-        <div className="divider-gradient my-16" />
-
-        <div className="flex justify-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 font-mono text-sm text-foreground/30 transition-colors hover:text-foreground/60"
-          >
-            ← All posts
-          </Link>
-        </div>
-      </Container>
-    </article>
+    <BlogPost
+      post={{
+        title: post.title,
+        category: post.category,
+        date: post.date,
+        readingTime: post.readingTime,
+        // One image serves the card and the header; the component crops it.
+        heroImage: post.image,
+        imageAlt: post.imageAlt || undefined,
+      }}
+      html={post.html}
+    />
   );
 }
