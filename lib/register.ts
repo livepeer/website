@@ -122,19 +122,60 @@ export async function getFundingPaths(): Promise<FundingPath[]> {
  * heard of. Drafts are filtered here, as posts are, and by the same rule.
  */
 export async function getUpdates(): Promise<PostSummary[]> {
-  const updates = hasNotionCredentials()
-    ? await getNotionUpdates()
-    : getMarkdownUpdates();
+  const [updates, commitments] = await Promise.all([
+    hasNotionCredentials() ? getNotionUpdates() : getMarkdownUpdates(),
+    getRegister(),
+  ]);
+  assertRetrosOnShipped(updates, commitments);
   return updates.filter(isPublished);
 }
 
 /** One commitment's updates with their write-ups, newest first. */
 export async function getCommitmentUpdates(slug: string): Promise<Post[]> {
-  const updates = hasNotionCredentials()
-    ? await getNotionCommitmentUpdates(slug)
-    : await getMarkdownCommitmentUpdates(slug);
+  const [updates, commitments] = await Promise.all([
+    hasNotionCredentials()
+      ? getNotionCommitmentUpdates(slug)
+      : getMarkdownCommitmentUpdates(slug),
+    getRegister(),
+  ]);
+  assertRetrosOnShipped(updates, commitments);
   return updates.filter(isPublished);
 }
+
+/**
+ * A published retrospective closes a shipped commitment, so one on a
+ * commitment that is not shipped is two claims that cannot both be true —
+ * the record says the work is under way, the post says it is finished and
+ * judged. The build fails rather than showing both, the way it fails when
+ * Shipped and its date disagree. Drafts are exempt: a retrospective kept
+ * as a draft while a commitment is moved back to In progress is the
+ * honest state, and what to do with it is the team's call, not the
+ * build's.
+ */
+function assertRetrosOnShipped(
+  posts: PostSummary[],
+  commitments: Commitment[]
+): void {
+  const state = new Map(commitments.map((c) => [c.slug, c]));
+  for (const post of posts) {
+    if (post.kind !== "retro" || post.draft) continue;
+    const c = state.get(post.commitment);
+    if (!c || c.state === "shipped") continue;
+    throw new Error(
+      `Roadmap updates → ${JSON.stringify(post.summary)}: a published ` +
+        `retrospective on "${c.title}", which is ${STATE_WORD[c.state]}. A ` +
+        `retrospective closes a shipped commitment. Either mark the ` +
+        `commitment Shipped, with the date it shipped, or set the ` +
+        `retrospective to Draft or delete it.`
+    );
+  }
+}
+
+const STATE_WORD: Record<Commitment["state"], string> = {
+  next: "Planned",
+  building: "In progress",
+  shipped: "Shipped",
+};
 
 /**
  * The changelog's published entries; see lib/entries.ts. Drafts are

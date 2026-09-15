@@ -20,3 +20,7 @@ update was posted, if somewhere else — a forum thread, say; absolute http(s)),
 and optional `draft`. The body
 is the write-up, and may be empty. The filename is not read; date it so the
 folder sorts.
+
+A retrospective (`kind: retrospective`) that is not a draft must belong to a
+record whose `state` is `shipped`; the build fails otherwise, as it does from
+Notion.
