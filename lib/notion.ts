@@ -36,7 +36,7 @@ import {
   type OrgType,
 } from "./organizations";
 import type { PersonRecord } from "./people";
-import { readGuideCover, type Guide } from "./guides";
+import { readGuideCover, type Guide, type GuideName } from "./guides";
 import {
   readPostLink,
   type Health,
@@ -105,7 +105,7 @@ const UPDATES_DB =
 const CHANGELOG_DB =
   process.env.NOTION_CHANGELOG_DB ?? "5691c5dfc92b41ee88139ae81510f7d9";
 /** The guides, by name: one page each under Livepeer.org content. */
-const GUIDE_PAGES: Record<string, string> = {
+const GUIDE_PAGES: Record<GuideName, string> = {
   reporting:
     process.env.NOTION_REPORTING_PAGE ?? "3db660222d08818abb7df76d7a43edfa",
 };
@@ -1279,7 +1279,7 @@ export async function getNotionFundingPaths(): Promise<FundingPath[]> {
  * way a record's write-up is. See lib/guides.ts. Throws on an empty page:
  * a guide with nothing in it is a page that says nothing.
  */
-export async function getNotionGuide(name: string): Promise<Guide> {
+export async function getNotionGuide(name: GuideName): Promise<Guide> {
   const id = GUIDE_PAGES[name];
   if (!id)
     throw new Error(`No Notion page is configured for the ${name} guide.`);

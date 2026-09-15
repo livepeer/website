@@ -25,6 +25,20 @@ export type Guide = {
   html: string;
 };
 
+/**
+ * The guides there are, by the name that is also their address under
+ * /roadmap. Stated once because two routes have to agree on it: the page at
+ * /roadmap/<name>, and the roadmap's intercepting route, which catches every
+ * client-side navigation to /roadmap/<anything> and has to know a guide from
+ * a commitment's slug it should 404 on.
+ */
+export const GUIDE_NAMES = ["reporting"] as const;
+export type GuideName = (typeof GUIDE_NAMES)[number];
+
+export function isGuideName(name: string): name is GuideName {
+  return (GUIDE_NAMES as readonly string[]).includes(name);
+}
+
 const DIR = path.join(process.cwd(), "content", "guides");
 
 /** The only image host next/image is configured for; see next.config.ts. */

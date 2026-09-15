@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+import { GuideRecord } from "@/components/livepeer-ui/guide-record";
 import { RecordCover } from "@/components/livepeer-ui/record-parts";
 import { StartAtTop } from "@/components/livepeer-ui/start-at-top";
 import { getGuide } from "@/lib/register";
@@ -21,7 +22,11 @@ import { getGuide } from "@/lib/register";
  * pull request, and it read long.
  *
  * Reached from where the question arises rather than from the header: the
- * empty states on a record, the roadmap's rail, and Contribute.
+ * empty states on a record, the roadmap's rail, and Contribute. From inside
+ * /roadmap it opens as a panel over the register, like a record, because the
+ * roadmap's intercepting route catches every client-side navigation to
+ * /roadmap/<segment> and cannot let a static sibling through — it used to
+ * 404 on this one until refreshed (app/roadmap/@modal/(.)[slug]).
  */
 
 export const revalidate = 60;
@@ -68,13 +73,7 @@ export default async function ReportingPage() {
         </Link>
 
         <div className="mt-8">
-          <h1 className="text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance sm:text-[2.25rem]">
-            {guide.title}
-          </h1>
-          <div
-            className="reading-prose mt-8"
-            dangerouslySetInnerHTML={{ __html: guide.html }}
-          />
+          <GuideRecord guide={guide} />
         </div>
       </div>
     </article>
