@@ -50,6 +50,44 @@ function normalize(value: unknown): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function isHttpUrl(value: string): boolean {
+  try {
+    return /^https?:$/.test(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * A link field is an http(s) URL or nothing. Entries arrive by pull request
+ * from outside, and every one of these becomes an anchor on the detail page,
+ * so a scheme that runs rather than navigates is refused here with the file
+ * and the field named, as the ecosystem body's own links are by sanitising.
+ */
+function readUrl(value: unknown, where: string): string | undefined {
+  const url = normalize(value);
+  if (!url) return undefined;
+  if (!isHttpUrl(url)) {
+    throw new Error(`${where}: ${JSON.stringify(url)} is not an http(s) URL.`);
+  }
+  return url;
+}
+
+/** Where to reach them: an address, or a page. Contact and support take both. */
+function readContact(value: unknown, where: string): string | undefined {
+  const contact = normalize(value);
+  if (!contact) return undefined;
+  if (!EMAIL.test(contact) && !isHttpUrl(contact)) {
+    throw new Error(
+      `${where}: ${JSON.stringify(contact)} is neither an email address nor ` +
+        `an http(s) URL.`
+    );
+  }
+  return contact;
+}
+
 export function getAppSlugs(): string[] {
   return fs
     .readdirSync(ECOSYSTEM_DIR)
@@ -58,19 +96,24 @@ export function getAppSlugs(): string[] {
 }
 
 export function getAppBySlug(slug: string): EcosystemApp {
+  // The slug names a file in the catalogue and nothing else. It comes off
+  // the URL, so it is matched against the files that exist rather than
+  // joined onto the directory and trusted to stay inside it.
+  if (!getAppSlugs().includes(slug)) {
+    throw new Error(`content/ecosystem/${slug}.md: no such entry.`);
+  }
+  const where = `content/ecosystem/${slug}.md`;
   const filePath = path.join(ECOSYSTEM_DIR, `${slug}.md`);
   const fileContents = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContents);
 
-  const url: string = data.url ?? "";
-  let displayUrl = "";
-  try {
-    const parsed = new URL(url);
-    const path = parsed.pathname.replace(/\/$/, "");
-    displayUrl = parsed.hostname.replace(/^www\./, "") + path;
-  } catch {
-    displayUrl = url;
+  const url = readUrl(data.url, `${where}: url`);
+  if (!url) {
+    throw new Error(`${where}: url is required. It is the "Visit site" link.`);
   }
+  const parsed = new URL(url);
+  const urlPath = parsed.pathname.replace(/\/$/, "");
+  const displayUrl = parsed.hostname.replace(/^www\./, "") + urlPath;
 
   return {
     slug,
@@ -83,15 +126,15 @@ export function getAppBySlug(slug: string): EcosystemApp {
     logoBg: normalize(data.logoBg),
     logoMonochrome: data.logoMonochrome === true,
     madeBy: normalize(data.madeBy),
-    madeByUrl: normalize(data.madeByUrl),
-    twitter: normalize(data.twitter),
-    bluesky: normalize(data.bluesky),
-    github: normalize(data.github),
-    contact: normalize(data.contact),
-    docs: normalize(data.docs),
-    support: normalize(data.support),
-    terms: normalize(data.terms),
-    privacy: normalize(data.privacy),
+    madeByUrl: readUrl(data.madeByUrl, `${where}: madeByUrl`),
+    twitter: readUrl(data.twitter, `${where}: twitter`),
+    bluesky: readUrl(data.bluesky, `${where}: bluesky`),
+    github: readUrl(data.github, `${where}: github`),
+    contact: readContact(data.contact, `${where}: contact`),
+    docs: readUrl(data.docs, `${where}: docs`),
+    support: readContact(data.support, `${where}: support`),
+    terms: readUrl(data.terms, `${where}: terms`),
+    privacy: readUrl(data.privacy, `${where}: privacy`),
     order: typeof data.order === "number" ? data.order : undefined,
     content,
   };

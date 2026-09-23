@@ -9,6 +9,8 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeExternalLinks from "rehype-external-links";
 import readingTime from "reading-time";
 
+import { resolveMediaUrl } from "./notion-media";
+
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
 /**
@@ -153,6 +155,17 @@ function readFile(slug: string): { summary: BlogSummary; body: string } {
     fs.readFileSync(path.join(BLOG_DIR, `${slug}.md`), "utf8")
   );
 
+  // The same contract the Notion reader holds a cover to: present, and on a
+  // host the site serves art from. The card, the header and the share image
+  // are all built on it, and none of them has a fallback.
+  const image = data.image ? String(data.image) : "";
+  if (!image) {
+    throw new Error(
+      `${where}: no image. The index card, the post's header and the share ` +
+        `image are all built on it, and none of them has a fallback.`
+    );
+  }
+
   return {
     summary: {
       slug,
@@ -166,7 +179,7 @@ function readFile(slug: string): { summary: BlogSummary; body: string } {
         : undefined,
       category: assertCategory(data.category, where),
       tags: data.tags ?? [],
-      image: data.image ?? "",
+      image: resolveMediaUrl(image, `${where} → image`),
       imageAlt: data.imageAlt ?? "",
       draft: data.draft ?? false,
     },

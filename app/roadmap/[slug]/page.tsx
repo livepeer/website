@@ -27,9 +27,13 @@ import { standingOf } from "@/lib/updates";
  * app/roadmap/@modal. Building it in that order is what makes it cheap: an
  * intercepting route is presentation over a page that already works, rather
  * than a second rendering path with no URL behind it.
+ *
+ * No `dynamicParams = false`, for the reason the blog gives: the register is
+ * read from Notion on a minute's revalidation so that a commitment reaches
+ * the site without a deploy, and a card that appeared on the register while
+ * its own address 404'd until the next build would undo that. An unknown slug
+ * still 404s — `find` decides, below.
  */
-
-export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const commitments = await getRegister();

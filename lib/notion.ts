@@ -6,7 +6,7 @@ import readingTime from "reading-time";
 import type { Entry } from "./entries";
 import { blocksToHtml } from "./notion-blocks";
 import { parsePeriod } from "./period";
-import { resolveMediaSource } from "./notion-media";
+import { readCoverUrl, resolveMediaSource } from "./notion-media";
 import {
   assertCategory,
   byNewest,
@@ -22,6 +22,7 @@ import {
 } from "./contribute";
 import { readPrecision, targetWindow } from "./target";
 import {
+  readLinkHref,
   WORKSTREAMS,
   type Commitment,
   type CommitmentLink,
@@ -35,8 +36,8 @@ import {
   type Organization,
   type OrgType,
 } from "./organizations";
-import type { PersonRecord } from "./people";
-import { readGuideCover, type Guide, type GuideName } from "./guides";
+import { X_HANDLE, type PersonRecord } from "./people";
+import type { Guide, GuideName } from "./guides";
 import {
   readPostLink,
   type Health,
@@ -330,9 +331,15 @@ const STATE_BY_NOTION: Record<string, CommitmentState> = {
  * less reliably, what the API is handing over.
  */
 function readLinks(prop: Json | undefined, where: string): CommitmentLink[] {
+  // The same rule the markdown register's `related` is held to: somewhere
+  // else on the web or a path on this site. Notion's editor will not write a
+  // javascript: link, but the API will accept one, and the record renders
+  // these as plain anchors.
   const links = richText(prop).flatMap((run) => {
     const label = (run.plain_text ?? "").trim();
-    return run.href && label ? [{ label, href: run.href }] : [];
+    return run.href && label
+      ? [{ label, href: readLinkHref(run.href, `${where}: Links`) }]
+      : [];
   });
 
   const seen = new Set<string>();
@@ -413,58 +420,126 @@ function portraitFilename(prop: Json | undefined): string | undefined {
  */
 async function readPeople(): Promise<Map<string, Person>> {
   const rows = await queryAll(PEOPLE_DB);
-  const people = new Map<string, Person>();
+  return new Map(rows.map((row) => [row.id as string, toPerson(row)]));
+}
 
-  for (const row of rows) {
-    const p = props(row);
-    const name = text(p.Name);
-    const where = `Livepeer people → ${name || (row.id as string)}`;
-    if (!name) {
-      throw new Error(
-        `Livepeer people row ${row.url as string} has no name. A credited face ` +
-          `with no name is a face nobody can check.`
-      );
-    }
-
-    const avatar = portraitFilename(p.Portrait);
-    if (avatar && /[/\\:]/.test(avatar)) {
-      throw new Error(
-        `${where}: Portrait resolves to "${avatar}", which is not a plain ` +
-          `filename. Link straight to the file in public/people.`
-      );
-    }
-    // A filename that resolves to nothing would render a broken image where a
-    // monogram would have been fine, so an unmatched name is a build failure
-    // rather than a silent hole. The portrait lives in the repo because a
-    // Notion-hosted one is a signed URL that expires within the hour.
-    if (avatar && !fs.existsSync(path.join(AVATAR_DIR, avatar))) {
-      throw new Error(
-        `${where}: Portrait points at "${avatar}", which is not in ` +
-          `public/people. Commit the portrait, or clear the field and the ` +
-          `face renders as a monogram.`
-      );
-    }
-
-    const profile = text(p["Forum handle"]) || undefined;
-    // A forum handle, not a path or a URL: enforced so the field cannot
-    // smuggle a protocol or a second host into the href the card builds.
-    if (profile && !/^[a-zA-Z0-9_.-]{2,20}$/.test(profile)) {
-      throw new Error(
-        `${where}: Profile is "${profile}" — it must be the bare handle from ` +
-          `a ${PROFILE_HOST}/u/... URL, not the URL itself. The site builds ` +
-          `the link from it.`
-      );
-    }
-
-    people.set(row.id as string, {
-      name,
-      slug: slugify(name),
-      avatar,
-      profile,
-    });
+/**
+ * One row as a face: the name, the portrait and the handle a card needs.
+ * The one mapping for both passes over the table, so the page a face links
+ * to cannot accept a portrait the face itself would have refused.
+ */
+function toPerson(row: Json): Person {
+  const p = props(row);
+  const name = text(p.Name);
+  const where = `Livepeer people → ${name || (row.id as string)}`;
+  if (!name) {
+    throw new Error(
+      `Livepeer people row ${row.url as string} has no name. A credited face ` +
+        `with no name is a face nobody can check.`
+    );
   }
 
-  return people;
+  const avatar = portraitFilename(p.Portrait);
+  if (avatar && /[/\\:]/.test(avatar)) {
+    throw new Error(
+      `${where}: Portrait resolves to "${avatar}", which is not a plain ` +
+        `filename. Link straight to the file in public/people.`
+    );
+  }
+  // A filename that resolves to nothing would render a broken image where a
+  // monogram would have been fine, so an unmatched name is a build failure
+  // rather than a silent hole. The portrait lives in the repo because a
+  // Notion-hosted one is a signed URL that expires within the hour.
+  if (avatar && !fs.existsSync(path.join(AVATAR_DIR, avatar))) {
+    throw new Error(
+      `${where}: Portrait points at "${avatar}", which is not in ` +
+        `public/people. Commit the portrait, or clear the field and the ` +
+        `face renders as a monogram.`
+    );
+  }
+
+  const profile = text(p["Forum handle"]) || undefined;
+  // A forum handle, not a path or a URL: enforced so the field cannot
+  // smuggle a protocol or a second host into the href the card builds.
+  if (profile && !/^[a-zA-Z0-9_.-]{2,20}$/.test(profile)) {
+    throw new Error(
+      `${where}: Profile is "${profile}" — it must be the bare handle from ` +
+        `a ${PROFILE_HOST}/u/... URL, not the URL itself. The site builds ` +
+        `the link from it.`
+    );
+  }
+
+  return { name, slug: slugify(name), avatar, profile };
+}
+
+/**
+ * A page's cover, as the site can use it.
+ *
+ * Notion returns an external cover as the URL that was set and an uploaded
+ * one as a signed URL that expires within the hour. An upload is refused
+ * with the reason rather than dropped: the person who dragged a picture onto
+ * the page set a banner, and a page that quietly shows none tells them
+ * nothing. The URL itself is held to the host next/image is configured for,
+ * as a cover in the markdown copy is (lib/notion-media.ts). Whether a page
+ * must have one is the caller's rule — a commitment must, the others may.
+ */
+function coverOf(
+  page: Json,
+  where: string,
+  required = false
+): string | undefined {
+  const cover = page.cover as
+    | { type?: string; external?: { url?: string }; file?: { url?: string } }
+    | null
+    | undefined;
+  if (!cover) {
+    if (required) {
+      throw new Error(
+        `${where}: no cover. Every record carries one — add an image from ` +
+          `the stock library at the top of the page.`
+      );
+    }
+    return undefined;
+  }
+  if (cover.type === "file" || cover.file) {
+    throw new Error(
+      `${where}: the cover is uploaded to Notion. Notion hands the API a ` +
+        `link that expires within the hour, so the banner would break by ` +
+        `itself. Set the cover from a link instead — see the database ` +
+        `description.`
+    );
+  }
+  return readCoverUrl(cover.external?.url, where);
+}
+
+/**
+ * A few at a time, not all at once.
+ *
+ * A body is a request per page — more when it nests — and Notion's limit
+ * sits near three a second. Fourteen commitments, seven bodies and ten
+ * people each fired as one burst have not tripped it, and a 429 is retried
+ * above, but the burst grows with every row anyone adds and the limit does
+ * not. Four in flight keeps a register of a few dozen inside it without
+ * running the bodies end to end.
+ */
+const BODIES_IN_FLIGHT = 4;
+
+async function mapLimit<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      results[i] = await fn(items[i]!);
+    }
+  };
+  await Promise.all(
+    Array.from({ length: Math.min(BODIES_IN_FLIGHT, items.length) }, worker)
+  );
+  return results;
 }
 
 /** Every child of a block, following the cursor — bodies run past one page. */
@@ -629,20 +704,26 @@ function toCommitment(
     );
   }
 
-  // Notion returns an external cover as the URL that was set and an uploaded
-  // one as a signed URL that expires within the hour. Only the first is worth
-  // rendering, so an upload is ignored rather than baked into a page that
-  // would break by lunchtime.
-  const coverProp = row.cover as
-    { type?: string; external?: { url?: string } } | null | undefined;
-  const cover =
-    coverProp?.type === "external" ? coverProp.external?.url : undefined;
+  // Required here and optional on the other records: the register's rule,
+  // repeated in the database description because a cover is not a property
+  // and an agent reading the schema would never learn of it otherwise.
+  const cover = coverOf(row, where, true);
+
+  // The one-line promise on the card, and the page's share description. The
+  // markdown copy has always refused a record without one.
+  const outcome = text(p.Outcome);
+  if (!outcome) {
+    throw new Error(
+      `${where}: Outcome is empty. It is the card's one line and the page's ` +
+        `description, so a record without one reaches the site saying nothing.`
+    );
+  }
 
   return {
     slug: slugify(title),
     cover,
     title,
-    outcome: text(p.Outcome),
+    outcome,
     workstream,
     state,
     owner,
@@ -672,14 +753,11 @@ export async function getNotionCommitments(): Promise<Commitment[]> {
     readOrganizations(),
   ]);
 
-  // One body per row, in parallel: fourteen small requests that would
-  // otherwise run end to end.
-  const details = await Promise.all(
-    rows.map((row) =>
-      readDetail(
-        row.id as string,
-        `Roadmap commitments → ${text(props(row).Name)}`
-      )
+  // One body per row, a few at a time — see mapLimit.
+  const details = await mapLimit(rows, (row) =>
+    readDetail(
+      row.id as string,
+      `Roadmap commitments → ${text(props(row).Name)}`
     )
   );
 
@@ -721,67 +799,63 @@ export async function getNotionOrganizations(): Promise<Organization[]> {
   // read the register does for contributors, so a face is described once.
   const [rows, people] = await Promise.all([queryAll(ORGS_DB), readPeople()]);
 
-  const orgs = await Promise.all(
-    rows.map(async (row): Promise<Organization> => {
-      const p = props(row);
-      const name = text(p.Name);
-      const where = `Organizations row ${row.url as string}`;
-      if (!name) {
-        throw new Error(
-          `${where} has no name. A body with no name is not one anyone can be ` +
-            `referred to.`
-        );
-      }
+  const orgs = await mapLimit(rows, async (row): Promise<Organization> => {
+    const p = props(row);
+    const name = text(p.Name);
+    const where = `Organizations row ${row.url as string}`;
+    if (!name) {
+      throw new Error(
+        `${where} has no name. A body with no name is not one anyone can be ` +
+          `referred to.`
+      );
+    }
 
-      const type = selectName(p.Type) as OrgType | undefined;
-      if (!type || !ORG_TYPES.includes(type)) {
-        throw new Error(
-          `${where} (${name}): Type is ${type ?? "empty"}, not one of ` +
-            `${ORG_TYPES.join(", ")}.`
-        );
-      }
+    const type = selectName(p.Type) as OrgType | undefined;
+    if (!type || !ORG_TYPES.includes(type)) {
+      throw new Error(
+        `${where} (${name}): Type is ${type ?? "empty"}, not one of ` +
+          `${ORG_TYPES.join(", ")}.`
+      );
+    }
 
-      const description = text(p.Description);
-      if (!description) {
-        throw new Error(
-          `${where} (${name}): Description is empty. It is the card line and ` +
-            `the page's share description, so a body without one reaches the ` +
-            `site unreadable away from its own page.`
-        );
-      }
+    const description = text(p.Description);
+    if (!description) {
+      throw new Error(
+        `${where} (${name}): Description is empty. It is the card line and ` +
+          `the page's share description, so a body without one reaches the ` +
+          `site unreadable away from its own page.`
+      );
+    }
 
-      // Same treatment as a portrait: the link is how Notion previews the
-      // mark, and the repo is where the site serves it from.
-      const logo = portraitFilename(p.Logo);
-      if (logo && !fs.existsSync(path.join(LOGO_DIR, logo))) {
-        throw new Error(
-          `${where} (${name}): Logo names ${logo}, which is not committed to ` +
-            `public/organizations. Commit the file before linking it.`
-        );
-      }
+    // Same treatment as a portrait: the link is how Notion previews the
+    // mark, and the repo is where the site serves it from.
+    const logo = portraitFilename(p.Logo);
+    if (logo && !fs.existsSync(path.join(LOGO_DIR, logo))) {
+      throw new Error(
+        `${where} (${name}): Logo names ${logo}, which is not committed to ` +
+          `public/organizations. Commit the file before linking it.`
+      );
+    }
 
-      const coverProp = row.cover as
-        { type?: string; external?: { url?: string } } | undefined;
-
-      return {
-        slug: slugify(name),
-        name,
-        description,
-        type,
-        link: (p.Link?.url as string | undefined) || undefined,
-        people: (() => {
-          const roster = relationIds(p.Affiliated)
-            .map((id) => people.get(id))
-            .filter((person) => person !== undefined);
-          return roster.length > 0 ? roster : undefined;
-        })(),
-        logo,
-        cover:
-          coverProp?.type === "external" ? coverProp.external?.url : undefined,
-        detail: await readDetail(row.id as string, where),
-      };
-    })
-  );
+    return {
+      slug: slugify(name),
+      name,
+      description,
+      type,
+      // Absolute and http(s), as the markdown copy holds it: the record
+      // parses the host out of it and renders it as an anchor.
+      link: readPostLink(urlOf(p.Link), `${where} (${name}): Link`),
+      people: (() => {
+        const roster = relationIds(p.Affiliated)
+          .map((id) => people.get(id))
+          .filter((person) => person !== undefined);
+        return roster.length > 0 ? roster : undefined;
+      })(),
+      logo,
+      cover: coverOf(row, `${where} (${name})`),
+      detail: await readDetail(row.id as string, where),
+    };
+  });
 
   const seen = new Map<string, string>();
   for (const o of orgs) {
@@ -815,51 +889,52 @@ export async function getNotionPeople(): Promise<PersonRecord[]> {
     readOrganizations(),
   ]);
 
-  const people = await Promise.all(
-    rows.map(async (row): Promise<PersonRecord> => {
-      const p = props(row);
-      const name = text(p.Name);
-      const where = `Livepeer people row ${row.url as string}`;
-      if (!name) {
-        throw new Error(
-          `${where} has no name. A credited face with no name is a face ` +
-            `nobody can check.`
-        );
-      }
+  const people = await mapLimit(rows, async (row): Promise<PersonRecord> => {
+    // The face first — name, portrait, handle — through the same checks
+    // the register runs, so a page cannot carry a portrait the card
+    // beside it would have refused.
+    const face = toPerson(row);
+    const p = props(row);
+    const { name } = face;
+    const where = `Livepeer people row ${row.url as string}`;
 
-      // One affiliation or none. Two would make "who are they with" a question
-      // with no answer, which is the shape the owner relation already rejects.
-      const affiliations = relationIds(p.Affiliation);
-      if (affiliations.length > 1) {
-        throw new Error(
-          `${where} (${name}): Affiliation names ${affiliations.length} ` +
-            `organizations. One or none — association is singular here, and ` +
-            `work is credited through a commitment's own Owner.`
-        );
-      }
-      const affiliationName = affiliations[0]
-        ? orgs.get(affiliations[0])
-        : undefined;
+    // One affiliation or none. Two would make "who are they with" a question
+    // with no answer, which is the shape the owner relation already rejects.
+    const affiliations = relationIds(p.Affiliation);
+    if (affiliations.length > 1) {
+      throw new Error(
+        `${where} (${name}): Affiliation names ${affiliations.length} ` +
+          `organizations. One or none — association is singular here, and ` +
+          `work is credited through a commitment's own Owner.`
+      );
+    }
+    const affiliationName = affiliations[0]
+      ? orgs.get(affiliations[0])
+      : undefined;
 
-      const coverProp = row.cover as
-        { type?: string; external?: { url?: string } } | undefined;
+    // The bare handle, never the URL — the site builds the link, and the
+    // markdown copy holds the field to the same shape.
+    const x = text(p["X handle"]).replace(/^@/, "") || undefined;
+    if (x && !X_HANDLE.test(x)) {
+      throw new Error(
+        `${where} (${name}): X handle is ${JSON.stringify(x)} — it must be ` +
+          `the bare handle from an x.com/... URL, up to 15 letters, digits ` +
+          `or underscores.`
+      );
+    }
 
-      return {
-        slug: slugify(name),
-        name,
-        avatar: portraitFilename(p.Portrait),
-        profile: text(p["Forum handle"]) || undefined,
-        x: text(p["X handle"]).replace(/^@/, "") || undefined,
-        email: (p.Email?.email as string | undefined) || undefined,
-        affiliation: affiliationName
-          ? { name: affiliationName, slug: slugify(affiliationName) }
-          : undefined,
-        cover:
-          coverProp?.type === "external" ? coverProp.external?.url : undefined,
-        detail: await readDetail(row.id as string, where),
-      };
-    })
-  );
+    return {
+      ...face,
+      x,
+      // Typed as an email in Notion, which checks the shape on entry.
+      email: (p.Email?.email as string | undefined) || undefined,
+      affiliation: affiliationName
+        ? { name: affiliationName, slug: slugify(affiliationName) }
+        : undefined,
+      cover: coverOf(row, `${where} (${name})`),
+      detail: await readDetail(row.id as string, where),
+    };
+  });
 
   const seen = new Map<string, string>();
   for (const person of people) {
@@ -1188,16 +1263,14 @@ export async function getNotionCommitmentUpdates(
   const mine = rows
     .map((row) => ({ row, summary: toUpdateSummary(row, people, commitments) }))
     .filter(({ summary }) => summary.commitment === slug);
-  const withBodies = await Promise.all(
-    mine.map(async ({ row, summary }) => ({
-      ...summary,
-      html:
-        (await readDetail(
-          row.id as string,
-          `Roadmap updates → ${summary.summary}`
-        )) ?? "",
-    }))
-  );
+  const withBodies = await mapLimit(mine, async ({ row, summary }) => ({
+    ...summary,
+    html:
+      (await readDetail(
+        row.id as string,
+        `Roadmap updates → ${summary.summary}`
+      )) ?? "",
+  }));
   return byNewest(withBodies);
 }
 
@@ -1287,14 +1360,7 @@ export async function getNotionGuide(name: GuideName): Promise<Guide> {
   const where = `Guide → ${name}`;
   const title = text(props(page).title).trim();
   if (!title) throw new Error(`${where}: the page has no title.`);
-  const coverProp = page.cover as
-    { type?: string; external?: { url?: string } } | null | undefined;
-  // An uploaded cover is a signed URL that expires within the hour, so
-  // only an external one counts, as on a commitment.
-  const cover = readGuideCover(
-    coverProp?.type === "external" ? coverProp.external?.url : undefined,
-    where
-  );
+  const cover = coverOf(page, where);
   const html = await readDetail(id, where);
   if (!html) {
     throw new Error(
@@ -1323,12 +1389,24 @@ export async function getNotionEntryBody(
 }
 
 export async function getNotionEntries(): Promise<Entry[]> {
+  // One row is one entry, and the period is its address, so two rows on one
+  // period would be two entries at one URL with whichever headline Notion
+  // returned last. The markdown copy cannot do this — a file is a name — and
+  // the build refuses it here so the two sources hold the same rule.
+  const seen = new Set<string>();
   return (await queryAll(CHANGELOG_DB)).flatMap((row) => {
     const p = props(row);
     const period = text(p.Period).trim();
     if (!period) return [];
     const where = `Changelog entries → ${JSON.stringify(period)}`;
     parsePeriod(period, where);
+    if (seen.has(period)) {
+      throw new Error(
+        `${where}: two rows carry this period. One row is one entry, and ` +
+          `the period is its address — merge them, or move one to Draft.`
+      );
+    }
+    seen.add(period);
     const status = selectName(p.Status);
     if (status && status !== "Draft" && status !== "Published") {
       throw new Error(

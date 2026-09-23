@@ -14,9 +14,11 @@ import { getPeopleRegister, getRegister } from "@/lib/register";
  * child of the roadmap. They are reached from a credited face on a card, which
  * slides this in over the register, and the roadmap is linked from here where
  * that is honest — on every commitment listed below.
+ *
+ * No `dynamicParams = false`, as on the roadmap record: a person credited in
+ * Notion after the last build is linked from a card the minute the register
+ * refreshes, and the link has to land. An unknown slug still 404s.
  */
-
-export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return (await getPeopleRegister()).map((p) => ({ slug: p.slug }));
@@ -80,7 +82,7 @@ export default async function PersonPage({
       )}
 
       <div
-        className={`${"mx-auto w-full max-w-[46rem]"} px-6 sm:px-8 ${person.cover ? "" : "pt-20"}`}
+        className={`mx-auto w-full max-w-[46rem] px-6 sm:px-8 ${person.cover ? "" : "pt-20"}`}
       >
         <PersonRecordView
           person={person}

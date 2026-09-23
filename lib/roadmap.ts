@@ -3,6 +3,8 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import { safeHref } from "./notion-blocks";
+import { readCoverUrl } from "./notion-media";
 import { slugify } from "./organizations";
 import { readPrecision, targetWindow } from "./target";
 
@@ -203,9 +205,6 @@ export type Commitment = {
 
 const dir = path.join(process.cwd(), "content", "roadmap");
 
-/** The only image host next/image is configured for; see next.config.ts. */
-const IMAGE_HOST = "cdn.sanity.io";
-
 /** Where a person's profile lives; the card builds the URL from a handle. */
 const PROFILE_HOST = "forum.livepeer.org";
 
@@ -279,30 +278,21 @@ function readPeople(value: unknown, file: string): Person[] | undefined {
 }
 
 /**
- * A cover must be on the one host next/image is configured to load.
- *
- * next.config.ts allows cdn.sanity.io and nothing else, so any other host
- * would render as a broken image at runtime rather than failing here. This
- * turns that into a build error naming the record.
+ * A link is somewhere else on the web or somewhere else on this site, and
+ * nothing more exotic. The record renders these as plain anchors, and the
+ * register is contributor-edited, so a scheme that runs rather than
+ * navigates is refused here with the file named — the same rule a link in a
+ * Notion body is held to.
  */
-function readCover(value: unknown, file: string): string | undefined {
-  if (value === undefined || value === null || value === "") return undefined;
-  const url = String(value);
-  let host: string;
-  try {
-    host = new URL(url).hostname;
-  } catch {
+export function readLinkHref(value: unknown, where: string): string {
+  const href = String(value);
+  if (!safeHref(href)) {
     throw new Error(
-      `content/roadmap/${file}: cover ${JSON.stringify(url)} is not a URL.`
+      `${where}: ${JSON.stringify(href)} is not an http(s) URL or a path on ` +
+        `this site.`
     );
   }
-  if (host !== IMAGE_HOST) {
-    throw new Error(
-      `content/roadmap/${file}: cover is on ${host}, and next/image is only ` +
-        `configured for ${IMAGE_HOST}. Use an image from the stock library.`
-    );
-  }
-  return url;
+  return href;
 }
 
 function readLinks(value: unknown, file: string, field: string) {
@@ -314,7 +304,13 @@ function readLinks(value: unknown, file: string, field: string) {
         `content/roadmap/${file}: ${field}[${i}] needs both a label and an href.`
       );
     }
-    return { label: link.label, href: link.href };
+    return {
+      label: link.label,
+      href: readLinkHref(
+        link.href,
+        `content/roadmap/${file}: ${field}[${i}].href`
+      ),
+    };
   });
 }
 
@@ -417,7 +413,12 @@ function parse(file: string): Commitment {
     lastUpdated: data.lastUpdated
       ? new Date(data.lastUpdated).toISOString().slice(0, 10)
       : undefined,
-    cover: readCover(data.cover, file),
+    cover: readCoverUrl(
+      data.cover === undefined || data.cover === null
+        ? undefined
+        : String(data.cover),
+      `content/roadmap/${file}`
+    ),
     detail: content.trim() || undefined, // raw markdown; rendered in getCommitments
   };
 }

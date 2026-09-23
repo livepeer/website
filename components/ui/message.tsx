@@ -1,7 +1,12 @@
 // ElevenLabs UI `message` (https://ui.elevenlabs.io/docs/components/message),
 // MIT, vendored from github.com/elevenlabs/ui because the registry was
 // rate-limiting installs. Import paths adapted to this repo; otherwise as
-// published.
+// published, with two departures. The published base classes open with
+// `is-user:dark`, which relies on a variant that library's stylesheet
+// declares and this one does not — here it compiled to nothing, so it is
+// dropped rather than left to read as a dark-mode rule. And MessageAvatar's
+// image carries the speaker's name as its alt text when one is given, instead
+// of the published `alt=""`, so the face says who is speaking.
 
 import type { ComponentProps, HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -25,7 +30,7 @@ export const Message = ({ className, from, ...props }: MessageProps) => (
 );
 
 const messageContentVariants = cva(
-  "is-user:dark flex flex-col gap-2 overflow-hidden rounded-lg text-sm",
+  "flex flex-col gap-2 overflow-hidden rounded-lg text-sm",
   {
     variants: {
       variant: {
@@ -75,7 +80,7 @@ export const MessageAvatar = ({
   ...props
 }: MessageAvatarProps) => (
   <Avatar className={cn("ring-border size-8 ring-1", className)} {...props}>
-    <AvatarImage alt="" className="mt-0 mb-0" src={src} />
+    <AvatarImage alt={name ?? ""} className="mt-0 mb-0" src={src} />
     <AvatarFallback>{name?.slice(0, 2) || "ME"}</AvatarFallback>
   </Avatar>
 );

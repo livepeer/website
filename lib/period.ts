@@ -70,8 +70,19 @@ export function parsePeriod(key: string, where = "a changelog entry"): Period {
     const n = Number(m[4]);
     const jan4 = new Date(Date.UTC(y, 0, 4));
     const monday1 = 4 - ((jan4.getUTCDay() + 6) % 7);
-    const start = iso(y, 0, monday1 + (n - 1) * 7);
-    const end = iso(y, 0, monday1 + (n - 1) * 7 + 6);
+    const first = monday1 + (n - 1) * 7;
+    // A week belongs to the year its Thursday falls in, so week 53 exists
+    // only in the years whose calendar reaches one — 2020 and 2026, not
+    // 2025. The pattern above cannot know that; without this, 2025-W53
+    // would quietly address 2026-W01 under the wrong name.
+    if (new Date(Date.UTC(y, 0, first + 3)).getUTCFullYear() !== y) {
+      throw new Error(
+        `${where}: period ${JSON.stringify(key)} names a week ${y} does ` +
+          `not have. ISO years run to week 52, or 53 in a long year.`
+      );
+    }
+    const start = iso(y, 0, first);
+    const end = iso(y, 0, first + 6);
     return { key, kind: "week", label: `Week ${n}, ${y}`, start, end };
   }
   return {

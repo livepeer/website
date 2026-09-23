@@ -1,10 +1,11 @@
 import crypto from "node:crypto";
 
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+import { revalidateNotionSurfaces } from "../notion-surfaces";
+
 /**
- * Notion tells us the register changed, instead of us waiting to notice.
+ * Notion tells us something changed, instead of us waiting to notice.
  *
  * This is a webhook subscription on the integration itself, which is not the
  * same thing as an automation inside the database. Automations exist to
@@ -19,9 +20,6 @@ import { NextResponse } from "next/server";
  * setup notes in content/roadmap/README.md.
  */
 
-/** Only the register reads Notion, so this is the only path worth clearing. */
-const PATH = "/roadmap";
-
 /**
  * Notion's handshake: on subscribing, it POSTs a one-off `verification_token`
  * rather than an event. That token is then the signing key for every event
@@ -29,6 +27,13 @@ const PATH = "/roadmap";
  * later. Logged loudly for that reason: the setup step is "read it out of the
  * deployment logs and paste it into Vercel", and a quiet log makes that step
  * look impossible.
+ *
+ * It is a secret, and it goes to the log on purpose: the log is the only place
+ * this endpoint can put it — the site has no store, and Notion shows it
+ * nowhere. What holding it buys is the right to call this route, whose whole
+ * effect is a page rebuilt early; and anyone who can read the deployment log
+ * is a member of the project who can already read its environment, secret
+ * included. It is written once, at the handshake, and never on an event.
  */
 function handleVerification(token: string): NextResponse {
   console.log(
@@ -97,9 +102,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Bad signature." }, { status: 401 });
   }
 
-  // Any event the subscription sends is about the register, because the
-  // integration can only see the register — so there is nothing to filter on.
-  // Revalidating is idempotent and costs a rebuild at worst.
-  revalidatePath(PATH);
-  return NextResponse.json({ revalidated: true, path: PATH, type: body.type });
+  // Which database the event came from is not worth working out: the
+  // integration sees six, an edit to one can move text on several addresses,
+  // and one call clears every address rendered from any of them — the same
+  // list the manual endpoint uses (../notion-surfaces.ts). Revalidating is
+  // idempotent and costs a rebuild at worst.
+  const paths = revalidateNotionSurfaces();
+  return NextResponse.json({ revalidated: true, paths, type: body.type });
 }

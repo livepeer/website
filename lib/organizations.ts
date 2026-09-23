@@ -3,6 +3,8 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import { readPostLink } from "./health";
+import { readCoverUrl } from "./notion-media";
 import type { Person } from "./roadmap";
 
 /**
@@ -96,31 +98,9 @@ export function slugify(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Covers come from one host, which is the only one next/image allows. */
-const IMAGE_HOST = "cdn.sanity.io";
 const LOGO_DIR = path.join(process.cwd(), "public", "organizations");
 const AVATAR_DIR = path.join(process.cwd(), "public", "people");
 const dir = path.join(process.cwd(), "content", "organizations");
-
-function readCover(value: unknown, file: string): string | undefined {
-  if (value === undefined || value === null || value === "") return undefined;
-  const url = String(value);
-  let host: string;
-  try {
-    host = new URL(url).host;
-  } catch {
-    throw new Error(
-      `content/organizations/${file}: cover ${JSON.stringify(url)} is not a URL.`
-    );
-  }
-  if (host !== IMAGE_HOST) {
-    throw new Error(
-      `content/organizations/${file}: cover is on ${host}. next.config.ts ` +
-        `allows ${IMAGE_HOST} and nothing else, so this would fail to render.`
-    );
-  }
-  return url;
-}
 
 /**
  * The roster, in the register's own shape.
@@ -210,10 +190,21 @@ function parse(file: string): Organization {
     name,
     description: String(at("description", data.description)),
     type,
-    link: data.link ? String(data.link) : undefined,
+    // Absolute and http(s), as a post's link is: the record parses it for its
+    // host and renders it as an anchor, so a value that is neither would
+    // either throw mid-render or run when clicked.
+    link: readPostLink(
+      data.link === undefined ? undefined : String(data.link),
+      `content/organizations/${file}`
+    ),
     people: readPeople(data.people, file),
     logo,
-    cover: readCover(data.cover, file),
+    cover: readCoverUrl(
+      data.cover === undefined || data.cover === null
+        ? undefined
+        : String(data.cover),
+      `content/organizations/${file}`
+    ),
     detail: content.trim() || undefined,
   };
 }

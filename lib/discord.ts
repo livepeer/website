@@ -21,6 +21,12 @@ const GUILD = "423160867534929930";
 const WIDGET = `https://discord.com/api/guilds/${GUILD}/widget.json`;
 /** Hourly: invites rarely change, and the count is decoration. */
 const REVALIDATE = 3_600;
+/**
+ * The root layout waits on this for every page, so a Discord that hangs
+ * rather than fails would hang the site with it. Bounded, and the fallback
+ * covers the timeout the way it covers an error.
+ */
+const REQUEST_TIMEOUT_MS = 5_000;
 
 export const DISCORD_FALLBACK_INVITE = "https://discord.gg/55SZFEEH5y";
 
@@ -45,7 +51,10 @@ export type Discord = {
 
 export async function getDiscord(): Promise<Discord> {
   try {
-    const res = await fetch(WIDGET, { next: { revalidate: REVALIDATE } });
+    const res = await fetch(WIDGET, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const widget = (await res.json()) as {
       instant_invite?: string | null;

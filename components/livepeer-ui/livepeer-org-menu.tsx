@@ -139,7 +139,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                       key={item.label}
                       href={item.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       onClick={close}
                       className={className}
                     >
@@ -168,7 +168,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                       key={item.label}
                       href={item.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       onClick={close}
                       className={className}
                     >

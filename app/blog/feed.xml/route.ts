@@ -26,7 +26,10 @@ export async function GET() {
 
   const items = posts
     .map((post) => {
-      const url = `${SITE}/blog/${post.slug}`;
+      // Both readers hold a slug to `SLUG` in lib/blog.ts, so encoding changes
+      // nothing today; it is here so the feed stays well-formed XML on the day
+      // that rule loosens, rather than depending on it from a file away.
+      const url = `${SITE}/blog/${encodeURIComponent(post.slug)}`;
       return [
         "  <entry>",
         `    <title>${escape(post.title)}</title>`,
@@ -39,7 +42,7 @@ export async function GET() {
           ? `    <summary>${escape(post.description)}</summary>`
           : "",
         post.author
-          ? `    <author><name>${escape(post.author.name)}</name>${post.author.slug ? `<uri>${SITE}/people/${post.author.slug}</uri>` : ""}</author>`
+          ? `    <author><name>${escape(post.author.name)}</name>${post.author.slug ? `<uri>${SITE}/people/${encodeURIComponent(post.author.slug)}</uri>` : ""}</author>`
           : "",
         "  </entry>",
       ]

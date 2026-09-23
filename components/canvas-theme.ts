@@ -1,3 +1,10 @@
+"use client";
+
+// Reads the theme off the document, so it only runs in the browser. The
+// directive keeps a Server Component from importing it by mistake: called
+// from one it would fail at runtime on `document`, and this way it fails at
+// the import instead.
+
 const canvasThemeTokens = [
   "--foreground",
   "--muted-foreground",
@@ -16,5 +23,8 @@ export function getCanvasThemePalette(inverted = false) {
     neutralColors[3] = styles.getPropertyValue("--secondary").trim();
   }
 
-  return [...neutralColors, "color(display-p3 0.04 0.74 0.49)"];
+  // The brand green is `--color-brand` in app/globals.css, one value for the
+  // canvases and the utilities alike; a literal repeated here would be a
+  // second copy to keep in step.
+  return [...neutralColors, styles.getPropertyValue("--color-brand").trim()];
 }

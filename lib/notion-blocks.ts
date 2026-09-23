@@ -49,9 +49,19 @@ function escape(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Only http(s) and site-relative hrefs, so a link cannot carry javascript:. */
-function safeHref(href: string): string | null {
-  if (href.startsWith("/")) return href;
+/**
+ * Only http(s) and site-relative hrefs, so a link cannot carry javascript:.
+ *
+ * Site-relative means one slash: "//elsewhere.example" is a scheme-relative
+ * URL that leaves the site, and a browser reads "/\elsewhere" the same way,
+ * so both are refused rather than passed off as a path. Shared with the
+ * readers of the Links property and the markdown register's `related`, which
+ * hold the same two kinds of destination.
+ */
+export function safeHref(href: string): string | null {
+  if (href.startsWith("/")) {
+    return /^\/[/\\]/.test(href) ? null : href;
+  }
   try {
     const url = new URL(href);
     return url.protocol === "https:" || url.protocol === "http:" ? href : null;

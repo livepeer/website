@@ -86,7 +86,10 @@ function MetaRow({
 
   if (!value) {
     body = <span className="text-muted-foreground/50">{EM_DASH}</span>;
-  } else if (href) {
+  } else if (href && isLinkable(href)) {
+    // The same http(s) gate as the value below: an explicit destination is
+    // contributor frontmatter too, and one that is not a web address renders
+    // as the prose it sits beside rather than as a link.
     body = (
       <a
         href={href}

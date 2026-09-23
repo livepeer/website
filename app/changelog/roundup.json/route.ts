@@ -61,6 +61,9 @@ export async function GET(request: Request) {
       start: r.start,
       end: r.end,
       open: r.open,
+      // The address the entry has, or will have: a period still under way is
+      // not published (`open` above says so), and its page 404s until a row
+      // closes it. A nudge built from this should link the records, not this.
       url: `${SITE}/changelog/${r.key}`,
       shipped: r.shipped.map(({ commitment, retro, update }) => ({
         ...ref(commitment),

@@ -35,7 +35,7 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                       key={link.label}
                       href={href}
                       target={external ? "_blank" : undefined}
-                      rel={external ? "noreferrer" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
                       className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {isLatest ? "Latest Updates" : link.label}
@@ -70,7 +70,7 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                   key={social.label}
                   href={social.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >

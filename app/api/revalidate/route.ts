@@ -1,14 +1,17 @@
-import { revalidatePath } from "next/cache";
+import crypto from "node:crypto";
+
 import { NextResponse } from "next/server";
 
+import { revalidateNotionSurfaces } from "../notion-surfaces";
+
 /**
- * Push the roadmap live now, rather than waiting for the window.
+ * Push what Notion holds live now, rather than waiting for the window.
  *
- * The register is read from Notion and rendered statically, refreshed on a
+ * Everything read from Notion is rendered statically and refreshed on a
  * timer (see `NOTION_REVALIDATE` in lib/notion.ts). That timer is what serves
- * people editing the board in Notion, who are not going to call an endpoint.
+ * people editing a board in Notion, who are not going to call an endpoint.
  *
- * This is for the other case: an agent that has just written to the register
+ * This is for the other case: an agent that has just written to a database
  * through the API and wants the site to reflect it immediately. Notion's own
  * automations do not run on API edits, so nothing else will notice.
  *
@@ -19,10 +22,22 @@ import { NextResponse } from "next/server";
  * page rebuilt slightly early. Forgetting it is not an error either; the
  * change still lands within the window. That is deliberate: an agent that
  * skips this step should be late, never wrong.
+ *
+ * What gets cleared is the shared list in ../notion-surfaces.ts, the same one
+ * the Notion webhook uses.
  */
 
-/** Only the register reads Notion, so this is the only path worth clearing. */
-const PATH = "/roadmap";
+/**
+ * Compared in constant time, the way the webhook compares its signature. The
+ * stakes are the same low ones — a forged call rebuilds pages early — but two
+ * endpoints guarding the same thing with two standards of care would make the
+ * weaker one look like an oversight rather than a choice.
+ */
+function tokenMatches(offered: string, secret: string): boolean {
+  const a = Buffer.from(offered);
+  const b = Buffer.from(secret);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
 
 export async function POST(request: Request): Promise<NextResponse> {
   const secret = process.env.REVALIDATE_SECRET;
@@ -37,15 +52,17 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
+  // The curl above sends `Bearer <secret>`; the prefix is stripped so a caller
+  // who sends the bare secret is accepted too.
   const offered =
     request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (offered !== secret) {
+  if (!tokenMatches(offered, secret)) {
     return NextResponse.json(
       { revalidated: false, error: "Bad or missing bearer token." },
       { status: 401 }
     );
   }
 
-  revalidatePath(PATH);
-  return NextResponse.json({ revalidated: true, path: PATH });
+  const paths = revalidateNotionSurfaces();
+  return NextResponse.json({ revalidated: true, paths });
 }

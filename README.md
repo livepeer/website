@@ -4,7 +4,7 @@ The official website for [Livepeer](https://livepeer.org) — the open inference
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router, built and served with `--webpack`)
 - **UI**: React 19, Tailwind CSS v4
 - **Design system**: [Livepeer UI](https://livepeer.peaceno.de/design.md) — a shadcn component registry (semantic tokens, light + dark)
 - **Language**: TypeScript

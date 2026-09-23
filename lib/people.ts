@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import { readCoverUrl } from "./notion-media";
 import { slugify } from "./organizations";
 import type { Person } from "./roadmap";
 
@@ -58,32 +59,14 @@ export type PersonRecord = Person & {
   affiliation?: { name: string; slug: string };
 };
 
-const IMAGE_HOST = "cdn.sanity.io";
 const AVATAR_DIR = path.join(process.cwd(), "public", "people");
 const dir = path.join(process.cwd(), "content", "people");
 const PROFILE_HANDLE = /^[a-zA-Z0-9_.-]{2,20}$/;
-// X caps handles at 15, letters, digits and underscore.
-const X_HANDLE = /^[A-Za-z0-9_]{1,15}$/;
-
-function readCover(value: unknown, file: string): string | undefined {
-  if (!value) return undefined;
-  const url = String(value);
-  let host: string;
-  try {
-    host = new URL(url).host;
-  } catch {
-    throw new Error(
-      `content/people/${file}: cover ${JSON.stringify(url)} is not a URL.`
-    );
-  }
-  if (host !== IMAGE_HOST) {
-    throw new Error(
-      `content/people/${file}: cover is on ${host}. next.config.ts allows ` +
-        `${IMAGE_HOST} and nothing else, so this would fail to render.`
-    );
-  }
-  return url;
-}
+/**
+ * X caps handles at 15, letters, digits and underscore. Exported because the
+ * Notion reader holds the same field to the same shape.
+ */
+export const X_HANDLE = /^[A-Za-z0-9_]{1,15}$/;
 
 function parse(file: string): PersonRecord {
   const slug = file.replace(/\.md$/, "");
@@ -160,7 +143,10 @@ function parse(file: string): PersonRecord {
     x,
     email,
     affiliation,
-    cover: readCover(data.cover, file),
+    cover: readCoverUrl(
+      data.cover ? String(data.cover) : undefined,
+      `content/people/${file}`
+    ),
     detail: content.trim() || undefined,
   };
 }

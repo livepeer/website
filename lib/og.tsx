@@ -126,6 +126,14 @@ export const ogArt = {
   // the table a contributor edits show the same picture. Unused elsewhere —
   // no two pages share a frame.
   organizations: `${CDN}/4ac4787dd83522e28d270d96554f26b487ee7d66-1456x816.png`,
+  // A person had the organizations' frame at first, which made a person and a
+  // body shared side by side the same picture with different words. The
+  // "Agent Playbooks" thumbnail from the nav — a blurred interior, the same
+  // family as the organizations' office and plainly not the same room — on no
+  // other card. Its bottom-left band is bright (61% luminance against home's
+  // 31%), and the titled card's scrim is weighted to the foot for exactly
+  // that case.
+  people: `${CDN}/c8bd525d1e15ddb91109450269e3d6eb484817ba-1456x816.png`,
   // Measured against home the way roadmap's was: 27% of its pixels saturated
   // to home's 27%, and a bottom-left band at 36% luminance to home's 31% —
   // which is the number that decides how hard the scrim works under the

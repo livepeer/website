@@ -24,6 +24,11 @@ function buildNewFileUrl(templateContents: string): string {
   return url.toString();
 }
 
+// Read once, when the module loads, rather than on every render. The page is
+// static, so the difference is nil in production; it is here so the read is
+// visibly a build-time fact and not something a render does.
+const TEMPLATE_URL = buildNewFileUrl(fs.readFileSync(TEMPLATE_PATH, "utf8"));
+
 const DESCRIPTION =
   "Add your project to the Livepeer ecosystem catalogue — open a pull request with a markdown file and a logo.";
 
@@ -47,11 +52,9 @@ export const metadata: Metadata = {
 };
 
 export default function SubmitAppPage() {
-  const templateUrl = buildNewFileUrl(fs.readFileSync(TEMPLATE_PATH, "utf8"));
-
   // "All" is the listing's unfiltered pseudo-category, not a real one — a
   // contributor must never write it into their frontmatter.
   const categories = getEcosystemCategories().filter((name) => name !== "All");
 
-  return <EcosystemSubmit templateUrl={templateUrl} categories={categories} />;
+  return <EcosystemSubmit templateUrl={TEMPLATE_URL} categories={categories} />;
 }

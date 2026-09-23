@@ -38,6 +38,46 @@ const REMOTE_HOSTS = new Set(["cdn.sanity.io", "images.mirror-media.xyz"]);
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 
 /**
+ * The one host next/image is configured for; see next.config.ts. A page's
+ * cover goes through next/image, which is why a cover is held to this host
+ * alone rather than to the body allowlist above: a livepeer.org address in
+ * a body is rewritten to the committed file, but a cover is handed to the
+ * image loader as it is.
+ */
+const COVER_HOST = "cdn.sanity.io";
+
+/**
+ * A page's cover as either source states it: absolute, https, on the one
+ * host next/image will load from. The same rule for a commitment, a body,
+ * a person and a guide, whichever reader is asking — next.config.ts allows
+ * https on cdn.sanity.io and nothing else, so anything else would render as
+ * a broken banner at request time rather than failing here with the record's
+ * name on it. Nothing when there is no cover; whether one is required is the
+ * caller's rule.
+ */
+export function readCoverUrl(
+  value: string | undefined,
+  where: string
+): string | undefined {
+  const url = value?.trim();
+  if (!url) return undefined;
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`${where}: cover ${JSON.stringify(url)} is not a URL.`);
+  }
+  if (parsed.protocol !== "https:" || parsed.hostname !== COVER_HOST) {
+    throw new Error(
+      `${where}: cover is ${parsed.protocol}//${parsed.hostname}, and ` +
+        `next/image is only configured for https://${COVER_HOST}. Use an ` +
+        `image from the stock library.`
+    );
+  }
+  return url;
+}
+
+/**
  * An allowed URL, resolved to what the page should actually load.
  *
  * Throws otherwise, which fails the build. That is the intended outcome: the

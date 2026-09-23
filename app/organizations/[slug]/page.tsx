@@ -20,9 +20,11 @@ import { getOrganizationRegister, getRegister } from "@/lib/register";
  * app/roadmap/@modal. Building the page first is what makes it cheap: an
  * intercepting route is presentation over a page that already works, rather
  * than a second rendering path with no URL behind it.
+ *
+ * No `dynamicParams = false`, as on the roadmap record: a body added in Notion
+ * after the last build is named on a card the minute the register refreshes,
+ * and the owner link has to land. An unknown slug still 404s.
  */
-
-export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return (await getOrganizationRegister()).map((o) => ({ slug: o.slug }));
@@ -76,7 +78,7 @@ export default async function OrganizationPage({
       )}
 
       <div
-        className={`${"mx-auto w-full max-w-[46rem]"} px-6 sm:px-8 ${org.cover ? "" : "pt-20"}`}
+        className={`mx-auto w-full max-w-[46rem] px-6 sm:px-8 ${org.cover ? "" : "pt-20"}`}
       >
         <OrganizationRecord organization={org} owned={owned} />
       </div>

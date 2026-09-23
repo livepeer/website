@@ -3,6 +3,7 @@ import path from "node:path";
 import matter from "gray-matter";
 
 import { renderMarkdown } from "./blog";
+import { readCoverUrl } from "./notion-media";
 
 /**
  * A guide: one Notion page shown as one page on the site.
@@ -41,31 +42,6 @@ export function isGuideName(name: string): name is GuideName {
 
 const DIR = path.join(process.cwd(), "content", "guides");
 
-/** The only image host next/image is configured for; see next.config.ts. */
-const IMAGE_HOST = "cdn.sanity.io";
-
-/** A cover as either source states it: absolute, on the one allowed host. */
-export function readGuideCover(
-  value: string | undefined,
-  where: string
-): string | undefined {
-  const url = value?.trim();
-  if (!url) return undefined;
-  let host: string;
-  try {
-    host = new URL(url).hostname;
-  } catch {
-    throw new Error(`${where}: cover ${JSON.stringify(url)} is not a URL.`);
-  }
-  if (host !== IMAGE_HOST) {
-    throw new Error(
-      `${where}: cover is on ${host}, and next/image is only configured for ` +
-        `${IMAGE_HOST}. Use an image from the stock library.`
-    );
-  }
-  return url;
-}
-
 export async function getMarkdownGuide(name: string): Promise<Guide> {
   const file = path.join(DIR, `${name}.md`);
   const where = `content/guides/${name}.md`;
@@ -77,7 +53,7 @@ export async function getMarkdownGuide(name: string): Promise<Guide> {
   if (!body) throw new Error(`${where}: the body is empty.`);
   return {
     title,
-    cover: readGuideCover(
+    cover: readCoverUrl(
       data.cover === undefined ? undefined : String(data.cover),
       where
     ),
