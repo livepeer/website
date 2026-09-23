@@ -3,7 +3,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   ALL_CATEGORIES,
@@ -41,6 +41,14 @@ export type EcosystemListingApp = {
  * button that opens a panel holding the query field and the category list.
  * That keeps the resting page to a title and one affordance, and means the
  * category list costs nothing until someone wants it.
+ *
+ * The filter is the address: `?q=` and `?categories=` seed the state, so a
+ * narrowed view can be shared and survives a reload, and the state is
+ * mirrored back into the URL as it changes. The page reads the query on the
+ * server and passes it in, so a shared link renders already narrowed rather
+ * than filling in after hydration; the mirroring is `history.replaceState`
+ * rather than a router navigation, since a keystroke is not a page and
+ * nothing on the server needs to know.
  */
 export function EcosystemListing({
   apps,
@@ -50,6 +58,8 @@ export function EcosystemListing({
   emptyMessage,
   submitLabel,
   submitHref,
+  initialQuery = "",
+  initialCategories = [],
 }: {
   apps: EcosystemListingApp[];
   categories: string[];
@@ -58,11 +68,29 @@ export function EcosystemListing({
   emptyMessage: string;
   submitLabel: string;
   submitHref: string;
+  /** From `?q=`, as the page read it. */
+  initialQuery?: string;
+  /** From `?categories=`, already limited to names the catalogue has. */
+  initialCategories?: string[];
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   // Empty means "All" — no category is stored for the unfiltered state, so
   // there is one representation of it rather than two.
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(initialCategories);
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const q = query.trim();
+    if (q) p.set("q", q);
+    else p.delete("q");
+    if (selected.length > 0) p.set("categories", selected.join(","));
+    else p.delete("categories");
+    const search = p.toString();
+    const next = `${window.location.pathname}${search ? `?${search}` : ""}`;
+    if (next !== `${window.location.pathname}${window.location.search}`) {
+      window.history.replaceState(window.history.state, "", next);
+    }
+  }, [query, selected]);
 
   const toggleCategory = (name: string) => {
     if (name === ALL_CATEGORIES) {

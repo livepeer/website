@@ -38,7 +38,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EcosystemPage() {
+/**
+ * The listing's filter lives in the URL (`?q=`, `?categories=`) so a narrowed
+ * view can be shared; read here so the shared link renders narrowed on the
+ * server, which makes this route dynamic — a markdown catalogue of a dozen
+ * entries, so the cost is nothing, and the alternative of reading the query
+ * on the client behind a Suspense boundary would keep the catalogue out of
+ * the prerendered page.
+ */
+export default async function EcosystemPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; categories?: string }>;
+}) {
+  const { q, categories: wanted } = await searchParams;
+  const categories = getEcosystemCategories();
+  const initialCategories = (wanted ?? "")
+    .split(",")
+    .map((name) => name.trim())
+    .filter((name) => categories.includes(name));
   const apps: EcosystemListingApp[] = getAllApps().map((app) => ({
     slug: app.slug,
     name: app.name,
@@ -53,12 +71,14 @@ export default function EcosystemPage() {
   return (
     <EcosystemListing
       apps={apps}
-      categories={getEcosystemCategories()}
+      categories={categories}
       heading={ecosystem.heading}
       searchPlaceholder={ecosystem.searchPlaceholder}
       emptyMessage={ecosystem.emptyMessage}
       submitLabel={ecosystem.submitLabel}
       submitHref={ecosystem.submitHref}
+      initialQuery={q ?? ""}
+      initialCategories={initialCategories}
     />
   );
 }

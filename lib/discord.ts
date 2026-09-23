@@ -10,7 +10,7 @@ import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
  * reads that at request time and never hardcodes an invite again. Marco
  * (stronk-tech) suggested it. The one dependency is "Enable Server Widget"
  * staying on in the server settings; the fallback below covers that and any
- * outage, and it is the invite the widget answered with on 2026-09-06.
+ * outage, and lives in the deployment's environment (see readFallbackInvite).
  *
  * Content that cannot fetch — markdown, Notion bodies, the primer — links to
  * livepeer.org/discord, a route here that redirects to the live invite, so
@@ -28,8 +28,6 @@ const REVALIDATE = 3_600;
  */
 const REQUEST_TIMEOUT_MS = 5_000;
 
-export const DISCORD_FALLBACK_INVITE = "https://discord.gg/55SZFEEH5y";
-
 /**
  * Only a Discord invite is ever served. The widget's answer is redirected to
  * verbatim by /discord, so a spoofed or compromised response would turn that
@@ -40,6 +38,40 @@ const INVITE = /^https:\/\/(discord\.gg|discord\.com\/invite)\/[\w-]+$/;
 
 export function isDiscordInvite(url: string): boolean {
   return INVITE.test(url);
+}
+
+/**
+ * The invite the widget answered with on 2026-09-06: what a clone with no
+ * configuration serves when the widget cannot be read, so the site runs
+ * without a variable set.
+ */
+const DEFAULT_FALLBACK_INVITE = "https://discord.gg/55SZFEEH5y";
+
+/**
+ * The fallback invite is configuration, not code. Set
+ * NEXT_PUBLIC_DISCORD_FALLBACK_INVITE in the deployment and rotating it is a
+ * settings change rather than a deploy; the value is held to the same
+ * invite shape as the widget's answer, and a wrong one is ignored with a
+ * warning rather than served. NEXT_PUBLIC_ because lib/site.ts puts it in the
+ * header's content, which the client renders too — a server-only variable
+ * would give the two a different href and a hydration error, and an invite
+ * link is public by nature.
+ */
+export const DISCORD_FALLBACK_INVITE = readFallbackInvite(
+  process.env.NEXT_PUBLIC_DISCORD_FALLBACK_INVITE
+);
+
+function readFallbackInvite(value: string | undefined): string {
+  const invite = value?.trim();
+  if (!invite) return DEFAULT_FALLBACK_INVITE;
+  if (!isDiscordInvite(invite)) {
+    console.warn(
+      `discord: NEXT_PUBLIC_DISCORD_FALLBACK_INVITE ${JSON.stringify(invite)} ` +
+        `is not a Discord invite; using the default fallback.`
+    );
+    return DEFAULT_FALLBACK_INVITE;
+  }
+  return invite;
 }
 
 export type Discord = {
