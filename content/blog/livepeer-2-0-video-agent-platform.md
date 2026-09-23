@@ -2,7 +2,7 @@
 title: "Livepeer 2.0: The Open Video Agent Platform"
 description: "An inside look at Livepeer 2.0, the open compute network for AI video, and Livepeer Agent—the open-source MCP connector supercharging AI agent workflows."
 date: "2026-07-29"
-category: "Product & Protocol"
+category: "Network"
 tags:
   [
     "Livepeer 2.0",
@@ -13,8 +13,8 @@ tags:
     "DePIN",
     "Decentralized Compute",
   ]
-image: "/images/blog/livepeer-2-0-video-agent-platform/open-all-the-way-down.svg"
-imageAlt: "Livepeer 2.0 — open all the way down"
+image: "https://cdn.sanity.io/images/l36s876e/production/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png?fm=webp&q=82"
+imageAlt: "Abstract light glass forms connected across a white field"
 draft: false
 ---
 
@@ -62,6 +62,6 @@ The final component of this next chapter for Livepeer is making the network reac
 
 ## Come build it
 
-Read the initial roadmap and the 2.0 vision on the [Livepeer Forum](https://forum.livepeer.org). If you run an orchestrator, delegate, or hold LPT, the community design sessions are where we'll explore protocol upgrades. The details and schedule are in [Discord](https://discord.gg/55SZFEEH5y).
+Read the initial roadmap and the 2.0 vision on the [Livepeer Forum](https://forum.livepeer.org). If you run an orchestrator, delegate, or hold LPT, the community design sessions are where we'll explore protocol upgrades. The details and schedule are in [Discord](https://livepeer.org/discord).
 
 This is the first of many exciting updates to come—stay tuned for more next week, where we'll have something new to get your hands on.

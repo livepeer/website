@@ -4,7 +4,8 @@ description: "Messari's State of Livepeer Q1 2026 report: network usage and fees
 date: "2026-05-18"
 category: "Network"
 tags: ["Messari", "Network Stats", "Real-time AI Video", "Q1 2026"]
-image: "/images/blog/q1-2026-messari/websitepost.svg"
+image: "https://cdn.sanity.io/images/l36s876e/production/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png?fm=webp&q=82"
+imageAlt: "Abstract cyan and orange system diagram on black"
 draft: false
 ---
 

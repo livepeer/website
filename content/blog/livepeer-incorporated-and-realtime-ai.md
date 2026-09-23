@@ -4,10 +4,10 @@ description: "Livepeer Inc shifts focus to executing a high-conviction go-to-mar
 date: "2025-07-31"
 author:
   name: "Doug Petkanics"
-category: "News"
+category: "Network"
 tags: ["livepeer-inc", "strategy", "realtime-ai", "announcement"]
-image: "/images/blog/livepeer-incorporated-and-realtime-ai.svg"
-imageAlt: "Livepeer Inc strategy update"
+image: "https://cdn.sanity.io/images/l36s876e/production/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png?fm=webp&q=82"
+imageAlt: "Glass figure moving across a dark green field"
 draft: false
 ---
 
@@ -50,4 +50,4 @@ While the above contains a lot of details about realtime AI and specific demand 
 
 If you're interested in building within this ecosystem, there are lots of opportunities that both contribute to the core development and operations of the project in service of the realtime AI mission, but also to develop companies that service additional markets not currently being focused on. Hopefully the above post gives you a view into what some of those opportunities and gaps are. Then check out [the Livepeer Foundation's recent forum posts on tactical recommendations](https://forum.livepeer.org/t/advisory-boards-phase-2-tactical-recommendations-2025/3025), and raise your hand to get involved in the ones of interest.
 
-[Join the Community](https://discord.gg/55SZFEEH5y)
+[Join the Community](https://livepeer.org/discord)
