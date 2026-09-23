@@ -25,7 +25,7 @@ const hero: HomeContent["hero"] & {
   heading: "The open",
   accent: "inference network.",
   description:
-    "Purpose-built for AI video and image workloads. Designed for the agentic era.",
+    "Purpose-built for AI video workloads. Designed for the agentic era.",
   banner: {
     label: "New",
     title: "Livepeer 2.0",
