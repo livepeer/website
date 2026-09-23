@@ -1,4 +1,4 @@
-import { ArrowUpRightIcon, DownloadIcon, XIcon } from "lucide-react";
+import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
 
 import { LivepeerLockup, LivepeerSymbol } from "@/components/brand";
 import { CopyButton } from "@/components/copy-button";
@@ -70,23 +70,9 @@ function Plate({
 }
 
 /** The caption under a plate: a name, then a note in the quieter colour. */
-function Caption({
-  name,
-  note,
-  never,
-}: {
-  name: string;
-  note?: string;
-  never?: boolean;
-}) {
+function Caption({ name, note }: { name: string; note?: string }) {
   return (
     <p className="mt-3 flex items-baseline gap-2 px-1 text-sm">
-      {never && (
-        <XIcon
-          className="size-3 shrink-0 self-center text-muted-foreground"
-          aria-hidden="true"
-        />
-      )}
       <span className="whitespace-nowrap">{name}</span>
       {note && <span className="text-muted-foreground">{note}</span>}
     </p>
@@ -190,46 +176,6 @@ function ClearSpace() {
   );
 }
 
-const NEVER = [
-  {
-    name: "Stretched",
-    render: (
-      <LivepeerSymbol
-        className="h-10 w-auto scale-x-[1.6]"
-        aria-hidden="true"
-      />
-    ),
-  },
-  {
-    name: "Rotated",
-    render: (
-      <LivepeerSymbol
-        className="h-10 w-auto rotate-[24deg]"
-        aria-hidden="true"
-      />
-    ),
-  },
-  {
-    name: "Outlined",
-    render: (
-      <LivepeerSymbol
-        className="h-10 w-auto"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.5}
-        aria-hidden="true"
-      />
-    ),
-  },
-  {
-    name: "Recoloured",
-    render: (
-      // The one green mark on the site, shown as the thing not to do.
-      <LivepeerSymbol className="h-10 w-auto text-brand" aria-hidden="true" />
-    ),
-  },
-];
-
 export function BrandUsageSection() {
   return (
     <Section
@@ -261,14 +207,6 @@ export function BrandUsageSection() {
           />
         </div>
       </div>
-      <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {NEVER.map((item) => (
-          <li key={item.name}>
-            <Plate className="aspect-square">{item.render}</Plate>
-            <Caption name={item.name} never />
-          </li>
-        ))}
-      </ul>
       <p className="mt-6 max-w-[48ch] px-1 text-sm leading-relaxed text-muted-foreground">
         Below 32px the symbol&apos;s squares close up, so it is not an icon.
         Black or white, never a gradient, never a shadow, never rebuilt from the
