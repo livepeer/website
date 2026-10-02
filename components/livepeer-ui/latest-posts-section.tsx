@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
+import { HOME_SECTION_HEADING } from "@/components/livepeer-ui/home-heading";
 import {
   PostCard,
   type PostCardPost,
@@ -54,16 +55,13 @@ export function LatestPostsSection({
           off from. */}
       <div className="mx-auto w-full max-w-page px-4 pt-10 pb-16 sm:px-6 sm:pt-12 sm:pb-20 lg:px-10 lg:pb-24">
         <div className="flex items-baseline justify-between gap-6">
-          {/* The Orchestrator heading's own classes, so the home page has
-              one scale for its sections. It was display-sm at first, a step
-              under that 60px line so a list label would not compete with a
-              pitch — but the two were already the same size on a phone, so
-              the difference only existed from sm up and read as a mistake,
-              and on a page of three sections the small one looked like a
-              footnote. */}
-          <h2 className="text-4xl font-normal tracking-tight text-balance sm:text-6xl">
-            {heading}
-          </h2>
+          {/* The home page's one heading scale (home-heading.ts). It was
+              display-sm at first, a step under the band's line so a list
+              label would not compete with a pitch — but the two were already
+              the same size on a phone, so the difference only existed from
+              sm up and read as a mistake, and on a page of few sections the
+              small one looked like a footnote. */}
+          <h2 className={HOME_SECTION_HEADING}>{heading}</h2>
           <Link
             href={allHref}
             className="group inline-flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"

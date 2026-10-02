@@ -2,9 +2,11 @@ import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import { ContributorFaces } from "@/components/livepeer-ui/contribute-sections";
+import { HOME_SECTION_HEADING } from "@/components/livepeer-ui/home-heading";
 import { Button } from "@/components/ui/button";
 import { SectionRule } from "@/components/ui/section-rule";
 import type { ContributorSet } from "@/lib/contributors";
+import { cn } from "@/lib/utils";
 
 /**
  * The home page's last word: who builds this, and how to be one of them.
@@ -46,11 +48,8 @@ export function ContributorsCtaSection({
         <p className="mt-4 font-mono text-xs text-muted-foreground tabular-nums">
           {contributors.count.toLocaleString()} contributors
         </p>
-        {/* The Orchestrator heading's classes, like Latest updates: one
-            scale for the page's sections. */}
-        <h2 className="mt-8 text-4xl font-normal tracking-tight text-balance sm:text-6xl">
-          {heading}
-        </h2>
+        {/* One scale for the page's sections; see home-heading.ts. */}
+        <h2 className={cn(HOME_SECTION_HEADING, "mt-8")}>{heading}</h2>
         <p className="mt-4 max-w-xl text-base leading-relaxed text-pretty text-foreground/65">
           {description}
         </p>

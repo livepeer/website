@@ -4,11 +4,13 @@ import { ArrowRightIcon } from "lucide-react";
 import { AgentWordmark, LivepeerWordmark } from "@/components/brand";
 import { AgentCompatibility } from "@/components/livepeer-ui/agent-compatibility";
 import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
+import { GpuPointCloud } from "@/components/livepeer-ui/gpu-point-cloud";
 import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream";
 import { AgentRuntimePreview } from "@/components/livepeer-ui/agent-runtime-preview";
 import { Button } from "@/components/ui/button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { ExternalArrow } from "@/components/ui/external-arrow";
+import { HOME_SECTION_HEADING } from "@/components/livepeer-ui/home-heading";
 import { cn } from "@/lib/utils";
 
 type HomeContent = NonNullable<LivepeerOrgPage["homeContent"]>;
@@ -201,10 +203,28 @@ export function NetworkHeroSection({
   );
 }
 
+/**
+ * Who a section is for, over its heading. The home page shows the network's
+ * two sides — the Agent for the people who use it, the band beneath for the
+ * people who supply it — and without these it never said so: a product, then
+ * a section headed with a word the reader had not met. The roadmap's label
+ * setting, so the site has one small-caps voice.
+ */
+function Audience({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+      {children}
+    </p>
+  );
+}
+
 export function LivepeerAgentFeatureSection({
   content,
+  audience,
 }: {
   content: HomeContent["agentFeature"];
+  /** Who the product is for; see Audience. */
+  audience?: string;
 }) {
   return (
     // The runtime is the product surface — an agent mid-task, calling the
@@ -234,6 +254,11 @@ export function LivepeerAgentFeatureSection({
           between the card and the particles instead of letting them meet. */}
       <div className="mx-auto grid max-w-page gap-14 px-4 pt-12 sm:px-6 lg:grid-cols-[43fr_57fr] lg:items-center lg:gap-16 lg:px-10 lg:pt-0">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          {audience && (
+            <div className="mb-5">
+              <Audience>{audience}</Audience>
+            </div>
+          )}
           <h2
             className="flex w-full min-w-0 flex-nowrap items-end justify-center gap-2 lg:w-auto lg:justify-start lg:gap-3"
             aria-label="Livepeer Agent"
@@ -309,12 +334,17 @@ export function LivepeerAgentFeatureSection({
  */
 const FIELD_BLEED_TOP = 220;
 const FIELD_BLEED_BOTTOM = 220;
+/** The larger circle the field takes when it runs on; see `arcRadius`. */
+const FIELD_ARC_RADIUS = 1.1;
 
 export function OrchestratorCtaSection({
   content,
+  audience,
   continues = false,
 }: {
   content: HomeContent["providerCta"];
+  /** Who the band is for; see Audience. */
+  audience?: string;
   /**
    * Whether a section follows this one. The field was composed to land on
    * the footer's rule, at full strength to the band's last few pixels; with
@@ -333,19 +363,20 @@ export function OrchestratorCtaSection({
     // and the Agent section (see app/page.tsx), which is also what lets the
     // canvas overflow upward instead of being clipped at this section's edge.
     //
-    // Shorter again when the page continues: the copy is centred in the band,
-    // so its height is also the empty space under the button, and that space
-    // was sized for a footer to follow. With a section beneath, it stacked on
-    // that section's own padding into ~310px between the button and the next
-    // heading — more than anywhere else on the page. Not much shorter than
-    // this, though: the arc crossing between the two is the transition, and
-    // it needs the room to be seen doing it.
+    // Padded rather than given a height when the page continues. The copy
+    // is centred in the band, so under a fixed height the empty space beneath
+    // the button was whatever the copy left over: sized for a footer at
+    // first (~310px to the next heading, more than anywhere else on the
+    // page), then cut to a shorter height, then eaten into again when the
+    // copy grew by a label and two lines. Fixed padding states the gap
+    // directly — ~210px from the button to the next section's heading, ~150
+    // on a phone — whatever the copy runs to. Not much less than that: the
+    // arc crossing between the two is the transition, and it needs the room
+    // to be seen doing it.
     <section
       className={cn(
         "relative z-10 flex",
-        continues
-          ? "min-h-[30rem] sm:min-h-[34rem]"
-          : "min-h-[32rem] sm:min-h-[40rem]"
+        !continues && "min-h-[32rem] sm:min-h-[40rem]"
       )}
     >
       {/* The field is composed against this section's own height — that layout
@@ -379,7 +410,7 @@ export function OrchestratorCtaSection({
         <LivepeerCubeStream
           bleedTop={FIELD_BLEED_TOP}
           bleedBottom={FIELD_BLEED_BOTTOM}
-          arcRadius={1.1}
+          arcRadius={FIELD_ARC_RADIUS}
           className="-top-[220px] bottom-auto h-[calc(100%+440px)] -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,transparent_0,black_172px,black_calc(100%_-_65px),transparent_100%)]"
         />
       ) : (
@@ -392,12 +423,47 @@ export function OrchestratorCtaSection({
           same line as the header, the section rules and the footer. Padding
           alone pinned the copy to the viewport edge, which only showed up once
           the viewport got wider than the page measure. */}
-      <div className="relative z-10 mx-auto flex w-full max-w-page flex-col justify-center px-4 py-6 sm:px-6 sm:py-10 lg:px-10">
-        <div className="ml-auto max-w-3xl text-right">
-          <h2 className="text-4xl font-normal tracking-tight text-balance sm:text-6xl">
+      <div
+        className={cn(
+          "relative z-10 mx-auto flex w-full max-w-page flex-col justify-center px-4 sm:px-6 lg:px-10",
+          continues ? "py-28 sm:py-40" : "py-6 sm:py-10"
+        )}
+      >
+        {/* The card the copy is about. From xl it stands in the left of the
+            band, between the page's edge and the arc, and what it sheds
+            crosses to the arc. Below that the arc runs through the space it
+            would take, so it sits over the copy instead, on its own. */}
+        {continues && (
+          <>
+            <GpuPointCloud
+              arcRadius={FIELD_ARC_RADIUS}
+              className="absolute inset-y-0 left-4 hidden w-[58%] sm:left-6 lg:left-10 xl:block"
+            />
+            <GpuPointCloud
+              figure
+              className="relative mb-6 ml-auto h-52 w-full max-w-sm xl:hidden"
+            />
+          </>
+        )}
+        <div className="relative ml-auto max-w-3xl text-right">
+          {audience && (
+            <div className="mb-4">
+              <Audience>{audience}</Audience>
+            </div>
+          )}
+          {/* Held to two lines between sm and md, and the copy beneath to a
+              narrower measure up to lg: the arc runs down the left of the
+              band, and at those widths a full-width line or paragraph
+              reached back across it. */}
+          <h2
+            className={cn(
+              HOME_SECTION_HEADING,
+              "ml-auto sm:max-w-sm md:max-w-none"
+            )}
+          >
             {content.heading}
           </h2>
-          <p className="mt-4 ml-auto max-w-xl text-base leading-relaxed text-foreground/65">
+          <p className="mt-4 ml-auto max-w-xl text-base leading-relaxed text-pretty text-foreground/65 sm:max-w-sm md:max-w-md lg:max-w-xl">
             {content.description}
           </p>
           <Button

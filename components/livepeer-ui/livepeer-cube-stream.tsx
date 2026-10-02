@@ -107,6 +107,48 @@ function makeParticles(
 }
 
 /**
+ * The circle the field runs round, in the canvas's own unmirrored
+ * coordinates. One function, because something drawn beside the field (the
+ * provider band's card) has to aim at the same circle the particles obey.
+ */
+function fieldCircle(
+  width: number,
+  height: number,
+  variant: "banner" | "card" | "default",
+  arcRadius?: number,
+  exclusionRadius = 0
+) {
+  const ownCenterX =
+    width *
+    (width < 640
+      ? 0.18
+      : variant === "banner"
+        ? 0.5
+        : variant === "card"
+          ? 0.32
+          : 0.3);
+  const ownRadius =
+    width < 640
+      ? width * 0.92
+      : Math.max(
+          variant === "banner"
+            ? Math.min(width * 0.42, height * 0.68)
+            : variant === "card"
+              ? Math.min(width * 0.42, height * 0.95)
+              : Math.min(width * 0.42, height * 0.78),
+          exclusionRadius
+        );
+  const radius = arcRadius ? height * arcRadius : ownRadius;
+
+  return {
+    // The larger circle shares the smaller one's outermost point.
+    centerX: ownCenterX + ownRadius - radius,
+    centerY: height * 0.5,
+    radius,
+  };
+}
+
+/**
  * `bleedTop` lets the canvas element extend above its section without moving
  * the field. Every geometry term below is a fraction of the canvas height, so
  * simply making the element taller re-centres and rescales the whole arc. With
@@ -275,30 +317,11 @@ function LivepeerCubeStream({
         ? 0
         : Math.min(2, Math.max(0.25, (time - previousTime) / 16.667));
       previousTime = time;
-      const ownCenterX =
-        width *
-        (width < 640
-          ? 0.18
-          : variant === "banner"
-            ? 0.5
-            : variant === "card"
-              ? 0.32
-              : 0.3);
-      const fieldCenterY = height * 0.5;
-      const ownRadius =
-        width < 640
-          ? width * 0.92
-          : Math.max(
-              variant === "banner"
-                ? Math.min(width * 0.42, height * 0.68)
-                : variant === "card"
-                  ? Math.min(width * 0.42, height * 0.95)
-                  : Math.min(width * 0.42, height * 0.78),
-              heroExclusionRadius
-            );
-      const fieldRadius = arcRadius ? height * arcRadius : ownRadius;
-      // The larger circle shares the smaller one's outermost point.
-      const fieldCenterX = ownCenterX + ownRadius - fieldRadius;
+      const {
+        centerX: fieldCenterX,
+        centerY: fieldCenterY,
+        radius: fieldRadius,
+      } = fieldCircle(width, height, variant, arcRadius, heroExclusionRadius);
       const influenceRadius =
         fieldRadius +
         Math.min(
@@ -542,4 +565,4 @@ function LivepeerCubeStream({
   );
 }
 
-export { LivepeerCubeStream };
+export { fieldCircle, LivepeerCubeStream };

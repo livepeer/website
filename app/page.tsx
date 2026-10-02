@@ -57,12 +57,41 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
     installCta: { label: "Install", href: "/agent" },
     libraryCta: { label: "Explore playbooks", href: "/agent" },
   },
+  // The other side of the network, written for the reader who has a GPU and
+  // from what that reader needs to know, in the order they ask it: what am I
+  // being asked to do (the heading, which is also /compute's own, so the
+  // button lands on the line it was pressed under), what would my GPU be
+  // doing and how am I paid (the first sentence, which is the whole market:
+  // who sends the work, who runs it, who is paid), and then the invitation.
+  // The ways in (a pool, AI-first, a solo node) are /compute's to explain;
+  // a line here offering a pool as the way to start without tokens was cut
+  // at Adam's word, and pools are not to be mentioned on this page.
+  //
+  // What it replaced, and why each went. "Become an Orchestrator" over three
+  // kinds of earnings in the network's own words named neither the reader
+  // nor the work. "Run the GPUs behind it." needed the section above to mean
+  // anything. Copy that quoted the Agent demo's $0.34 needed the reader to
+  // have caught a price in small type in a demo that plays once, and as a
+  // bare figure read as a claim about what things cost; Adam cut the number.
+  //
+  // The word "orchestrator" is not on this page at all: a visitor cannot be
+  // assumed to know it, and "GPU provider" says what one is. /compute, where
+  // this leads, is where the term is taught. Nothing here promises earnings;
+  // /compute says work is not guaranteed, and this only says a job pays.
   providerCta: {
-    heading: "Become an Orchestrator",
+    heading: "Put your GPU to work.",
     description:
-      "Put a GPU on the Livepeer network and earn from inference workloads, service payouts, and protocol rewards.",
-    cta: { label: "Get Started", href: "/compute" },
+      "Livepeer routes AI video jobs from apps and agents to GPUs on the open network, and each job pays the provider who ran it. Connect yours and earn from what it runs.",
+    cta: { label: "Get started", href: "/compute" },
   },
+};
+
+// The two sides, labelled over their sections. The Agent is for people who
+// build with it and people who make things with it; the band is for people
+// with hardware. See Audience in livepeer-org-landing-sections.
+const audience = {
+  agent: "For builders and creatives",
+  providers: "For GPU providers",
 };
 
 // The newest posts close the page, under the blog's own heading and linking
@@ -105,8 +134,15 @@ export default async function Home() {
           which is what keeps the field composed against that section's height
           rather than being re-centred over the taller combined box. */}
       <div className="relative isolate overflow-hidden bg-background">
-        <LivepeerAgentFeatureSection content={home.agentFeature} />
-        <OrchestratorCtaSection content={home.providerCta} continues />
+        <LivepeerAgentFeatureSection
+          content={home.agentFeature}
+          audience={audience.agent}
+        />
+        <OrchestratorCtaSection
+          content={home.providerCta}
+          audience={audience.providers}
+          continues
+        />
         {/* Inside the wrapper too: the field dissolves into this section's
             top padding rather than stopping at a rule, so the two have to
             share the wrapper's ground and its crop. */}
