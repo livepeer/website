@@ -155,12 +155,12 @@ export interface LivepeerOrgPage {
       signInCta: EditorialLink;
       createAccountCta: EditorialLink;
     };
-    // `cta` is optional here, unlike the registry's own shape: the band reads
-    // as a statement without one, and livepeer.org currently makes it without.
+    // `cta` is optional on these two, unlike the registry's own shape: each
+    // reads as a statement without one, and livepeer.org makes both without.
     // Widening rather than narrowing, so anything that satisfied the registry
     // still satisfies this.
     access: { heading: string; description: string; cta?: EditorialLink };
-    capabilities: { heading: string; cta: EditorialLink };
+    capabilities: { heading: string; cta?: EditorialLink };
     playbooks: { heading: string; description: string; cta: EditorialLink };
   };
   libraryContent?: {

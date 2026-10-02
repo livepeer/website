@@ -37,11 +37,13 @@ const agent: AgentContent = {
   capabilities: {
     heading:
       "Livepeer Agent brings image, video, audio, 3D, editing, rendering, and production tools across the Livepeer network into one interface.",
-    cta: { label: "See more", href: agentApp.playbooks },
+    // No CTA. It was "See more" to the playbook library in the Agent app,
+    // which the list does not lead to: it is an inventory of capabilities,
+    // shown in full, and the app is one click away in the header.
   },
   // The mockup has no playbooks section on this page — the library lives in the
-  // Agent app, which the capabilities CTA links to. Kept present because the
-  // contract requires it, and empty rather than invented.
+  // Agent app. Kept present because the contract requires it, and empty
+  // rather than invented.
   playbooks: {
     heading: "",
     description: "",

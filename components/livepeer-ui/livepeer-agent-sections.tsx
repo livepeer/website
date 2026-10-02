@@ -65,8 +65,9 @@ export function AgentAccessSection({
  * The capability index: one badge per tool the Agent can reach on the network.
  *
  * The list is the argument — its sheer length is the point being made — so it
- * is rendered in full rather than truncated behind the "see more" link, which
- * goes to the Agent app where each entry is actually documented.
+ * is rendered in full rather than truncated. It has no button under it: a
+ * "See more" to the Agent app's playbook library was cut, since the list is
+ * the whole of what it has to show.
  */
 export function AgentCapabilitiesSection({
   content,
@@ -99,16 +100,18 @@ export function AgentCapabilitiesSection({
             </li>
           ))}
         </ul>
-        <Button
-          variant="secondary"
-          size="lg"
-          nativeButton={false}
-          render={<Link href={content.cta.href} />}
-          className="mt-10 h-12 rounded-sm px-5"
-        >
-          {content.cta.label}
-          <ArrowRightIcon className="size-4" aria-hidden="true" />
-        </Button>
+        {content.cta && (
+          <Button
+            variant="secondary"
+            size="lg"
+            nativeButton={false}
+            render={<Link href={content.cta.href} />}
+            className="mt-10 h-12 rounded-sm px-5"
+          >
+            {content.cta.label}
+            <ArrowRightIcon className="size-4" aria-hidden="true" />
+          </Button>
+        )}
       </div>
     </section>
   );
