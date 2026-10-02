@@ -1,13 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useInView,
-  useReducedMotion,
-} from "framer-motion";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { ArrowUpIcon, PaperclipIcon, PlayIcon } from "lucide-react";
 
 import { stockAssets } from "@/lib/stock-assets";
@@ -21,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * The Agent section's product surface: an agent runtime mid-task, calling
- * Livepeer Agent over MCP, played once each time it scrolls into view.
+ * Livepeer Agent over MCP, played once, the first time it scrolls into view.
  *
  * It replaced a mocked-up "Generate video" form. A form shows a product's
  * controls; this shows the product being used, which is the thing a visitor
@@ -45,9 +40,10 @@ import { cn } from "@/lib/utils";
  * Scripted, not simulated: one timeline, driven by requestAnimationFrame
  * from the moment the card enters view, with each phase derived from elapsed
  * time so a tab that was hidden resumes at the right place rather than
- * piling up timeouts. It runs to the result and holds there; leaving and
- * re-entering view replays it. Under reduced motion the finished state is
- * shown still. The conversation area has a fixed height, so nothing on the
+ * piling up timeouts. It runs to the result and holds there for the rest of
+ * the visit: it used to replay on every re-entry, which meant scrolling back
+ * to it was scrolling back to an empty window. Under reduced motion the
+ * finished state is shown still. The conversation area has a fixed height, so nothing on the
  * page reflows as messages appear; Conversation's stick-to-bottom keeps the
  * newest in view.
  * Presentation only: `inert` and hidden from assistive tech, as the form was.
@@ -72,18 +68,25 @@ const QUOTE = "$0.34 · ~23s · 94% ok this week";
 /** Seconds into the run at which each phase begins. The run ends on `done`
  *  and holds there: the finished frame — prompt, folded call with its price,
  *  clip — is the one that explains the product, and looping threw it away
- *  every twenty seconds to fade back to an empty window. Scrolling away and
- *  back replays it from the typing. */
+ *  every twenty seconds to fade back to an empty window.
+ *
+ *  Nine seconds, down from thirteen. The window sat empty for nearly four
+ *  of them while the prompt was typed, and the result landed after most
+ *  visitors had scrolled on. The typing stays — it is the moment the surface
+ *  reads as someone using it — at about forty characters a second, which is
+ *  still visibly a person typing; the render is the phase that gave up the
+ *  most, since a progress bar says "this takes a while" in three seconds as
+ *  well as it does in five. */
 const T = {
-  attach: 0.4, // the still drops into the composer
-  typing: 1.1,
-  typed: 3.3, // the prompt is fully typed
-  sent: 3.8,
-  thinking: 4.3,
-  call: 5.7,
-  quoted: 7.3,
-  rendering: 8.1,
-  done: 13.1,
+  attach: 0.2, // the still drops into the composer
+  typing: 0.6,
+  typed: 2.3, // the prompt is fully typed
+  sent: 2.7,
+  thinking: 3.1,
+  call: 4.2,
+  quoted: 5.4,
+  rendering: 6.1,
+  done: 9.3,
 } as const;
 
 type Phase =
@@ -179,6 +182,21 @@ function useTimeline(active: boolean, still: boolean) {
     : frame;
 }
 
+/**
+ * The assistant's bubble. Both sides of the conversation are in bubbles, as
+ * they are in the chat-shaped agent apps this is meant to read as: the user
+ * on the right on the quiet secondary fill, the assistant on the left on the
+ * surface the tool call already uses, so everything the assistant says or
+ * does is one material. Each has the corner nearest its speaker tightened,
+ * the way a message app marks whose it is.
+ *
+ * The assistant was bare text at first — the layout of the assistants people
+ * type to at a desk — and beside the user's bubble its opening line read as
+ * a caption over the window rather than as something said in it.
+ */
+const ASSISTANT_BUBBLE =
+  "w-fit rounded-2xl rounded-bl-md border border-border bg-background/50";
+
 const rise = {
   initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0 },
@@ -206,7 +224,7 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
   const running = phase === "rendering";
   const done = reached(phase, "done");
   return (
-    <div className="w-full max-w-[32rem] overflow-hidden rounded-lg border border-border bg-background/50 font-mono text-xs">
+    <div className="w-full max-w-[35rem] overflow-hidden rounded-lg border border-border bg-background/50 font-mono text-xs">
       <div className="flex items-center justify-between gap-3 px-3 py-2">
         <span className="flex items-center gap-2 text-foreground">
           <span
@@ -303,9 +321,54 @@ function ToolCall({ phase, progress }: { phase: Phase; progress: number }) {
   );
 }
 
+/**
+ * The assistant's opening message, at the head of the conversation from the
+ * first frame. While the prompt is being typed there is nothing else in the
+ * window yet, and without this it was blank chrome for those seconds — which
+ * on a page being scrolled is how the section was mostly seen.
+ *
+ * A message, not a status line. The first version was what a terminal
+ * runtime prints when a server connects ("livepeer-agent connected", the
+ * kinds of work in mono beneath); Adam's point was that the agent apps
+ * people use now are conversations, and the rest of this window already is
+ * one. So it says the same two things — Livepeer Agent is there, and what it
+ * can make — in the assistant's voice, and ends on the question the prompt
+ * answers. The kinds of work are the Agent page's own list; no count, since
+ * a number here would be one more thing to keep true.
+ */
+function Greeting() {
+  return (
+    <Message from="assistant" className="py-2">
+      <MessageContent variant="flat">
+        {/* The kinds of work show from md: below it the card is one narrow
+            column, the line ran to three and four rows, and it pushed the
+            finished conversation past the window. "Connected" with the
+            question is the part that matters. */}
+        <span
+          className={cn(
+            ASSISTANT_BUBBLE,
+            "max-w-[min(30rem,88%)] px-3.5 py-2.5 text-pretty"
+          )}
+        >
+          Livepeer Agent is connected
+          <span className="hidden md:inline">
+            : images, video, audio, 3D and editing
+          </span>
+          . What are we making?
+        </span>
+      </MessageContent>
+    </Message>
+  );
+}
+
 function Result() {
   return (
-    <div className="flex w-full max-w-[32rem] items-start gap-3">
+    <div
+      className={cn(
+        ASSISTANT_BUBBLE,
+        "flex max-w-full items-start gap-3 p-2.5 pr-3.5 sm:max-w-[35rem]"
+      )}
+    >
       <div className="relative aspect-video w-36 shrink-0 overflow-hidden rounded-md bg-background/60 sm:w-44">
         <Image
           src={stockAssets.playbooks.generateVideo}
@@ -330,7 +393,10 @@ function Result() {
         <p className="text-sm text-foreground">
           Done. 5 seconds, 16:9, no audio. $0.34 charged.
         </p>
-        <p className="mt-1 font-mono text-xs text-muted-foreground">
+        {/* Gone on the narrowest phones: at 360px the caption above runs to
+            three lines and this to two, and together they were the fifty
+            pixels the conversation overran its window by. */}
+        <p className="mt-1 font-mono text-xs text-muted-foreground max-[380px]:hidden">
           saved ./out/dawn-teaser.mp4
         </p>
       </div>
@@ -338,10 +404,38 @@ function Result() {
   );
 }
 
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function subscribeToReducedMotion(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_MOTION);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+/**
+ * The reader's reduced-motion setting, read so the server and the first
+ * client render agree. Motion's own hook answers from `matchMedia` on the
+ * very first client render, while the server could only have rendered the
+ * moving card — so with the setting on, the client's finished card met the
+ * server's idle one and React threw the tree away. An external store with a
+ * server snapshot of "no" hydrates as the server rendered and switches in
+ * the render after.
+ */
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    subscribeToReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false
+  );
+}
+
 export function AgentRuntimePreview({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { amount: 0.3 });
-  const still = useReducedMotion() ?? false;
+  // `once`: the run starts the first time the card is seen and is never
+  // reset, so it finishes even if the reader scrolls on, and is finished
+  // when they come back.
+  const inView = useInView(ref, { amount: 0.3, once: true });
+  const still = usePrefersReducedMotion();
   const { phase, typed, progress } = useTimeline(inView, still);
   const composing = phase === "attached" || phase === "typing";
   const prompt = PROMPT.slice(0, typed);
@@ -385,23 +479,39 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
           idle, growing as messages arrived, which is the reflow a fixed height
           exists to prevent. Sized so the finished conversation fits without
           scrolling at either width — the tool call folds its arguments away
-          once done, and the clip sits beside its caption, to make that true. */}
-      <div className="flex h-[24rem] flex-col sm:h-[23rem]">
+          once done, and the clip sits beside its caption, to make that true.
+          The greeting at the head and the bubbles around the assistant's
+          messages are part of what has to fit: together they took the height
+          from 23rem to 28 — the narrow card of a 1024px window, where the
+          prompt and the caption wrap, is what sets it — and from 24 to 28.5
+          on a phone. */}
+      <div className="flex h-[28.5rem] flex-col sm:h-[28rem]">
         {/* No scrollbar: the surface is presentational and inert, and a track
           down the edge of a window nobody can scroll reads as a glitch. The
           stick-to-bottom scroller still scrolls the newest message into
           view. */}
         <Conversation className="min-h-0 flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ConversationContent className="px-4 py-2 sm:px-5">
+            <Greeting />
             <AnimatePresence>
               {reached(phase, "sent") && (
                 <motion.div key="user" {...rise} exit={{ opacity: 0 }}>
                   {/* flat for both: the contained user bubble takes the
                     library's primary fill, which in dark is near-white and
                     dominated the card. Flat gives the user a quiet secondary
-                    surface and the assistant none. */}
+                    surface; the assistant's bubbles are drawn here
+                    (ASSISTANT_BUBBLE), since its message is several things —
+                    a line, a call, a clip — rather than one block. */}
                   <Message from="user" className="py-2">
-                    <MessageContent variant="flat" className="gap-2.5">
+                    <MessageContent
+                      variant="flat"
+                      // foreground at a tenth, not the variant's secondary:
+                      // in light the secondary fill is the window's own
+                      // muted, and the user's bubble was simply not there.
+                      // A tint of the foreground is a step off the surface
+                      // in both themes.
+                      className="gap-2.5 rounded-2xl rounded-br-md group-[.is-user]:bg-foreground/10"
+                    >
                       <Attachment />
                       <span>{PROMPT}</span>
                     </MessageContent>
@@ -413,21 +523,23 @@ export function AgentRuntimePreview({ className }: { className?: string }) {
                   <Message from="assistant" className="py-2">
                     <MessageContent variant="flat" className="gap-3">
                       {phase === "thinking" && (
-                        <ShimmeringText
-                          text="Checking Livepeer capabilities…"
-                          className="text-sm"
-                          startOnView={false}
-                          duration={1.6}
-                        />
+                        <span className={cn(ASSISTANT_BUBBLE, "px-3.5 py-2.5")}>
+                          <ShimmeringText
+                            text="Checking Livepeer capabilities…"
+                            className="text-sm"
+                            startOnView={false}
+                            duration={1.6}
+                          />
+                        </span>
                       )}
                       {reached(phase, "call") && (
                         <ToolCall phase={phase} progress={progress} />
                       )}
                       {reached(phase, "done") && (
-                        /* Air above the clip: it is the one place two
-                           different things touch. Paid for by the messages'
-                           padding, so the finished state still fits. */
-                        <motion.div {...rise} className="mt-4">
+                        /* No extra air above the clip now: it used to be
+                           the one place two bare things touched, and the
+                           bubble around it is the separation. */
+                        <motion.div {...rise}>
                           <Result />
                         </motion.div>
                       )}

@@ -301,10 +301,28 @@ export function LivepeerAgentFeatureSection({
   );
 }
 
+/**
+ * How far the field runs on under the Orchestrator band when the page
+ * continues beneath it, and the strip above it that it always had. The
+ * canvas classes below spell the same numbers out, since Tailwind reads
+ * class names as written.
+ */
+const FIELD_BLEED_TOP = 220;
+const FIELD_BLEED_BOTTOM = 220;
+
 export function OrchestratorCtaSection({
   content,
+  continues = false,
 }: {
   content: HomeContent["providerCta"];
+  /**
+   * Whether a section follows this one. The field was composed to land on
+   * the footer's rule, at full strength to the band's last few pixels; with
+   * content beneath, that read as an arc sliced by a line. When the page
+   * continues, the field runs on past the boundary and behind the next
+   * section instead, and there is no rule between them.
+   */
+  continues?: boolean;
 }) {
   return (
     // 40rem rather than the mockup's 56rem: there the band is a bright inverted
@@ -314,7 +332,22 @@ export function OrchestratorCtaSection({
     // Transparent: the shared background is supplied by the wrapper around this
     // and the Agent section (see app/page.tsx), which is also what lets the
     // canvas overflow upward instead of being clipped at this section's edge.
-    <section className="relative z-10 flex min-h-[32rem] sm:min-h-[40rem]">
+    //
+    // Shorter again when the page continues: the copy is centred in the band,
+    // so its height is also the empty space under the button, and that space
+    // was sized for a footer to follow. With a section beneath, it stacked on
+    // that section's own padding into ~310px between the button and the next
+    // heading — more than anywhere else on the page. Not much shorter than
+    // this, though: the arc crossing between the two is the transition, and
+    // it needs the room to be seen doing it.
+    <section
+      className={cn(
+        "relative z-10 flex",
+        continues
+          ? "min-h-[30rem] sm:min-h-[34rem]"
+          : "min-h-[32rem] sm:min-h-[40rem]"
+      )}
+    >
       {/* The field is composed against this section's own height — that layout
           is the one we want — but the arc it describes is a circle whose crown
           sits ~180px above the section, and the canvas edge used to cut it off
@@ -331,10 +364,30 @@ export function OrchestratorCtaSection({
           and it starts dimming the field on approach, which is the thing that
           kept reading as too much. The top dissolves over a much longer run,
           where it has to disappear under the card without an edge. */}
-      <LivepeerCubeStream
-        bleedTop={220}
-        className="-top-[220px] bottom-auto h-[calc(100%+220px)] -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,transparent_0%,black_20%,black_96%,rgba(0,0,0,0.5)_98.5%,transparent_100%)]"
-      />
+      {continues ? (
+        // The same top dissolve, in pixels now that the element is taller,
+        // and no fade at the boundary at all: the arc keeps its curve
+        // through the next section's heading row and passes behind its
+        // cards, which are opaque, so the cards are what end it. The mask
+        // only has to remove the field before it could come out again under
+        // them, among the titles: full strength for 155px below the boundary,
+        // which is where the covers start from sm up, and gone by 220px,
+        // which is short of where they end on a phone. So the fade happens
+        // behind a cover at every width. A dissolve into the padding was the
+        // first version; it read as the field giving up at the line it used
+        // to be cut by.
+        <LivepeerCubeStream
+          bleedTop={FIELD_BLEED_TOP}
+          bleedBottom={FIELD_BLEED_BOTTOM}
+          arcRadius={1.1}
+          className="-top-[220px] bottom-auto h-[calc(100%+440px)] -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,transparent_0,black_172px,black_calc(100%_-_65px),transparent_100%)]"
+        />
+      ) : (
+        <LivepeerCubeStream
+          bleedTop={FIELD_BLEED_TOP}
+          className="-top-[220px] bottom-auto h-[calc(100%+220px)] -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,transparent_0%,black_20%,black_96%,rgba(0,0,0,0.5)_98.5%,transparent_100%)]"
+        />
+      )}
       {/* max-w-page and the standard gutters, so the right edge lands on the
           same line as the header, the section rules and the footer. Padding
           alone pinned the copy to the viewport edge, which only showed up once

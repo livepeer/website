@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { clock, effect, frameLoop, init, surface } from "vgpu";
+import { clock, effect, frame, frameLoop, init, surface } from "vgpu";
 import type { FrameLoopHandle } from "vgpu";
 
 import { getCanvasThemePalette } from "@/components/canvas-theme";
@@ -202,6 +202,24 @@ export function ContributeGraph() {
         },
       });
 
+      // Reduced motion's one frame. A surface can only be drawn to inside a
+      // frame, so this is a frame of one pass; drawing to it bare threw, and
+      // the reader who asked for stillness got the empty CSS grid instead.
+      // Called again whenever what it shows changes, since no loop will —
+      // and always on the next animation frame, coalesced: a surface reports
+      // its size from inside a frame, and a frame opened from there is a
+      // nested one, which vgpu refuses.
+      let stillQueued = 0;
+      const drawStill = () => {
+        if (stillQueued) return;
+        stillQueued = requestAnimationFrame(() => {
+          stillQueued = 0;
+          if (!gpu || disposed) return;
+          frame(gpu, (still) => still.pass(target, graph));
+        });
+      };
+      cleanups.push(() => cancelAnimationFrame(stillQueued));
+
       // The shader draws the empty cells too; from here the CSS grid would
       // only show through beneath them.
       canvas.style.backgroundImage = "none";
@@ -212,16 +230,18 @@ export function ContributeGraph() {
       // Fires once immediately, then on every resize. The shader works in
       // device pixels, so the pitch scales with the ratio the surface chose.
       cleanups.push(
-        target.onResize(({ width, height, dpr }) =>
-          graph.set({ params: { size: [width, height], dpr } })
-        )
+        target.onResize(({ width, height, dpr }) => {
+          graph.set({ params: { size: [width, height], dpr } });
+          if (reduceMotion) drawStill();
+        })
       );
 
       // The theme toggle flips a class on <html>; re-read the tokens when it
       // does, the way the agent hero's particles do.
-      const theme = new MutationObserver(() =>
-        graph.set({ params: colours(probe) })
-      );
+      const theme = new MutationObserver(() => {
+        graph.set({ params: colours(probe) });
+        if (reduceMotion) drawStill();
+      });
       theme.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ["class", "data-theme"],
@@ -229,7 +249,7 @@ export function ContributeGraph() {
       cleanups.push(() => theme.disconnect());
 
       if (reduceMotion) {
-        graph.draw(target);
+        drawStill();
         return;
       }
 

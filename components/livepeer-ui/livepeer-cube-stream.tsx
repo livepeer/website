@@ -17,6 +17,19 @@ const mobileParticleCount = 650;
 const referenceWidth = 1440;
 const maxDensityScale = 2.4;
 
+/**
+ * Reduced motion gets one still frame, and it has to be a frame of the field
+ * as it runs: the seed positions are where the stream starts from, not what
+ * it looks like, and they stop at the layout box, so a bleed strip would be
+ * empty. The simulation is stepped this far without painting, at the largest
+ * step the integrator allows, and then drawn once and held. Eight seconds is
+ * long enough for the stream to take the circle's shape and for particles
+ * fed in under the deepest strip to have risen through it; a full passage
+ * of the field was twice the work on the main thread for the same picture.
+ */
+const SETTLE_SECONDS = 8;
+const SETTLE_STEP_MS = 33.334;
+
 function particleCountFor(width: number) {
   if (width < 640) return mobileParticleCount;
   const scale = Math.min(maxDensityScale, Math.max(1, width / referenceWidth));
@@ -100,8 +113,22 @@ function makeParticles(
  * a bleed, the field is still laid out against the section's own height and is
  * drawn anchored to the bottom; the extra strip on top is pure overflow, where
  * the crown of the arc — which the canvas edge used to clip — can now be seen.
+ *
+ * `bleedBottom` is the same below: a strip under the section the field runs
+ * on into, for a section with another beneath it, where the caller masks the
+ * field out rather than letting the section's edge cut the arc. Particles are
+ * fed in from under that strip, not inside it, so none appears mid-fade.
+ *
+ * `arcRadius` swaps the section's own circle for a larger one, as a multiple
+ * of the layout height, with its outer edge held where the default one has
+ * it. The default circle is sized to the section, so it bottoms out just
+ * under it; a field that carries on behind the next section needs a curve
+ * that is still descending when it gets there. Holding the outer edge keeps
+ * the arc where it was against the section's own copy, only flatter.
  */
 function LivepeerCubeStream({
+  arcRadius,
+  bleedBottom = 0,
   bleedTop = 0,
   className,
   freezeAtSeconds,
@@ -109,6 +136,8 @@ function LivepeerCubeStream({
   startAtSeconds = 0,
   variant = "default",
 }: {
+  arcRadius?: number;
+  bleedBottom?: number;
   bleedTop?: number;
   className?: string;
   freezeAtSeconds?: number;
@@ -133,6 +162,7 @@ function LivepeerCubeStream({
     let heroExclusionRadius = 0;
     let isPrerolling = false;
     let resizeFrame = 0;
+    let settled = false;
     let width = 0;
     let particles: Particle[] = [];
     let palette = getCanvasThemePalette(inverted);
@@ -145,14 +175,15 @@ function LivepeerCubeStream({
       delete document.documentElement.dataset.captureReady;
     }
 
-    const resize = () => {
+    /** Returns whether the particles were seeded afresh. */
+    const resize = (): boolean => {
       const bounds = canvas.getBoundingClientRect();
       const nextWidth = bounds.width;
-      // The layout height excludes the bleed strip, so the field is composed
+      // The layout height excludes the bleed strips, so the field is composed
       // against the section it belongs to rather than the element's full box.
-      const nextHeight = bounds.height - bleedTop;
+      const nextHeight = bounds.height - bleedTop - bleedBottom;
 
-      if (nextWidth <= 0 || nextHeight <= 0) return;
+      if (nextWidth <= 0 || nextHeight <= 0) return false;
 
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
       const previousWidth = width;
@@ -191,11 +222,15 @@ function LivepeerCubeStream({
         );
       }
 
-      const targetCount = particleCountFor(width);
+      // A strip under the section is more field for the same particles to
+      // fill, so the count grows with it and the stream keeps its density.
+      const targetCount = Math.round(
+        particleCountFor(width) * (1 + bleedBottom / (height + bleedTop))
+      );
 
       if (particles.length === 0 || crossedMobileBreakpoint) {
         particles = makeParticles(targetCount, width, height, variant);
-        return;
+        return true;
       }
 
       const scaleX = width / previousWidth;
@@ -221,17 +256,26 @@ function LivepeerCubeStream({
       } else if (particles.length > targetCount) {
         particles.length = targetCount;
       }
+      return false;
     };
 
     const draw = (time: number) => {
-      context.clearRect(0, -bleedTop, width, height + bleedTop);
+      // A preroll steps the simulation and paints nothing: only the frame it
+      // arrives at is ever seen, and filling a couple of thousand rects per
+      // step is most of what a step costs.
+      const painting = !isPrerolling;
+      if (painting) {
+        context.clearRect(0, -bleedTop, width, height + bleedTop + bleedBottom);
+      }
 
-      const elapsed = reduceMotion ? 2.8 : (time - start) / 1000;
-      const delta = reduceMotion
+      // Held: the settled frame, drawn again without moving anything.
+      const holding = reduceMotion && settled;
+      const elapsed = holding ? SETTLE_SECONDS : (time - start) / 1000;
+      const delta = holding
         ? 0
         : Math.min(2, Math.max(0.25, (time - previousTime) / 16.667));
       previousTime = time;
-      const fieldCenterX =
+      const ownCenterX =
         width *
         (width < 640
           ? 0.18
@@ -241,7 +285,7 @@ function LivepeerCubeStream({
               ? 0.32
               : 0.3);
       const fieldCenterY = height * 0.5;
-      const fieldRadius =
+      const ownRadius =
         width < 640
           ? width * 0.92
           : Math.max(
@@ -252,6 +296,9 @@ function LivepeerCubeStream({
                   : Math.min(width * 0.42, height * 0.78),
               heroExclusionRadius
             );
+      const fieldRadius = arcRadius ? height * arcRadius : ownRadius;
+      // The larger circle shares the smaller one's outermost point.
+      const fieldCenterX = ownCenterX + ownRadius - fieldRadius;
       const influenceRadius =
         fieldRadius +
         Math.min(
@@ -344,15 +391,19 @@ function LivepeerCubeStream({
           particle.x > width * 1.25
         ) {
           const spread = (noise(particle.wave + time) * 2 - 1) * width * 0.18;
-          particle.x = width * 0.7 + spread;
-          particle.y = height * (1.04 + noise(particle.wave + 11) * 0.12);
+          // Fed in nearer the larger circle, so the stream meets it lower
+          // and the line it draws is already running where the next section
+          // starts, rather than beginning just short of it.
+          particle.x = width * (arcRadius ? 0.6 : 0.7) + spread;
+          particle.y =
+            height * (1.04 + noise(particle.wave + 11) * 0.12) + bleedBottom;
           particle.vx = -0.08 - noise(particle.wave + 17) * 0.18;
           particle.vy = -(0.9 + particle.speed * 0.58);
         }
 
         context.globalAlpha = 1;
 
-        if (variant === "banner" && particle.x < fieldCenterX) {
+        if (!painting || (variant === "banner" && particle.x < fieldCenterX)) {
           continue;
         }
 
@@ -386,9 +437,36 @@ function LivepeerCubeStream({
       }
     };
 
+    const settle = () => {
+      settled = false;
+      isPrerolling = true;
+      const from = performance.now();
+      start = from;
+      previousTime = from;
+      for (
+        let simulatedTime = SETTLE_STEP_MS;
+        simulatedTime <= SETTLE_SECONDS * 1000;
+        simulatedTime += SETTLE_STEP_MS
+      ) {
+        draw(from + simulatedTime);
+      }
+      isPrerolling = false;
+      settled = true;
+      draw(performance.now());
+    };
+
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(resizeFrame);
-      resizeFrame = requestAnimationFrame(resize);
+      resizeFrame = requestAnimationFrame(() => {
+        const seeded = resize();
+        // Sizing a canvas clears it, and with motion off no next frame is
+        // coming to repaint it: the still field used to be drawn once and
+        // then wiped by this observer's first report, which left reduced
+        // motion with no field at all.
+        if (!reduceMotion || width <= 0) return;
+        if (seeded || !settled) settle();
+        else draw(performance.now());
+      });
     });
     const themeObserver = new MutationObserver(() => {
       palette = getCanvasThemePalette(inverted);
@@ -401,6 +479,11 @@ function LivepeerCubeStream({
     });
     frame = requestAnimationFrame(() => {
       resize();
+
+      if (reduceMotion) {
+        if (width > 0 && !settled) settle();
+        return;
+      }
 
       const prerollStart = performance.now();
       start = prerollStart;
@@ -437,7 +520,15 @@ function LivepeerCubeStream({
         delete document.documentElement.dataset.captureReady;
       }
     };
-  }, [bleedTop, freezeAtSeconds, inverted, startAtSeconds, variant]);
+  }, [
+    arcRadius,
+    bleedBottom,
+    bleedTop,
+    freezeAtSeconds,
+    inverted,
+    startAtSeconds,
+    variant,
+  ]);
 
   return (
     <canvas

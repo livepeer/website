@@ -163,7 +163,12 @@ const GITHUB = "https://github.com/livepeer";
  * A raw <img>, not next/image: GitHub serves avatars at any size on request,
  * so there is nothing for the optimizer to do but proxy twelve small files.
  */
-export function ContributeContributors({ count, spotlight }: ContributorSet) {
+/**
+ * The faces themselves: the stack, and the chip counting everyone else.
+ * Its own component because the home page closes on the same people (see
+ * ContributorsCtaSection) and the two should be one drawing of them.
+ */
+export function ContributorFaces({ count, spotlight }: ContributorSet) {
   const remaining = count - spotlight.length;
   const face =
     "relative block size-10 shrink-0 overflow-hidden rounded-full ring-2 ring-background transition duration-200 outline-none motion-reduce:transition-none hover:z-10 hover:-translate-y-1 hover:scale-110 focus-visible:z-10 focus-visible:ring-ring";
@@ -171,41 +176,47 @@ export function ContributeContributors({ count, spotlight }: ContributorSet) {
     i < 5 ? "" : i < 8 ? "hidden sm:block" : "hidden lg:block";
 
   return (
+    <div className="flex -space-x-2">
+      {spotlight.map((c, i) => (
+        <a
+          key={c.login}
+          href={`https://github.com/${c.login}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`${c.name} · ${c.yearly.toLocaleString()} contributions this year`}
+          style={{ zIndex: spotlight.length - i }}
+          className={`${face} ${shown(i)}`}
+        >
+          <img
+            src={`${c.avatar}&s=80`}
+            alt={c.name}
+            width={40}
+            height={40}
+            loading="lazy"
+            className="size-full object-cover grayscale transition duration-200 motion-reduce:transition-none hover:grayscale-0"
+          />
+        </a>
+      ))}
+      <a
+        href={GITHUB}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={`${remaining.toLocaleString()} more contributors`}
+        style={{ zIndex: 0 }}
+        className={`${face} flex items-center justify-center bg-muted font-mono text-[0.625rem] font-medium text-muted-foreground hover:text-foreground`}
+      >
+        +{remaining}
+      </a>
+    </div>
+  );
+}
+
+export function ContributeContributors({ count, spotlight }: ContributorSet) {
+  return (
     <section className="mt-20 sm:mt-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 border-t border-border pt-12 sm:pt-16">
-          <div className="flex -space-x-2">
-            {spotlight.map((c, i) => (
-              <a
-                key={c.login}
-                href={`https://github.com/${c.login}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`${c.name} · ${c.yearly.toLocaleString()} contributions this year`}
-                style={{ zIndex: spotlight.length - i }}
-                className={`${face} ${shown(i)}`}
-              >
-                <img
-                  src={`${c.avatar}&s=80`}
-                  alt={c.name}
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  className="size-full object-cover grayscale transition duration-200 motion-reduce:transition-none hover:grayscale-0"
-                />
-              </a>
-            ))}
-            <a
-              href={GITHUB}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={`${remaining.toLocaleString()} more contributors`}
-              style={{ zIndex: 0 }}
-              className={`${face} flex items-center justify-center bg-muted font-mono text-[0.625rem] font-medium text-muted-foreground hover:text-foreground`}
-            >
-              +{remaining}
-            </a>
-          </div>
+          <ContributorFaces count={count} spotlight={spotlight} />
           {/* Balanced, so a phone breaks it after the count rather than in
               the middle of the link. */}
           <p className="text-center text-sm text-balance text-muted-foreground">
