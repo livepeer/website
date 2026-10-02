@@ -190,7 +190,7 @@ export function LivepeerOrgMenu({ site }: { site: LivepeerOrgSite }) {
                   onClick={() => setShowLoginLinks(true)}
                   className="mt-8 flex items-center gap-2 rounded-sm py-2.5 text-display-sm text-foreground transition-colors outline-none hover:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring sm:text-display-lg"
                 >
-                  <span>Login</span>
+                  <span>Log in</span>
                   <span aria-hidden="true">→</span>
                 </button>
               </>

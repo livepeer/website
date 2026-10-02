@@ -18,13 +18,13 @@ type AgentContent = NonNullable<LivepeerOrgPage["agentContent"]>;
 
 const agent: AgentContent = {
   hero: {
-    heading: "Create and edit images and video with your agent.",
+    heading: "Create and edit video with your agent.",
     // Just what happens. Naming the step that no longer exists would put an
     // API key in the reader's head on the way to telling them there isn't one.
     description:
-      "Add this server in your agent's MCP / connector settings. The first connection opens your browser and signs you in.",
+      "Add this server in your agent's MCP / connector settings. The first connection opens your browser and logs you in.",
     serverUrl: agentApp.mcpServerUrl,
-    signInCta: { label: "Sign in", href: agentApp.signIn },
+    signInCta: { label: "Log in", href: agentApp.signIn },
     createAccountCta: { label: "Create account", href: agentApp.createAccount },
   },
   access: {
@@ -50,7 +50,7 @@ const agent: AgentContent = {
 };
 
 const DESCRIPTION =
-  "Create and edit images and video with your agent. Connect Livepeer Agent over MCP and reach image, video, audio, 3D and production tools across the Livepeer network.";
+  "Create and edit video with your agent. Connect Livepeer Agent over MCP and reach image, video, audio, 3D and production tools across the Livepeer network.";
 
 // openGraph and twitter are declared, not inferred. Next does not fill
 // og:title from `title` or og:description from `description`, so a page

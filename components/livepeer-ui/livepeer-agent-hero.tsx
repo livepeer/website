@@ -18,7 +18,15 @@ export function LivepeerAgentHero({
   return (
     <section className="w-full overflow-hidden bg-background px-4 pb-24 sm:px-6 sm:pb-32">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-        <div className="relative h-64 w-full sm:h-72 lg:h-80">
+        {/* The stream gives up height to keep the hero inside the first
+            screen. At fixed heights (16, 18 and 20rem, still the ceilings
+            here) the account links landed on the fold of a 13-inch laptop,
+            13px above it at 1440x791 and cut off at 1280x720, so the page
+            opened with its last line pressed against the window's edge.
+            Each middle term is the window less the header and the copy
+            beneath the stream at that breakpoint, less the air the links
+            are left with: 40px on a phone, 56 from sm. */}
+        <div className="relative h-[clamp(9rem,100svh_-_28.25rem,16rem)] w-full sm:h-[clamp(10rem,100svh_-_31.25rem,18rem)] lg:h-[clamp(10rem,100svh_-_32.25rem,20rem)]">
           <LivepeerAgentDeltaStream contained />
         </div>
         <div className="flex w-full max-w-4xl flex-col items-center gap-7">
