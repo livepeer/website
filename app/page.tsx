@@ -63,6 +63,14 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   // button lands on the line it was pressed under), what would my GPU be
   // doing and how am I paid (the first sentence, which is the whole market:
   // who sends the work, who runs it, who is paid), and then the invitation.
+  // The router is named as Livepeer Agent, Adam's call: it is not the only
+  // source of jobs, but effectively all of them will reach a GPU through an
+  // agent, and naming it ties this band to the section above. The matching
+  // (a node advertises its capabilities, a job is routed on what it needs)
+  // is all in "jobs it can run". Longer versions spelled out both halves
+  // and Adam asked for it to be easy to understand, so the mechanism is
+  // /compute's to explain and this is three plain facts: connect, get
+  // work your GPU can do, get paid for it.
   // The ways in (a pool, AI-first, a solo node) are /compute's to explain;
   // a line here offering a pool as the way to start without tokens was cut
   // at Adam's word, and pools are not to be mentioned on this page.
@@ -81,7 +89,7 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   providerCta: {
     heading: "Put your GPU to work.",
     description:
-      "Livepeer routes AI video jobs from apps and agents to GPUs on the open network, and each job pays the provider who ran it. Connect yours and earn from what it runs.",
+      "Connect your GPU to the network. Livepeer Agent sends it AI video jobs it can run, and you get paid for each one.",
     cta: { label: "Get started", href: "/compute" },
   },
 };
