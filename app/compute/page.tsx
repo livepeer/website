@@ -22,7 +22,7 @@ const earn: EarnContent = {
     periodLabel: "24h",
   },
   hero: {
-    heading: "Put your GPU to work on Livepeer.",
+    heading: "Put your GPUs to work on Livepeer.",
     description:
       "Livepeer routes inference and video work to GPUs on the open network. Run an orchestrator, serve real workloads, and earn from fees and protocol rewards.",
     cta: {
@@ -152,7 +152,7 @@ const baselineCta = {
 };
 
 const DESCRIPTION =
-  "Put your GPU to work on Livepeer. Join a pool, run AI-first, or operate a solo node — with the baseline hardware, network, and on-chain requirements for each.";
+  "Put your GPUs to work on Livepeer. Join a pool, run AI-first, or operate a solo node — with the baseline hardware, network, and on-chain requirements for each.";
 
 // openGraph and twitter are declared, not inferred. Next does not fill
 // og:title from `title` or og:description from `description`, so a page

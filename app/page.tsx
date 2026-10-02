@@ -67,10 +67,12 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   // source of jobs, but effectively all of them will reach a GPU through an
   // agent, and naming it ties this band to the section above. The matching
   // (a node advertises its capabilities, a job is routed on what it needs)
-  // is all in "jobs it can run". Longer versions spelled out both halves
+  // is all in "jobs they can run". Longer versions spelled out both halves
   // and Adam asked for it to be easy to understand, so the mechanism is
   // /compute's to explain and this is three plain facts: connect, get
-  // work your GPU can do, get paid for it.
+  // work your GPUs can do, get paid for it. GPUs in the plural, here and
+  // on /compute: most providers run more than one, and "your GPU" spoke to
+  // a hobbyist with a single card.
   // The ways in (a pool, AI-first, a solo node) are /compute's to explain;
   // a line here offering a pool as the way to start without tokens was cut
   // at Adam's word, and pools are not to be mentioned on this page.
@@ -87,9 +89,9 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   // this leads, is where the term is taught. Nothing here promises earnings;
   // /compute says work is not guaranteed, and this only says a job pays.
   providerCta: {
-    heading: "Put your GPU to work.",
+    heading: "Put your GPUs to work.",
     description:
-      "Connect your GPU to the network. Livepeer Agent sends it AI video jobs it can run, and you get paid for each one.",
+      "Connect your GPUs to the network. Livepeer Agent sends them AI video jobs they can run, and you get paid for each one.",
     cta: { label: "Get started", href: "/compute" },
   },
 };
