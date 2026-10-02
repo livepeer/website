@@ -66,13 +66,18 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   // The router is named as Livepeer Agent, Adam's call: it is not the only
   // source of jobs, but effectively all of them will reach a GPU through an
   // agent, and naming it ties this band to the section above. The matching
-  // (a node advertises its capabilities, a job is routed on what it needs)
-  // is all in "jobs they can run". Longer versions spelled out both halves
-  // and Adam asked for it to be easy to understand, so the mechanism is
-  // /compute's to explain and this is three plain facts: connect, get
-  // work your GPUs can do, get paid for it. GPUs in the plural, here and
-  // on /compute: most providers run more than one, and "your GPU" spoke to
-  // a hobbyist with a single card.
+  // is the copy's order, because it is the order things happen: a provider
+  // registers GPUs as nodes and advertises what they run and at what price
+  // ("choose what they run and set your own prices", in plain words, and
+  // the control is itself the pitch to a provider weighing it up), the
+  // Agent routes each job on capability and price ("the best fit"), and the
+  // provider is paid per job. Earlier versions said only "jobs they can
+  // run" and left prices out; one that opened "Connect your GPUs ...
+  // Livepeer Agent sends them ... and you get paid" changed subject three
+  // times and read as a list. Adam asked for it to be easy to understand,
+  // so the mechanism beyond that is /compute's to explain.
+  // GPUs in the plural, here and on /compute: most providers run more than
+  // one, and "your GPU" spoke to a hobbyist with a single card.
   // The ways in (a pool, AI-first, a solo node) are /compute's to explain;
   // a line here offering a pool as the way to start without tokens was cut
   // at Adam's word, and pools are not to be mentioned on this page.
@@ -91,7 +96,7 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   providerCta: {
     heading: "Put your GPUs to work.",
     description:
-      "Connect your GPUs to the network. Livepeer Agent sends them AI video jobs they can run, and you get paid for each one.",
+      "Register your GPUs, choose what they run and set your own prices. Livepeer Agent routes each AI video job to the best fit, and you get paid for every job they complete.",
     cta: { label: "Get started", href: "/compute" },
   },
 };
