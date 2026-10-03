@@ -67,7 +67,8 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   // source of jobs, but effectively all of them will reach a GPU through an
   // agent, and naming it ties this band to the section above. The matching
   // is the copy's order, because it is the order things happen: a provider
-  // registers GPUs as nodes and advertises what they run and at what price
+  // registers GPUs as nodes (said as "Connect", Adam's word, which is what
+  // the reader does) and advertises what they run and at what price
   // ("choose what they run and set your own prices", in plain words, and
   // the control is itself the pitch to a provider weighing it up), the
   // Agent routes each job on capability and price ("the best fit"), and the
@@ -96,7 +97,7 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   providerCta: {
     heading: "Put your GPUs to work.",
     description:
-      "Register your GPUs, choose what they run and set your own prices. Livepeer Agent routes each AI video job to the best fit, and you get paid for every job they complete.",
+      "Connect your GPUs, choose what they run and set your own prices. Livepeer Agent routes each AI video job to the best fit, and you get paid for every job they complete.",
     cta: { label: "Get started", href: "/compute" },
   },
 };
