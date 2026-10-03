@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
+import { keepHyphenated } from "./keep-hyphenated";
+
 export type PostCardPost = {
   slug: string;
   title: string;
@@ -77,7 +79,7 @@ export function PostCard({
           out-weighing the body copy beneath it. Matches the ecosystem card
           title. */}
       <Heading className="text-xl leading-snug font-medium tracking-tight text-pretty">
-        {post.title}
+        {keepHyphenated(post.title)}
       </Heading>
       {/* whitespace-nowrap with a truncating date: at 390px a two-column card
           is ~180px wide, and letting this row wrap would stagger every card

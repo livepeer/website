@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import type { BlogAuthor } from "@/lib/blog";
 
+import { keepHyphenated } from "./keep-hyphenated";
+
 export type BlogPostView = {
   title: string;
   category: string;
@@ -103,7 +105,7 @@ export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
               stopped anchoring the page. 600 was the alternative and is heavier
               than anything else on the site. */}
           <h1 className="text-3xl font-medium tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
-            {post.title}
+            {keepHyphenated(post.title)}
           </h1>
 
           {/* One line from sm. On a phone the author takes a line of their own
