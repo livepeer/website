@@ -37,8 +37,21 @@ type RichText = {
     italic?: boolean;
     strikethrough?: boolean;
     code?: boolean;
+    color?: string;
   };
 };
+
+/**
+ * Notion's grey, on a run or a whole block, is the site's muted voice — a
+ * standing note, an aside, a credit — so an author can set it back without a
+ * convention the site has to guess at. Only grey: every other Notion colour
+ * would be a hard-coded colour outside the theme, which the design system
+ * does not allow, so those are read as plain text.
+ */
+const MUTED = "muted";
+function isGrey(color: unknown): boolean {
+  return color === "gray";
+}
 
 /**
  * Escaped before anything else touches it.
@@ -87,6 +100,7 @@ function inline(runs: RichText[]): string {
       if (a.bold) html = `<strong>${html}</strong>`;
       if (a.italic) html = `<em>${html}</em>`;
       if (a.strikethrough) html = `<del>${html}</del>`;
+      if (isGrey(a.color)) html = `<span class="${MUTED}">${html}</span>`;
       const href = run.href ? safeHref(run.href) : null;
       if (href) {
         const external = !href.startsWith("/");
@@ -161,7 +175,11 @@ export async function blocksToHtml(
       case "paragraph": {
         const body = inline(runsOf(block, type));
         // Notion uses empty paragraphs as spacing; they are not content.
-        if (body) html.push(`<p>${body}</p>`);
+        const grey = isGrey((block[type] as Json | undefined)?.color);
+        if (body)
+          html.push(
+            grey ? `<p class="${MUTED}">${body}</p>` : `<p>${body}</p>`
+          );
         break;
       }
       // h1 renders as h2: the page's own title is the h1, and a body that

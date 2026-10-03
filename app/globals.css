@@ -346,6 +346,13 @@ body {
 .article-prose li > ol {
   margin-top: 0.5rem;
 }
+/* Notion's grey text (lib/notion-blocks.ts): a standing note or an aside,
+   stepped back to the secondary voice. Both prose styles, since both render
+   Notion bodies. */
+.article-prose .muted,
+.reading-prose .muted {
+  color: var(--muted-foreground);
+}
 /* A rule on the inline edge rather than a tinted panel: the quote is the same
    voice as the prose, just set apart. */
 .article-prose blockquote {
