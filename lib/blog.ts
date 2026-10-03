@@ -39,14 +39,6 @@ export const BLOG_CATEGORIES = [
   "Governance",
 ] as const;
 
-/**
- * Old names still accepted, for as long as a row may carry one. A rename has
- * two halves, this file and the Notion select, and they never land at the
- * same moment; without this the blog stops refreshing in between. Remove an
- * entry once no row uses it.
- */
-const RENAMED: Record<string, BlogCategory> = { Proposals: "Governance" };
-
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
 export type BlogAuthor = {
@@ -139,8 +131,6 @@ export function categoryFromSlug(slug: string): BlogCategory | undefined {
 export const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function assertCategory(value: unknown, where: string): BlogCategory {
-  const renamed = typeof value === "string" ? RENAMED[value] : undefined;
-  if (renamed) return renamed;
   if (!BLOG_CATEGORIES.includes(value as BlogCategory)) {
     throw new Error(
       `${where}: category ${JSON.stringify(value)} is not one of ${BLOG_CATEGORIES.join(", ")}.`

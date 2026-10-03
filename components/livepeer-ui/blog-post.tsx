@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import type { BlogAuthor } from "@/lib/blog";
+
 export type BlogPostView = {
   title: string;
   category: string;
   /** ISO yyyy-mm-dd, straight from the markdown frontmatter. */
   date: string;
   readingTime: string;
+  author?: BlogAuthor;
   heroImage?: string;
   imageAlt?: string;
 };
@@ -19,6 +22,47 @@ function formatDate(iso: string): string {
     day: "numeric",
     year: "numeric",
   });
+}
+
+/**
+ * Who wrote it: a face, then the name, the way a roadmap record credits
+ * someone (RecordCredit), and a monogram where there is no portrait. The name
+ * links to their page when they are in the people register; a name that only
+ * exists in a markdown file's frontmatter has no page to link to.
+ */
+function Byline({ author }: { author: BlogAuthor }) {
+  const face = author.avatar ? (
+    <Image
+      src={`/people/${author.avatar}`}
+      alt=""
+      width={24}
+      height={24}
+      className="size-6 shrink-0 rounded-full object-cover"
+    />
+  ) : (
+    <span
+      aria-hidden
+      className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground"
+    >
+      {author.name.charAt(0)}
+    </span>
+  );
+  const byline = (
+    <span className="flex items-center gap-2 text-foreground">
+      {face}
+      {author.name}
+    </span>
+  );
+  return author.slug ? (
+    <Link
+      href={`/people/${author.slug}`}
+      className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+    >
+      {byline}
+    </Link>
+  ) : (
+    byline
+  );
 }
 
 /**
@@ -62,10 +106,18 @@ export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
             {post.title}
           </h1>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <time dateTime={post.date}>{formatDate(post.date)}</time>
-            <span aria-hidden="true">·</span>
-            <span>{post.readingTime}</span>
+          {/* Each dot is held to the field after it, so a line that wraps on a
+              phone never ends on one — the changelog's rule for its lines. */}
+          <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+            {post.author && <Byline author={post.author} />}
+            <span className="flex items-center gap-3">
+              {post.author && <span aria-hidden="true">·</span>}
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
+            </span>
+            <span className="flex items-center gap-3">
+              <span aria-hidden="true">·</span>
+              <span>{post.readingTime}</span>
+            </span>
           </div>
 
           {/* 16:9 here where the index is square — the index is a grid of

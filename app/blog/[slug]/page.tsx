@@ -59,6 +59,7 @@ export default async function BlogPostPage({ params }: Props) {
         category: post.category,
         date: post.date,
         readingTime: post.readingTime,
+        author: post.author,
         // One image serves the card and the header; the component crops it.
         heroImage: post.image,
         imageAlt: post.imageAlt || undefined,
