@@ -106,15 +106,20 @@ export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
             {post.title}
           </h1>
 
-          {/* Each dot is held to the field after it, so a line that wraps on a
-              phone never ends on one — the changelog's rule for its lines. */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+          {/* One line from sm. On a phone the author takes a line of their own
+              and the date and reading time share the next: all three need
+              ~365px against 343 on a 375px phone, so as one wrapping row the
+              reading time fell to a line by itself. The date and reading time
+              never part. */}
+          <div className="mt-6 flex flex-col items-start gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             {post.author && <Byline author={post.author} />}
-            <span className="flex items-center gap-3">
-              {post.author && <span aria-hidden="true">·</span>}
+            <span className="flex items-center gap-3 whitespace-nowrap">
+              {post.author && (
+                <span aria-hidden="true" className="hidden sm:inline">
+                  ·
+                </span>
+              )}
               <time dateTime={post.date}>{formatDate(post.date)}</time>
-            </span>
-            <span className="flex items-center gap-3">
               <span aria-hidden="true">·</span>
               <span>{post.readingTime}</span>
             </span>
