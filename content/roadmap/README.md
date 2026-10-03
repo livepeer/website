@@ -24,7 +24,7 @@ recreate the drift that moving to a CMS removed, and a record here that fails
 A commitment: **a dated, owned undertaking to deliver a named outcome to the
 Livepeer network, with its funding source identified.** Nothing else. Ideas,
 requests and open questions are proposed and discussed on the forum, and
-appear here once they are owned and dated — a suggestion presented on the
+appear here once someone owns them — a suggestion presented on the
 canonical register as funded work in progress is the exact failure this page
 exists to prevent.
 

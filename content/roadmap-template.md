@@ -1,15 +1,14 @@
 ---
-# A commitment: a dated, owned undertaking to deliver a named outcome to the
-# Livepeer network, with a source anyone can check. Ideas and suggestions
-# do not belong here — they are proposed and discussed on the forum, and
-# appear here once they are owned and dated.
+# A commitment: an owned undertaking to deliver a named outcome to the
+# Livepeer network. Ideas and suggestions do not belong here — they are
+# proposed and discussed on the forum, and appear here once someone owns them.
+#
+# Required: title, workstream, state and owner (and shippedAt once shipped).
+# Everything else is optional — a row brought over from another board often
+# has no outcome, date or link yet, and the record shows what it has.
 
 # Required
 title: Name of the outcome
-# The promise: one sentence, max ~140 chars, what lands in plain terms. Sits
-# under the title on the closed card. Not the same as the body at the bottom of
-# this file, which the expanded card shows as "Context".
-outcome: One sentence, max ~140 chars — what lands, in plain terms.
 workstream: Network # Protocol | Network | Agent
 state: building # building | next | shipped
 # The one party answerable for delivering this, shown on the closed card as
@@ -17,6 +16,14 @@ state: building # building | next | shipped
 # holds, and a reader whose question is "who do I ask about that date" needs a
 # single answer. Contributors go under people; joint funding goes in funding.
 owner: Name or team
+# Optional from here down.
+
+# The promise: one sentence, max ~140 chars, what lands in plain terms. Sits
+# under the title on the closed card. Not the same as the body at the bottom of
+# this file, which the expanded card shows as "Context". Without one the card
+# is its title.
+outcome: One sentence, max ~140 chars — what lands, in plain terms.
+
 # The person leading this — accountable for it, and the one to ask about it.
 # Optional, and one person: "who do I ask" has one answer or none. Distinct
 # from owner, which is the organisation answerable for delivering. Same shape
@@ -50,7 +57,8 @@ contributors:
 # pair Notion holds as Target date and Target precision. Any day in the
 # window places it; write the last day, so it reads as the deadline. The
 # precision is day | month | quarter | half | year, and quarter when left
-# off — use day only when a real date exists. See lib/target.ts.
+# off — use day only when a real date exists. See lib/target.ts. Undated work
+# sits under "No target yet" on the roadmap.
 targetDate: 2026-12-31 # shows as Q4 2026
 targetPrecision: quarter
 
@@ -58,8 +66,9 @@ targetPrecision: quarter
 #   https://livepeer.peaceno.de/marketing/stock-images
 # Must be on cdn.sanity.io — next/image is configured for that host and
 # nothing else, and a URL anywhere else fails the build rather than rendering
-# broken. In Notion this is the page cover, set as an external image: an
-# uploaded one comes back as a signed URL that expires within the hour.
+# broken. In Notion this is the page cover, set as an external image: a cover
+# from anywhere else, or uploaded, is left off the page (and logged) rather
+# than failing the roadmap. Images in the body may be uploaded.
 # cover: https://cdn.sanity.io/images/l36s876e/production/....png
 
 # Required once state is shipped
@@ -80,8 +89,8 @@ targetPrecision: quarter
 
 # Where this can be checked, and where the work lives — the board item, the
 # forum thread, the
-# LIP, the repo, the product page, the write-up. At least one, so no claim on
-# this page is unverifiable. One entry per destination: a second label on a URL
+# LIP, the repo, the product page, the write-up. Optional; a record with none
+# shows no Links row. One entry per destination: a second label on a URL
 # already listed fails the build, because the card would print the same place
 # twice.
 related:

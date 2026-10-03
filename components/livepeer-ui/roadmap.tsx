@@ -103,7 +103,24 @@ function readToday() {
  * is, like the current quarter.
  */
 function pastTarget(c: Commitment, today: string | null): boolean {
-  return today !== null && c.state !== "shipped" && c.targetEnd < today;
+  return (
+    today !== null &&
+    c.state !== "shipped" &&
+    c.targetEnd !== undefined &&
+    c.targetEnd < today
+  );
+}
+
+/**
+ * The heading undated work sits under on the quarter cut, after every
+ * window. A target is optional: work is often taken on before anyone can
+ * say when it lands.
+ */
+const NO_TARGET = "No target yet";
+
+/** Orders by target, with undated work after everything that has one. */
+function targetOrder(c: Commitment): number {
+  return c.targetSort ?? Number.MAX_SAFE_INTEGER;
 }
 
 type View = "roadmap" | "shipped";
@@ -592,9 +609,11 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
             {c.title}
           </Link>
         </h3>
-        <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
-          {c.outcome}
-        </p>
+        {c.outcome && (
+          <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
+            {c.outcome}
+          </p>
+        )}
         {/* The card's two corners, carrying its two registers: where the work
           stands on the left, who is behind it on the right.
 
@@ -729,7 +748,7 @@ function CommitmentRow({ commitment: c }: { commitment: RoadmapItem }) {
             ·
           </span>
           <span className="whitespace-nowrap tabular-nums md:text-right">
-            {shipped ? shortDate(c.shippedAt!) : c.target}
+            {shipped ? shortDate(c.shippedAt!) : (c.target ?? NO_TARGET)}
           </span>
         </span>
       </div>
@@ -1041,7 +1060,7 @@ function SuggestBlock({
     <div className={cn("border-t border-border pt-5", className)}>
       <Label>Not on the roadmap?</Label>
       <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
-        Ideas start on the forum and land here once they are owned and dated.
+        Ideas start on the forum and land here once someone owns them.
       </p>
       <p className="mt-3 text-sm">
         <LinkRow label="How to contribute" href={href} />
@@ -1667,7 +1686,7 @@ export function Roadmap({
     const q = query.trim().toLowerCase();
     const hit = (c: Commitment) =>
       !q ||
-      [c.title, c.outcome, c.workstream, c.owner]
+      [c.title, c.outcome ?? "", c.workstream, c.owner]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -1696,7 +1715,7 @@ export function Roadmap({
       if (selected.length > 0 && !selected.includes(c.workstream)) continue;
       if (
         q &&
-        ![c.title, c.outcome, c.workstream, c.owner]
+        ![c.title, c.outcome ?? "", c.workstream, c.owner]
           .join(" ")
           .toLowerCase()
           .includes(q)
@@ -1727,7 +1746,7 @@ export function Roadmap({
         continue;
       if (
         q &&
-        ![c.title, c.outcome, c.workstream, c.owner]
+        ![c.title, c.outcome ?? "", c.workstream, c.owner]
           .join(" ")
           .toLowerCase()
           .includes(q)
@@ -1763,7 +1782,7 @@ export function Roadmap({
       if (selected.length > 0 && !selected.includes(c.workstream)) continue;
       if (
         q &&
-        ![c.title, c.outcome, c.workstream, c.owner]
+        ![c.title, c.outcome ?? "", c.workstream, c.owner]
           .join(" ")
           .toLowerCase()
           .includes(q)
@@ -1829,11 +1848,11 @@ export function Roadmap({
   // renders empty future quarters, which reads as a roadmap with nothing in it
   // rather than as an honest edge; the closing line says that once.
   const roadmapByPeriod = [...building, ...next]
-    .sort((a, b) => a.targetSort - b.targetSort)
+    .sort((a, b) => targetOrder(a) - targetOrder(b))
     // By the quarter it falls in, so a target set to a day or a month sits
     // under its quarter rather than under a heading of its own.
     .reduce<Record<string, Commitment[]>>((acc, c) => {
-      (acc[c.targetPeriod] ??= []).push(c);
+      (acc[c.targetPeriod ?? NO_TARGET] ??= []).push(c);
       return acc;
     }, {});
 
@@ -1847,7 +1866,7 @@ export function Roadmap({
       ? HEALTH_ORDER.indexOf(c.standing?.health ?? "no-update")
       : HEALTH_ORDER.length;
   const roadmapByOwner = [...building, ...next]
-    .sort((a, b) => rank(a) - rank(b) || a.targetSort - b.targetSort)
+    .sort((a, b) => rank(a) - rank(b) || targetOrder(a) - targetOrder(b))
     .reduce<Record<string, { slug: string; items: RoadmapItem[] }>>(
       (acc, c) => {
         (acc[c.owner] ??= { slug: c.ownerSlug, items: [] }).items.push(c);
@@ -1865,7 +1884,7 @@ export function Roadmap({
   // committed work that has no health yet. Only headings with something
   // under them — the facet in the rail already says which are empty.
   const byTarget = (a: RoadmapItem, b: RoadmapItem) =>
-    a.targetSort - b.targetSort;
+    targetOrder(a) - targetOrder(b);
   const roadmapByHealth: [HealthOrNone | "next", RoadmapItem[]][] = [
     ...HEALTH_ORDER.map((h): [HealthOrNone, RoadmapItem[]] => [
       h,
@@ -1901,8 +1920,8 @@ export function Roadmap({
   // committed records sat in Q4 and Q1 with the filter hiding them. Any
   // workstream filter told the same lie more quietly.
   const lastPeriod = commitments
-    .filter((c) => c.state !== "shipped")
-    .sort((a, b) => a.targetSort - b.targetSort)
+    .filter((c) => c.state !== "shipped" && c.target)
+    .sort((a, b) => targetOrder(a) - targetOrder(b))
     .at(-1)?.target;
 
   const shown =
@@ -2131,8 +2150,7 @@ export function Roadmap({
                     Nothing is committed past {lastPeriod}.
                   </p>
                   <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                    Work appears here once it has an owner, a date and a source
-                    you can check — not before.{" "}
+                    Work appears here once someone owns it — not before.{" "}
                     <LinkRow
                       label="How to propose something"
                       href={suggestionsHref}

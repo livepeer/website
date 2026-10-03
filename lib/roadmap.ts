@@ -81,7 +81,14 @@ export type Person = {
 export type Commitment = {
   slug: string;
   title: string;
-  outcome: string;
+  /**
+   * The one-line promise on the card, and the page's description. Optional:
+   * a row brought in from another board often has a title and an owner and
+   * nothing written yet, and refusing it kept the whole register from
+   * refreshing. Without one the card is its title, and the page describes
+   * itself by name.
+   */
+  outcome?: string;
   workstream: Workstream;
   state: CommitmentState;
   /**
@@ -110,15 +117,19 @@ export type Commitment = {
    * When it is meant to land, at the precision it is stated at — "Q4 2026",
    * "July 2026", "H1 2027", "2027", "September 15, 2026". Read from a date
    * and a precision; see lib/target.ts.
+   *
+   * Optional, with the three below: work is often taken on before anyone
+   * can say when it lands. Undated work sits under "No target yet" at the
+   * end of the quarter cut, and is never counted as past its target.
    */
-  target: string;
+  target?: string;
   /** The heading it sits under when the roadmap is cut by quarter: the
    *  quarter a day or a month falls in, the window itself otherwise. */
-  targetPeriod: string;
+  targetPeriod?: string;
   /** Orders targets by where their window starts, then where it ends. */
-  targetSort: number;
+  targetSort?: number;
   /** The last day of the window, ISO: past it, unshipped work is late. */
-  targetEnd: string;
+  targetEnd?: string;
   /**
    * The individual to ask about this — shown in the expanded panel as
    * "Lead".
@@ -147,7 +158,11 @@ export type Commitment = {
   cover?: string;
   /** ISO yyyy-mm-dd. Present only when shipped. */
   shippedAt?: string;
-  /** Where this record can be checked and where the work lives. At least one. */
+  /**
+   * Where this record can be checked and where the work lives. Possibly
+   * none: it was at least one, and a row without a link yet was refused and
+   * held up the whole register; a record with none shows no Links row.
+   */
   related: CommitmentLink[];
   /**
    * Where the money comes from — the board's "Funding Mechanism".
@@ -363,47 +378,47 @@ function parse(file: string): Commitment {
         `in funding.`
     );
   }
-  const related = readLinks(at("related", data.related), file, "related");
-  if (related.length === 0) {
-    throw new Error(
-      `content/roadmap/${file}: at least one related link, so the record can be checked.`
-    );
-  }
+  const related = readLinks(data.related, file, "related");
   assertNoRepeats(related, file);
 
   // The same pair Notion holds: a date, and the precision it is stated at,
-  // empty meaning quarter. YAML reads an unquoted date as a Date.
-  const targetDate = new Date(
-    at("targetDate", data.targetDate) as string | Date
-  );
-  if (Number.isNaN(targetDate.getTime())) {
-    throw new Error(
-      `content/roadmap/${file}: targetDate ${JSON.stringify(data.targetDate)} is not a date.`
+  // empty meaning quarter. YAML reads an unquoted date as a Date. Optional.
+  let target: ReturnType<typeof targetWindow> | undefined;
+  if (
+    data.targetDate !== undefined &&
+    data.targetDate !== null &&
+    data.targetDate !== ""
+  ) {
+    const targetDate = new Date(data.targetDate as string | Date);
+    if (Number.isNaN(targetDate.getTime())) {
+      throw new Error(
+        `content/roadmap/${file}: targetDate ${JSON.stringify(data.targetDate)} is not a date.`
+      );
+    }
+    target = targetWindow(
+      targetDate.toISOString().slice(0, 10),
+      readPrecision(
+        data.targetPrecision ? String(data.targetPrecision) : undefined,
+        `content/roadmap/${file}`
+      ),
+      `content/roadmap/${file}`
     );
   }
-  const target = targetWindow(
-    targetDate.toISOString().slice(0, 10),
-    readPrecision(
-      data.targetPrecision ? String(data.targetPrecision) : undefined,
-      `content/roadmap/${file}`
-    ),
-    `content/roadmap/${file}`
-  );
 
   return {
     slug,
     title: String(at("title", data.title)),
-    outcome: String(at("outcome", data.outcome)),
+    outcome: data.outcome ? String(data.outcome) : undefined,
     workstream,
     state: declared,
     owner,
     ownerSlug: slugify(owner),
     contributors: readPeople(data.contributors, file),
     lead: readPeople(data.lead ? [data.lead] : undefined, file)?.[0],
-    target: target.label,
-    targetPeriod: target.period,
-    targetSort: target.sort,
-    targetEnd: target.end,
+    target: target?.label,
+    targetPeriod: target?.period,
+    targetSort: target?.sort,
+    targetEnd: target?.end,
     shippedAt,
     related,
     funding: data.funding ? String(data.funding) : undefined,

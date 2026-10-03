@@ -15,8 +15,14 @@
  * Deliberately not `notion-to-md`: that is a dependency to walk a tree we
  * already fetch, and the site keeps Notion at plain `fetch` on purpose.
  *
- * Images and video are supported, but only as links — never as files dragged
- * into the page. lib/notion-media.ts has the reasoning and does the checking.
+ * Images and video are supported either way they get into a page. A link is
+ * checked against the hosts the site serves media from (lib/notion-media.ts).
+ * A file dragged into the page is linked through /api/notion-media/[id],
+ * which asks Notion for a fresh address on each request: Notion signs an
+ * upload's address for about an hour, and a page is served for longer. It
+ * was refused at first, which made adding a screenshot to a write-up a
+ * matter of hosting it somewhere first; covers are still links, from the
+ * stock library.
  */
 
 import { resolveMediaSource } from "./notion-media";
@@ -98,6 +104,18 @@ function runsOf(block: Json, type: string): RichText[] {
 }
 
 export type BlockChildren = (block: Json) => Promise<Json[]>;
+
+/** Notion's block ids are UUIDs; the route refuses anything else. */
+const BLOCK_ID =
+  /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
+
+/** Where an uploaded image or video is served from; see the module note. */
+function uploadedMediaPath(id: string, where: string): string {
+  if (!BLOCK_ID.test(id)) {
+    throw new Error(`${where}: an uploaded file's block id ${id} is not one.`);
+  }
+  return `/api/notion-media/${id}`;
+}
 
 /**
  * Blocks to HTML, following nesting through `children`.
@@ -190,7 +208,12 @@ export async function blocksToHtml(
           caption?: RichText[];
         };
         const runs = source.caption ?? [];
-        const src = escape(resolveMediaSource(source, where));
+        const uploaded = source.type === "file" || Boolean(source.file);
+        const src = escape(
+          uploaded
+            ? uploadedMediaPath(block.id as string, where)
+            : resolveMediaSource(source, where)
+        );
         const caption = inline(runs);
         // Notion has no alt text separate from the caption, so the caption is
         // both — shown under the figure and read out in place of it. Built

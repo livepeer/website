@@ -91,13 +91,17 @@ function CommitmentRow({
             {c.title}
           </Link>
         </h3>
-        <span className="shrink-0 font-mono text-xs text-muted-foreground">
-          {c.state === "shipped" ? shippedPeriod(c.shippedAt!) : c.target}
-        </span>
+        {(c.state === "shipped" || c.target) && (
+          <span className="shrink-0 font-mono text-xs text-muted-foreground">
+            {c.state === "shipped" ? shippedPeriod(c.shippedAt!) : c.target}
+          </span>
+        )}
       </div>
-      <p className="mt-1 max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-        {c.outcome}
-      </p>
+      {c.outcome && (
+        <p className="mt-1 max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
+          {c.outcome}
+        </p>
+      )}
     </li>
   );
 }

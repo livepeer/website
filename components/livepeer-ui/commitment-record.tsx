@@ -353,22 +353,25 @@ export function CommitmentRecord({
           <Row icon={CalendarDays} label="Shipped on">
             {shippedPeriod(c.shippedAt!)}
           </Row>
-        ) : (
+        ) : c.target ? (
           <Row icon={AlignLeft} label="Target">
             {c.target}
             {/* The one objective check on a self-reported health: the
                 window has closed and the work has not shipped. */}
-            {c.targetEnd < now.toISOString().slice(0, 10) && (
-              <span className="text-muted-foreground"> · passed</span>
-            )}
+            {c.targetEnd !== undefined &&
+              c.targetEnd < now.toISOString().slice(0, 10) && (
+                <span className="text-muted-foreground"> · passed</span>
+              )}
           </Row>
-        )}
+        ) : null}
         <Row icon={CircleChevronDown} label="Workstream">
           {c.workstream}
         </Row>
-        <Row icon={AlignLeft} label="Outcome">
-          {c.outcome}
-        </Row>
+        {c.outcome && (
+          <Row icon={AlignLeft} label="Outcome">
+            {c.outcome}
+          </Row>
+        )}
         {c.funding && (
           <Row icon={AlignLeft} label="Funding">
             {c.funding}
@@ -393,22 +396,24 @@ export function CommitmentRecord({
             </ul>
           </Row>
         )}
-        <Row icon={Link2} label="Links">
-          <ul className="space-y-1">
-            {c.related.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </Row>
+        {c.related.length > 0 && (
+          <Row icon={Link2} label="Links">
+            <ul className="space-y-1">
+              {c.related.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline decoration-border underline-offset-4 hover:decoration-foreground"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Row>
+        )}
         {c.lastUpdated && (
           <Row icon={Clock} label="Last updated">
             <span className="text-muted-foreground">

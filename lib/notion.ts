@@ -246,6 +246,27 @@ async function notion(endpoint: string, init?: RequestInit): Promise<Json> {
   return (await res.json()) as Json;
 }
 
+/**
+ * A fresh address for an image or video uploaded into a page body, and when
+ * it stops working — for /api/notion-media/[id], which the body links to in
+ * place of the upload's own address. Notion signs an uploaded file's address
+ * for about an hour, so it cannot be written into a page that is served for
+ * longer; the route asks again each time instead. Nothing for any other kind
+ * of block, or for media that is a link, which the body uses as it is.
+ */
+export async function getNotionMediaUrl(
+  blockId: string
+): Promise<{ url: string; expires?: string } | null> {
+  const block = await notion(`/blocks/${blockId}`);
+  const type = block.type as string;
+  if (type !== "image" && type !== "video") return null;
+  const media = block[type] as
+    | { type?: string; file?: { url?: string; expiry_time?: string } }
+    | undefined;
+  const url = media?.type === "file" ? media.file?.url : undefined;
+  return url ? { url, expires: media?.file?.expiry_time } : null;
+}
+
 /** Every row, following Notion's cursor rather than assuming one page. */
 async function queryAll(databaseId: string): Promise<Json[]> {
   const rows: Json[] = [];
@@ -475,13 +496,19 @@ function toPerson(row: Json): Person {
 /**
  * A page's cover, as the site can use it.
  *
- * Notion returns an external cover as the URL that was set and an uploaded
- * one as a signed URL that expires within the hour. An upload is refused
- * with the reason rather than dropped: the person who dragged a picture onto
- * the page set a banner, and a page that quietly shows none tells them
- * nothing. The URL itself is held to the host next/image is configured for,
- * as a cover in the markdown copy is (lib/notion-media.ts). Whether a page
- * must have one is the caller's rule — a commitment must, the others may.
+ * Covers come from Peace Node's stock library, on the one host next/image is
+ * configured for (lib/notion-media.ts): the site's banners are one family,
+ * and Notion returns an uploaded cover as a signed URL that expires within
+ * the hour. Whether a page must have one is the caller's rule — a blog post
+ * must, everything else may.
+ *
+ * Where one is optional, a cover from anywhere else is left off the page
+ * rather than refused: the page renders as it would with none, and the
+ * reason goes to the log. Refusing it threw, and a throw in a reader keeps
+ * the whole surface from refreshing — one commitment with a picture dragged
+ * onto it held every other row on the roadmap at its last good copy, which
+ * to the person who did it looked like the site ignoring the row. Where one
+ * is required, it still throws, since the page has nothing to fall back to.
  */
 function coverOf(
   page: Json,
@@ -501,15 +528,21 @@ function coverOf(
     }
     return undefined;
   }
-  if (cover.type === "file" || cover.file) {
-    throw new Error(
-      `${where}: the cover is uploaded to Notion. Notion hands the API a ` +
-        `link that expires within the hour, so the banner would break by ` +
-        `itself. Set the cover from a link instead — see the database ` +
-        `description.`
-    );
+  try {
+    if (cover.type === "file" || cover.file) {
+      throw new Error(
+        `${where}: the cover is uploaded to Notion. Covers come from the ` +
+          `stock library (livepeer.peaceno.de/marketing/stock-images), set ` +
+          `from a link — an upload comes back as an address that expires ` +
+          `within the hour.`
+      );
+    }
+    return readCoverUrl(cover.external?.url, where);
+  } catch (error) {
+    if (required) throw error;
+    console.warn(`${(error as Error).message} Shown without a cover.`);
+    return undefined;
   }
-  return readCoverUrl(cover.external?.url, where);
 }
 
 /**
@@ -658,22 +691,20 @@ function toCommitment(
   // A date from Notion's picker and the precision it is stated at, so the
   // value cannot be malformed; an empty precision means Quarter. See
   // lib/target.ts.
+  // Optional: work is often taken on before anyone can say when it lands,
+  // and an empty date held up the whole register. Undated work sits under
+  // "No target yet".
   const targetDate = dateStart(p["Target date"]);
-  if (!targetDate) {
-    throw new Error(`${where}: Target date is empty.`);
-  }
-  const target = targetWindow(
-    targetDate,
-    readPrecision(selectName(p["Target precision"]), where),
-    where
-  );
+  const target = targetDate
+    ? targetWindow(
+        targetDate,
+        readPrecision(selectName(p["Target precision"]), where),
+        where
+      )
+    : undefined;
 
+  // Optional too; a record with none shows no Links row.
   const related = readLinks(p.Links, where);
-  if (related.length === 0) {
-    throw new Error(
-      `${where}: Links is empty. At least one, so the record can be checked.`
-    );
-  }
 
   const roster = relationIds(p.Contributors).map((id) => {
     const person = people.get(id);
@@ -704,20 +735,13 @@ function toCommitment(
     );
   }
 
-  // Required here and optional on the other records: the register's rule,
-  // repeated in the database description because a cover is not a property
-  // and an agent reading the schema would never learn of it otherwise.
-  const cover = coverOf(row, where, true);
+  // Optional, from the stock library when there is one; see coverOf. It was
+  // required, and a row brought over without one held up the register.
+  const cover = coverOf(row, where);
 
-  // The one-line promise on the card, and the page's share description. The
-  // markdown copy has always refused a record without one.
-  const outcome = text(p.Outcome);
-  if (!outcome) {
-    throw new Error(
-      `${where}: Outcome is empty. It is the card's one line and the page's ` +
-        `description, so a record without one reaches the site saying nothing.`
-    );
-  }
+  // The one-line promise on the card, and the page's share description.
+  // Optional: without one the card is its title.
+  const outcome = text(p.Outcome) || undefined;
 
   return {
     slug: slugify(title),
@@ -730,10 +754,10 @@ function toCommitment(
     ownerSlug: slugify(owner),
     contributors: roster.length > 0 ? roster : undefined,
     lead,
-    target: target.label,
-    targetPeriod: target.period,
-    targetSort: target.sort,
-    targetEnd: target.end,
+    target: target?.label,
+    targetPeriod: target?.period,
+    targetSort: target?.sort,
+    targetEnd: target?.end,
     shippedAt,
     related,
     funding: text(p.Funding) || undefined,

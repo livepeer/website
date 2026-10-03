@@ -54,16 +54,19 @@ export async function generateMetadata({
   if (!c) return {};
 
   // The outcome is already one sentence written to be read away from the page,
-  // which is exactly what a description is for. Nothing to compose.
+  // which is exactly what a description is for. It is optional, and without
+  // one the page says what it is rather than inheriting the site's own line.
   const title = `${c.title} — Livepeer Roadmap`;
+  const description =
+    c.outcome ?? `${c.title}, by ${c.owner}, on the Livepeer roadmap.`;
   return {
     title: c.title,
-    description: c.outcome,
-    openGraph: { title, description: c.outcome, type: "article" },
+    description,
+    openGraph: { title, description, type: "article" },
     twitter: {
       card: "summary_large_image",
       title,
-      description: c.outcome,
+      description,
     },
   };
 }
