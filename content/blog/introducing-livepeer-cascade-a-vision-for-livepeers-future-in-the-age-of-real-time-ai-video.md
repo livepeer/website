@@ -4,10 +4,10 @@ description: "Discover Livepeer's vision to revolutionize real-time AI video wit
 date: "2024-11-01"
 author:
   name: "Doug Petkanics"
-category: "News"
+category: "Network"
 tags: ["cascade", "vision", "realtime-ai", "roadmap"]
-image: "/images/blog/introducing-livepeer-cascade.svg"
-imageAlt: "Introducing Livepeer Cascade"
+image: "https://cdn.sanity.io/images/l36s876e/production/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png?fm=webp&q=82"
+imageAlt: "Orange tubular channel with reflective highlights"
 draft: false
 ---
 
@@ -155,4 +155,4 @@ This post contained lots of information about the potential of Cascade and this 
 3. Update our community experience to be an excellent home for those looking to experiment and push the boundaries of what's possible with real-time AI video pipelines.
 4. Leverage our public goods funding programs to create the right incentives to make builders in this space stakeholders in the Livepeer network.
 
-This new and exciting opportunity energizes me. For all those in the community or looking to join the community to get involved in this mission, the best way to start is by joining the [Livepeer Discord community](https://discord.gg/55SZFEEH5y).
+This new and exciting opportunity energizes me. For all those in the community or looking to join the community to get involved in this mission, the best way to start is by joining the [Livepeer Discord community](https://livepeer.org/discord).
