@@ -23,16 +23,29 @@ const BLOG_DIR = path.join(process.cwd(), "content/blog");
  * instead of quietly splitting the archive in two.
  *
  * Order is the order they appear in the index's rail, and it is editorial
- * rather than alphabetical: what the network did, then the two product
- * surfaces, then the people and the governance around them.
+ * rather than alphabetical: the network, the product, then the people and
+ * the governance around them — the readers the site already speaks to.
+ *
+ * Four. "Proposals" became Governance: neither post under it was a proposal
+ * (one introduced the Foundation, one explained the treasury), and the
+ * treasury, the Foundation, staking and proposals are what an LPT holder
+ * looks for under one name. "Engineering" was never used and went; a
+ * technical post belongs under the network or the product it is about.
  */
 export const BLOG_CATEGORIES = [
   "Network",
   "Agent",
   "Community",
-  "Proposals",
-  "Engineering",
+  "Governance",
 ] as const;
+
+/**
+ * Old names still accepted, for as long as a row may carry one. A rename has
+ * two halves, this file and the Notion select, and they never land at the
+ * same moment; without this the blog stops refreshing in between. Remove an
+ * entry once no row uses it.
+ */
+const RENAMED: Record<string, BlogCategory> = { Proposals: "Governance" };
 
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
@@ -101,7 +114,7 @@ export function byNewest<T extends { date: string }>(posts: T[]): T[] {
  *
  * Declared-but-empty categories are held back rather than shown: a filter
  * option that can only ever return "No posts match that search" is a dead end
- * dressed as a choice. Engineering appears the moment a post uses it — no code
+ * dressed as a choice. Agent appears the moment a post uses it — no code
  * change needed.
  */
 export function categoriesInUse(posts: BlogSummary[]): BlogCategory[] {
@@ -126,6 +139,8 @@ export function categoryFromSlug(slug: string): BlogCategory | undefined {
 export const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function assertCategory(value: unknown, where: string): BlogCategory {
+  const renamed = typeof value === "string" ? RENAMED[value] : undefined;
+  if (renamed) return renamed;
   if (!BLOG_CATEGORIES.includes(value as BlogCategory)) {
     throw new Error(
       `${where}: category ${JSON.stringify(value)} is not one of ${BLOG_CATEGORIES.join(", ")}.`

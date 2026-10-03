@@ -2,7 +2,7 @@
 title: "Introducing the Livepeer Foundation"
 description: "A new, neutral entity to steward the next phase of growth, decentralization, and ecosystem participation across the Livepeer network."
 date: "2025-06-05"
-category: "Proposals"
+category: "Governance"
 tags: ["governance", "foundation", "announcement"]
 image: "https://cdn.sanity.io/images/l36s876e/production/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png?fm=webp&q=82"
 imageAlt: "Layered green reflective architecture"

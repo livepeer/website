@@ -134,6 +134,12 @@ const nextConfig: NextConfig = {
         destination: "/blog/:slug*",
         permanent: false,
       },
+      // The blog's Proposals category became Governance (lib/blog.ts).
+      {
+        source: "/blog/category/proposals",
+        destination: "/blog/category/governance",
+        permanent: true,
+      },
       // Legal pages — not yet implemented, redirect to home for now
       {
         source: "/terms-of-service",
