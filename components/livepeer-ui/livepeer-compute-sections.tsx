@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowRightIcon,
   CircleDollarSignIcon,
@@ -9,13 +8,35 @@ import {
 
 import { LivepeerSymbol } from "@/components/brand";
 import { ComputeMetrics } from "@/components/livepeer-ui/compute-metrics";
+import { GpuRack } from "@/components/livepeer-ui/gpu-rack";
 import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
 import { LivepeerCubeStream } from "@/components/livepeer-ui/livepeer-cube-stream";
 import { stockAssets } from "@/lib/stock-assets";
 import { Button } from "@/components/ui/button";
+import { ExternalArrow } from "@/components/ui/external-arrow";
 import { cn } from "@/lib/utils";
 
 type EarnContent = NonNullable<LivepeerOrgPage["earnContent"]>;
+
+/**
+ * The hero's field circle from xl, as a multiple of the hero's height: small
+ * enough to hold the arc to the copy's half and leave the other half to the
+ * rack. Shared by the field and the rack, which aims its jobs off the arc.
+ */
+const HERO_FIELD_RADIUS = 0.51;
+/**
+ * How far the field runs on under the hero, into the requirements section,
+ * where it fades out; the canvas class spells the same number out, since
+ * Tailwind reads class names as written.
+ */
+const HERO_FIELD_BLEED = 120;
+/**
+ * From xl, the larger circle the arc is drawn on, with the same outer edge,
+ * as a multiple of the hero's height (`wideArcRadius`). The hero's own
+ * circle bottoms out at the hero's foot, so the arc could not run on into
+ * the section below; this one is still descending where it leaves.
+ */
+const HERO_FIELD_ARC = 0.8;
 
 const baselineIcons = {
   cpu: CpuIcon,
@@ -42,24 +63,63 @@ export function ComputeHeroSection({
     //
     // Full-bleed so the field can run edge to edge — the max-w-page measure
     // moves to the content wrapper instead.
-    <section className="relative isolate flex min-h-[calc(100svh-4rem)] w-full items-center overflow-hidden">
+    // Clipped across, not down: the field runs on under the hero into the
+    // section beneath, and overflow-hidden cut it at the boundary.
+    <section className="relative isolate flex min-h-[calc(100svh-4rem)] w-full items-center overflow-x-clip">
       {/* The field is mirrored, matching the Orchestrator band on the home
           page that links here — you arrive to the same arc you clicked from.
           It also distinguishes this hero from the home hero, which runs the
-          same stream unflipped. Fades toward the Baseline section rather than
-          being cut at the boundary.
+          same stream unflipped. It runs on 120px under the hero, fading from
+          50px above the boundary, and is gone before the requirements table
+          begins (that section's top padding is raised from xl to make sure),
+          so the arc goes into the section below without touching anything in
+          it. Faded inside the hero (from 72% of its height at first) it
+          dissolved while still sweeping; run 180px on, it faded out over the
+          table's first icon and across its column rule.
 
           The component finds the h1's parent to hold particles clear of the
           copy, so the canvas has to be a sibling of the content wrapper. */}
-      <LivepeerCubeStream className="z-0 -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,black_0%,black_72%,transparent_100%)]" />
-      <div className="relative z-10 mx-auto flex w-full max-w-page flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-24 lg:px-10">
+      <LivepeerCubeStream
+        wideRadius={HERO_FIELD_RADIUS}
+        wideArcRadius={HERO_FIELD_ARC}
+        bleedBottom={HERO_FIELD_BLEED}
+        className="bottom-auto z-0 h-[calc(100%+120px)] -scale-x-100 opacity-80 [mask-image:linear-gradient(to_bottom,black_0,black_calc(100%_-_170px),transparent_100%)]"
+      />
+      {/* From xl the hero is the home page's provider band, arrived at:
+          the rack where the card stood, between the page's edge and the
+          arc, and the copy across the arc from it. The home band says "Put
+          your GPUs to work" over one card; this page shows the plural, with
+          the network's jobs landing on it. Below xl the arc runs through
+          that space, and the hero stays centred copy over the field.
+
+          The mirror (copy left, rack right, field unmirrored) was built and
+          set aside. It put the heading on the page's left edge, but it
+          turned the copy's ragged edge to the arc, leaving a dead band
+          between them where the hard edge had sat against the curve, and it
+          left the button bottom left, where a scan of the screen does not
+          end, with the rack in the corner where it does. Here the eye goes
+          picture, flow, heading, and ends on the button.
+
+          Above the copy (z-20) so the rack can be taken hold of; the
+          layer itself lets everything else through. */}
+      <div className="pointer-events-none absolute inset-0 z-20 hidden xl:block">
+        <div className="relative mx-auto h-full w-full max-w-page">
+          <GpuRack
+            side="left"
+            arcRadius={HERO_FIELD_ARC}
+            wideRadius={HERO_FIELD_RADIUS}
+            className="absolute inset-y-0 left-10 w-[58%]"
+          />
+        </div>
+      </div>
+      <div className="relative z-10 mx-auto flex w-full max-w-page flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-24 lg:px-10 xl:items-end xl:text-left">
         {/* This inner measure is load-bearing, not just typographic. The canvas
             reads the h1's *parent* to work out how wide a berth to give the
             copy, so leaving the h1 directly inside the max-w-page wrapper made
             the exclusion zone 1408px and pushed almost the whole field off
             canvas — 31 particles rendered where home shows ~561. Constraining
             it here matches home's max-w-3xl block. */}
-        <div className="flex w-full max-w-3xl flex-col items-center">
+        <div className="flex w-full max-w-3xl flex-col items-center xl:max-w-xl xl:items-start">
           {/* The mockup's arbitrary clamp is clamp(2.5rem,4.5vw,4rem), which is
               text-display-fluid exactly — same ramp, tracking, and weight. */}
           <h1 className="text-display-fluid text-balance">{content.heading}</h1>
@@ -70,9 +130,13 @@ export function ComputeHeroSection({
               no placeholder or zero state: an empty metric card would still
               read as a claim about what the network paid out. */}
           {metrics && (
-            <div className="mt-10">
+            // Full width below sm, where the two cards share the row as
+            // halves: in the centred column the wrapper shrank to its
+            // content, the halves were halves of nothing, and on a phone
+            // the figures were not drawn at all.
+            <div className="mt-10 w-full sm:w-auto">
               <ComputeMetrics
-                align="center"
+                align="center-xl-start"
                 stats={[
                   {
                     label: earnings.servicePayoutsLabel,
@@ -94,7 +158,12 @@ export function ComputeHeroSection({
           <Button
             size="lg"
             nativeButton={false}
-            render={<Link href={content.cta.href} />}
+            render={
+              // The tutorial, off-site, taking over the tab: it is the next
+              // step, as the Agent console is on the home page, not an aside.
+              // No Link: there is nothing for Next to prefetch across origins.
+              <a href={content.cta.href} />
+            }
             className="mt-10 h-12 rounded-sm px-5"
           >
             {content.cta.label}
@@ -117,7 +186,9 @@ export function ComputeBaselineSection({
   cta: { label: string; href: string };
 }) {
   return (
-    <section className="mx-auto max-w-page px-4 py-16 sm:px-6 sm:py-24 lg:px-10">
+    // relative z-10: above the hero's field, which runs on into the top of
+    // this section, so the copy and the table sit over its tail.
+    <section className="relative z-10 mx-auto max-w-page px-4 py-16 sm:px-6 sm:py-24 lg:px-10 xl:pt-32">
       {/* items-center at md+: the heading column is much shorter than the
           table, and top-aligning left it stranded against a tall block. */}
       <div className="grid gap-10 md:grid-cols-[0.7fr_1.3fr] md:items-center">
@@ -128,21 +199,26 @@ export function ComputeBaselineSection({
           <p className="mt-4 max-w-md text-reading-body text-pretty text-muted-foreground">
             {content.baselineDescription}
           </p>
-          {/* The requirements answer "can I run this?"; this answers "how do I
-              start?". It sits in the heading column rather than after the grid
-              so it reads as the next step from the description, and stays
-              beside the requirements on desktop instead of below them.
-              Secondary: the hero opens the page and the stake panel closes it,
-              so this supporting step shouldn't compete with either. */}
+          {/* The requirements answer "can I run this?" in brief; this is the
+              detail, the docs' hardware reference. It sits in the heading column rather than after the grid
+              so it reads on from the description, and stays beside the
+              requirements on desktop instead of below them. Secondary: the
+              hero's button is the page's action and the stake panel closes
+              it, so the reference shouldn't compete with either. */}
           <Button
             size="lg"
             variant="secondary"
             nativeButton={false}
-            render={<Link href={cta.href} />}
+            render={
+              // An aside, so a new tab and the mark that says so: the reader
+              // checks their card and comes back to the requirements. The
+              // site's rule, from the home hero's buttons.
+              <a href={cta.href} target="_blank" rel="noreferrer" />
+            }
             className="mt-8 h-12 rounded-sm px-5"
           >
             {cta.label}
-            <ArrowRightIcon className="size-4" aria-hidden="true" />
+            <ExternalArrow className="size-4" />
           </Button>
         </div>
         {/* border-t on the grid, border-b on every cell: together they rule off
@@ -259,11 +335,20 @@ export function ComputeOnchainSection({
             size="lg"
             variant="secondary"
             nativeButton={false}
-            render={<Link href={content.arbitrum.cta.href} />}
+            render={
+              // Asides, both of this section's links, so new tabs and the
+              // mark that says so: someone bridging funds or looking over
+              // the active set will want this page still open behind them.
+              <a
+                href={content.arbitrum.cta.href}
+                target="_blank"
+                rel="noreferrer"
+              />
+            }
             className="mt-8 h-12 rounded-sm px-5"
           >
             {content.arbitrum.cta.label}
-            <ArrowRightIcon className="size-4" aria-hidden="true" />
+            <ExternalArrow className="size-4" />
           </Button>
           {/* Custody warning. mt-auto pins it to the foot of the panel rather
             than letting it trail the button, so it reads as a standing caveat
@@ -297,11 +382,17 @@ export function ComputeOnchainSection({
           <Button
             size="lg"
             nativeButton={false}
-            render={<Link href={content.stake.cta.href} />}
+            render={
+              <a
+                href={content.stake.cta.href}
+                target="_blank"
+                rel="noreferrer"
+              />
+            }
             className="mt-8 h-12 rounded-sm px-5"
           >
             {content.stake.cta.label}
-            <ArrowRightIcon className="size-4" aria-hidden="true" />
+            <ExternalArrow className="size-4" />
           </Button>
         </div>
       </div>

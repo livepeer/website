@@ -98,7 +98,13 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
     heading: "Put your GPUs to work.",
     description:
       "Connect your GPUs, choose what they run and set your own prices. Livepeer Agent routes each AI video job to the best fit, and you get paid for every job they complete.",
-    cta: { label: "Get started", href: "/compute" },
+    // The role the band is addressed to ("For GPU providers") and the word its
+    // copy uses, as the action. "Get started" promised a setup flow and led
+    // to a page that explains one; "Provide GPUs", the header's name for that
+    // page, read as a second command after the heading; "See how it works"
+    // and "Learn more" were weighed and set aside. The step itself, "Connect
+    // your GPUs", is the first button on the page this opens.
+    cta: { label: "Become a provider", href: "/compute" },
   },
 };
 

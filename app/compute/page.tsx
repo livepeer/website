@@ -25,9 +25,14 @@ const earn: EarnContent = {
     heading: "Put your GPUs to work on Livepeer.",
     description:
       "Livepeer routes inference and video work to GPUs on the open network. Run an orchestrator, serve real workloads, and earn from fees and protocol rewards.",
+    // The page's one action: the step-by-step tutorial, worded as what the
+    // reader gets out of it and in the home band's own words, since that
+    // band's button is how most arrive. It was "Orchestrator docs",
+    // a reference link where someone who had just come to start
+    // expected the next step; the docs moved down beside the requirements.
     cta: {
-      label: "Orchestrator docs",
-      href: "https://docs.livepeer.org/v2/orchestrators/setup/guide",
+      label: "Connect your GPUs",
+      href: "https://docs.livepeer.org/network/tutorials/run-your-first-orchestrator",
     },
   },
   // The "Choose the right path" section is no longer rendered. These fields
@@ -143,12 +148,14 @@ const earn: EarnContent = {
 };
 
 // Not part of `earnContent` — the contract has no CTA on the baseline section.
-// The hero's "Orchestrator docs" points at the reference; this points at the
-// step-by-step tutorial, which is the actual next action after reading the
-// requirements.
+// The reference beside the requirements: supported GPUs, VRAM by workload,
+// session limits and drivers, which answers the question the requirements
+// raise ("will my card do?"). It pointed at the docs' landing page first,
+// which left that reader to find this page; the hero's button is the
+// tutorial.
 const baselineCta = {
-  label: "Run your first orchestrator",
-  href: "https://docs.livepeer.org/network/tutorials/run-your-first-orchestrator",
+  label: "Check GPU support",
+  href: "https://docs.livepeer.org/network/reference/hardware",
 };
 
 const DESCRIPTION =

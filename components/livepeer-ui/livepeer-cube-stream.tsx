@@ -28,6 +28,15 @@ const maxDensityScale = 2.4;
  * of the field was twice the work on the main thread for the same picture.
  */
 const SETTLE_SECONDS = 8;
+
+/**
+ * Where a wide field (see `wideRadius`) feeds its stream in, as a share of
+ * its radius out from the centre: just outside the circle, so the stream
+ * meets it partway up its side and the arc is an arc. Fed in under the
+ * circle (0.3) to draw it from the section's foot, it traced the circle's
+ * whole bottom and closed it under the copy.
+ */
+const WIDE_FEED = 1.03;
 const SETTLE_STEP_MS = 33.334;
 
 function particleCountFor(width: number) {
@@ -55,7 +64,16 @@ function makeParticles(
   count: number,
   width: number,
   height: number,
-  variant: "banner" | "card" | "default"
+  variant: "banner" | "card" | "default",
+  /**
+   * A circle to seed on instead (see `wideRadius`): each particle on the
+   * circle at its own height, just outside it, so the first frame is
+   * already the arc. Seeded the default way, the first seconds of a wide
+   * field had particles drifting through the half of the hero it is meant
+   * to leave clear; seeded in a column beside the circle, the page opened
+   * on a wide band of pixels that took seconds to draw in to a line.
+   */
+  seedAlong?: { centerX: number; centerY: number; radius: number }
 ): Particle[] {
   return Array.from({ length: count }, (_, index) => {
     const progress = noise(index + 3);
@@ -83,15 +101,33 @@ function makeParticles(
           : variant === "card"
             ? Math.min(width * 0.42, height * 0.95)
             : Math.min(width * 0.36, height * 0.54);
-    let x = centerX + spread;
     let y = (-0.1 + progress * 1.2) * height;
-    const fieldX = x - fieldCenterX;
-    const fieldY = y - fieldCenterY;
-    const distance = Math.max(1, Math.hypot(fieldX, fieldY));
+    let x = centerX + spread;
+    if (seedAlong) {
+      // A third on the line, tight to it; the rest held below the section,
+      // to rise in as the running stream feeds them. With every particle on
+      // the line at once it opened as a heavy band that took seconds to
+      // thin to what the field holds.
+      if (noise(index + 31) > 0.34) {
+        y = height * (1.04 + noise(index + 37));
+      }
+      const across = y - seedAlong.centerY;
+      const out = noise(index + 23) ** 4 * seedAlong.radius * 0.03;
+      x =
+        Math.abs(across) < seedAlong.radius
+          ? seedAlong.centerX +
+            Math.sqrt(seedAlong.radius ** 2 - across ** 2) +
+            out
+          : seedAlong.centerX + seedAlong.radius * WIDE_FEED + spread * 0.45;
+    } else {
+      const fieldX = x - fieldCenterX;
+      const fieldY = y - fieldCenterY;
+      const distance = Math.max(1, Math.hypot(fieldX, fieldY));
 
-    if (distance < fieldRadius) {
-      x = fieldCenterX + (fieldX / distance) * fieldRadius;
-      y = fieldCenterY + (fieldY / distance) * fieldRadius;
+      if (distance < fieldRadius) {
+        x = fieldCenterX + (fieldX / distance) * fieldRadius;
+        y = fieldCenterY + (fieldY / distance) * fieldRadius;
+      }
     }
 
     return {
@@ -116,7 +152,8 @@ function fieldCircle(
   height: number,
   variant: "banner" | "card" | "default",
   arcRadius?: number,
-  exclusionRadius = 0
+  exclusionRadius = 0,
+  ownRadiusFactor?: number
 ) {
   const ownCenterX =
     width *
@@ -127,8 +164,9 @@ function fieldCircle(
         : variant === "card"
           ? 0.32
           : 0.3);
-  const ownRadius =
-    width < 640
+  const ownRadius = ownRadiusFactor
+    ? height * ownRadiusFactor
+    : width < 640
       ? width * 0.92
       : Math.max(
           variant === "banner"
@@ -167,9 +205,21 @@ function fieldCircle(
  * under it; a field that carries on behind the next section needs a curve
  * that is still descending when it gets there. Holding the outer edge keeps
  * the arc where it was against the section's own copy, only flatter.
+ *
+ * `wideRadius` sets the section's own circle, from xl (1280px), as a multiple
+ * of the layout height, in place of the one sized to the canvas and grown to
+ * clear the copy. The Compute hero uses it to keep the field to the copy's
+ * half of a two-column hero, leaving the other half to the rack drawn there,
+ * and feeds the stream in at the circle's edge rather than across that half.
+ * `wideArcRadius` is `arcRadius` for that circle, from xl only: a larger one
+ * with the same outer edge, still descending where it leaves the section, so
+ * the arc runs on into a `bleedBottom` strip; the stream is then fed in on
+ * that curve under the strip, so the line itself is drawn from there up.
  */
 function LivepeerCubeStream({
   arcRadius,
+  wideArcRadius,
+  wideRadius,
   bleedBottom = 0,
   bleedTop = 0,
   className,
@@ -186,6 +236,8 @@ function LivepeerCubeStream({
   inverted?: boolean;
   startAtSeconds?: number;
   variant?: "banner" | "card" | "default";
+  wideArcRadius?: number;
+  wideRadius?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -216,6 +268,18 @@ function LivepeerCubeStream({
     if (freezeAtSeconds !== undefined) {
       delete document.documentElement.dataset.captureReady;
     }
+
+    const seedAlong = () =>
+      wideRadius !== undefined && width >= 1280
+        ? fieldCircle(
+            width,
+            height,
+            variant,
+            wideArcRadius ?? arcRadius,
+            0,
+            wideRadius
+          )
+        : undefined;
 
     /** Returns whether the particles were seeded afresh. */
     const resize = (): boolean => {
@@ -271,7 +335,13 @@ function LivepeerCubeStream({
       );
 
       if (particles.length === 0 || crossedMobileBreakpoint) {
-        particles = makeParticles(targetCount, width, height, variant);
+        particles = makeParticles(
+          targetCount,
+          width,
+          height,
+          variant,
+          seedAlong()
+        );
         return true;
       }
 
@@ -291,9 +361,13 @@ function LivepeerCubeStream({
       // exactly the set this width would have had.
       if (particles.length < targetCount) {
         particles.push(
-          ...makeParticles(targetCount, width, height, variant).slice(
-            particles.length
-          )
+          ...makeParticles(
+            targetCount,
+            width,
+            height,
+            variant,
+            seedAlong()
+          ).slice(particles.length)
         );
       } else if (particles.length > targetCount) {
         particles.length = targetCount;
@@ -317,11 +391,19 @@ function LivepeerCubeStream({
         ? 0
         : Math.min(2, Math.max(0.25, (time - previousTime) / 16.667));
       previousTime = time;
+      const wide = wideRadius !== undefined && width >= 1280;
       const {
         centerX: fieldCenterX,
         centerY: fieldCenterY,
         radius: fieldRadius,
-      } = fieldCircle(width, height, variant, arcRadius, heroExclusionRadius);
+      } = fieldCircle(
+        width,
+        height,
+        variant,
+        wide ? (wideArcRadius ?? arcRadius) : arcRadius,
+        heroExclusionRadius,
+        wide ? wideRadius : undefined
+      );
       const influenceRadius =
         fieldRadius +
         Math.min(
@@ -417,9 +499,21 @@ function LivepeerCubeStream({
           // Fed in nearer the larger circle, so the stream meets it lower
           // and the line it draws is already running where the next section
           // starts, rather than beginning just short of it.
-          particle.x = width * (arcRadius ? 0.6 : 0.7) + spread;
           particle.y =
             height * (1.04 + noise(particle.wave + 11) * 0.12) + bleedBottom;
+          // A wide field's stream is fed in on its circle, at the height it
+          // starts from when the circle reaches that low, so the arc is drawn
+          // from under the strip up; otherwise just beside it.
+          const below = particle.y - fieldCenterY;
+          const onCurve =
+            wide && wideArcRadius !== undefined && fieldRadius > below
+              ? fieldCenterX + Math.sqrt(fieldRadius ** 2 - below ** 2)
+              : undefined;
+          particle.x = wide
+            ? onCurve !== undefined
+              ? onCurve + fieldRadius * 0.02 + spread * 0.3
+              : fieldCenterX + fieldRadius * WIDE_FEED + spread * 0.45
+            : width * (arcRadius ? 0.6 : 0.7) + spread;
           particle.vx = -0.08 - noise(particle.wave + 17) * 0.18;
           particle.vy = -(0.9 + particle.speed * 0.58);
         }
@@ -551,6 +645,8 @@ function LivepeerCubeStream({
     inverted,
     startAtSeconds,
     variant,
+    wideArcRadius,
+    wideRadius,
   ]);
 
   return (

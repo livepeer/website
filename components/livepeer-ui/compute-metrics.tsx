@@ -11,13 +11,15 @@ export type ComputeMetric = { label: string; value: string; period?: string };
  * `align` exists because the label row is a flex container: it ignores an
  * inherited text-align, so on a centred surface the value would centre while
  * the label above it stayed packed left. The value is a block and follows
- * text-align on its own, so only this row needs steering.
+ * text-align on its own, so only this row needs steering. `center-xl-start`
+ * is the Compute hero's: centred over its stacked layout, then flush left
+ * once the copy moves to its own column at xl.
  */
 export function ComputeMetrics({
   align = "start",
   stats,
 }: {
-  align?: "start" | "center";
+  align?: "start" | "center" | "center-xl-start";
   stats: ComputeMetric[];
 }) {
   return (
@@ -29,7 +31,9 @@ export function ComputeMetrics({
               className={
                 align === "center"
                   ? "flex w-full items-baseline justify-center gap-1.5"
-                  : "flex w-full items-baseline gap-1.5"
+                  : align === "center-xl-start"
+                    ? "flex w-full items-baseline justify-center gap-1.5 xl:justify-start"
+                    : "flex w-full items-baseline gap-1.5"
               }
             >
               <span>{stat.label}</span>
@@ -46,7 +50,9 @@ export function ComputeMetrics({
               className={
                 align === "center"
                   ? "w-full text-center font-sans text-3xl leading-none font-medium tracking-tight tabular-nums"
-                  : "font-sans text-3xl leading-none font-medium tracking-tight tabular-nums"
+                  : align === "center-xl-start"
+                    ? "w-full text-center font-sans text-3xl leading-none font-medium tracking-tight tabular-nums xl:text-left"
+                    : "font-sans text-3xl leading-none font-medium tracking-tight tabular-nums"
               }
             >
               {stat.value}
