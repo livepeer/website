@@ -3,6 +3,12 @@ import Link from "next/link";
 
 import { ContributeGraph } from "@/components/livepeer-ui/contribute-graph";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { isActive, type FundingPath } from "@/lib/contribute";
 import type { ContributorSet } from "@/lib/contributors";
@@ -176,38 +182,62 @@ export function ContributorFaces({ count, spotlight }: ContributorSet) {
     i < 5 ? "" : i < 8 ? "hidden sm:block" : "hidden lg:block";
 
   return (
-    <div className="flex -space-x-2">
-      {spotlight.map((c, i) => (
-        <a
-          key={c.login}
-          href={`https://github.com/${c.login}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`${c.name} · ${c.yearly.toLocaleString()} contributions this year`}
-          style={{ zIndex: spotlight.length - i }}
-          className={`${face} ${shown(i)}`}
-        >
-          <img
-            src={`${c.avatar}&s=80`}
-            alt={c.name}
-            width={40}
-            height={40}
-            loading="lazy"
-            className="size-full object-cover grayscale transition duration-200 motion-reduce:transition-none hover:grayscale-0"
+    // The registry's Tooltip rather than a `title`, which this used first: a
+    // native title waits a second or more, cannot be styled, and never shows
+    // for a keyboard. One provider for the row, so after the first face the
+    // next opens at once as the pointer moves along it.
+    <TooltipProvider delay={150}>
+      <div className="flex -space-x-2">
+        {spotlight.map((c, i) => (
+          <Tooltip key={c.login}>
+            {/* render, not a wrapper: the trigger is a <button> by default,
+                and a button around a link is invalid and focused twice. */}
+            <TooltipTrigger
+              render={
+                <a
+                  href={`https://github.com/${c.login}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ zIndex: spotlight.length - i }}
+                  className={`${face} ${shown(i)}`}
+                >
+                  <img
+                    src={`${c.avatar}&s=80`}
+                    alt={c.name}
+                    width={40}
+                    height={40}
+                    loading="lazy"
+                    className="size-full object-cover grayscale transition duration-200 motion-reduce:transition-none hover:grayscale-0"
+                  />
+                </a>
+              }
+            />
+            <TooltipContent>
+              {c.name} · {c.yearly.toLocaleString()} contributions this year
+            </TooltipContent>
+          </Tooltip>
+        ))}
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <a
+                href={GITHUB}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${remaining.toLocaleString()} more contributors on GitHub`}
+                style={{ zIndex: 0 }}
+                className={`${face} flex items-center justify-center bg-muted font-mono text-[0.625rem] font-medium text-muted-foreground hover:text-foreground`}
+              >
+                +{remaining}
+              </a>
+            }
           />
-        </a>
-      ))}
-      <a
-        href={GITHUB}
-        target="_blank"
-        rel="noopener noreferrer"
-        title={`${remaining.toLocaleString()} more contributors`}
-        style={{ zIndex: 0 }}
-        className={`${face} flex items-center justify-center bg-muted font-mono text-[0.625rem] font-medium text-muted-foreground hover:text-foreground`}
-      >
-        +{remaining}
-      </a>
-    </div>
+          <TooltipContent>
+            {remaining.toLocaleString()} more contributors
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   );
 }
 

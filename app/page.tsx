@@ -108,11 +108,14 @@ const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   },
 };
 
-// The two sides, labelled over their sections. The Agent is for people who
-// build with it and people who make things with it; the band is for people
-// with hardware. See Audience in livepeer-org-landing-sections.
+// The two sides, labelled over their sections. The Agent is for creators,
+// the audience the 2.0 messaging house names (creators and marketers making
+// video in the agent they already use); it said "builders and creatives"
+// first, and the messaging steers away from builders, who are fal's and
+// Replicate's market (Adam). The band is for people with hardware. See
+// Audience in livepeer-org-landing-sections.
 const audience = {
-  agent: "For builders and creatives",
+  agent: "For creators",
   providers: "For GPU providers",
 };
 
