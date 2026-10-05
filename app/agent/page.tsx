@@ -31,8 +31,14 @@ const agent: AgentContent = {
     heading: "Install Livepeer Agent in your app today",
     description:
       "Point your product's agent runtime at the same MCP server and Livepeer Agent's image and video workflows are available inside it.",
-    // No CTA. The band is a statement about what the Agent can do inside
-    // someone else's product, and the console is one click away in the header.
+    // To sign-up: connecting a runtime to the MCP server needs an account
+    // (the first connection logs in), and there is no integration guide to
+    // send a builder to yet; the docs have no Agent pages and the MCP host
+    // serves only the endpoint. It had no button at first, as a statement
+    // with the console one click away in the header, and read as a dead end
+    // to a builder told to install something (Adam). Point it at the guide
+    // once the docs have one.
+    cta: { label: "Create an account", href: agentApp.createAccount },
   },
   capabilities: {
     heading:
