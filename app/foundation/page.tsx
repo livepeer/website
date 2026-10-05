@@ -1,57 +1,58 @@
 import type { Metadata } from "next";
 
 import {
-  FoundationHeroSection,
-  FoundationMandateSection,
-  type FoundationContent,
+  FOUNDATION_DESCRIPTION,
+  foundation,
+  loadFoundationWork,
+} from "@/app/foundation/content";
+import {
+  AccountabilityTimeline,
+  FundingLadder,
+  RoadmapSteps,
+} from "@/components/livepeer-ui/foundation-steps";
+import {
+  FoundationChapter,
+  FoundationHero,
+  FoundationWaysIn,
 } from "@/components/livepeer-ui/livepeer-foundation-sections";
+import { isActive } from "@/lib/contribute";
+import { getFundingPaths } from "@/lib/register";
 
 /**
- * Copy mirrors the public-beta mockup, authored as a typed object rather than
- * read from a CMS (CLAUDE.md → Content).
- *
- * The mockup is two sections and stops. The previous page ran four numbered
- * chapters; what it said that this does not is noted in the git history —
- * chiefly the three pillars spelled out one by one, and a project history
- * whose closing framing ("the open network for real-time AI video") the 2.0
- * announcement has since retired.
+ * The design is described in components/livepeer-ui/livepeer-foundation-
+ * sections.tsx, the copy is in ./content.ts. The roadmap and the funding
+ * ladder are read from Notion through the minute-long fetch cache, so the
+ * page refreshes with them.
  */
-const foundation: FoundationContent = {
-  hero: {
-    eyebrow: "The Livepeer Foundation",
-    heading: "Advancing the world's open inference network.",
-    description:
-      "The Livepeer Foundation is an independent non-profit accountable to network participants, advancing Livepeer's long-term health through strategy, core development, and ecosystem growth.",
-    cta: {
-      // The mockup links out to livepeer.org; on livepeer.org that is a local
-      // route, and the post is in content/blog.
-      label: "Read more",
-      href: "/blog/introducing-the-livepeer-foundation",
-    },
-  },
-  mandate: {
-    heading: "Strategy, coordination, & support.",
-    description:
-      "The Livepeer Foundation sets the network's strategic direction, aligns stakeholders around shared priorities, coordinates development across independent teams, and supports builders with funding, connections, and tools.",
-    cta: { label: "Explore the ecosystem", href: "/ecosystem" },
-  },
-  lockup: "The Livepeer Foundation",
-};
 
 export const metadata: Metadata = {
   title: "Foundation",
-  description:
-    "The Livepeer Foundation is an independent non-profit accountable to network participants, advancing Livepeer's long-term health through strategy, core development, and ecosystem growth.",
+  description: FOUNDATION_DESCRIPTION,
 };
 
-export default function FoundationPage() {
+export default async function FoundationPage() {
+  const [items, paths] = await Promise.all([
+    loadFoundationWork(),
+    getFundingPaths(),
+  ]);
+  const ladder = paths
+    .filter(isActive)
+    .sort((a, b) => a.order - b.order)
+    .map((p) => ({ name: p.name, bestFor: p.bestFor, ceiling: p.ceiling }));
+
   return (
     <>
-      <FoundationHeroSection content={foundation.hero} />
-      <FoundationMandateSection
-        content={foundation.mandate}
-        lockup={foundation.lockup}
-      />
+      <FoundationHero content={foundation.hero} />
+      <FoundationChapter content={foundation.direction}>
+        <RoadmapSteps items={items} />
+      </FoundationChapter>
+      <FoundationChapter content={foundation.funding}>
+        <FundingLadder paths={ladder} />
+      </FoundationChapter>
+      <FoundationChapter content={foundation.accountability}>
+        <AccountabilityTimeline />
+      </FoundationChapter>
+      <FoundationWaysIn content={foundation.waysIn} />
     </>
   );
 }

@@ -1,4 +1,5 @@
-import { HEALTH_LABEL, type HealthOrNone } from "@/lib/health";
+import { HEALTH_LABEL, type HealthOrNone, type Standing } from "@/lib/health";
+import type { Commitment } from "@/lib/roadmap";
 import { cn } from "@/lib/utils";
 
 /**
@@ -184,6 +185,94 @@ export function HealthMark({
     >
       <HealthIcon health={health} />
       {word ?? HEALTH_LABEL[health]}
+    </span>
+  );
+}
+
+/** "Sep 5", or "Sep 5, 2025" once it is not this year. */
+export function shortDate(iso: string): string {
+  const sameYear = iso.slice(0, 4) === String(new Date().getFullYear());
+  return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+}
+
+/**
+ * State, as a dot and a word. Here beside the health it carries rather than
+ * in roadmap.tsx so a page outside the roadmap (the Foundation page) can
+ * draw it without the roadmap's client code.
+ *
+ * A dot rather than a badge: three boxed chips per card would rebuild the
+ * bordered look this design is getting away from, and the state is already one
+ * word long. Green lands on "in progress" alone — colour that appears on every
+ * state signals nothing, and this way the live work is findable at a glance.
+ *
+ * Green is brand expression, never an affordance; globals.css scopes
+ * --color-brand to exactly this use. Light mode darkens it with the same mix
+ * the home hero's chip uses, because display-p3 green on white is illegible.
+ */
+export function StateMark({
+  state,
+  standing,
+  retro,
+}: {
+  state: Commitment["state"];
+  standing?: Standing;
+  retro?: boolean;
+}) {
+  const building = state === "building";
+  return (
+    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+      <span className="flex items-center gap-2">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "size-1.5 shrink-0 rounded-full",
+            building
+              ? "bg-[color-mix(in_oklch,var(--color-brand),black_28%)] dark:bg-brand"
+              : "bg-muted-foreground/40"
+          )}
+        />
+        <span className={cn(building && "text-foreground")}>
+          {building ? "In progress" : state === "next" ? "Planned" : "Shipped"}
+        </span>
+      </span>
+      {/* Health beside the state, for work under way: what the lead last
+          said about it, or that nothing has been said lately. Linear puts
+          the same word on a project's row. See lib/updates.ts. */}
+      {building && standing && (
+        <>
+          <span aria-hidden="true" className="text-muted-foreground/50">
+            ·
+          </span>
+          <HealthMark
+            health={standing.health}
+            // "No update" alone reads as though nothing was ever posted.
+            // When a post has gone stale the mark names the day it went
+            // quiet; when nothing was posted it says so.
+            word={
+              standing.health !== "no-update"
+                ? undefined
+                : standing.latest
+                  ? `No update since ${shortDate(standing.latest.date)}`
+                  : "No update yet"
+            }
+          />
+        </>
+      )}
+      {/* Behind us the question is whether the closing post was written,
+          in the same idiom as the health beside open work. */}
+      {state === "shipped" && retro !== undefined && (
+        <>
+          <span aria-hidden="true" className="text-muted-foreground/50">
+            ·
+          </span>
+          <RetroMark done={retro} />
+        </>
+      )}
     </span>
   );
 }

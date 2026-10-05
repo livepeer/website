@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-const description =
-  "The Livepeer Foundation is an independent non-profit accountable to network participants, advancing Livepeer's long-term health through strategy, core development, and ecosystem growth.";
+import { FOUNDATION_DESCRIPTION as description } from "@/app/foundation/content";
 
 export const metadata: Metadata = {
   title: "Foundation | Livepeer",

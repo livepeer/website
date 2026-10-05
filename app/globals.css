@@ -423,28 +423,6 @@ body {
   }
 }
 
-/* Foundation Venn. The rings carry a sheen that travels around them once every
-   ten seconds, and the lit intersection breathes on a slower, offset cycle —
-   two periods that never quite meet, so the drawing never settles into a
-   visible loop. Both are killed by the reduced-motion rule below. */
-@keyframes foundation-orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes foundation-lens {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(0.9);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.08);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -470,10 +448,6 @@ body {
      `backwards` holds each element's start state through its delay rather than
      flashing in first. */
   --animate-stagger-in: stagger-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-
-  /* Foundation Venn — see the keyframes above. */
-  --animate-foundation-orbit: foundation-orbit 10s linear infinite;
-  --animate-foundation-lens: foundation-lens 7.5s ease-in-out infinite;
 
   /* Livepeer brand green, and the tone that sits legibly on it. Brand
      expression only — per design.md green is never an affordance colour, so
