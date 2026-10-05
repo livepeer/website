@@ -122,7 +122,7 @@ export default async function ContributePage() {
                 </li>
               </ol>
 
-              <h2>How work gets funded</h2>
+              <h2 id="funding">How work gets funded</h2>
               <p>
                 Every way work on the network gets paid for, smallest first.
                 Which rung fits depends on how big the thing is; the proposal is
