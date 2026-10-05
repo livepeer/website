@@ -13,12 +13,19 @@ import {
 } from "./entries";
 import { getMarkdownGuide, type Guide, type GuideName } from "./guides";
 import {
+  getMarkdownLegalPage,
+  isReady,
+  type LegalPage,
+  type LegalSlug,
+} from "./legal";
+import {
   getNotionCommitmentUpdates,
   getNotionCommitments,
   getNotionFundingPaths,
   getNotionEntries,
   getNotionEntryBody,
   getNotionGuide,
+  getNotionLegalPage,
   getNotionOrganizations,
   getNotionPeople,
   getNotionPost,
@@ -204,4 +211,21 @@ export async function getEntryBody(
 /** A guide page by name; see lib/guides.ts. The reporting rules are one. */
 export async function getGuide(name: GuideName): Promise<Guide> {
   return hasNotionCredentials() ? getNotionGuide(name) : getMarkdownGuide(name);
+}
+
+/**
+ * A legal page, or null where it may not be shown; see lib/legal.ts. On
+ * livepeer.org a page shows only once it is published, dated and free of
+ * questions for counsel. Previews and dev show it as it stands, drafts
+ * included, so counsel can review it where it will be read.
+ */
+export async function getLegalPage(slug: LegalSlug): Promise<LegalPage | null> {
+  const page = hasNotionCredentials()
+    ? await getNotionLegalPage(slug)
+    : await getMarkdownLegalPage(slug);
+  if (!page) return null;
+  if (process.env.VERCEL_ENV === "production") {
+    return isReady(page) ? page : null;
+  }
+  return page;
 }

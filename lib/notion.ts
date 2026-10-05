@@ -4,6 +4,7 @@ import path from "node:path";
 import readingTime from "reading-time";
 
 import type { Entry } from "./entries";
+import type { LegalPage, LegalSlug } from "./legal";
 import { blocksToHtml } from "./notion-blocks";
 import { parsePeriod } from "./period";
 import { readCoverUrl, resolveMediaSource } from "./notion-media";
@@ -105,6 +106,8 @@ const UPDATES_DB =
   process.env.NOTION_UPDATES_DB ?? "ce39b6c5bc8a404b9ea2aac237d5acf7";
 const CHANGELOG_DB =
   process.env.NOTION_CHANGELOG_DB ?? "5691c5dfc92b41ee88139ae81510f7d9";
+const LEGAL_DB =
+  process.env.NOTION_LEGAL_DB ?? "bd9d0e68bac8412c8351f82958b0d8d1";
 /** The guides, by name: one page each under Livepeer.org content. */
 const GUIDE_PAGES: Record<GuideName, string> = {
   reporting:
@@ -1443,4 +1446,52 @@ export async function getNotionEntries(): Promise<Entry[]> {
       { period, headline: headline || undefined, draft: status === "Draft" },
     ];
   });
+}
+
+/**
+ * One legal page with its text, or null when no row carries the slug; see
+ * lib/legal.ts. Whether it may be shown is the register's decision, so a
+ * draft comes back too: previews show it for review.
+ */
+export async function getNotionLegalPage(
+  slug: LegalSlug
+): Promise<LegalPage | null> {
+  const rows = (await queryAll(LEGAL_DB)).filter(
+    (row) => selectName(props(row).Slug) === slug
+  );
+  const where = `Legal pages → ${slug}`;
+  if (rows.length > 1) {
+    throw new Error(
+      `${where}: ${rows.length} rows carry this slug. One row is one page, ` +
+        `and the slug is its address.`
+    );
+  }
+  const row = rows[0];
+  if (!row) return null;
+  const p = props(row);
+  const title = text(p.Name).trim();
+  if (!title) throw new Error(`${where}: the row has no Name.`);
+  const status = selectName(p.Status);
+  if (status && status !== "Draft" && status !== "Published") {
+    throw new Error(
+      `${where}: Status is ${JSON.stringify(status)}. It must be Draft or ` +
+        `Published.`
+    );
+  }
+  const html = await readDetail(row.id as string, where);
+  if (!html) {
+    throw new Error(
+      `${where}: the page is empty. The text is the page body, under the ` +
+        `title.`
+    );
+  }
+  return {
+    slug,
+    title,
+    effective: dateStart(p["Effective date"]),
+    // Draft unless someone has published it: a legal page shown by default
+    // is the one mistake this table exists to prevent.
+    draft: status !== "Published",
+    html,
+  };
 }

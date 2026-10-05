@@ -78,6 +78,13 @@ export const livepeerOrgSite: LivepeerOrgSite = {
     { label: "Livepeer.org", href: "https://livepeer.org", service: "website" },
   ],
   copyright: "© 2026 Livepeer",
+  // Linked whatever their state: the pages 404 on livepeer.org until counsel
+  // signs them off and they are published (lib/legal.ts), which the launch
+  // checklist requires before go-live.
+  legalLinks: [
+    { label: "Terms", href: "/terms-of-service" },
+    { label: "Privacy", href: "/privacy-policy" },
+  ],
 };
 
 /**

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { inter, geistMono } from "@/lib/fonts";
 import { LivepeerOrgHeader } from "@/components/livepeer-ui/livepeer-org-header";
 import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer";
+import { Analytics } from "@vercel/analytics/next";
 import { getDiscord, withDiscordInvite } from "@/lib/discord";
 import { livepeerOrgSite } from "@/lib/site";
 import { SectionRule } from "@/components/ui/section-rule";
@@ -80,38 +80,6 @@ export default async function RootLayout({
             __html: `(function(){function apply(t){var de=document.documentElement;de.setAttribute('data-theme',t);de.classList.toggle('dark',t==='dark');}function sys(){return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}try{var s=localStorage.getItem('theme');apply(s==='light'||s==='dark'?s:sys());}catch(e){try{apply(sys());}catch(e2){apply('dark');}}})();`,
           }}
         />
-        {process.env.NEXT_PUBLIC_VERCEL_ENV === "production" && (
-          <>
-            {/* Google Analytics 4 */}
-            <Script
-              src="https://www.googletagmanager.com/gtag/js?id=G-4BFECXFFJD"
-              strategy="afterInteractive"
-            />
-            <Script id="gtag-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-4BFECXFFJD');
-                gtag('config', 'G-E4Q3BR9X93');
-              `}
-            </Script>
-
-            {/* Hotjar */}
-            <Script id="hotjar-init" strategy="afterInteractive">
-              {`
-                (function(h,o,t,j,a,r){
-                  h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                  h._hjSettings={hjid:6388940,hjsv:6};
-                  a=o.getElementsByTagName('head')[0];
-                  r=o.createElement('script');r.async=1;
-                  r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                  a.appendChild(r);
-                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-              `}
-            </Script>
-          </>
-        )}
       </head>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
         <LivepeerOrgHeader
@@ -123,6 +91,10 @@ export default async function RootLayout({
             vertical lines as the header rule and the section rules. */}
         <SectionRule />
         <LivepeerOrgFooter site={site} />
+        {/* Vercel Web Analytics: page views without cookies, so no consent
+            banner. Google Analytics and Hotjar were removed for that reason;
+            the Privacy Policy (/privacy-policy, in Notion) describes this. */}
+        <Analytics />
       </body>
     </html>
   );

@@ -50,6 +50,8 @@ export interface LivepeerOrgSite {
     service: "discord" | "x" | "github" | "website";
   })[];
   copyright: string;
+  /** Beside the copyright: the Terms and the Privacy Policy. */
+  legalLinks?: EditorialLink[];
 }
 
 export interface EcosystemEditorialApp {

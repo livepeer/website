@@ -85,7 +85,18 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
             setting, not page content, so it belongs in the same quiet band as
             the legal notice rather than up with the navigation. */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">{site.copyright}</p>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span>{site.copyright}</span>
+            {site.legalLinks?.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ))}
+          </p>
           <ThemeToggle />
         </div>
       </div>

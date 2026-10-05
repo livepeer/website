@@ -3,9 +3,9 @@ import { revalidatePath } from "next/cache";
 /**
  * Every address rendered from Notion, so that one call clears them all.
  *
- * Six databases feed the site now — the roadmap register and the updates on
- * it, people, organizations, blog posts, the funding ladder and the changelog
- * entries (see CLAUDE.md → Content) — and a change to any of them can move
+ * Eight databases feed the site now — the roadmap register and the updates on
+ * it, people, organizations, blog posts, the funding ladder, the changelog
+ * entries and the legal pages (see CLAUDE.md → Content) — and a change to any of them can move
  * text on several addresses at once: an owner renamed in _Organizations_
  * appears on the register, on every record they own, on their own page and
  * in the panel that slides over the roadmap. Working out which surface an
@@ -35,6 +35,10 @@ const NOTION_SURFACES: ReadonlyArray<
   ["/changelog/feed.xml"],
   ["/changelog/roundup.json"],
   ["/contribute"],
+  ["/foundation"],
+  ["/"],
+  ["/terms-of-service"],
+  ["/privacy-policy"],
   ["/sitemap.xml"],
 ];
 

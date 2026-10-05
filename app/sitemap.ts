@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getBlogRegister, getRegister, getUpdates } from "@/lib/register";
 import { roundups } from "@/lib/changelog";
-import { getEntries } from "@/lib/register";
+import { getEntries, getLegalPage } from "@/lib/register";
+import { LEGAL_SLUGS } from "@/lib/legal";
 import { categoriesInUse, categorySlug } from "@/lib/blog";
 import { getAppSlugs } from "@/lib/ecosystem";
 
@@ -48,6 +49,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
+  // A legal page is listed once it is published (lib/legal.ts); until then
+  // its address 404s on livepeer.org.
+  const legalEntries: MetadataRoute.Sitemap = (
+    await Promise.all(LEGAL_SLUGS.map((slug) => getLegalPage(slug)))
+  )
+    .filter((page) => page !== null && !page.draft)
+    .map((page) => ({
+      url: `${BASE_URL}/${page!.slug}`,
+      lastModified: page!.effective ? new Date(page!.effective) : undefined,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    }));
+
   const ecosystemEntries: MetadataRoute.Sitemap = getAppSlugs().map((slug) => ({
     url: `${BASE_URL}/ecosystem/${slug}`,
     changeFrequency: "monthly",
@@ -91,5 +105,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryEntries,
     ...blogEntries,
     ...changelogEntries,
+    ...legalEntries,
   ];
 }

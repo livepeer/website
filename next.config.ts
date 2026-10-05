@@ -140,26 +140,17 @@ const nextConfig: NextConfig = {
         destination: "/blog/category/governance",
         permanent: true,
       },
-      // Legal pages — not yet implemented, redirect to home for now
-      {
-        source: "/terms-of-service",
-        destination: "/",
-        permanent: false,
-      },
-      {
-        source: "/privacy-policy",
-        destination: "/",
-        permanent: false,
-      },
+      // The old site's alternate legal addresses. The pages themselves are
+      // /terms-of-service and /privacy-policy, read from Notion (lib/legal.ts).
       {
         source: "/terms-of-service-p",
-        destination: "/",
-        permanent: false,
+        destination: "/terms-of-service",
+        permanent: true,
       },
       {
         source: "/privacy-policy-p",
-        destination: "/",
-        permanent: false,
+        destination: "/privacy-policy",
+        permanent: true,
       },
       // blog.livepeer.org → livepeer.org/blog (path-preserving catch-all)
       {
