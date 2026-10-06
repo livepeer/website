@@ -526,8 +526,12 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
           </Link>
         </h3>
         {c.outcome && (
+          // Labelled, because outcomes are written as the finished state ("…is
+          // live onchain") and under an In progress mark read as where the work
+          // stands now. The word is the field's, as the record page's row and
+          // the proposals put it.
           <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
-            {c.outcome}
+            <span className="text-foreground">Outcome:</span> {c.outcome}
           </p>
         )}
         {/* The card's two corners, carrying its two registers: where the work

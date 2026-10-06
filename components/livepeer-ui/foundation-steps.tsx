@@ -281,7 +281,7 @@ export function RoadmapSteps({ items }: { items: FoundationWorkItem[] }) {
             </h3>
             {item.outcome && (
               <p className="mt-1.5 text-base leading-relaxed text-pretty text-muted-foreground">
-                {item.outcome}
+                <span className="text-foreground">Outcome:</span> {item.outcome}
               </p>
             )}
           </li>

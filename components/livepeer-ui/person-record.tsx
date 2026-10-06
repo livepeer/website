@@ -51,7 +51,7 @@ function CommitmentRow({
       </div>
       {c.outcome && (
         <p className="mt-1 max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-          {c.outcome}
+          <span className="text-foreground">Outcome:</span> {c.outcome}
         </p>
       )}
     </li>
