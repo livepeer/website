@@ -60,6 +60,12 @@ type PostBase = {
    */
   link?: string;
   draft: boolean;
+  /**
+   * Its address on the record page, numbered where two posts of one kind
+   * share a day; set by the register (withAnchors), so every view that links
+   * to a post links to the row the record gives it.
+   */
+  anchor?: string;
 };
 
 /**
@@ -135,8 +141,8 @@ export function standingOf(
  * it in the Activity log, so the changelog and anyone else can link straight
  * to what was said. "update-2026-08-27", "retro-2026-09-10". Dated rather
  * than keyed on a Notion id, which the site never holds; a lead who posts
- * twice on one day gets the newer post at the bare address and the older at
- * "-2" (see the record's log).
+ * twice on one day gets one post at the bare address and the other at "-2"
+ * (see withAnchors).
  */
 export function postAnchor(post: Pick<PostSummary, "kind" | "date">): string {
   return `${post.kind}-${post.date}`;
@@ -144,9 +150,37 @@ export function postAnchor(post: Pick<PostSummary, "kind" | "date">): string {
 
 /** The record page, opened on one of its posts. */
 export function postHref(
-  post: Pick<PostSummary, "kind" | "date" | "commitment">
+  post: Pick<PostSummary, "kind" | "date" | "commitment" | "anchor">
 ): string {
-  return `/roadmap/${post.commitment}#${postAnchor(post)}`;
+  return `/roadmap/${post.commitment}#${post.anchor ?? postAnchor(post)}`;
+}
+
+/**
+ * Every post's address, numbered where a commitment has two posts of one
+ * kind on one day: the first keeps the bare address and the others take
+ * "-2", "-3". Same-day posts are ordered by their line, which every query
+ * returns alike, so the record's log and the changelog, feed and roundup
+ * number them the same; numbering by each view's own order made a link to
+ * the second post open the first.
+ */
+export function withAnchors<T extends PostSummary>(posts: T[]): T[] {
+  const groups = new Map<string, T[]>();
+  for (const post of posts) {
+    const key = `${post.commitment}#${postAnchor(post)}`;
+    groups.set(key, [...(groups.get(key) ?? []), post]);
+  }
+  const anchors = new Map<T, string>();
+  for (const group of groups.values()) {
+    [...group]
+      .sort((a, b) => a.summary.localeCompare(b.summary))
+      .forEach((post, i) =>
+        anchors.set(
+          post,
+          i === 0 ? postAnchor(post) : `${postAnchor(post)}-${i + 1}`
+        )
+      );
+  }
+  return posts.map((post) => ({ ...post, anchor: anchors.get(post) }));
 }
 
 /**

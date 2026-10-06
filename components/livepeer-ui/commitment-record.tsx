@@ -71,17 +71,6 @@ function shortDate(iso: string, now: Date): string {
 }
 
 /**
- * A post's address in the log. Two posts of one kind on one day would share
- * one, so the ones after the first (the log is newest first, and so is
- * `updates`) take a number: "update-2026-08-27-2".
- */
-function anchorOf(post: Post, before: Post[]): string {
-  const anchor = postAnchor(post);
-  const n = before.filter((p) => postAnchor(p) === anchor).length;
-  return n === 0 ? anchor : `${anchor}-${n + 1}`;
-}
-
-/**
  * One line of the activity log: an icon, who did what, and when.
  *
  * Linear's sidebar, not its feed: "ads1018 posted an update · Sep 9". A
@@ -559,13 +548,13 @@ export function CommitmentRecord({
                     },
                   ]
                 : []),
-              ...updates.map((u, i) => ({
+              ...updates.map((u) => ({
                 key: `${u.kind}-${u.date}-${u.summary}`,
                 date: u.date,
                 node: (
                   <ActivityRow
                     key={`${u.kind}-${u.date}-${u.summary}`}
-                    id={anchorOf(u, updates.slice(0, i))}
+                    id={u.anchor ?? postAnchor(u)}
                     icon={
                       u.kind === "update" ? (
                         <HealthIcon health={u.health} />

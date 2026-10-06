@@ -77,6 +77,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/changelog`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE_URL}/compute`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/roadmap`, changeFrequency: "weekly", priority: 0.7 },
+    // The owners' reporting rules, linked from the roadmap and Contribute.
+    {
+      url: `${BASE_URL}/roadmap/reporting`,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
     // The destination the forum's welcome post and the Foundation's Notion
     // page are being repointed at, so it is worth more than its age suggests.
     {

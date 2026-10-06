@@ -1,5 +1,5 @@
 import { roundupFor } from "@/lib/changelog";
-import { PERIOD, monthOf } from "@/lib/period";
+import { monthOf, periodOf } from "@/lib/period";
 import { HEALTH_LABEL, postHref } from "@/lib/health";
 import { getRegister, getUpdates } from "@/lib/register";
 import type { Commitment } from "@/lib/roadmap";
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   ]);
   const now = new Date();
   const wanted = new URL(request.url).searchParams.get("period");
-  if (wanted && !PERIOD.test(wanted)) {
+  if (wanted && !periodOf(wanted)) {
     return Response.json(
       {
         error:

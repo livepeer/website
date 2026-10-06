@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ChangelogListing } from "@/components/livepeer-ui/changelog-listing";
 import { roundups } from "@/lib/changelog";
-import { PERIOD, parsePeriod } from "@/lib/period";
+import { periodOf } from "@/lib/period";
 import {
   getBlogRegister,
   getEntries,
@@ -41,8 +41,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { period } = await params;
-  if (!PERIOD.test(period)) return { title: "Not Found — Livepeer Changelog" };
-  const label = parsePeriod(period).label;
+  const parsed = periodOf(period);
+  if (!parsed) return { title: "Not Found — Livepeer Changelog" };
+  const label = parsed.label;
   const title = `${label} | Livepeer Changelog`;
   const description = `What shipped on the Livepeer roadmap in ${label}, how the work under way was going, and who did not report.`;
   return {
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ChangelogMonthPage({ params }: Props) {
   const { period } = await params;
-  if (!PERIOD.test(period)) notFound();
+  if (!periodOf(period)) notFound();
 
   const [all, posts] = await Promise.all([months(), getBlogRegister()]);
   const at = all.findIndex((r) => r.key === period);

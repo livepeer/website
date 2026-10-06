@@ -94,6 +94,21 @@ export function parsePeriod(key: string, where = "a changelog entry"): Period {
   };
 }
 
+/**
+ * A period key's window, or null when it is not one. The pattern alone
+ * accepts week 53 of every year; only the parser knows which years have
+ * one, so a route that turns a bad key into a 404 or a 400 asks this rather
+ * than testing PERIOD and then calling parsePeriod, which throws.
+ */
+export function periodOf(key: string): Period | null {
+  if (!PERIOD.test(key)) return null;
+  try {
+    return parsePeriod(key);
+  } catch {
+    return null;
+  }
+}
+
 /** The month a day falls in, as a period key: "2026-09-14" → "2026-09". */
 export function monthOf(isoDate: string): string {
   return isoDate.slice(0, 7);

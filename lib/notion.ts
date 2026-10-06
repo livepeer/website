@@ -263,11 +263,56 @@ export async function getNotionMediaUrl(
   const block = await notion(`/blocks/${blockId}`);
   const type = block.type as string;
   if (type !== "image" && type !== "video") return null;
+  if (!(await onTheSite(block))) return null;
   const media = block[type] as
     | { type?: string; file?: { url?: string; expiry_time?: string } }
     | undefined;
   const url = media?.type === "file" ? media.file?.url : undefined;
   return url ? { url, expires: media?.file?.expiry_time } : null;
+}
+
+/** A Notion id without its dashes, for comparing ids written either way. */
+const bare = (id: string) => id.replace(/-/g, "").toLowerCase();
+
+/**
+ * Whether a block sits in a page the site renders: a row of one of its
+ * databases, or one of its guides. The media route serves an upload by its
+ * block id, and an id is not a permission; without this, anyone holding the
+ * id of a block on any page the integration can read could have its file
+ * served. Walks up through nested blocks (toggles, columns) to the page.
+ */
+async function onTheSite(block: Json): Promise<boolean> {
+  const databases = new Set(
+    [
+      COMMITMENTS_DB,
+      PEOPLE_DB,
+      ORGS_DB,
+      BLOG_DB,
+      FUNDING_DB,
+      UPDATES_DB,
+      CHANGELOG_DB,
+      LEGAL_DB,
+    ].map(bare)
+  );
+  const guides = new Set(Object.values(GUIDE_PAGES).map(bare));
+  let parent = block.parent as Json | undefined;
+  for (let depth = 0; parent && depth < 8; depth++) {
+    if (parent.type === "block_id") {
+      parent = (await notion(`/blocks/${parent.block_id as string}`)).parent as
+        Json | undefined;
+      continue;
+    }
+    if (parent.type !== "page_id") return false;
+    const pageId = parent.page_id as string;
+    if (guides.has(bare(pageId))) return true;
+    const page = await notion(`/pages/${pageId}`);
+    const home = page.parent as Json | undefined;
+    return (
+      home?.type === "database_id" &&
+      databases.has(bare(home.database_id as string))
+    );
+  }
+  return false;
 }
 
 /** Every row, following Notion's cursor rather than assuming one page. */
@@ -1416,24 +1461,20 @@ export async function getNotionEntryBody(
 }
 
 export async function getNotionEntries(): Promise<Entry[]> {
-  // One row is one entry, and the period is its address, so two rows on one
-  // period would be two entries at one URL with whichever headline Notion
-  // returned last. The markdown copy cannot do this — a file is a name — and
-  // the build refuses it here so the two sources hold the same rule.
-  const seen = new Set<string>();
-  return (await queryAll(CHANGELOG_DB)).flatMap((row) => {
+  // One published row is one entry, and the period is its address, so two
+  // published rows on one period would be two entries at one URL with
+  // whichever headline Notion returned last; the build refuses that. A Draft
+  // beside a published row is allowed (a headline being reworked), and the
+  // published one wins everywhere, previews included, since drafts show
+  // there. Two drafts on one period are refused for the same reason as two
+  // published rows. The markdown copy cannot do any of this: a file is a name.
+  const byPeriod = new Map<string, Entry[]>();
+  for (const row of await queryAll(CHANGELOG_DB)) {
     const p = props(row);
     const period = text(p.Period).trim();
-    if (!period) return [];
+    if (!period) continue;
     const where = `Changelog entries → ${JSON.stringify(period)}`;
     parsePeriod(period, where);
-    if (seen.has(period)) {
-      throw new Error(
-        `${where}: two rows carry this period. One row is one entry, and ` +
-          `the period is its address — merge them, or move one to Draft.`
-      );
-    }
-    seen.add(period);
     const status = selectName(p.Status);
     if (status && status !== "Draft" && status !== "Published") {
       throw new Error(
@@ -1442,9 +1483,23 @@ export async function getNotionEntries(): Promise<Entry[]> {
       );
     }
     const headline = text(p.Headline).trim();
-    return [
+    byPeriod.set(period, [
+      ...(byPeriod.get(period) ?? []),
       { period, headline: headline || undefined, draft: status === "Draft" },
-    ];
+    ]);
+  }
+  return [...byPeriod.entries()].map(([period, rows]) => {
+    const published = rows.filter((r) => !r.draft);
+    const chosen = published.length > 0 ? published : rows;
+    if (chosen.length > 1) {
+      throw new Error(
+        `Changelog entries → ${JSON.stringify(period)}: ${chosen.length} ` +
+          `${published.length > 0 ? "published" : "draft"} rows carry this ` +
+          `period. One row is one entry, and the period is its address — ` +
+          `merge them, or keep one Published and the others as Draft.`
+      );
+    }
+    return chosen[0]!;
   });
 }
 

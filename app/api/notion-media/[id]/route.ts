@@ -11,9 +11,10 @@ import { getNotionMediaUrl, hasNotionCredentials } from "@/lib/notion";
  * fresh one on each request and sends the browser on to it. The redirect is
  * cached for no longer than the address it points at stays good.
  *
- * Only image and video blocks the site's integration can read are served,
- * by their block id, which is a UUID nobody guesses: the route hands out
- * nothing a published page does not already show.
+ * Only image and video blocks inside a page the site renders are served
+ * (a row of one of its databases, or a guide; onTheSite in lib/notion.ts).
+ * A block id alone is not enough: the integration can read pages the site
+ * never shows, and an id that leaked from one must not get its file served.
  */
 
 const BLOCK_ID =

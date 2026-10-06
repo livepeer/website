@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 // has no share image at all: the page's generateMetadata declares an
 // `openGraph` object with no `images`, which drops the card it would otherwise
 // inherit from /blog. The closed category set decides what exists, as on the
-// page; a slug outside it 404s here too.
+// page; a slug outside it, or an unused one, 404s here too.
 export default async function OpengraphImage({
   params,
 }: {
@@ -26,6 +26,9 @@ export default async function OpengraphImage({
 }) {
   const { slug } = await params;
   const category = categoryFromSlug(slug);
-  if (!category) notFound();
+  // In the closed set and in use, as on the page: an unused category 404s
+  // there, so it has no card either.
+  if (!category || !categoriesInUse(await getBlogRegister()).includes(category))
+    notFound();
   return renderTitledCard(ogArt.blog, category, "Blog");
 }

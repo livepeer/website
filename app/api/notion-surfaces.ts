@@ -27,8 +27,10 @@ const NOTION_SURFACES: ReadonlyArray<
   readonly [path: string, type?: "page" | "layout"]
 > = [
   ["/roadmap", "layout"],
-  ["/organizations", "layout"],
-  ["/people", "layout"],
+  // Neither has a layout of its own, so a layout revalidation at the root
+  // reaches nothing; the record pages are named by their pattern instead.
+  ["/organizations/[slug]", "page"],
+  ["/people/[slug]", "page"],
   ["/blog", "layout"],
   ["/blog/feed.xml"],
   ["/changelog", "layout"],

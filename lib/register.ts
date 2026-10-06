@@ -39,6 +39,7 @@ import { getCommitments, type Commitment } from "./roadmap";
 import {
   getMarkdownCommitmentUpdates,
   getMarkdownUpdates,
+  withAnchors,
   type Post,
   type PostSummary,
 } from "./updates";
@@ -134,7 +135,7 @@ export async function getUpdates(): Promise<PostSummary[]> {
     getRegister(),
   ]);
   assertRetrosOnShipped(updates, commitments);
-  return updates.filter(isPublished);
+  return withAnchors(updates.filter(isPublished));
 }
 
 /** One commitment's updates with their write-ups, newest first. */
@@ -146,7 +147,7 @@ export async function getCommitmentUpdates(slug: string): Promise<Post[]> {
     getRegister(),
   ]);
   assertRetrosOnShipped(updates, commitments);
-  return updates.filter(isPublished);
+  return withAnchors(updates.filter(isPublished));
 }
 
 /**
