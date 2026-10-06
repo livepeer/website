@@ -139,7 +139,7 @@ const earn: EarnContent = {
   stake: {
     heading: "$LPT stake",
     description:
-      "Video work requires enough self-stake and delegated LPT to enter the active orchestrator set. AI inference has a lower stake barrier.",
+      "Video work requires enough self-stake and delegated LPT to enter the active orchestrator set.",
     cta: {
       label: "View active orchestrators",
       href: "https://explorer.livepeer.org",
