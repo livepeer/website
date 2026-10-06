@@ -2,6 +2,8 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { UPLOADED_COVER_PREFIX, getNotionBlogCover } from "./notion";
+
 /**
  * Social share cards.
  *
@@ -146,6 +148,26 @@ export const ogArt = {
 } as const;
 
 /**
+ * A blog post's uploaded cover, read straight from Notion rather than through
+ * the site's own route: share images are drawn at build time, when that route
+ * is not being served. Null on any failure, as for library art.
+ */
+async function loadUploadedCover(url: string): Promise<string | null> {
+  try {
+    const pageId = url.slice(UPLOADED_COVER_PREFIX.length).split("/")[0]!;
+    const file = await getNotionBlogCover(pageId);
+    if (!file) return null;
+    const response = await fetch(file);
+    if (!response.ok) return null;
+    const type = response.headers.get("content-type") ?? "image/png";
+    const bytes = Buffer.from(await response.arrayBuffer());
+    return `data:${type};base64,${bytes.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fetch the art already cropped to the card, as a data URI.
  *
  * The CDN does the resize, so Satori composites 1200 × 630 pixels onto a
@@ -154,6 +176,7 @@ export const ogArt = {
  * a build that dies because a CDN blipped.
  */
 async function loadArt(url: string): Promise<string | null> {
+  if (url.startsWith(UPLOADED_COVER_PREFIX)) return loadUploadedCover(url);
   try {
     const source = new URL(url);
     source.search = "";
@@ -190,7 +213,9 @@ function ArtBackdrop({ art, scrim }: { art: string | null; scrim: string }) {
           alt=""
           width={OG_SIZE.width}
           height={OG_SIZE.height}
-          style={{ position: "absolute", top: 0, left: 0 }}
+          // Library art arrives cropped to the card; an uploaded cover does
+          // not, so it is cropped here rather than stretched.
+          style={{ position: "absolute", top: 0, left: 0, objectFit: "cover" }}
         />
       )}
       {/* The art runs from near-black to blown highlights, so the lockup cannot

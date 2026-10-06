@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -269,6 +270,45 @@ export async function getNotionMediaUrl(
     | undefined;
   const url = media?.type === "file" ? media.file?.url : undefined;
   return url ? { url, expires: media?.file?.expiry_time } : null;
+}
+
+/** Where an uploaded blog cover is served from; see app/api/notion-cover. */
+export const UPLOADED_COVER_PREFIX = "/api/notion-cover/";
+
+/**
+ * The site's address for a blog post's uploaded cover: the page id and a
+ * version taken from the file's own path, which Notion keeps when it re-signs
+ * the link and changes when the cover is replaced. So the address can be
+ * cached for good, and a new cover gets a new one.
+ */
+function uploadedCover(pageId: string, fileUrl: string): string {
+  const version = createHash("sha256")
+    .update(new URL(fileUrl).pathname)
+    .digest("hex")
+    .slice(0, 12);
+  return `${UPLOADED_COVER_PREFIX}${bare(pageId)}/${version}`;
+}
+
+/**
+ * A blog post's uploaded cover, as a fresh Notion link, or null when the page
+ * is not a row of Blog posts or its cover is not an upload. Only blog posts:
+ * a cover is required there and the stock library is finite, so a post may
+ * bring its own; the optional covers elsewhere stay library-only.
+ */
+export async function getNotionBlogCover(
+  pageId: string
+): Promise<string | null> {
+  const page = await notion(`/pages/${pageId}`);
+  const home = page.parent as Json | undefined;
+  if (
+    home?.type !== "database_id" ||
+    bare(home.database_id as string) !== bare(BLOG_DB)
+  ) {
+    return null;
+  }
+  const cover = page.cover as
+    { type?: string; file?: { url?: string } } | null | undefined;
+  return cover?.type === "file" && cover.file?.url ? cover.file.url : null;
 }
 
 /** A Notion id without its dashes, for comparing ids written either way. */
@@ -1126,7 +1166,13 @@ function toSummary(row: Json, people: Map<string, Person>): BlogSummary {
     tags: multiSelectNames(p.Tags),
     // Checked here rather than where it is rendered, so a bad address fails
     // the build with the post's name attached to it.
-    image: resolveMediaSource(cover, `${where} → cover`),
+    // A cover from the stock library is the usual case; one uploaded into
+    // Notion is allowed too and served from the site (uploadedCover), since
+    // Notion's own link for it expires within the hour.
+    image:
+      cover.type === "file" && cover.file?.url
+        ? uploadedCover(row.id as string, cover.file.url)
+        : resolveMediaSource(cover, `${where} → cover`),
     imageAlt: text(p["Image alt"]),
     draft: status === "Draft",
   };
