@@ -108,11 +108,12 @@ export const livepeerOrgSite: LivepeerOrgSite = {
 const agentAppOrigin = "https://earlyaccess.livepeer.org";
 
 /**
- * Where "Use Livepeer", "Try Livepeer Agent", and "Agent Console" all point.
+ * Where "Use Livepeer" and "Agent Console" point. ("Try Livepeer Agent" on
+ * the home page goes to /agent instead, for a visitor with no account yet.)
  *
  * The console's own root, which sends a signed-out visitor to its login — the
  * right landing for a CTA that means "go and use the thing". A single constant
- * precisely so the three prominent CTAs that use it cannot drift apart, and so
+ * precisely so the CTAs that use it cannot drift apart, and so
  * repointing at launch is one edit.
  */
 const agentConsoleHref = agentAppOrigin;

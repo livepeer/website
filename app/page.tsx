@@ -9,7 +9,6 @@ import {
 import { getContributors } from "@/lib/contributors";
 import { getDiscord } from "@/lib/discord";
 import { getBlogRegister } from "@/lib/register";
-import { agentApp } from "@/lib/site";
 
 import { blog, toListingPosts } from "./blog/listing";
 
@@ -38,10 +37,13 @@ const hero: HomeContent["hero"] & {
     description: "The open video agent platform",
     href: "/blog/livepeer-2-0-video-agent-platform",
   },
-  // Both off-site, but only one is an aside. The Agent console is the product,
-  // so it takes over the tab and gets the "go" arrow; Discord opens alongside
-  // and is marked as leaving. See renderCta in livepeer-org-landing-sections.
-  primaryCta: { label: "Try Livepeer Agent", href: agentApp.console },
+  // The primary goes to /agent, which says what the Agent is and how to
+  // install it, and is where the section's Install button goes too. It went
+  // to the console, whose root sends a visitor without an account to its
+  // login: the first thing a newcomer met was a sign-in for something nobody
+  // had told them about. Discord opens alongside and is marked as leaving.
+  // See renderCta in livepeer-org-landing-sections.
+  primaryCta: { label: "Try Livepeer Agent", href: "/agent" },
   secondaryCta: {
     label: "Join Discord",
     // Replaced with the live invite at render; see lib/discord.ts.
@@ -53,7 +55,7 @@ const hero: HomeContent["hero"] & {
 const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
   agentFeature: {
     description:
-      "A video agent harness for multimodal media generation, from right within Claude. Running on Livepeer's open network.",
+      "Video generation, right inside the AI tools you already use. Running on Livepeer's open network.",
     installCta: { label: "Install", href: "/agent" },
     libraryCta: { label: "Explore playbooks", href: "/agent" },
   },
