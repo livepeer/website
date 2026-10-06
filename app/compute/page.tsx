@@ -24,7 +24,7 @@ const earn: EarnContent = {
   hero: {
     heading: "Put your GPUs to work on Livepeer.",
     description:
-      "Livepeer routes inference and video work to GPUs on the open network. Run an orchestrator, serve real workloads, and earn from fees and protocol rewards.",
+      "Livepeer routes AI video jobs to GPUs on the open network. Run an orchestrator, serve real workloads, and earn from fees and protocol rewards.",
     // The page's one action: the step-by-step tutorial, worded as what the
     // reader gets out of it and in the home band's own words, since that
     // band's button is how most arrive. It was "Orchestrator docs",
@@ -139,7 +139,7 @@ const earn: EarnContent = {
   stake: {
     heading: "$LPT stake",
     description:
-      "Video work requires enough self-stake and delegated LPT to enter the active orchestrator set.",
+      "Transcoding requires enough self-stake and delegated LPT to enter the active orchestrator set.",
     cta: {
       label: "View active orchestrators",
       href: "https://explorer.livepeer.org",
@@ -167,15 +167,15 @@ const DESCRIPTION =
 // and served "Livepeer — The open inference network" with the home page's
 // description to every timeline it was shared into.
 export const metadata: Metadata = {
-  title: "Provide GPU compute",
+  title: "Provide Compute",
   description: DESCRIPTION,
   openGraph: {
-    title: "Provide GPU compute | Livepeer",
+    title: "Provide Compute | Livepeer",
     description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Provide GPU compute | Livepeer",
+    title: "Provide Compute | Livepeer",
     description: DESCRIPTION,
   },
 };

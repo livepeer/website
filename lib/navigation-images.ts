@@ -13,7 +13,7 @@ const CDN = "https://cdn.sanity.io/images/l36s876e/production";
 
 export const livepeerOrgNavigationImages: LivepeerOrgNavigationImages = {
   Ecosystem: `${CDN}/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png`,
-  "Provide GPUs": `${CDN}/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png`,
+  "Provide Compute": `${CDN}/111bb7231a9a5e9997fdcd53ccfbbba739d8706c-1456x816.png`,
   "Livepeer Token": `${CDN}/ca81ff8f671969141086bf1626a8df7386bb2cd4-1456x816.png`,
   "Delegate LPT": `${CDN}/7bd4492abf0c18ac08045592a5987d56e11e3e91-1456x816.png`,
   "Livepeer Agent": `${CDN}/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png`,

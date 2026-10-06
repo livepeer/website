@@ -27,7 +27,7 @@ const linkDescriptions: Record<string, string> = {
   Ecosystem: "Explore apps built on Livepeer",
   "Livepeer Token": "Learn how LPT coordinates the network",
   "Delegate LPT": "Stake LPT with network operators",
-  "Provide GPUs": "Run an orchestrator and earn fees",
+  "Provide Compute": "Run an orchestrator and earn fees",
   Roadmap: "See what’s next for the network",
   Blog: "Updates from across the ecosystem",
   Foundation: "Meet the organization supporting Livepeer",
@@ -44,7 +44,8 @@ const localLinkMatches: Record<
     label === "Ecosystem" || href.includes("/ecosystem"),
   "Livepeer Token": (label, href) =>
     label === "Livepeer Token" || href.includes("/token"),
-  "Provide GPUs": (label, href) => label === "GPU" || href.includes("/compute"),
+  "Provide Compute": (label, href) =>
+    label === "GPU" || href.includes("/compute"),
   Blog: (label, href) =>
     label === "Blog" || href.includes("/latest") || href.includes("/blog"),
   Foundation: (label, href) =>
@@ -62,7 +63,7 @@ const resourceOrder: Record<string, number> = {
 
 const networkOrder: Record<string, number> = {
   Ecosystem: 0,
-  "Provide GPUs": 1,
+  "Provide Compute": 1,
   "Livepeer Token": 2,
   "Delegate LPT": 3,
 };
@@ -74,7 +75,7 @@ function resolveHref(site: LivepeerOrgSite, label: string, href: string) {
       href)
     : href;
 
-  if (label === "Provide GPUs") {
+  if (label === "Provide Compute") {
     return resolvedHref.replace(/\/earn(?=\/|$)/, "/compute");
   }
 
@@ -149,12 +150,7 @@ export function LivepeerOrgNavItem({
 }) {
   const href = resolveHref(site, item.label, item.href);
   const jumpOut = href.startsWith("http");
-  const label =
-    item.label === "Blog"
-      ? "Latest Updates"
-      : item.label === "Provide GPUs"
-        ? "Provide Compute"
-        : item.label;
+  const label = item.label === "Blog" ? "Latest Updates" : item.label;
   const image = navigationImages?.[item.label];
   const content = (
     <>

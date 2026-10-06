@@ -17,7 +17,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
     { label: "Livepeer Agent", href: "/agent" },
     { label: "Ecosystem", href: "/ecosystem" },
     { label: "Livepeer Token", href: "/token" },
-    { label: "Provide GPUs", href: "/compute" },
+    { label: "Provide Compute", href: "/compute" },
     { label: "Blog", href: "/blog" },
     { label: "Foundation", href: "/foundation" },
   ],
@@ -28,7 +28,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       title: "Network",
       links: [
         { label: "Ecosystem", href: "/ecosystem" },
-        { label: "Provide GPUs", href: "/compute" },
+        { label: "Provide Compute", href: "/compute" },
         { label: "Livepeer Token", href: "/token" },
         { label: "Delegate LPT", href: "https://explorer.livepeer.org" },
       ],
@@ -44,7 +44,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Changelog", href: "/changelog" },
         // Roadmap is a reading destination — "see what's next for the
         // network" — like Blog and Documentation, not a network surface like
-        // Provide GPUs. The header always listed it here; the footer had it
+        // Provide Compute. The header always listed it here; the footer had it
         // under Network, and the two disagreed without anyone deciding so.
         { label: "Roadmap", href: "/roadmap" },
         { label: "Contribute", href: "/contribute" },

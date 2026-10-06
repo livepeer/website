@@ -1,6 +1,6 @@
 import { renderArtCard, ogArt, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og";
 
-export const alt = "Livepeer — Provide GPU compute";
+export const alt = "Livepeer — Provide Compute";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
