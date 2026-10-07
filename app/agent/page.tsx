@@ -92,7 +92,7 @@ import { stockAssets } from "@/lib/stock-assets";
 const films: AgentHeroFilm[] = [
   {
     name: "coat",
-    focus: 60,
+    focus: 54,
     model: "Seedream → Veo · 4K · 8s",
     request:
       "An editorial shot of a woman in a crimson coat in a field of pampas grass at dusk.",
@@ -245,8 +245,8 @@ export default function AgentPage() {
 
       {/* The range beyond film: what else it makes, in a line, beside two
           more of its videos in the shapes they were made in. */}
-      <section className="bg-background px-4 py-24 sm:px-6 sm:py-32 lg:px-10">
-        <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-end lg:gap-20">
+      <section className="bg-background px-4 py-16 sm:px-6 sm:py-32 lg:px-10">
+        <div className="mx-auto grid max-w-6xl gap-10 sm:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-end lg:gap-20">
           <div className="lg:pb-24">
             <h2 className="text-display-sm text-balance sm:text-display-md">
               Any kind of video.
@@ -265,7 +265,7 @@ export default function AgentPage() {
           install, and the builder's way in said once and quietly beneath. */}
       <section
         id="install"
-        className="scroll-mt-16 border-t border-border bg-background px-4 pt-24 pb-28 sm:px-6 sm:pt-32 sm:pb-36 lg:px-10"
+        className="scroll-mt-16 border-t border-border bg-background px-4 pt-16 pb-20 sm:px-6 sm:pt-32 sm:pb-36 lg:px-10"
       >
         <div className="mx-auto flex max-w-xl flex-col items-start text-left sm:items-center sm:text-center">
           <h2 className="text-display-sm text-balance sm:text-display-md">

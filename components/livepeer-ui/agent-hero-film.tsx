@@ -15,7 +15,7 @@ export type AgentHeroFilm = {
   name: string;
   /**
    * Where the subject sits across the frame, as a percentage from the left,
-   * so the narrow crops (4:5 on a phone, 4:3 on a tablet) follow it. The
+   * so the narrow crops (the tall card on a phone, 4:3 on a tablet) follow it. The
    * films were composed with the subject right of centre for the headline
    * beside it, and centred crops cut it off at the edge.
    */
@@ -64,9 +64,10 @@ function urlFor(name: string, variant: "av1" | "av1-sm" | "h264") {
  * Inset rather than full-bleed, and cropped wide (2.35:1 from xl, 16:9 from
  * lg, 4:3 from sm, where 16:9 is too short for the words over it): a 1080p film stretched edge to edge across a large window and cropped
  * to its height looked soft, and a card is the design system's own frame. On
- * a phone the card is 4:5 and the words sit beneath the picture inside it,
- * where over it they would cover most of the film. The card is dark in both
- * themes, because it is a picture.
+ * a phone the card fills the screen under the header, with the words over
+ * its lower half, so the headline and the film are both in the first screen;
+ * a 4:5 card with the words beneath it put the headline a scroll away. The
+ * card is dark in both themes, because it is a picture.
  *
  * Only the first clip loads with the page; the rest are fetched once it is
  * playing. A row of bars over the credit fills as each clip plays and picks
@@ -155,7 +156,7 @@ export function AgentHeroFilms({
       ref={root}
       className="dark relative overflow-hidden rounded-3xl bg-background text-foreground"
     >
-      <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-video xl:aspect-[2.35/1]">
+      <div className="relative h-[max(34rem,calc(100svh-4.75rem))] sm:h-auto sm:aspect-[4/3] lg:aspect-video xl:aspect-[2.35/1]">
         {films.map((entry, index) => (
           <video
             key={entry.name}
@@ -184,14 +185,19 @@ export function AgentHeroFilms({
         ))}
         {/* Scrims: up from the foot for the type, in from the left for the
             headline's side, so the picture stays clear above and right. On a
-            phone the first only fades the foot into the words below. */}
+            phone the words take the lower half, so the first rises higher. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent to-40% sm:via-background/35 sm:to-75%"
+          className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent to-70% sm:via-background/35 sm:to-75%"
         />
         <div
           aria-hidden="true"
           className="absolute inset-0 hidden bg-gradient-to-r from-background/60 via-transparent to-transparent sm:block"
+        />
+        {/* Below lg, a little shade at the head for the credit there. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/55 to-transparent lg:hidden"
         />
 
         {/* The film's credit, from lg, where it has room beside the words. */}
@@ -213,11 +219,10 @@ export function AgentHeroFilms({
           </p>
         </div>
 
-        {/* Below lg, a short credit and the bars: at the picture's foot on
-            a phone, where the words sit beneath it, and at its head from sm,
-            where the words cover the foot. Without them the films changed
+        {/* Below lg, a short credit and the bars at the picture's head,
+            where the words cover its foot. Without them the films changed
             with nothing to say they were a set, or whose they were. */}
-        <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 sm:inset-x-8 sm:top-8 sm:bottom-auto sm:items-start lg:hidden">
+        <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-4 sm:inset-x-8 sm:top-8 lg:hidden">
           <p
             key={active}
             aria-hidden="true"
@@ -231,9 +236,8 @@ export function AgentHeroFilms({
         </div>
       </div>
 
-      {/* The page's words: over the foot of the picture from sm, beneath it
-          on a phone. */}
-      <div className="relative px-6 pt-1 pb-8 sm:absolute sm:inset-x-0 sm:bottom-0 sm:p-10 xl:p-14">
+      {/* The page's words, over the foot of the picture. */}
+      <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 xl:p-14">
         {children}
       </div>
     </div>
