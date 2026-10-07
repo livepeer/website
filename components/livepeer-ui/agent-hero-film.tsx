@@ -13,6 +13,13 @@ export type AgentHeroFilm = {
    * poster.
    */
   name: string;
+  /**
+   * Where the subject sits across the frame, as a percentage from the left,
+   * so the narrow crops (4:5 on a phone, 4:3 on a tablet) follow it. The
+   * films were composed with the subject right of centre for the headline
+   * beside it, and centred crops cut it off at the edge.
+   */
+  focus: number;
   /** The models and length, as the credit names them. */
   model: string;
   /** The request that made it, in a person's words. */
@@ -107,6 +114,42 @@ export function AgentHeroFilms({
   const next = () => setActive((current) => (current + 1) % films.length);
   const film = films[active];
 
+  // One bar per film: the playing one fills over its length, and pressing
+  // one plays it.
+  const bars = (width: string) => (
+    <div className="flex justify-end gap-1.5" role="group" aria-label="Films">
+      {films.map((entry, index) => (
+        <button
+          key={entry.name}
+          type="button"
+          aria-label={`Film ${index + 1} of ${films.length}`}
+          aria-pressed={index === active}
+          onClick={() => setActive(index)}
+          className="py-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span
+            className={cn(
+              "block h-0.5 overflow-hidden rounded-full bg-foreground/25",
+              width
+            )}
+          >
+            <span
+              key={index === active ? `${active}-on` : "off"}
+              className={cn(
+                "block h-full origin-left bg-foreground",
+                index === active
+                  ? still || !visible
+                    ? "scale-x-100"
+                    : "animate-[bar-fill_8s_linear_forwards]"
+                  : "scale-x-0"
+              )}
+            />
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div
       ref={root}
@@ -125,6 +168,7 @@ export function AgentHeroFilms({
                 : undefined
             }
             poster={`/videos/agent/${entry.name}.jpg`}
+            style={{ objectPosition: `${entry.focus}% 50%` }}
             aria-hidden="true"
             muted
             playsInline
@@ -152,38 +196,7 @@ export function AgentHeroFilms({
 
         {/* The film's credit, from lg, where it has room beside the words. */}
         <div className="absolute right-10 bottom-10 hidden w-[17rem] text-right lg:block xl:right-14 xl:bottom-14">
-          {films.length > 1 && (
-            <div
-              className="mb-4 flex justify-end gap-1.5"
-              role="group"
-              aria-label="Films"
-            >
-              {films.map((entry, index) => (
-                <button
-                  key={entry.name}
-                  type="button"
-                  aria-label={`Film ${index + 1} of ${films.length}`}
-                  aria-pressed={index === active}
-                  onClick={() => setActive(index)}
-                  className="py-2 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <span className="block h-0.5 w-8 overflow-hidden rounded-full bg-foreground/25">
-                    <span
-                      key={index === active ? `${active}-on` : "off"}
-                      className={cn(
-                        "block h-full origin-left bg-foreground",
-                        index === active
-                          ? still || !visible
-                            ? "scale-x-100"
-                            : "animate-[bar-fill_8s_linear_forwards]"
-                          : "scale-x-0"
-                      )}
-                    />
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
+          {films.length > 1 && <div className="mb-4">{bars("w-8")}</div>}
           <p
             key={active}
             aria-live="polite"
@@ -198,6 +211,23 @@ export function AgentHeroFilms({
               &ldquo;{film.request}&rdquo;
             </span>
           </p>
+        </div>
+
+        {/* Below lg, a short credit and the bars: at the picture's foot on
+            a phone, where the words sit beneath it, and at its head from sm,
+            where the words cover the foot. Without them the films changed
+            with nothing to say they were a set, or whose they were. */}
+        <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 sm:inset-x-8 sm:top-8 sm:bottom-auto sm:items-start lg:hidden">
+          <p
+            key={active}
+            aria-hidden="true"
+            className="animate-[fadeIn_0.8s_ease-out] font-mono text-[0.6875rem] leading-4 text-foreground/60"
+          >
+            Made with Livepeer Agent
+            <br />
+            {film.model}
+          </p>
+          {films.length > 1 && bars("w-5")}
         </div>
       </div>
 

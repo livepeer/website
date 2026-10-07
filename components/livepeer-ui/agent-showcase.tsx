@@ -31,10 +31,11 @@ export type AgentShowcaseItem = {
  * carousel with a mocked-up prompt box before that read as a widget competing
  * with the work. A vertical clip takes a column a little over half the width
  * of a widescreen one, which keeps its height in proportion to the row
- * without shrinking the films. Below sm the row scrolls sideways,
- * bottom-aligned the same way, with the next clip peeking in. Clips play
- * silently while the row is on screen; under reduced motion the posters
- * stand still.
+ * without shrinking the films. Below sm they stack: a tall clip beside its
+ * caption, a wide one at full width over its own. A sideways scroll came
+ * first there and cut the second clip and its caption off at the edge.
+ * Clips play silently while the row is on screen; under reduced motion the
+ * posters stand still.
  */
 export function AgentShowcase({ items }: { items: AgentShowcaseItem[] }) {
   const row = useRef<HTMLUListElement>(null);
@@ -69,14 +70,15 @@ export function AgentShowcase({ items }: { items: AgentShowcaseItem[] }) {
     <ul
       ref={row}
       style={{ "--cols": columns } as React.CSSProperties}
-      className="-mx-4 flex snap-x snap-mandatory scroll-px-4 items-end gap-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-[var(--cols)] sm:grid-rows-[auto_auto] sm:gap-x-6 sm:gap-y-0 sm:overflow-visible sm:px-0"
+      className="grid gap-12 sm:grid-cols-[var(--cols)] sm:grid-rows-[auto_auto] sm:gap-x-6 sm:gap-y-0"
     >
       {items.map((item) => (
         <li
           key={item.kind}
           className={cn(
-            "flex shrink-0 snap-start flex-col sm:row-span-2 sm:grid sm:w-auto sm:grid-rows-subgrid",
-            item.aspect < 1 ? "w-[46%]" : "w-[82%]"
+            "grid sm:row-span-2 sm:grid-cols-1 sm:grid-rows-subgrid",
+            item.aspect < 1 &&
+              "grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-end gap-x-5 sm:items-start"
           )}
         >
           {/* The figure gives way to the row's two tracks, so every clip
@@ -97,7 +99,7 @@ export function AgentShowcase({ items }: { items: AgentShowcaseItem[] }) {
                 className="absolute inset-0 size-full object-cover"
               />
             </div>
-            <figcaption className="mt-4">
+            <figcaption className={cn(item.aspect < 1 ? "sm:mt-4" : "mt-4")}>
               <p className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-sm">
                 <span className="text-foreground">{item.kind}</span>
                 <span className="font-mono text-xs text-muted-foreground">

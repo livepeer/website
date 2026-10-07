@@ -92,23 +92,27 @@ import { stockAssets } from "@/lib/stock-assets";
 const films: AgentHeroFilm[] = [
   {
     name: "coat",
+    focus: 60,
     model: "Seedream → Veo · 4K · 8s",
     request:
       "An editorial shot of a woman in a crimson coat in a field of pampas grass at dusk.",
   },
   {
     name: "ringed",
+    focus: 60,
     model: "Seedream → Veo · 4K · 8s",
     request: "An astronaut on a crater rim under a giant ringed planet.",
   },
   {
     name: "monolith",
+    focus: 70,
     model: "Seedream → Veo · 4K · 8s",
     request:
       "A lone figure crossing a foggy concrete plaza toward a glowing monolith.",
   },
   {
     name: "lanterns",
+    focus: 60,
     model: "Seedream → Veo · 4K · 8s",
     request:
       "A gouache-painted animation of a child releasing a paper lantern over a river at night.",
@@ -263,7 +267,7 @@ export default function AgentPage() {
         id="install"
         className="scroll-mt-16 border-t border-border bg-background px-4 pt-24 pb-28 sm:px-6 sm:pt-32 sm:pb-36 lg:px-10"
       >
-        <div className="mx-auto flex max-w-xl flex-col items-center text-center">
+        <div className="mx-auto flex max-w-xl flex-col items-start text-left sm:items-center sm:text-center">
           <h2 className="text-display-sm text-balance sm:text-display-md">
             Your turn.
           </h2>
