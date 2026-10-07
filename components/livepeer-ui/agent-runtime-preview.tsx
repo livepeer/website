@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { ArrowUpIcon, PaperclipIcon, PlayIcon } from "lucide-react";
 
 import { stockAssets } from "@/lib/stock-assets";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import {
   Conversation,
   ConversationContent,
@@ -401,31 +402,6 @@ function Result() {
         </p>
       </div>
     </div>
-  );
-}
-
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
-
-function subscribeToReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-/**
- * The reader's reduced-motion setting, read so the server and the first
- * client render agree. Motion's own hook answers from `matchMedia` on the
- * very first client render, while the server could only have rendered the
- * moving card — so with the setting on, the client's finished card met the
- * server's idle one and React threw the tree away. An external store with a
- * server snapshot of "no" hydrates as the server rendered and switches in
- * the render after.
- */
-function usePrefersReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeToReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => false
   );
 }
 

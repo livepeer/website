@@ -103,7 +103,12 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * The MCP endpoint is different in kind: it is not a link, it is the address
  * users paste into their own agent, so it has to be exactly right. It lives on
  * `agent.livepeer.org`, its own host — this said `livepeer.org/api/mcp` for a
- * while, which 404s, and nothing on a marketing page can catch that.
+ * while, which 404s, and nothing on a marketing page can catch that. It is
+ * the Creative surface (`/api/mcp/creative`), the one the Agent's own
+ * get-started page tells people to add: describe the result and the Agent
+ * picks the model. The bare `/api/mcp` is the Raw surface, for a caller that
+ * names models itself. Both are keyless; access is an emailed activation
+ * code asked for in the chat, not a browser login.
  */
 const agentAppOrigin = "https://earlyaccess.livepeer.org";
 
@@ -143,7 +148,7 @@ export const loginLinks = [
 ] as const;
 
 export const agentApp = {
-  mcpServerUrl: "https://agent.livepeer.org/api/mcp",
+  mcpServerUrl: "https://agent.livepeer.org/api/mcp/creative",
   /** The signed-in surface behind the header's "Log in" menu. */
   console: agentConsoleHref,
   signIn: `${agentAppOrigin}/login`,

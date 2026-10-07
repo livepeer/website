@@ -25,9 +25,10 @@ support: https://livepeer.org/discord
 
 Livepeer Agent is the network's own agent surface: one MCP server that gives any
 agent harness the ability to generate, edit, and finish moving image and audio.
-Point your agent's connector settings at `https://agent.livepeer.org/api/mcp`
-and the tools appear alongside whatever else it already has. The first
-connection opens a browser and logs you in.
+Point your agent's connector settings at
+`https://agent.livepeer.org/api/mcp/creative` and the tools appear alongside
+whatever else it already has. No key is needed: ask it for an activation code
+by email to unlock the demo credit.
 
 It is aimed at people who are already working in an agent — in an editor, a
 chat harness, or their own product — rather than at a separate web app to switch
