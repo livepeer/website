@@ -1,4 +1,5 @@
-import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
+import { ArrowRightIcon, ArrowUpRightIcon, DownloadIcon } from "lucide-react";
+import Link from "next/link";
 
 import { LivepeerLockup, LivepeerSymbol } from "@/components/brand";
 import { CopyButton } from "@/components/copy-button";
@@ -116,12 +117,10 @@ export function BrandHeroSection({
           size="lg"
           variant="outline"
           nativeButton={false}
-          render={
-            <a href={systemHref} target="_blank" rel="noopener noreferrer" />
-          }
+          render={<Link href={systemHref} />}
         >
-          Design system
-          <ArrowUpRightIcon data-icon="inline-end" aria-hidden="true" />
+          Design guidelines
+          <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
         </Button>
       </div>
     </header>
@@ -375,27 +374,35 @@ export function BrandTypeSection() {
 export function BrandSystemSection({
   links,
 }: {
-  links: { label: string; href: string; note: string }[];
+  links: { label: string; href: string; note: string; external?: boolean }[];
 }) {
   return (
     <Section
       id="system"
       title="The system"
-      lede="This page is the summary. The tokens, components and the full guidance are the Livepeer UI registry."
+      lede="This page is the summary. The full guidelines, colour and type roles, spacing and composition, have a page of their own."
     >
-      <ul className="grid gap-3 sm:grid-cols-3">
+      <ul className="grid gap-3 sm:grid-cols-2">
         {links.map((link) => (
           <li key={link.href}>
             <a
               href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(link.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               className="group flex h-full flex-col justify-between gap-8 rounded-lg bg-muted p-5 transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_4%)]"
             >
-              <ArrowUpRightIcon
-                className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
+              {link.external ? (
+                <ArrowUpRightIcon
+                  className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              ) : (
+                <ArrowRightIcon
+                  className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              )}
               <span>
                 <span className="block text-sm">{link.label}</span>
                 <span className="mt-1 block text-sm text-muted-foreground">

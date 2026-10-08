@@ -26,21 +26,19 @@ const brand = {
       "The mark, the green, the type, and the few rules that keep them looking right. If you're putting Livepeer on something, start here.",
   },
   kitHref: "/downloads/livepeer-brand-kit.zip",
-  systemHref: "https://livepeer.peaceno.de/design.md",
+  // The guidelines live in this repo (content/design.md), not on the
+  // registry they came from; the registry link was removed (Adam).
+  systemHref: "/brand/guidelines",
   system: [
     {
       label: "Design guidelines",
-      href: "https://livepeer.peaceno.de/design.md",
+      href: "/brand/guidelines",
       note: "Colour roles, type roles, spacing and composition in full.",
-    },
-    {
-      label: "Component registry",
-      href: "https://livepeer.peaceno.de/docs",
-      note: "Livepeer UI. Installable components, themed and documented.",
     },
     {
       label: "Ask on Discord",
       href: "/discord",
+      external: true,
       note: "Unsure whether a use is on-brand? Ask before shipping it.",
     },
   ],
