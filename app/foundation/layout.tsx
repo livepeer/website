@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import ForceDarkTheme from "./ForceDarkTheme";
 
-const description =
-  "The Livepeer Foundation exists to serve the Livepeer network \u2014 making it easier to build on, establishing it as open infrastructure for real-time AI video, and holding strategic decisions to the highest standard of accountability.";
+import { FOUNDATION_DESCRIPTION as description } from "@/app/foundation/content";
 
 export const metadata: Metadata = {
   title: "Foundation | Livepeer",
@@ -18,15 +16,14 @@ export const metadata: Metadata = {
   },
 };
 
+// No ForceDarkTheme. The old Foundation page was dark-only artwork that broke
+// on a light canvas; the migrated one is registry-native and verified in both
+// themes, so pinning the route would only mean a user on Light hits one page
+// that ignores them.
 export default function FoundationLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <ForceDarkTheme />
-      {children}
-    </>
-  );
+  return children;
 }

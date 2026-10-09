@@ -7,7 +7,7 @@ categories:
   - Agents
 logo: embody.svg
 order: 7
-madeBy: DeFine + Dane
+madeBy: DeFine
 twitter:
 github: https://github.com/its-DeFine
 contact:

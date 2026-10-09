@@ -1,0 +1,22 @@
+<!--
+  Padded, square viewBox. Two corrections in one box.
+
+  Size: the raw mark is flush to its own viewBox, so it rendered at 99% of the
+  tile against 75–85% for the marks in this set that carry their own margin.
+  Padding brings it to 82%.
+
+  Position: the mark's ink sits left of its bounding centre — three squares in
+  the left column, two in the middle, one on the right — so a true centre reads
+  as leaning left. Tuned by eye across three passes: +6.00u still read left,
+  the full centroid correction of +9.48u overshot, and +7.80u still sat at
+  +8.5% of the box against ~0% for every other logo here. This is +2.5%,
+  a nudge rather than a correction.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-19.94 -8.68 106.92 106.92" fill="none">
+  <path d="M0 16.4436V0.944092H15.4995V16.4436H0Z" fill="#181818"/>
+  <path d="M28.4692 34.504V19.0045H43.9687V34.504H28.4692Z" fill="#181818"/>
+  <path d="M56.8936 52.5661V37.0667H72.393V52.5661H56.8936Z" fill="#181818"/>
+  <path d="M28.4692 70.5814V55.0819H43.9687V70.5814H28.4692Z" fill="#181818"/>
+  <path d="M0 88.6207V73.1212H15.4995V88.6207H0Z" fill="#181818"/>
+  <path d="M0 52.5661V37.0667H15.4995V52.5661H0Z" fill="#181818"/>
+</svg>

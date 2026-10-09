@@ -1,20 +1,186 @@
-import Hero from "@/components/home/Hero";
-import BuiltOnLivepeer from "@/components/home/BuiltOnLivepeer";
-import LatestPosts from "@/components/home/LatestPosts";
-import CommunityCTA from "@/components/home/CommunityCTA";
-import { getAllPosts } from "@/lib/blog";
+import type { LivepeerOrgPage } from "@/components/livepeer-ui/contracts";
+import { ContributorsCtaSection } from "@/components/livepeer-ui/contributors-cta-section";
+import { LatestPostsSection } from "@/components/livepeer-ui/latest-posts-section";
+import {
+  NetworkHeroSection,
+  LivepeerAgentFeatureSection,
+  OrchestratorCtaSection,
+} from "@/components/livepeer-ui/livepeer-org-landing-sections";
+import { getContributors } from "@/lib/contributors";
+import { getDiscord } from "@/lib/discord";
+import { getBlogRegister } from "@/lib/register";
 
-export default function Home() {
-  const latestPosts = getAllPosts()
-    .slice(0, 3)
-    .map((p) => ({ ...p, content: "" }));
+import { blog, toListingPosts } from "./blog/listing";
 
+// Static, in-repo page content matching the registry's content contract
+// (see CLAUDE.md → Content). Copy mirrors the public-beta mockup.
+//
+// The hero splits its headline across two lines — `heading` leads in the
+// foreground colour, `accent` follows on its own line in the muted one — so it
+// carries a third string the contract has no field for.
+type HomeContent = NonNullable<LivepeerOrgPage["homeContent"]>;
+
+const hero: HomeContent["hero"] & {
+  description: string;
+  banner: { label: string; title: string; description: string; href: string };
+  // The contract's EditorialLink has no newTab; whether a CTA takes over the
+  // tab is a presentation decision this page makes, not content from a CMS.
+  secondaryCta: HomeContent["hero"]["secondaryCta"] & { newTab?: boolean };
+} = {
+  heading: "The open",
+  accent: "inference network.",
+  description:
+    "Purpose-built for AI video workloads. Designed for the agentic era.",
+  banner: {
+    label: "New",
+    title: "Livepeer 2.0",
+    description: "The open video agent platform",
+    href: "/blog/livepeer-2-0-video-agent-platform",
+  },
+  // The primary goes to /agent, which says what the Agent is and how to
+  // install it, and is where the section's Install button goes too. It went
+  // to the console, whose root sends a visitor without an account to its
+  // login: the first thing a newcomer met was a sign-in for something nobody
+  // had told them about. Discord opens alongside and is marked as leaving.
+  // See renderCta in livepeer-org-landing-sections.
+  primaryCta: { label: "Try Livepeer Agent", href: "/agent" },
+  secondaryCta: {
+    label: "Join Discord",
+    // Replaced with the live invite at render; see lib/discord.ts.
+    href: "/discord",
+    newTab: true,
+  },
+};
+
+const home: Pick<HomeContent, "agentFeature" | "providerCta"> = {
+  agentFeature: {
+    description:
+      "Video generation, right inside the AI tools you already use. Running on Livepeer's open network.",
+    installCta: { label: "Install", href: "/agent" },
+    libraryCta: { label: "Explore playbooks", href: "/agent" },
+  },
+  // The other side of the network, written for the reader who has a GPU and
+  // from what that reader needs to know, in the order they ask it: what am I
+  // being asked to do (the heading, which is also /compute's own, so the
+  // button lands on the line it was pressed under), what would my GPU be
+  // doing and how am I paid (the first sentence, which is the whole market:
+  // who sends the work, who runs it, who is paid), and then the invitation.
+  // The router is named as Livepeer Agent, Adam's call: it is not the only
+  // source of jobs, but effectively all of them will reach a GPU through an
+  // agent, and naming it ties this band to the section above. The matching
+  // is the copy's order, because it is the order things happen: a provider
+  // registers GPUs as nodes (said as "Connect", Adam's word, which is what
+  // the reader does) and advertises what they run and at what price
+  // ("choose what they run and set your own prices", in plain words, and
+  // the control is itself the pitch to a provider weighing it up), the
+  // Agent routes each job on capability and price ("the best fit"), and the
+  // provider is paid per job. Earlier versions said only "jobs they can
+  // run" and left prices out; one that opened "Connect your GPUs ...
+  // Livepeer Agent sends them ... and you get paid" changed subject three
+  // times and read as a list. Adam asked for it to be easy to understand,
+  // so the mechanism beyond that is /compute's to explain.
+  // GPUs in the plural, here and on /compute: most providers run more than
+  // one, and "your GPU" spoke to a hobbyist with a single card.
+  // The ways in (a pool, AI-first, a solo node) are /compute's to explain;
+  // a line here offering a pool as the way to start without tokens was cut
+  // at Adam's word, and pools are not to be mentioned on this page.
+  //
+  // What it replaced, and why each went. "Become an Orchestrator" over three
+  // kinds of earnings in the network's own words named neither the reader
+  // nor the work. "Run the GPUs behind it." needed the section above to mean
+  // anything. Copy that quoted the Agent demo's $0.34 needed the reader to
+  // have caught a price in small type in a demo that plays once, and as a
+  // bare figure read as a claim about what things cost; Adam cut the number.
+  //
+  // The word "orchestrator" is not on this page at all: a visitor cannot be
+  // assumed to know it, and "GPU provider" says what one is. /compute, where
+  // this leads, is where the term is taught. Nothing here promises earnings;
+  // /compute says work is not guaranteed, and this only says a job pays.
+  providerCta: {
+    heading: "Put your GPUs to work.",
+    description:
+      "Connect your GPUs, choose what they run and set your own prices. Livepeer Agent routes each AI video job to the best fit, and you get paid for every job they complete.",
+    // The role the band is addressed to ("For GPU providers") and the word its
+    // copy uses, as the action. "Get started" promised a setup flow and led
+    // to a page that explains one; "Provide Compute", the nav's name for that
+    // page, read as a second command after the heading; "See how it works"
+    // and "Learn more" were weighed and set aside. The step itself, "Connect
+    // your GPUs", is the first button on the page this opens.
+    cta: { label: "Become a provider", href: "/compute" },
+  },
+};
+
+// The two sides, labelled over their sections. The Agent is for creators,
+// the audience the 2.0 messaging house names (creators and marketers making
+// video in the agent they already use); it said "builders and creatives"
+// first, and the messaging steers away from builders, who are fal's and
+// Replicate's market (Adam). The band is for people with hardware. See
+// Audience in livepeer-org-landing-sections.
+const audience = {
+  agent: "For creators",
+  providers: "For GPU providers",
+};
+
+// The newest posts close the page, under the blog's own heading and linking
+// to its index (app/blog/listing.ts). Three is one row; the register is
+// already newest first. Read from Notion like the blog, so a post published
+// there reaches this page within the minute, and the page revalidates with
+// it rather than at build.
+const latest = { count: 3, allLabel: "View all" };
+
+// The closing band: the people, and the way in. The faces and the count are
+// read live (lib/contributors.ts, with its dated fallback); the words are
+// the site's, and say only as much as sends the reader to /contribute, which
+// is where the path and the funding ladder are explained.
+const contribute = {
+  heading: "Built in the open.",
+  description:
+    "Livepeer is built by independent teams, not by one company. Bring an idea, pick up a bounty, or propose something larger.",
+  cta: { label: "How to contribute", href: "/contribute" },
+};
+
+export default async function Home() {
+  const [{ invite }, register, contributors] = await Promise.all([
+    getDiscord(),
+    getBlogRegister(),
+    getContributors(),
+  ]);
   return (
     <>
-      <Hero />
-      <BuiltOnLivepeer />
-      <LatestPosts posts={latestPosts} />
-      <CommunityCTA />
+      <NetworkHeroSection
+        content={{
+          ...hero,
+          secondaryCta: { ...hero.secondaryCta, href: invite },
+        }}
+      />
+      {/* These share a background so the Orchestrator's particle field can
+          overflow up past the section boundary and pass behind the playbook
+          card. An opaque background on the Agent section would clip it there;
+          the wrapper carries the black for both and crops the overflow at the
+          outer edges. The canvas itself stays inside the Orchestrator section,
+          which is what keeps the field composed against that section's height
+          rather than being re-centred over the taller combined box. */}
+      <div className="relative isolate overflow-hidden bg-background">
+        <LivepeerAgentFeatureSection
+          content={home.agentFeature}
+          audience={audience.agent}
+        />
+        <OrchestratorCtaSection
+          content={home.providerCta}
+          audience={audience.providers}
+          continues
+        />
+        {/* Inside the wrapper too: the field dissolves into this section's
+            top padding rather than stopping at a rule, so the two have to
+            share the wrapper's ground and its crop. */}
+        <LatestPostsSection
+          posts={toListingPosts(register).slice(0, latest.count)}
+          heading={blog.heading}
+          allLabel={latest.allLabel}
+          allHref={blog.allHref}
+        />
+      </div>
+      <ContributorsCtaSection contributors={contributors} {...contribute} />
     </>
   );
 }

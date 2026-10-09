@@ -7,6 +7,24 @@ const nextConfig: NextConfig = {
   watchOptions: {
     pollIntervalMs: 1000,
   },
+  images: {
+    // Registry landing sections reference static brand imagery on Sanity's CDN.
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
+  // `.wgsl` shaders (the contribute hero) go through vgpu's loader, which
+  // resolves their import graph at build time and hands the effect one
+  // finished source. Both bundlers are told: `next dev` and `next build` both
+  // run webpack in this repo, but `next dev --turbopack` reads only the block
+  // below, so the rule is stated for each. Neither validates the WGSL — that
+  // is `vgpu check`, run by hand.
+  turbopack: {
+    rules: {
+      "*.wgsl": {
+        loaders: ["@vgpu/wgsl/loader-webpack"],
+        as: "*.js",
+      },
+    },
+  },
   webpack: (config) => {
     // Additional Webpack-specific watch tweaks for git worktree symlinks
     // (only takes effect when Turbopack is disabled).
@@ -16,6 +34,10 @@ const nextConfig: NextConfig = {
       poll: 1000,
       aggregateTimeout: 300,
     };
+    config.module.rules.push({
+      test: /\.wgsl$/,
+      loader: "@vgpu/wgsl/loader-webpack",
+    });
     return config;
   },
   async redirects() {
@@ -31,30 +53,58 @@ const nextConfig: NextConfig = {
         destination: "/primer",
         permanent: false,
       },
+      // /network and /orchestrate used to bounce off-site because there was no
+      // page here to send them to. /compute is now that page — one surface for
+      // running a node and earning from it — so they resolve on-site.
       {
         source: "/network",
-        destination: "https://explorer.livepeer.org",
+        destination: "/compute",
         permanent: false,
       },
+      {
+        source: "/orchestrate",
+        destination: "/compute",
+        permanent: false,
+      },
+      // /earn is an alias for the same page, not a separate one (CLAUDE.md).
+      {
+        source: "/earn",
+        destination: "/compute",
+        permanent: false,
+      },
+      // Delegation stays external — it's an explorer action, not a page here.
       {
         source: "/delegate",
         destination: "https://explorer.livepeer.org/",
         permanent: false,
       },
+      // The five use-case pages collapse into the surfaces that replaced them:
+      // four were AI/agent stories, the transcoding one is a compute story.
+      ...[
+        "/use-cases/ai-avatars-and-agents",
+        "/use-cases/composable-ai-pipelines",
+        "/use-cases/real-time-video-analysis",
+        "/use-cases/synthetic-data-generation",
+      ].map((source) => ({
+        source,
+        destination: "/agent",
+        permanent: true,
+      })),
       {
-        source: "/orchestrate",
-        destination:
-          "https://docs.livepeer.org/v1/orchestrators/guides/get-started",
-        permanent: false,
+        source: "/use-cases/live-transcoding-and-streaming",
+        destination: "/compute",
+        permanent: true,
       },
       {
         source: "/dev-hub",
         destination: "https://docs.livepeer.org",
         permanent: false,
       },
+      // The invite is read live by app/discord/route.ts; a static redirect
+      // cannot fetch, so it goes through that route.
       {
         source: "/community-hub",
-        destination: "https://discord.gg/55SZFEEH5y",
+        destination: "/discord",
         permanent: false,
       },
       {
@@ -72,26 +122,35 @@ const nextConfig: NextConfig = {
         destination: "/primer",
         permanent: true,
       },
-      // Legal pages — not yet implemented, redirect to home for now
+      // Nav labels the blog "Latest Updates" and links to /latest; the canonical
+      // URL stays /blog (preserves SEO + existing slug redirects).
       {
-        source: "/terms-of-service",
-        destination: "/",
+        source: "/latest",
+        destination: "/blog",
         permanent: false,
       },
       {
-        source: "/privacy-policy",
-        destination: "/",
+        source: "/latest/:slug*",
+        destination: "/blog/:slug*",
         permanent: false,
       },
+      // The blog's Proposals category became Governance (lib/blog.ts).
+      {
+        source: "/blog/category/proposals",
+        destination: "/blog/category/governance",
+        permanent: true,
+      },
+      // The old site's alternate legal addresses. The pages themselves are
+      // /terms-of-service and /privacy-policy, read from Notion (lib/legal.ts).
       {
         source: "/terms-of-service-p",
-        destination: "/",
-        permanent: false,
+        destination: "/terms-of-service",
+        permanent: true,
       },
       {
         source: "/privacy-policy-p",
-        destination: "/",
-        permanent: false,
+        destination: "/privacy-policy",
+        permanent: true,
       },
       // blog.livepeer.org → livepeer.org/blog (path-preserving catch-all)
       {
