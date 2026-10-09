@@ -291,6 +291,240 @@ export function CommitmentRecord({
   // commitment owes, the way an open one owes a monthly update.
   const retro =
     c.state === "shipped" ? updates.find((u) => u.kind === "retro") : undefined;
+  // A record leads with how it is going when someone has said so — the
+  // latest update for work under way, the retrospective for shipped work —
+  // with the activity log under it, and then the write-up, which a returning
+  // reader has already read and the Outcome row summarises in a line. With
+  // nothing posted, it leads with the write-up: an empty card and a one-line
+  // log above it pushed the page's only content down to repeat what the
+  // Health row already says ("No update yet"), so the empty card and the log
+  // follow the write-up instead, as planned work's log does (Adam,
+  // 2026-10-09). The latest update sat above the write-up once before and
+  // came down because the log stayed at the foot, sandwiching the write-up;
+  // the card and the log now move together.
+  const leadsWithStatus = Boolean(latest) || Boolean(retro);
+
+  const writeUp = (
+    <>
+      {/* The write-up, unlabelled and below a rule, exactly where Notion puts
+          a page body. On the card it needed the word "Context" to explain why
+          a paragraph sat among facts; here it is the content and the
+          properties are the aside.
+
+          HTML from either source: the markdown register renders through the
+          blog's pipeline, Notion's blocks through lib/notion-blocks.ts. */}
+      {c.detail ? (
+        <div
+          className="reading-prose mt-10 border-t border-border pt-10"
+          dangerouslySetInnerHTML={{ __html: c.detail }}
+        />
+      ) : (
+        // Said plainly rather than left blank. Every commitment should carry a
+        // write-up, and an empty record is a prompt to write one rather than
+        // evidence that there is nothing to say.
+        <p className="mt-10 border-t border-border pt-10 text-sm text-muted-foreground">
+          No write-up yet.
+        </p>
+      )}
+    </>
+  );
+
+  const statusCard = (
+    <>
+      {/* The card that leads a record under way or shipped: the latest
+          update, or the retrospective. The card is the health its lead
+          chose, who said so and when, and what they said. Past six weeks of
+          silence the card says so on its right — the word the lead chose is
+          still the last word, but it is no longer a current one — and with
+          nothing ever posted the card says that instead of hiding. */}
+      {c.state === "shipped" &&
+        (retro ? (
+          <div className="mt-10 border-t border-border pt-10">
+            <UpdateCard
+              update={retro}
+              when={shortDate(retro.date, now)}
+              eyebrow="Retrospective"
+            />
+          </div>
+        ) : (
+          <div className="mt-10 border-t border-border pt-10">
+            <div className="rounded-xl border border-border p-5 sm:p-6">
+              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+                Retrospective
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                None posted yet. A retrospective closes a shipped commitment:
+                what was delivered against what was committed, what it cost,
+                what was learned.{" "}
+                <Link
+                  href="/roadmap/reporting"
+                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                >
+                  What one covers
+                </Link>
+              </p>
+            </div>
+          </div>
+        ))}
+
+      {standing &&
+        (latest ? (
+          <div className="mt-10 border-t border-border pt-10">
+            <UpdateCard
+              update={latest}
+              when={shortDate(latest.date, now)}
+              eyebrow="Latest update"
+              note={
+                standing.health === "no-update"
+                  ? `No update in ${Math.round(STALE_AFTER_DAYS / 7)} weeks`
+                  : undefined
+              }
+            />
+          </div>
+        ) : (
+          <div className="mt-10 border-t border-border pt-10">
+            <div className="rounded-xl border border-border p-5 sm:p-6">
+              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
+                Latest update
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Nothing posted yet. The lead posts one a month while the work is
+                under way.{" "}
+                <Link
+                  href="/roadmap/reporting"
+                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                >
+                  What one carries
+                </Link>
+              </p>
+            </div>
+          </div>
+        ))}
+    </>
+  );
+
+  const activityLog = (
+    <>
+      {/* Activity, the way Linear keeps it beside a project: one line per
+          event, newest first — every update posted, with its health as the
+          icon and its text a click away, and the record's own milestones
+          around them. The latest update is in the log too, even though it
+          is the card above; a log with its newest entry missing is not one.
+          Shown whenever there is anything to log, which for committed work
+          with no updates is only the day it was committed. Directly under
+          the latest card where there is one, with no rule between: the two
+          are one subject, and they come before the write-up together. */}
+      {(updates.length > 0 || c.shippedAt || c.issued) && (
+        <section
+          className={
+            standing || c.state === "shipped"
+              ? "mt-10"
+              : "mt-10 border-t border-border pt-10"
+          }
+        >
+          <h2 className="text-sm font-medium">Activity</h2>
+          <RevealPost />
+          <ol className="mt-4">
+            {/* One log in date order, newest first: the posts, and the
+                record's own milestones among them. Pinning "shipped it" to
+                the top put it above a retrospective written the day after,
+                which is not the order things happened in. */}
+            {[
+              ...(c.shippedAt
+                ? [
+                    {
+                      key: "shipped",
+                      date: c.shippedAt,
+                      node: (
+                        <ActivityRow
+                          key="shipped"
+                          icon={<CircleCheck className="size-4" aria-hidden />}
+                          actor={c.owner}
+                          verb="shipped it"
+                          date={shortDate(c.shippedAt, now)}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+              ...updates.map((u) => ({
+                key: `${u.kind}-${u.date}-${u.summary}`,
+                date: u.date,
+                node: (
+                  <ActivityRow
+                    key={`${u.kind}-${u.date}-${u.summary}`}
+                    id={u.anchor ?? postAnchor(u)}
+                    icon={
+                      u.kind === "update" ? (
+                        <HealthIcon health={u.health} />
+                      ) : (
+                        <NotebookPen className="size-4" aria-hidden />
+                      )
+                    }
+                    actor={u.author?.name ?? c.owner}
+                    verb={
+                      u.kind === "update"
+                        ? `posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`
+                        : "posted a retrospective"
+                    }
+                    date={shortDate(u.date, now)}
+                  >
+                    {/* The post's title: a size step above its write-up
+                        as well as a weight, or the write-up's own bold
+                        lead-ins outrank it. At the body's size it was a
+                        paragraph in a different colour. */}
+                    {/* The title at the log's own size — a size above it
+                        outranked the row header, which is its parent — and
+                        the only dark text in the expansion: the write-up
+                        below runs entirely in the muted voice, its bold
+                        lead-ins included, so weight and colour carry the
+                        hierarchy without a size step. */}
+                    <p
+                      className={cn(
+                        "text-sm leading-snug font-medium text-pretty",
+                        // Air beneath only when there is a write-up to hold
+                        // off; on its own the title sat over an empty band.
+                        u.html && "mb-3"
+                      )}
+                    >
+                      {u.summary}
+                    </p>
+                    {u.html && (
+                      <div
+                        className="reading-prose mt-2 text-sm! [&_strong]:font-medium [&_strong]:text-muted-foreground!"
+                        dangerouslySetInnerHTML={{ __html: u.html }}
+                      />
+                    )}
+                    <ReadOn post={u} className="mt-3" />
+                  </ActivityRow>
+                ),
+              })),
+              ...(c.issued
+                ? [
+                    {
+                      key: "issued",
+                      date: c.issued,
+                      node: (
+                        <ActivityRow
+                          key="issued"
+                          icon={<CircleDot className="size-4" aria-hidden />}
+                          actor={c.owner}
+                          verb="committed to it"
+                          date={shortDate(c.issued, now)}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+            ]
+              .sort((a, b) => b.date.localeCompare(a.date))
+              .map((e) => e.node)}
+          </ol>
+        </section>
+      )}
+    </>
+  );
+
   return (
     <>
       {/* Notion's page title: heavy, tight, and the largest thing on the
@@ -412,216 +646,18 @@ export function CommitmentRecord({
         )}
       </dl>
 
-      {/* The write-up, unlabelled and below a rule, exactly where Notion puts
-          a page body. On the card it needed the word "Context" to explain why
-          a paragraph sat among facts; here it is the content and the
-          properties are the aside.
-
-          HTML from either source: the markdown register renders through the
-          blog's pipeline, Notion's blocks through lib/notion-blocks.ts. */}
-      {c.detail ? (
-        <div
-          className="reading-prose mt-10 border-t border-border pt-10"
-          dangerouslySetInnerHTML={{ __html: c.detail }}
-        />
+      {leadsWithStatus ? (
+        <>
+          {statusCard}
+          {activityLog}
+          {writeUp}
+        </>
       ) : (
-        // Said plainly rather than left blank. Every commitment should carry a
-        // write-up, and an empty record is a prompt to write one rather than
-        // evidence that there is nothing to say.
-        <p className="mt-10 border-t border-border pt-10 text-sm text-muted-foreground">
-          No write-up yet.
-        </p>
-      )}
-
-      {/* The latest update, under the write-up and above the log, so the
-          record reads as what it is, then how it is going. It sat above the
-          write-up first, where Linear puts a project's, but Linear's
-          activity is a sidebar; in one column that left the write-up
-          sandwiched between two kinds of update. The card is the health its
-          lead chose, who said so and when, and what they said. Past six weeks of silence
-          the card says so on its right — the word the lead chose is still
-          the last word, but it is no longer a current one — and with
-          nothing ever posted the card says that instead of hiding. */}
-      {c.state === "shipped" &&
-        (retro ? (
-          <div className="mt-10 border-t border-border pt-10">
-            <UpdateCard
-              update={retro}
-              when={shortDate(retro.date, now)}
-              eyebrow="Retrospective"
-            />
-          </div>
-        ) : (
-          <div className="mt-10 border-t border-border pt-10">
-            <div className="rounded-xl border border-border p-5 sm:p-6">
-              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-                Retrospective
-              </h2>
-              <p className="mt-3 text-sm text-muted-foreground">
-                None posted yet. A retrospective closes a shipped commitment:
-                what was delivered against what was committed, what it cost,
-                what was learned.{" "}
-                <Link
-                  href="/roadmap/reporting"
-                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                >
-                  What one covers
-                </Link>
-              </p>
-            </div>
-          </div>
-        ))}
-
-      {standing &&
-        (latest ? (
-          <div className="mt-10 border-t border-border pt-10">
-            <UpdateCard
-              update={latest}
-              when={shortDate(latest.date, now)}
-              eyebrow="Latest update"
-              note={
-                standing.health === "no-update"
-                  ? `No update in ${Math.round(STALE_AFTER_DAYS / 7)} weeks`
-                  : undefined
-              }
-            />
-          </div>
-        ) : (
-          <div className="mt-10 border-t border-border pt-10">
-            <div className="rounded-xl border border-border p-5 sm:p-6">
-              <h2 className="text-[0.6875rem] leading-4 font-medium tracking-[0.09em] text-muted-foreground uppercase">
-                Latest update
-              </h2>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Nothing posted yet. The lead posts one a month while the work is
-                under way.{" "}
-                <Link
-                  href="/roadmap/reporting"
-                  className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                >
-                  What one carries
-                </Link>
-              </p>
-            </div>
-          </div>
-        ))}
-
-      {/* Activity, the way Linear keeps it beside a project: one line per
-          event, newest first — every update posted, with its health as the
-          icon and its text a click away, and the record's own milestones
-          around them. The latest update is in the log too, even though it
-          is the card above; a log with its newest entry missing is not one.
-          Shown whenever there is anything to log, which for committed work
-          with no updates is only the day it was committed. Directly under
-          the latest card where there is one, with no rule between: the two
-          are one subject. */}
-      {(updates.length > 0 || c.shippedAt || c.issued) && (
-        <section
-          className={
-            standing || c.state === "shipped"
-              ? "mt-10"
-              : "mt-10 border-t border-border pt-10"
-          }
-        >
-          <h2 className="text-sm font-medium">Activity</h2>
-          <RevealPost />
-          <ol className="mt-4">
-            {/* One log in date order, newest first: the posts, and the
-                record's own milestones among them. Pinning "shipped it" to
-                the top put it above a retrospective written the day after,
-                which is not the order things happened in. */}
-            {[
-              ...(c.shippedAt
-                ? [
-                    {
-                      key: "shipped",
-                      date: c.shippedAt,
-                      node: (
-                        <ActivityRow
-                          key="shipped"
-                          icon={<CircleCheck className="size-4" aria-hidden />}
-                          actor={c.owner}
-                          verb="shipped it"
-                          date={shortDate(c.shippedAt, now)}
-                        />
-                      ),
-                    },
-                  ]
-                : []),
-              ...updates.map((u) => ({
-                key: `${u.kind}-${u.date}-${u.summary}`,
-                date: u.date,
-                node: (
-                  <ActivityRow
-                    key={`${u.kind}-${u.date}-${u.summary}`}
-                    id={u.anchor ?? postAnchor(u)}
-                    icon={
-                      u.kind === "update" ? (
-                        <HealthIcon health={u.health} />
-                      ) : (
-                        <NotebookPen className="size-4" aria-hidden />
-                      )
-                    }
-                    actor={u.author?.name ?? c.owner}
-                    verb={
-                      u.kind === "update"
-                        ? `posted an update, ${HEALTH_LABEL[u.health].toLowerCase()}`
-                        : "posted a retrospective"
-                    }
-                    date={shortDate(u.date, now)}
-                  >
-                    {/* The post's title: a size step above its write-up
-                        as well as a weight, or the write-up's own bold
-                        lead-ins outrank it. At the body's size it was a
-                        paragraph in a different colour. */}
-                    {/* The title at the log's own size — a size above it
-                        outranked the row header, which is its parent — and
-                        the only dark text in the expansion: the write-up
-                        below runs entirely in the muted voice, its bold
-                        lead-ins included, so weight and colour carry the
-                        hierarchy without a size step. */}
-                    <p
-                      className={cn(
-                        "text-sm leading-snug font-medium text-pretty",
-                        // Air beneath only when there is a write-up to hold
-                        // off; on its own the title sat over an empty band.
-                        u.html && "mb-3"
-                      )}
-                    >
-                      {u.summary}
-                    </p>
-                    {u.html && (
-                      <div
-                        className="reading-prose mt-2 text-sm! [&_strong]:font-medium [&_strong]:text-muted-foreground!"
-                        dangerouslySetInnerHTML={{ __html: u.html }}
-                      />
-                    )}
-                    <ReadOn post={u} className="mt-3" />
-                  </ActivityRow>
-                ),
-              })),
-              ...(c.issued
-                ? [
-                    {
-                      key: "issued",
-                      date: c.issued,
-                      node: (
-                        <ActivityRow
-                          key="issued"
-                          icon={<CircleDot className="size-4" aria-hidden />}
-                          actor={c.owner}
-                          verb="committed to it"
-                          date={shortDate(c.issued, now)}
-                        />
-                      ),
-                    },
-                  ]
-                : []),
-            ]
-              .sort((a, b) => b.date.localeCompare(a.date))
-              .map((e) => e.node)}
-          </ol>
-        </section>
+        <>
+          {writeUp}
+          {statusCard}
+          {activityLog}
+        </>
       )}
     </>
   );
