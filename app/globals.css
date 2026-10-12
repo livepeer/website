@@ -51,22 +51,22 @@
   --text-display-sm: 36px;
   --text-display-sm--line-height: 0.98;
   --text-display-sm--font-weight: 300;
-  --text-display-sm--letter-spacing: -0.035em;
+  --text-display-sm--letter-spacing: -0.045em;
 
   --text-display-md: 48px;
   --text-display-md--line-height: 0.98;
   --text-display-md--font-weight: 300;
-  --text-display-md--letter-spacing: -0.035em;
+  --text-display-md--letter-spacing: -0.045em;
 
   --text-display-lg: 60px;
   --text-display-lg--line-height: 0.98;
   --text-display-lg--font-weight: 300;
-  --text-display-lg--letter-spacing: -0.035em;
+  --text-display-lg--letter-spacing: -0.045em;
 
   --text-display-fluid: clamp(40px, 4.5vw, 64px);
   --text-display-fluid--line-height: 0.98;
   --text-display-fluid--font-weight: 300;
-  --text-display-fluid--letter-spacing: -0.035em;
+  --text-display-fluid--letter-spacing: -0.045em;
 }
 
 /* Page-level background — like --color-background but NEVER overridden by

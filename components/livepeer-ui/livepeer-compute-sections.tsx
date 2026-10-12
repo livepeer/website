@@ -122,9 +122,7 @@ export function ComputeHeroSection({
         <div className="flex w-full max-w-3xl flex-col items-center xl:max-w-xl xl:items-start">
           {/* The mockup's arbitrary clamp is clamp(2.5rem,4.5vw,4rem), which is
               text-display-fluid exactly — same ramp, tracking, and weight. */}
-          <h1 className="text-display-fluid text-balance font-normal">
-            {content.heading}
-          </h1>
+          <h1 className="text-display-fluid text-balance">{content.heading}</h1>
           <p className="mt-6 max-w-2xl text-reading-body text-pretty text-muted-foreground">
             {content.description}
           </p>

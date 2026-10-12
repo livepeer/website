@@ -133,7 +133,7 @@ export default async function RoadmapPage() {
 
                 text-balance still earns its place at the widths where the line
                 does wrap: it stops the last word stranding alone. */}
-            <h1 className="mt-3 text-display-sm leading-[1.02] tracking-[-0.04em] text-balance sm:text-display-md lg:text-display-lg font-normal">
+            <h1 className="mt-3 text-display-sm leading-[1.02] tracking-[-0.04em] text-balance sm:text-display-md lg:text-display-lg">
               What we&rsquo;re building, and when.
             </h1>
             {/* The measure is chosen so the paragraph breaks on its own full

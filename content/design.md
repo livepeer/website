@@ -44,12 +44,12 @@ The semantic type scale is defined in the theme. Each `text-*` utility carries i
 - **UI body** — `text-ui-body`, 14/20px, 400. Controls, navigation, tables, forms and routine product copy.
 - **Reading body** — `text-reading-body`, 16/28px, 400. Docs, editorial prose and explanatory content inside a constrained measure.
 - **Page title** — `text-page-title`, 32px, 300, −0.025em. The primary title in product and console shells; pair with `text-balance`.
-- **Display small** — `text-display-sm`, 36px, 300, −0.035em. Mobile public headings and smaller statements.
-- **Display medium** — `text-display-md`, 48px, 300, −0.035em. Public section statements and compact desktop heroes.
-- **Display large** — `text-display-lg`, 60px, 300, −0.035em. Large desktop heroes and mobile-menu navigation.
-- **Display fluid** — `text-display-fluid`, 40–64px with the viewport, 300, −0.035em. Wide public or editorial statements that should grow continuously.
+- **Display small** — `text-display-sm`, 36px, 300, −0.045em. Mobile public headings and smaller statements.
+- **Display medium** — `text-display-md`, 48px, 300, −0.045em. Public section statements and compact desktop heroes.
+- **Display large** — `text-display-lg`, 60px, 300, −0.045em. Large desktop heroes and mobile-menu navigation.
+- **Display fluid** — `text-display-fluid`, 40–64px with the viewport, 300, −0.045em. Wide public or editorial statements that should grow continuously.
 
-A page's main heading (its `h1`) sets its display role at the regular weight, `font-normal` (400): at hero size the role's 300 reads as faint, especially dark on white. Section headings keep the role's 300.
+Page headings set their display role at its own 300, the main heading (`h1`) included; the home page's opening line is the one exception, at 400 (`font-normal`). Do not add a weight to a heading to make it read stronger: size and space do that.
 
 Use responsive roles rather than arbitrary sizes: `text-display-sm sm:text-display-md` for a 36→48px statement, `text-display-sm sm:text-display-lg` for a 36→60px hero, `text-display-sm sm:text-display-fluid` for a statement that grows with the window. Do not add a token for a one-off size.
 

@@ -98,7 +98,7 @@ export function BrandHeroSection({
   return (
     <header className="mx-auto max-w-2xl pt-12 text-center sm:pt-20">
       <p className="font-mono text-xs text-muted-foreground">Livepeer</p>
-      <h1 className="mt-5 text-display-md text-balance sm:text-display-lg font-normal">
+      <h1 className="mt-5 text-display-md text-balance sm:text-display-lg">
         {heading}
       </h1>
       <p className="mx-auto mt-6 max-w-[40ch] text-reading-body text-pretty text-muted-foreground">

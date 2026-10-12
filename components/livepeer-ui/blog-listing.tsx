@@ -79,7 +79,7 @@ export function BlogListing({
         {/* display-md at the regular weight rather than the 300 the display
             utilities carry, so the heading holds its own over a row of
             buttons and a search field. Vercel's heading measures the same. */}
-        <h1 className="text-display-md font-normal">{heading}</h1>
+        <h1 className="text-display-md">{heading}</h1>
 
         <LatestNav
           allHref={allHref}
