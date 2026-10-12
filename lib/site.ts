@@ -41,6 +41,10 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       _key: "resources",
       title: "Resources",
       links: [
+        // First: the reference people come to the footer for most. The header's
+        // Resources menu keeps its own order (resourceOrder in
+        // livepeer-org-header-nav.tsx).
+        { label: "Documentation", href: "https://docs.livepeer.org" },
         { label: "Blog", href: "/blog" },
         // Beside the blog in the footer and in the blog's own row; kept out of
         // the header's Resources menu, which stays the five it was designed
@@ -53,7 +57,6 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Roadmap", href: "/roadmap" },
         { label: "Contribute", href: "/contribute" },
         { label: "Foundation", href: "/foundation" },
-        { label: "Documentation", href: "https://docs.livepeer.org" },
       ],
     },
     {
