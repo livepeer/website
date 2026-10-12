@@ -27,12 +27,6 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   HealthIcon,
   HealthMark,
   HealthWord,
@@ -41,7 +35,7 @@ import {
   shortDate,
 } from "@/components/livepeer-ui/health";
 import { cn } from "@/lib/utils";
-import type { Commitment, Person } from "@/lib/roadmap";
+import type { Commitment } from "@/lib/roadmap";
 import {
   HEALTH_LABEL,
   HEALTH_ORDER,
@@ -187,218 +181,6 @@ function Label({
 }
 
 /**
- * Initials for a credit, from whatever the register calls the party.
- *
- * Two letters for a multi-word name, one for a handle. Parenthesised suffixes
- * are dropped — "John Mull (Elite Code Solutions)" is a person and a studio in
- * one string, and the mark should read as the person it leads with.
- */
-function initials(name: string) {
-  const words = name
-    .replace(/\(.*?\)/g, "")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  if (words.length === 0) return "?";
-  if (words.length === 1) return words[0]!.charAt(0).toUpperCase();
-  return (
-    words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)
-  ).toUpperCase();
-}
-
-/**
- * The faces behind the accountable party, set against its name.
- *
- * Owner and Team roster were two fields describing one thing: who is behind
- * this. Split across the footer's two ends they read as separate claims and
- * needed two labels to explain that they weren't. One field says it once —
- * the org that is on the hook, and the people doing the work beside it — and it
- * is the treatment the home page already uses for contributors, so the site
- * says "these people" the same way twice.
- *
- * The names go with the split. They were what made the roster wide enough to
- * need its own end of the row, and a tooltip on each face puts the name back
- * beside the face it belongs to rather than in a list a reader has to match up.
- * What the closed card owes a reader is that real, named people are behind
- * this — a face says that, and hovering one says which.
- *
- * Overlapped, but at 6px rather than the usual 8. An overlap of 8 on a 28px
- * circle covers the outer 8px, and a two-letter monogram runs to within 7.5px
- * of the edge — which is how "DP" rendered as "DF". Six clears the letters and
- * still reads as a stack, so the photo-less fallback survives the idiom.
- *
- * A face links to the person's forum profile only when the record
- * supplies an id. Nothing is inferred from a name: a guessed id is a link to a
- * stranger, and this page exists to be checkable. The board exposes no profile
- * links on its public item pages, so each id has to be confirmed by hand.
- *
- * The hover is the old home page's contributor strip, carried over from
- * components/home/CommunityCTA.tsx before the cutover deleted it: grey at rest,
- * and on hover it lifts, grows and comes up in colour over its neighbours. Two
- * deliberate departures from that original:
- *
- * - The ring warms to a foreground wash, not to green. The old strip predates
- *   the design system, which reserves green for non-interactive brand
- *   expression; a hover ring is the definition of an affordance.
- * - Every face moves, linked or not. Making the lift exclusive to a link was
- *   the first version and it left twenty of the register's twenty-one faces
- *   inert, which reads as broken rather than as informative. The hover is
- *   honest on an unlinked face anyway: it names the person either way. The
- *   link is a bonus on top of that, not the reason to reach for it.
- *
- * The name is the registry's Tooltip rather than a `title`, which the first
- * version used. A native title waits a second, cannot be styled or themed, and
- * never appears for a keyboard or touch user at all. Base UI opens the same
- * popup on focus as on hover, so tabbing the row reads it out.
- *
- * Grey at rest is doing real work beyond the reveal: six portraits from six
- * different sources arrive with six different colour casts, and desaturated
- * they read as one row instead of six stickers — which is what keeps a strip of
- * faces from outshouting the commitment it belongs to.
- */
-/**
- * A stable fill for a monogram, from the registry's categorical five.
- *
- * Keyed on the name so a person keeps their tone across every card they appear
- * on — the point of a categorical colour is that it means the same thing twice.
- * FNV-1a with a murmur3 finalizer: a plain `h * 31 + c` barely moves its low
- * bits between similar strings, so near-identical names collide on one tone.
- */
-const FACE_TONES = [0, 25, 50, 75, 100].map((step) => ({
-  // The light end of the ramp, not the whole of it. Spreading across all five
-  // put people on chart-3 and chart-5 — 0.439 and 0.269 — darker than the card
-  // they sit on, so a monogram read as a hole punched in the row. These are
-  // steps between chart-1 and chart-2, a band that stays lighter than every
-  // surface on the page. One ink for all five: the band is narrow enough that
-  // chart-5 clears the darkest of them.
-  bg: `color-mix(in oklch, var(--chart-2) ${step}%, var(--chart-1))`,
-  ink: "var(--chart-5)",
-}));
-
-function faceTone(name: string) {
-  let h = 2166136261;
-  for (const ch of name) {
-    h ^= ch.charCodeAt(0);
-    h = Math.imul(h, 16777619);
-  }
-  h ^= h >>> 15;
-  h = Math.imul(h, 2246822507);
-  h ^= h >>> 13;
-  h >>>= 0;
-  return FACE_TONES[h % FACE_TONES.length]!;
-}
-
-function Faces({ people }: { people: Person[] }) {
-  // The lift and the grow ride on the outer element, not the portrait: it is
-  // what clips to a circle, so scaling the image inside it would crop the face
-  // rather than enlarge the mark.
-  //
-  // In colour at rest. These were desaturated so that portraits from six
-  // different sources would read as one row rather than six stickers, with
-  // colour arriving on hover as the reveal. The cost was that a row of people
-  // — the one thing on a card that is unambiguously human — was the only
-  // greyed-out element on the page, and it read as disabled rather than as
-  // restrained.
-  const face = cn(
-    // A filled monogram, tone assigned per person.
-    //
-    // Opaque first: foreground/8% let whatever sat behind it through, and these
-    // overlap by 6px, so a lettered face stacked on a photographed one showed
-    // the photo through the letters.
-    //
-    // The fill comes from chart-1..5 — the registry's categorical role, which
-    // is exactly what "one of a set of things that must be told apart" means.
-    // In this theme those five are greyscale (chroma 0), so what a reader gets
-    // is five tones rather than five hues. That is the design system's answer,
-    // not a compromise reached for: green is brand expression and never a
-    // per-person label, and inventing hues here would be the second token layer
-    // CLAUDE.md rules out.
-    //
-    // Ink is drawn from the same palette, so the pairing cannot drift from it.
-    "pointer-events-auto relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--face)] text-[0.625rem] font-medium text-[var(--face-ink)] ring-2 ring-muted outline-none dark:ring-card",
-    "transition duration-200 motion-reduce:transition-none"
-  );
-  // The lift belongs to the ones that go somewhere. Giving it to all of them
-  // made an unlinked face rise and glow and then do nothing on click, which is
-  // a promise the card cannot keep — the card opens instead, and the click
-  // reads as a link that failed. With colour no longer the hover reveal, the
-  // lift is the whole affordance, so it carries the ring on its own.
-  const linked =
-    "hover:z-10 hover:-translate-y-1 hover:scale-110 hover:ring-foreground/20 focus-visible:z-10 focus-visible:ring-ring";
-  return (
-    <span className="flex -space-x-1.5">
-      {people.map((person) => {
-        const inner = person.avatar ? (
-          <Image
-            src={`/people/${person.avatar}`}
-            alt=""
-            width={64}
-            height={64}
-            className="size-full object-cover"
-          />
-        ) : (
-          initials(person.name)
-        );
-        // The card is a <details> and this sits in its <summary>, so a click
-        // here would follow the link and toggle the card on the way out.
-        // stopPropagation keeps the card from opening behind the new tab; the
-        // anchor's own navigation is untouched, and the keydown does the same
-        // for Enter.
-        //
-        // No preventDefault, and no window.open standing in for the href. An
-        // earlier version had both, on the theory that <summary> swallows link
-        // activation — that theory came from test clicks that were landing on
-        // the page container rather than on the avatar. Retested against the
-        // real element: a plain anchor here navigates, tooltip trigger and all.
-        const tone = faceTone(person.name);
-        const toneVars = {
-          "--face": tone.bg,
-          "--face-ink": tone.ink,
-        } as React.CSSProperties;
-        // Every face goes to that person's page.
-        //
-        // It used to go to the forum where a handle existed and nowhere at all
-        // where one did not, which left nine of ten credited people as dead
-        // text — and the one that went somewhere left the site entirely. The
-        // page is ours, always exists, and carries the forum handle as a row
-        // for the people who have one.
-        //
-        // scroll={false} and the intercepting route make this open over the
-        // register, so a reader checking who someone is does not lose the list
-        // they were reading.
-        const trigger = (
-          <Link
-            style={toneVars}
-            href={`/people/${person.slug}`}
-            scroll={false}
-            // The portrait is decorative — its alt is empty, because the name
-            // beside it is the content — so without this the anchor has no
-            // accessible name at all and a screen reader reads out "link" once
-            // per face. The tooltip carries the name for a sighted reader; this
-            // is the same fact, for everyone else.
-            aria-label={person.name}
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-            className={cn(face, linked)}
-          >
-            {inner}
-          </Link>
-        );
-        return (
-          <Tooltip key={person.name}>
-            {/* render, not a wrapper: Base UI's trigger is a <button> by
-                default, and a button around an anchor is invalid and
-                double-focusable. This hands it the element we already have. */}
-            <TooltipTrigger render={trigger} />
-            <TooltipContent>{person.name}</TooltipContent>
-          </Tooltip>
-        );
-      })}
-    </span>
-  );
-}
-
-/**
  * Internal links go through next/link, external ones do not.
  *
  * Not only a nicety: a plain anchor is a full navigation, and a full
@@ -509,8 +291,8 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
         <h3 className="mt-3 text-lg font-medium tracking-[-0.015em]">
           {/* The stretched link.
             A sibling that covers the card rather than a wrapper around it, so
-            the faces below keep their own links without anchors nesting inside
-            an anchor. It hangs off the title because that is what the record
+            the owner's name below keeps its own link without anchors nesting
+            inside an anchor. It hangs off the title because that is what the record
             is called — a screen reader announces the heading as the link, not
             "read more". */}
           <Link
@@ -539,12 +321,7 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
 
           justify-between rather than an auto margin, because both ends wrap: at
           375px the credit drops to its own line and each end keeps its own left
-          edge, which is what an auto margin would not do.
-
-          The faces are optional and genuinely so — a register that credits
-          foundations, SPEs and pseudonymous contributors should not imply a
-          roster exists when it does not. They sit above the stretched link so
-          a face still goes to its own profile. */}
+          edge, which is what an auto margin would not do. */}
         <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-sm text-muted-foreground">
           <StateMark state={c.state} standing={c.standing} retro={c.retro} />
           {/* z-[1], not z-10. This only has to clear the stretched link's
@@ -556,9 +333,8 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
               pointer-events-none, because raising the whole row put a dead
               strip over the card: "by" and the owner name are plain text and
               never had anything to click, so they only blocked the stretched
-              link underneath. The faces opt back in individually — they are
-              the one thing here that genuinely needs the pointer, for a
-              tooltip if not for a link. */}
+              link underneath. The owner's name opts back in, the one thing
+              here that goes somewhere of its own. */}
           <span className="pointer-events-none relative z-[1] flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="shrink-0">by</span>
             {/* The owner goes somewhere now. pointer-events-auto because the
@@ -573,19 +349,13 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
             >
               {c.owner}
             </Link>
-            {/* The lead's face, with the name on hover — not the
-                contributors'. A stack of contributors set against the owner's
-                name read as that owner's people, and the register credits
-                people from other bodies on work an organisation owns (Rick
-                Staa, of the Foundation, on Livepeer Inc's network work). The
-                lead is the one person to ask, which is what a card owes a
-                reader; the contributors are on the record, in a row of their
-                own. The name beside the face, with and without a "led by"
-                label, was tried and read as more than the line needed.
-                Only a photograph: a monogram beside the owner's name read as
-                a second, unexplained badge, so without a portrait the credit
-                is the owner alone. */}
-            {c.lead?.avatar && <Faces people={[c.lead]} />}
+            {/* The owner alone, no faces. A stack of contributors beside the
+                owner's name read as that owner's people when the register
+                credits people from other bodies (Rick Staa, of the
+                Foundation, on Livepeer Inc's network work); the lead's face
+                alone, shown when there was a portrait, came next, and was cut
+                too (Adam, 2026-10-12). The lead and contributors are on the
+                record, in rows of their own. */}
           </span>
         </div>
       </div>
@@ -1862,10 +1632,7 @@ export function Roadmap({
       : commitments.filter((c) => c.state !== "shipped").length;
 
   return (
-    // 150ms rather than the provider default of 0: at zero, dragging the
-    // pointer across a row of faces fires several popups in a row. Long enough
-    // to mean you stopped on one, short enough not to feel gated.
-    <TooltipProvider delay={150}>
+    <>
       {/* The working area: instruments left, work right, both starting on the
           same line. Deliberately no items-start — the rail has to stretch to
           the register's height, because that is the containing block it sticks
@@ -2093,6 +1860,6 @@ export function Roadmap({
           <SuggestBlock href={suggestionsHref} className="mt-16 lg:hidden" />
         </div>
       </div>
-    </TooltipProvider>
+    </>
   );
 }
