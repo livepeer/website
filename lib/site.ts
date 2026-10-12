@@ -27,6 +27,10 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       _key: "network",
       title: "Network",
       links: [
+        // The product leads the network column; the footer had no link to
+        // it at all. The header gives Agent an item of its own, so its
+        // Network menu leaves this one out (getLivepeerOrgHeaderLinks).
+        { label: "Livepeer Agent", href: "/agent" },
         { label: "Ecosystem", href: "/ecosystem" },
         { label: "Provide Compute", href: "/compute" },
         { label: "Livepeer Token", href: "/token" },
@@ -49,7 +53,6 @@ export const livepeerOrgSite: LivepeerOrgSite = {
         { label: "Roadmap", href: "/roadmap" },
         { label: "Contribute", href: "/contribute" },
         { label: "Foundation", href: "/foundation" },
-        { label: "Brand", href: "/brand" },
         { label: "Documentation", href: "https://docs.livepeer.org" },
       ],
     },
@@ -58,7 +61,7 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       title: "Community",
       links: [
         { label: "Discord", href: DISCORD_FALLBACK_INVITE },
-        { label: "X / Twitter", href: "https://twitter.com/Livepeer" },
+        { label: "X", href: "https://twitter.com/Livepeer" },
         { label: "Forum", href: "https://forum.livepeer.org" },
       ],
     },
@@ -70,17 +73,20 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       service: "discord",
     },
     {
-      label: "X / Twitter",
+      label: "X",
       href: "https://twitter.com/Livepeer",
       service: "x",
     },
     { label: "GitHub", href: "https://github.com/livepeer", service: "github" },
   ],
   copyright: "© 2026 Livepeer",
-  // Linked whatever their state: the pages 404 on livepeer.org until counsel
-  // signs them off and they are published (lib/legal.ts), which the launch
-  // checklist requires before go-live.
+  // The row beside the copyright. Brand sits here rather than under
+  // Resources: the kit is for the few who need it, where people look for it,
+  // and it kept the Resources column from running to seven. The legal pages
+  // are linked whatever their state: they 404 on livepeer.org until published
+  // (lib/legal.ts).
   legalLinks: [
+    { label: "Brand", href: "/brand" },
     { label: "Terms", href: "/terms-of-service" },
     { label: "Privacy", href: "/privacy-policy" },
   ],

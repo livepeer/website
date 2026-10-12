@@ -103,12 +103,10 @@ export function getLivepeerOrgHeaderLinks(
       (item) =>
         item.label !== "Primer" &&
         item.label !== "Foundation" &&
-        // Footer-only. Brand gave its place in the Resources menu to
-        // Contribute (Adam, 2026-10-12): getting involved is something a
-        // visitor comes looking for, the brand kit is for the few who
-        // need it and the footer serves them. The changelog likewise: it
-        // is reached from the footer and from the blog's own row.
-        item.label !== "Brand" &&
+        // The header has an Agent item of its own, so the footer's Network
+        // column leads with a link the Network menu would only repeat.
+        item.label !== "Livepeer Agent" &&
+        // Footer-only: reached from the footer and from the blog's own row.
         item.label !== "Changelog"
     )
     .sort((a, b) => {
