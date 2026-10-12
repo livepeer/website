@@ -573,8 +573,28 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
             >
               {c.owner}
             </Link>
-            {c.contributors && c.contributors.length > 0 && (
-              <Faces people={c.contributors} />
+            {/* The lead, named, after the owner — not the contributors' faces.
+                A stack of faces set against the owner's name read as that
+                owner's people, and the register credits people from other
+                bodies on work an organisation owns (Rick Staa, of the
+                Foundation, on Livepeer Inc's network work). "Led by" says
+                what the person is to the work rather than who employs them,
+                and the one person to ask is what a card owes a reader; the
+                contributors are on the record, in a row of their own. */}
+            {c.lead && (
+              <span className="flex items-center gap-x-2">
+                <span className="shrink-0">led by</span>
+                <span className="flex items-center gap-x-2">
+                  <Faces people={[c.lead]} />
+                  <Link
+                    href={`/people/${c.lead.slug}`}
+                    scroll={false}
+                    className="pointer-events-auto text-foreground underline decoration-transparent underline-offset-4 transition-colors hover:decoration-border"
+                  >
+                    {c.lead.name}
+                  </Link>
+                </span>
+              </span>
             )}
           </span>
         </div>
