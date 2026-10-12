@@ -34,8 +34,8 @@ const hero: HomeContent["hero"] & {
   banner: {
     label: "New",
     title: "Livepeer 2.0",
-    description: "The open video agent platform",
-    href: "/blog/livepeer-2-0-video-agent-platform",
+    description: "Protocol evolution",
+    href: "/blog/livepeer-2-0-protocol-evolution",
   },
   // The primary goes to /agent, which says what the Agent is and how to
   // install it, and is where the section's Install button goes too. It went
