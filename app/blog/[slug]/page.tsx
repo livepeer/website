@@ -21,10 +21,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
-  if (!post) return { title: "Post Not Found — Livepeer Blog" };
+  if (!post) return { title: { absolute: "Post Not Found — Livepeer Blog" } };
 
   return {
-    title: `${post.title} | Livepeer Blog`,
+    title: { absolute: `${post.title} | Livepeer Blog` },
     description: post.description,
     openGraph: {
       title: post.title,

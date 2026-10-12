@@ -5,7 +5,8 @@ import { ArrowLeftIcon } from "lucide-react";
 import { getDesignGuidelines } from "@/lib/design-guidelines";
 
 export const metadata: Metadata = {
-  title: "Design guidelines",
+  // Absolute: the brand layout's own title ends the root's template here.
+  title: { absolute: "Design guidelines | Livepeer" },
   description:
     "How Livepeer surfaces are designed: colour and type roles, spacing, composition, responsive behaviour and accessibility.",
   openGraph: {

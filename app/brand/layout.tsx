@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Brand | Livepeer",
+  title: "Brand",
   description:
     "Logos, colors, typography, and a downloadable brand kit for Livepeer.",
   openGraph: {

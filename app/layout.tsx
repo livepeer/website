@@ -17,7 +17,17 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : "https://livepeer.org"
   ),
-  title: "Livepeer — The open inference network",
+  // Every other page names itself and the template adds the site, so a tab
+  // or a search result never reads as a bare "Foundation". A title that
+  // already names its section ("… | Livepeer Blog") opts out with `absolute`.
+  title: {
+    default: "Livepeer — The open inference network",
+    template: "%s | Livepeer",
+  },
+  // Each page canonical at its own path, without its query string, so the
+  // roadmap's filtered views (?group=owner, ?state=…) are one page to a
+  // search engine. A segment that sets `alternates` must restate this.
+  alternates: { canonical: "./" },
   description:
     "Run AI video and image workloads on Livepeer — the open inference network.",
   openGraph: {
@@ -82,11 +92,21 @@ export default async function RootLayout({
         />
       </head>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
+        {/* The first stop for a keyboard or screen reader, past the header's
+            menus to the page; out of sight until it has focus. */}
+        <a
+          href="#main"
+          className="sr-only rounded-md bg-background text-ui-body text-foreground ring-2 ring-ring focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2"
+        >
+          Skip to content
+        </a>
         <LivepeerOrgHeader
           site={site}
           navigationImages={livepeerOrgNavigationImages}
         />
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1 outline-none">
+          {children}
+        </main>
         {/* Closes the page against the footer on every route, on the same
             vertical lines as the header rule and the section rules. */}
         <SectionRule />

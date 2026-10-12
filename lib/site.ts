@@ -75,7 +75,6 @@ export const livepeerOrgSite: LivepeerOrgSite = {
       service: "x",
     },
     { label: "GitHub", href: "https://github.com/livepeer", service: "github" },
-    { label: "Livepeer.org", href: "https://livepeer.org", service: "website" },
   ],
   copyright: "© 2026 Livepeer",
   // Linked whatever their state: the pages 404 on livepeer.org until counsel

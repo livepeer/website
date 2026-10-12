@@ -42,12 +42,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { period } = await params;
   const parsed = periodOf(period);
-  if (!parsed) return { title: "Not Found — Livepeer Changelog" };
+  if (!parsed) return { title: { absolute: "Not Found — Livepeer Changelog" } };
   const label = parsed.label;
   const title = `${label} | Livepeer Changelog`;
   const description = `What shipped on the Livepeer roadmap in ${label}, how the work under way was going, and who did not report.`;
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: { title, description, type: "article" },
     twitter: { card: "summary_large_image", title, description },

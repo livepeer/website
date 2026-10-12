@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+// Without this the tab and any shared link read as the home page.
+export const metadata: Metadata = {
+  title: "Page not found",
+  openGraph: { title: "Page not found | Livepeer" },
+  twitter: { title: "Page not found | Livepeer" },
+};
 
 export default function NotFound() {
   return (

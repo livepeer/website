@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const app = getAppBySlug(slug);
     return {
-      title: `${app.name} | Livepeer Ecosystem`,
+      title: { absolute: `${app.name} | Livepeer Ecosystem` },
       description: app.description,
       openGraph: {
         title: `${app.name} | Livepeer Ecosystem`,
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
-    return { title: "Project Not Found — Livepeer Ecosystem" };
+    return { title: { absolute: "Project Not Found — Livepeer Ecosystem" } };
   }
 }
 

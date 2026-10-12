@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { FOUNDATION_DESCRIPTION as description } from "@/app/foundation/content";
 
 export const metadata: Metadata = {
-  title: "Foundation | Livepeer",
+  title: "Foundation",
   description,
   openGraph: {
     title: "Foundation | Livepeer",

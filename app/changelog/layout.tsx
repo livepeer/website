@@ -4,9 +4,11 @@ const description =
   "Month by month: what shipped on the Livepeer roadmap, how the work under way is going, and who has not reported.";
 
 export const metadata: Metadata = {
-  title: "Changelog | Livepeer",
+  title: "Changelog",
   description,
+  // Restates the root's self-canonical, which this object replaces.
   alternates: {
+    canonical: "./",
     types: { "application/atom+xml": "/changelog/feed.xml" },
   },
   openGraph: { title: "Changelog | Livepeer", description },
