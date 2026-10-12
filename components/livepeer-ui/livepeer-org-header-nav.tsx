@@ -32,6 +32,7 @@ const linkDescriptions: Record<string, string> = {
   Blog: "Updates from across the ecosystem",
   Foundation: "Meet the organization supporting Livepeer",
   Brand: "Logos, guidelines, and brand assets",
+  Contribute: "Propose work and get it funded",
   Documentation: "Technical guides and reference",
   "Livepeer Agent": "Create and edit media with your agent",
 };
@@ -56,8 +57,8 @@ const localLinkMatches: Record<
 
 const resourceOrder: Record<string, number> = {
   Blog: 0,
-  Brand: 1,
-  Roadmap: 2,
+  Roadmap: 1,
+  Contribute: 2,
   Documentation: 3,
 };
 
@@ -102,11 +103,12 @@ export function getLivepeerOrgHeaderLinks(
       (item) =>
         item.label !== "Primer" &&
         item.label !== "Foundation" &&
-        // Footer-only: /contribute is reached from the footer and from the
-        // roadmap's "Not on the roadmap?" block, and the header's Resources
-        // menu stays the five it was designed with. The changelog likewise:
-        // it is reached from the footer and from the blog's own row.
-        item.label !== "Contribute" &&
+        // Footer-only. Brand gave its place in the Resources menu to
+        // Contribute (Adam, 2026-10-12): getting involved is something a
+        // visitor comes looking for, the brand kit is for the few who
+        // need it and the footer serves them. The changelog likewise: it
+        // is reached from the footer and from the blog's own row.
+        item.label !== "Brand" &&
         item.label !== "Changelog"
     )
     .sort((a, b) => {

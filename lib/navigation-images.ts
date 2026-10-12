@@ -22,6 +22,8 @@ export const livepeerOrgNavigationImages: LivepeerOrgNavigationImages = {
   Blog: `${CDN}/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png`,
   Brand: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
   Roadmap: `${CDN}/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png`,
+  // The art /contribute's share card uses (ogArt.contribute in lib/og.tsx).
+  Contribute: `${CDN}/6bda58163dac9238d28ecd67e2e147ae0aeddc8f-1456x816.png`,
   Documentation: `${CDN}/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png`,
 };
 
