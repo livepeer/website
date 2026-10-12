@@ -39,7 +39,7 @@ export default async function DesignGuidelinesPage() {
           <ArrowLeftIcon className="size-4" aria-hidden="true" />
           Brand
         </Link>
-        <h1 className="mt-8 text-display-sm text-balance sm:text-display-md">
+        <h1 className="mt-8 text-display-sm text-balance sm:text-display-md font-normal">
           {guidelines.title}
         </h1>
         <p className="mt-5 text-reading-body text-pretty text-muted-foreground">

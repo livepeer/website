@@ -100,7 +100,7 @@ export function ContributeHero({
         <p className="font-mono text-ui-caption tracking-wide text-muted-foreground uppercase">
           {eyebrow}
         </p>
-        <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid">
+        <h1 className="mt-6 text-display-sm text-balance sm:text-display-fluid font-normal">
           {heading}
         </h1>
         <p className="mx-auto mt-5 max-w-[46ch] text-reading-body text-balance text-muted-foreground">

@@ -118,7 +118,7 @@ export function FoundationHero({
           density={1.1}
           className="max-w-[22rem] sm:max-w-[30rem]"
         />
-        <h1 className="mt-10 text-display-md text-balance sm:text-display-fluid">
+        <h1 className="mt-10 text-display-md text-balance sm:text-display-fluid font-normal">
           {content.title}
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-balance text-muted-foreground">

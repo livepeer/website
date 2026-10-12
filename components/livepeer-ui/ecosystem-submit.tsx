@@ -176,7 +176,7 @@ export function EcosystemSubmit({
       </nav>
 
       <header className="mt-8">
-        <h1 className="text-page-title text-balance sm:text-display-sm">
+        <h1 className="text-page-title text-balance sm:text-display-sm font-normal">
           Submit your project
         </h1>
         <p className="mt-6 max-w-[46ch] text-reading-body text-pretty text-muted-foreground">

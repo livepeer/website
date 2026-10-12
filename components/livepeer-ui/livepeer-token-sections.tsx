@@ -455,7 +455,7 @@ export function TokenHeroSection({
           <p className="text-xs text-muted-foreground">{content.eyebrow}</p>
         </div>
 
-        <h1 className="mt-6 max-w-[22ch] text-display-sm text-balance sm:text-display-fluid">
+        <h1 className="mt-6 max-w-[22ch] text-display-sm text-balance sm:text-display-fluid font-normal">
           {content.heading}
         </h1>
         <p className="mt-5 max-w-prose text-sm leading-relaxed text-balance text-muted-foreground">

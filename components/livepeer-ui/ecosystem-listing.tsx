@@ -132,7 +132,7 @@ export function EcosystemListing({
     <div className="pt-16 pb-24">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10">
         <header className="pt-12 text-center lg:pt-16">
-          <h1 className="text-display-sm text-balance sm:text-display-fluid">
+          <h1 className="text-display-sm text-balance sm:text-display-fluid font-normal">
             {heading}
           </h1>
         </header>

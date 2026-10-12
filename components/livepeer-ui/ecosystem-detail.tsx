@@ -287,7 +287,7 @@ export function EcosystemDetail({
           {/* page-title, not display-md. This is one entry in a catalogue whose
               own title runs at display-fluid — an app name set larger than it
               needs to be competes with the page it belongs to. */}
-          <h1 className="text-page-title text-balance sm:text-display-sm">
+          <h1 className="text-page-title text-balance sm:text-display-sm font-normal">
             {app.name}
           </h1>
           <p className="mt-3 font-mono text-xs text-muted-foreground">

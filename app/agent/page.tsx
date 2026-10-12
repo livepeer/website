@@ -222,7 +222,7 @@ export default function AgentPage() {
                 aria-hidden="true"
               />
             </div>
-            <h1 className="mt-6 text-display-md text-balance sm:text-display-fluid">
+            <h1 className="mt-6 text-display-md text-balance sm:text-display-fluid font-normal">
               Ask for a video.
             </h1>
             <p className="mt-5 max-w-md text-base leading-relaxed text-pretty text-foreground/75 sm:text-lg">
