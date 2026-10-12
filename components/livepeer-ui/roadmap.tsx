@@ -581,8 +581,11 @@ function CommitmentCard({ commitment: c }: { commitment: RoadmapItem }) {
                 lead is the one person to ask, which is what a card owes a
                 reader; the contributors are on the record, in a row of their
                 own. The name beside the face, with and without a "led by"
-                label, was tried and read as more than the line needed. */}
-            {c.lead && <Faces people={[c.lead]} />}
+                label, was tried and read as more than the line needed.
+                Only a photograph: a monogram beside the owner's name read as
+                a second, unexplained badge, so without a portrait the credit
+                is the owner alone. */}
+            {c.lead?.avatar && <Faces people={[c.lead]} />}
           </span>
         </div>
       </div>
