@@ -182,11 +182,76 @@ const nextConfig: NextConfig = {
         "/learn-about-pipelines",
         "/learn-about-pipelines---dev",
         "/daydream-waitlist",
+        "/comfystream-signup",
+        "/demuxed",
+        "/participation-agreement",
+        "/tv",
+        "/tv/:path*",
+        "/jobs/:path*",
       ].map((source) => ({
         source,
         destination: "/",
         permanent: true,
       })),
+      // Addresses from earlier versions of livepeer.org that search engines
+      // and old links still carry (found in the Wayback Machine's index of
+      // the domain, 2026-10-12), each sent to the page that does that job
+      // now. All of them 404ed on the site this one replaced.
+      //
+      // The 2021 site was translated and prefixed every page with its locale
+      // (/en/primer, /ko/delegators); the prefix goes and the rest of the
+      // path is resolved by the rules here, or by the page itself.
+      {
+        source: "/:locale(en|es|ko|ru|zh)",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|es|ko|ru|zh)/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
+      // The docs lived at livepeer.org/docs before docs.livepeer.org; their
+      // paths do not map onto the new docs, so they land on its front page.
+      ...["/docs", "/docs/:path*", "/developers"].map((source) => ({
+        source,
+        destination: "https://docs.livepeer.org",
+        permanent: false,
+      })),
+      ...[
+        ["/about", "/foundation"],
+        ["/delegators", "/token"],
+        ["/tokenholders", "/token"],
+        ["/orchestrators", "/compute"],
+        ["/video-miners", "/compute"],
+        ["/grants", "/contribute"],
+        ["/participate", "/contribute"],
+        ["/participants", "/contribute"],
+        ["/faq", "/primer"],
+        ["/resources", "/blog"],
+        ["/pricing", "/agent"],
+        ["/use-cases", "/agent"],
+        ["/use-cases/:path*", "/agent"],
+        ["/brand.zip", "/brand"],
+        // Dropped from the catalogue with the redesign.
+        ["/ecosystem/livepeer-studio", "/ecosystem"],
+        ["/ecosystem/showcase", "/ecosystem"],
+        // The Ghost blog's own addresses, arriving through the
+        // blog.livepeer.org catch-all above.
+        ["/blog/rss", "/blog/feed.xml"],
+        ["/blog/tag/:tag*", "/blog"],
+        ["/blog/author/:author*", "/blog"],
+        ["/blog/about", "/blog"],
+      ].map(([source, destination]) => ({
+        source,
+        destination,
+        permanent: true,
+      })),
+      {
+        source: "/oss",
+        destination: "https://github.com/livepeer",
+        permanent: false,
+      },
     ];
   },
 };
