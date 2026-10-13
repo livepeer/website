@@ -127,11 +127,13 @@ export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
             </span>
           </div>
 
-          {/* 16:9 here where the index is square — the index is a grid of
+          {/* 2:1 here where the index is square — the index is a grid of
               covers and wants a repeating shape; a post opens on one image and
-              wants the wider frame. */}
+              wants the wider frame. It was 16:9, which at the column's width
+              filled the first screen and pushed the opening paragraph below
+              it; the covers are abstract, so the crop loses nothing. */}
           {post.heroImage && (
-            <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-sm border bg-muted">
+            <div className="relative mt-10 aspect-[2/1] overflow-hidden rounded-sm border bg-muted">
               <Image
                 src={post.heroImage}
                 alt={post.imageAlt ?? ""}
