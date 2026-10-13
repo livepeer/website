@@ -2,10 +2,10 @@
 title: "A Real-time Update to the Livepeer Network Vision"
 description: "The Livepeer ecosystem refines its vision around real-time AI video infrastructure, with network fees tripling year-over-year and AI inference driving over 72% of fees."
 date: "2025-11-13"
-category: "News"
+category: "Network"
 tags: ["vision", "network", "realtime-ai", "roadmap"]
-image: "/images/blog/real-time-update-network-vision.svg"
-imageAlt: "Livepeer network vision update"
+image: "https://cdn.sanity.io/images/l36s876e/production/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png?fm=webp&q=82"
+imageAlt: "Repeating blue and red network signals on black"
 draft: false
 ---
 

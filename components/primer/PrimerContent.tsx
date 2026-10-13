@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { LivepeerWordmark } from "@/components/brand";
 import { raleway } from "@/lib/fonts";
 import type { ProtocolStats } from "@/lib/subgraph";
 import MintingDiagram from "@/components/primer/MintingDiagram";
-import { EXTERNAL_LINKS } from "@/lib/constants";
 
 /**
  * Livepeer 10-Minute Primer
@@ -133,7 +133,18 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
         className="pointer-events-none fixed inset-x-0 top-[19px] z-50 md:top-[18px]"
         ref={tocRef}
       >
-        <div className="mx-auto flex w-full max-w-7xl justify-end px-6 lg:px-8">
+        {/* The primer's own top bar, in place of the site header: the
+            wordmark home on the left in the primer's ink, Chapters on the
+            right. */}
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 lg:px-8">
+          <Link
+            href="/"
+            aria-label="Livepeer home"
+            className="pointer-events-auto rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-black"
+            style={{ color: "#131418" }}
+          >
+            <LivepeerWordmark className="h-4 w-auto" aria-hidden="true" />
+          </Link>
           <div
             className="pointer-events-auto relative"
             onMouseEnter={openToc}
@@ -723,10 +734,7 @@ export default function PrimerContent({ stats }: { stats: ProtocolStats }) {
                   questions, share what you&rsquo;re working on, and find
                   collaborators.
                 </Text18>
-                <InvolvedButton
-                  href={EXTERNAL_LINKS.discord}
-                  label="Let's build"
-                />
+                <InvolvedButton href="/discord" label="Let's build" />
               </InvolvedCard>
               <InvolvedCard
                 icon={`${IMG}/icon-mining.svg`}
