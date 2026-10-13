@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "10-Minute Primer | Livepeer",
+  title: "10-Minute Primer",
   description:
     "Through storytelling, illustration, and data, the Livepeer Primer explains, at a high level, the problem Livepeer solves, and how it works.",
   openGraph: {
