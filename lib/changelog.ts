@@ -79,8 +79,15 @@ function healthRank(health: HealthOrNone): number {
 
 /**
  * The published entries, newest first: one per row whose period has
- * closed. A row for a period still under way waits until it ends. An
- * entry with nothing in it is still an entry — publishing it was a choice.
+ * closed. A row for a period still under way waits until it ends.
+ *
+ * An entry with no roadmap rows is left out unless it has a headline. It
+ * was kept at first, on the reasoning that publishing it was a choice, but
+ * January to May 2026 had rows only because the monthly wrap-ups were once
+ * written into them, and with the wrap-ups moved to the blog they listed as
+ * five months that opened on nothing (Adam, 2026-10-13). A headline is
+ * someone saying the period mattered, so it keeps the entry; an intro alone
+ * does not, since bodies are read only for the entries shown in full.
  */
 export function roundups(
   entries: Entry[],
@@ -90,10 +97,14 @@ export function roundups(
 ): Roundup[] {
   return entries
     .map((e) => roundupFor(e.period, commitments, updates, now, e.headline))
-    .filter((r) => !r.open)
+    .filter((r) => !r.open && (hasRows(r) || r.headline))
     .sort(
       (a, b) => b.start.localeCompare(a.start) || b.end.localeCompare(a.end)
     );
+}
+
+function hasRows(r: Roundup): boolean {
+  return r.shipped.length + r.reported.length + r.quiet.length > 0;
 }
 
 export function roundupFor(
