@@ -112,9 +112,11 @@ export default async function RootLayout({
             vertical lines as the header rule and the section rules. */}
         <SectionRule />
         <LivepeerOrgFooter site={site} />
-        {/* Vercel Web Analytics: page views without cookies, so no consent
-            banner. Google Analytics and Hotjar were removed for that reason;
-            the Privacy Policy (/privacy-policy, in Notion) describes this. */}
+        {/* Vercel Web Analytics (page views) and Speed Insights (Core Web
+            Vitals per page load), both anonymous and cookie-free. PostHog
+            runs from instrumentation-client.ts. The Privacy Policy
+            (/privacy-policy, in Notion) describes all three, so adding or
+            removing one changes the policy too. */}
         <Analytics />
         <SpeedInsights />
       </body>
