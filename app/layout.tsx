@@ -3,6 +3,7 @@ import { inter, geistMono } from "@/lib/fonts";
 import { LivepeerOrgHeader } from "@/components/livepeer-ui/livepeer-org-header";
 import { LivepeerOrgFooter } from "@/components/livepeer-ui/livepeer-org-footer";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getDiscord, withDiscordInvite } from "@/lib/discord";
 import { livepeerOrgSite } from "@/lib/site";
 import { SectionRule } from "@/components/ui/section-rule";
@@ -115,6 +116,7 @@ export default async function RootLayout({
             banner. Google Analytics and Hotjar were removed for that reason;
             the Privacy Policy (/privacy-policy, in Notion) describes this. */}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
