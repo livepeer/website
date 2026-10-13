@@ -211,6 +211,11 @@ export function LivepeerOrgHeader({
   // when a section asks for it; never while the mega-menu supplies its own.
   const glassUp = (scrolled || glass) && !desktopMenuOpen;
 
+  // The primer draws its own top bar (the logo and its Chapters menu, in its
+  // own palette). Over it this header's dark glass and buttons covered the
+  // Chapters button and read as another site's chrome on the cyan ground.
+  if (pathname === "/primer") return null;
+
   return (
     <>
       {mounted &&
