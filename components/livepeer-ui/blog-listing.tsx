@@ -103,7 +103,7 @@ export function BlogListing({
             </p>
           ) : (
             // Two columns from the smallest screen, not one. Post art is the
-            // point of this grid and a single column of square images turns
+            // point of this grid and a single column of large covers turns
             // the index into a scroll; paired, the covers read as a contact
             // sheet.
             <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-3">

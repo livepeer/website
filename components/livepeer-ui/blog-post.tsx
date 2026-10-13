@@ -127,7 +127,7 @@ export function BlogPost({ post, html }: { post: BlogPostView; html: string }) {
             </span>
           </div>
 
-          {/* 2:1 here where the index is square — the index is a grid of
+          {/* 2:1 here where the index is 4:3 — the index is a grid of
               covers and wants a repeating shape; a post opens on one image and
               wants the wider frame. It was 16:9, which at the column's width
               filled the first screen and pushed the opening paragraph below

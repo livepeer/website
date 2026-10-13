@@ -16,8 +16,8 @@ import {
  * has. Last on the page because it is for every reader rather than for one
  * of the two audiences the sections above address.
  *
- * The blog's own card, with a shorter cover: squares are the index's contact
- * sheet, and three of them here would make a band into a second page. It is
+ * The blog's own card, with a shorter cover: the index's 4:3 covers are its
+ * contact sheet, and three of them here would make a band into a second page. It is
  * one row of the newest at every width — three from sm, and two on a phone,
  * paired the way the index pairs them. A single column of three covers was
  * tried there and made the band twelve hundred pixels of scroll before the

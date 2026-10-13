@@ -40,13 +40,15 @@ function formatDate(iso: string): string {
 export function PostCard({
   post,
   heading: Heading = "h2",
-  coverClassName = "aspect-square",
+  coverClassName = "aspect-[4/3]",
   sizes,
 }: {
   post: PostCardPost;
   /** The level the title sits at under the caller's own heading. */
   heading?: "h2" | "h3";
-  /** The cover's proportion; square on the index. */
+  /** The cover's proportion; 4:3 on the index. It was square, which at
+   *  three across filled the first screen and left the titles below it
+   *  (Adam, 2026-10-13); 3:2 was tried and read as thumbnails. */
   coverClassName?: string;
   /** next/image `sizes` for the column the card sits in. */
   sizes: string;
