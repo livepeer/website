@@ -105,33 +105,39 @@ export function LatestNav({
         )}
       </nav>
 
-      <label className="relative block w-full sm:ml-auto sm:w-64">
-        <SearchIcon
-          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          type="search"
-          value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
-          placeholder={searchPlaceholder}
-          aria-label={searchPlaceholder}
-          className="pl-9"
-        />
-      </label>
-      {feedHref && (
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          nativeButton={false}
-          render={<a href={feedHref} />}
-          aria-label="Atom feed"
-          title="Atom feed"
-          className="-ml-4 hidden text-muted-foreground sm:inline-flex"
-        >
-          <RssIcon aria-hidden="true" />
-        </Button>
-      )}
+      {/* Its own full-width line below lg, the end of the row from lg. The
+          places, a 16rem field and the feed only fit on one line at about
+          1024px; between sm and lg the field wrapped but kept its width and
+          its auto margin, and sat stranded at the right of an empty line. */}
+      <div className="flex w-full items-center gap-x-2 lg:ml-auto lg:w-auto">
+        <label className="relative block min-w-0 flex-1 lg:w-64 lg:flex-none">
+          <SearchIcon
+            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            type="search"
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            aria-label={searchPlaceholder}
+            className="pl-9"
+          />
+        </label>
+        {feedHref && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            nativeButton={false}
+            render={<a href={feedHref} />}
+            aria-label="Atom feed"
+            title="Atom feed"
+            className="hidden shrink-0 text-muted-foreground sm:inline-flex"
+          >
+            <RssIcon aria-hidden="true" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
