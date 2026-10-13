@@ -6,7 +6,10 @@ categories:
   - Streaming
   - Decentralized
   - API
-logo: stream-place.png
+logo: streamplace.svg
+# Single near-black ink (#0A0A0B), so it flips with the theme rather than
+# needing a fixed plate — see the note in the template.
+logoMonochrome: true
 order: 3
 madeBy: Aquareum Inc
 twitter:

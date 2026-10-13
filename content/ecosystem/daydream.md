@@ -1,9 +1,9 @@
 ---
 name: Daydream
 url: https://daydream.live
-description: Open-source, local-first platform for running real-time interactive generative AI video pipelines.
+description: Live sample generation for your DAW — create original, royalty-free samples in real time from your own audio.
 categories:
-  - AI Video
+  - Music
   - Generative
   - API
 logo: daydream.svg
@@ -20,24 +20,24 @@ privacy: https://daydream.live/privacy-policy
 
 ## Overview
 
-Daydream is an open-source, local-first platform for real-time generative AI video. Its flagship project, **Daydream Scope**, runs autoregressive video diffusion models on your own GPU — or in the cloud — and exposes a node-based workflow for composing live, interactive pipelines from text, video, and live camera inputs.
+Daydream generates original audio samples in real time, from sound you already have. Feed **DreamSampler** a riff, a vocal, or a field recording and it produces new royalty-free material with synth-style control — chop it, perform it, and drop it into a track without touching a sample library or clearing rights.
 
-It's built for developers and creative technologists who want continuous, real-time AI video instead of asynchronous batch generation.
+The distinction it draws is against batch-mode tools: rather than writing a prompt and waiting for a render, you move a control and hear the result in roughly 81ms. The model responds to a performance instead of replacing it.
 
 ## What you can build
 
-- **Real-time generative video pipelines** — compose text-to-video, video-to-video, and live camera workflows from a node-based graph
-- **Interactive installations and live visuals** — drive output reactively with audio, MIDI, OSC, or DMX
-- **Custom nodes and models** — extend Scope with your own pipelines, LoRAs, and inference logic in Python
-- **Tooling integrations** — share output to TouchDesigner, OBS, Resolume, Unity, Ableton Live, and other creative tools via Spout, Syphon, and NDI
+- **Original samples and stems** — generate new material from your own audio rather than splitting what is already there
+- **Performed, not prompted** — map the model's latent space to faders, knobs, and MIDI hardware, with control propagating at 25Hz
+- **Sessions inside a DAW** — a native VST3 plugin automates generation curves from standard envelope lanes and macro knobs
+- **Agentic and generative workflows** — an MCP server and API expose every parameter for programmatic control
 
 ## Developer surface
 
-- **Self-hosted runtime** — Scope runs locally as a server on `localhost:8000` with a WebRTC-based API for programmatic, low-latency control
-- **Bundled diffusion models** — ships with StreamDiffusion V2, LongLive, Krea Realtime, RewardForcing, and MemFlow
-- **Open-source Python codebase** — fork it, build custom nodes, contribute pipelines back upstream
-- **Cloud inference** — run pipelines on remote GPUs when local hardware isn't available
+- **DEMON** — the diffusion-native audio engine behind every Daydream instrument, open source and self-hostable, with sub-100ms parameter latency on a single consumer GPU
+- **Supported models** — ACE-Step v1.5 (2B turbo and 5B XL turbo) today, with Stable Audio 3.0 and Magenta RT2 announced
+- **Runs anywhere** — a browser app needing no install or GPU, a VST3 plugin, and a TouchDesigner operator, all on hosted infrastructure
+- **Scope** — Daydream's real-time video project, also open source, for running generation from any source locally or in the cloud
 
 ## Powered by Livepeer
 
-Daydream's cloud inference is powered by Livepeer's GPU network. Workloads are routed to independent orchestrators, giving builders elastic, cost-efficient real-time video inference without a centralized provider.
+Daydream's hosted inference is powered by Livepeer's GPU network. Workloads are routed to independent orchestrators, giving builders elastic, cost-efficient real-time inference without a centralized provider.
