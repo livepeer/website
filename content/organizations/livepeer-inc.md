@@ -8,7 +8,6 @@ people:
     avatar: doug-petkanics.jpg
     profile: dob
   - name: Qiang Han
-    avatar: placeholder-2.jpg
 ---
 
 Livepeer Inc focuses on driving demand to the network by building the realtime AI products, go-to-market services, and AI community — initially in the creative realtime AI video space.

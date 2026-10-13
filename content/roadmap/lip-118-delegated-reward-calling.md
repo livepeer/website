@@ -4,11 +4,6 @@ outcome: Let orchestrators delegate the reward call, removing a standing operati
 workstream: Protocol
 state: shipped
 owner: Protocol R&D SPE
-contributors:
-  - name: Peter Lindqvist
-    avatar: peter-lindqvist.jpg
-  - name: Elena Vargas
-    avatar: elena-vargas.jpg
 targetDate: 2026-07-31
 targetPrecision: month
 shippedAt: 2026-07-30

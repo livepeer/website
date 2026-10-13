@@ -8,7 +8,6 @@ people:
   - name: Rich O'Grady
     avatar: rich-ogrady.jpg
   - name: Steph Alinsug
-    avatar: placeholder-1.jpg
 ---
 
 The Livepeer Foundation stewards the Livepeer community, project marketing, and public goods funding, and enables recommendations on the project roadmap. Its role is to serve the network — to support public goods, fill in coordination gaps, and ensure the ecosystem can scale with integrity.

@@ -4,11 +4,6 @@ outcome: Let nodes serve audio, clipping, captions and overlays, so supply is co
 workstream: Network
 state: next
 owner: Network Engineering SPE
-contributors:
-  - name: Andre Okafor
-    avatar: andre-okafor.jpg
-  - name: Tom Whitfield
-    avatar: tom-whitfield.jpg
 targetDate: 2026-12-31
 targetPrecision: quarter
 related:

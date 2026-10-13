@@ -5,7 +5,6 @@ kind: retrospective
 summary: Shipped with coverage for every capability the connector advertises; routing took two weeks longer than planned.
 author:
   name: Qiang Han
-  avatar: placeholder-2.jpg
 ---
 
 **What we committed to.** Capacity, capability coverage and routing good

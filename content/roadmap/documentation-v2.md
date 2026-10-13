@@ -6,11 +6,6 @@ state: shipped
 owner: Livepeer Foundation
 # The RFP is how the work was paid for, not who was answerable for it.
 funding: Documentation Restructure RFP
-contributors:
-  - name: Mei Tanaka
-    avatar: mei-tanaka.jpg
-  - name: Anjali Raman
-    avatar: anjali-raman.jpg
 targetDate: 2026-05-31
 targetPrecision: month
 shippedAt: 2026-05-04

@@ -4,11 +4,6 @@ outcome: Fund work already delivered to the network, so contributors are paid wi
 workstream: Network
 state: shipped
 owner: Network Engineering SPE
-contributors:
-  - name: Elena Vargas
-    avatar: elena-vargas.jpg
-  - name: Andre Okafor
-    avatar: andre-okafor.jpg
 targetDate: 2026-07-31
 targetPrecision: month
 shippedAt: 2026-07-31

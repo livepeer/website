@@ -5,7 +5,6 @@ health: at risk
 summary: Connector and console are ready, but the go-to-market proposal is still with the Foundation, which puts Q3 at risk.
 author:
   name: Steph Alinsug
-  avatar: placeholder-1.jpg
 ---
 
 The product side is done: the connector has been stable for four weeks and the

@@ -4,11 +4,6 @@ outcome: Replace the 100-orchestrator cap with a stake-elected validator set and
 workstream: Protocol
 state: next
 owner: Protocol R&D SPE
-contributors:
-  - name: Peter Lindqvist
-    avatar: peter-lindqvist.jpg
-  - name: Anjali Raman
-    avatar: anjali-raman.jpg
 targetDate: 2026-12-31
 targetPrecision: quarter
 related:

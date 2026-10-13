@@ -9,7 +9,6 @@ contributors:
   # /u/ links on its public pages, so each has to be confirmed by hand rather
   # than guessed.
   - name: Steph Alinsug
-    avatar: placeholder-1.jpg
 targetDate: 2026-09-30
 targetPrecision: quarter
 # Verbatim from the board item, not paraphrased.

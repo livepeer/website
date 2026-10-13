@@ -219,8 +219,7 @@ export function OrganizationRecord({
 
           Two rows, not nine. An organisation has fewer facts than a
           commitment, and inventing rows to fill the table would be scaffolding
-          rather than content — Affiliated is the one that will earn a third,
-          once the placeholder people are replaced. */}
+          rather than content. */}
       <dl className="mt-8 space-y-0.5">
         <Row icon={CircleChevronDown} label="Type">
           {org.type}

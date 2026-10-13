@@ -7,7 +7,6 @@ owner: Livepeer Foundation
 contributors:
   # Stand-in portrait — see the note in agent-product-launch.md.
   - name: Qiang Han
-    avatar: placeholder-2.jpg
 targetDate: 2026-09-30
 targetPrecision: quarter
 shippedAt: 2026-08-20
