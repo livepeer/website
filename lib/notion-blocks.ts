@@ -25,6 +25,7 @@
  * stock library.
  */
 
+import { signMediaId } from "./media-signature";
 import { resolveMediaSource } from "./notion-media";
 
 type Json = Record<string, unknown>;
@@ -128,7 +129,11 @@ function uploadedMediaPath(id: string, where: string): string {
   if (!BLOCK_ID.test(id)) {
     throw new Error(`${where}: an uploaded file's block id ${id} is not one.`);
   }
-  return `/api/notion-media/${id}`;
+  // Signed, so the route serves only ids a page rendered (media-signature).
+  const signature = signMediaId(id);
+  return signature
+    ? `/api/notion-media/${id}?s=${signature}`
+    : `/api/notion-media/${id}`;
 }
 
 /**

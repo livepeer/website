@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { mediaSignatureMatches } from "@/lib/media-signature";
 import { getNotionMediaUrl, hasNotionCredentials } from "@/lib/notion";
 
 /**
@@ -15,6 +16,10 @@ import { getNotionMediaUrl, hasNotionCredentials } from "@/lib/notion";
  * (a row of one of its databases, or a guide; onTheSite in lib/notion.ts).
  * A block id alone is not enough: the integration can read pages the site
  * never shows, and an id that leaked from one must not get its file served.
+ *
+ * And the id must carry the signature the page rendered it with
+ * (lib/media-signature.ts), checked before Notion is asked anything: an
+ * unsigned route spent the shared Notion rate limit on any id sent to it.
  */
 
 const BLOCK_ID =
@@ -24,11 +29,16 @@ const BLOCK_ID =
 const MAX_CACHE_SECONDS = 1800;
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  if (!BLOCK_ID.test(id) || !hasNotionCredentials()) {
+  const signature = new URL(request.url).searchParams.get("s");
+  if (
+    !BLOCK_ID.test(id) ||
+    !hasNotionCredentials() ||
+    !mediaSignatureMatches(id, signature)
+  ) {
     return new NextResponse(null, { status: 404 });
   }
 

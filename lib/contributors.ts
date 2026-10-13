@@ -143,7 +143,12 @@ function displayName(raw: Raw): string {
 
 export async function getContributors(): Promise<ContributorSet> {
   try {
-    const res = await fetch(ENDPOINT, { next: { revalidate: REVALIDATE } });
+    // Bounded, as getDiscord is: a stalled connection would otherwise hold
+    // the home and Contribute renders open rather than reach the snapshot.
+    const res = await fetch(ENDPOINT, {
+      next: { revalidate: REVALIDATE },
+      signal: AbortSignal.timeout(5000),
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const raw = (await res.json()) as Raw[];
     if (!Array.isArray(raw) || raw.length === 0) {

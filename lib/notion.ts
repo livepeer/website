@@ -282,11 +282,15 @@ export const UPLOADED_COVER_PREFIX = "/api/notion-cover/";
  * cached for good, and a new cover gets a new one.
  */
 function uploadedCover(pageId: string, fileUrl: string): string {
-  const version = createHash("sha256")
+  return `${UPLOADED_COVER_PREFIX}${bare(pageId)}/${coverVersion(fileUrl)}`;
+}
+
+/** The version in an uploaded cover's address; the route checks it. */
+export function coverVersion(fileUrl: string): string {
+  return createHash("sha256")
     .update(new URL(fileUrl).pathname)
     .digest("hex")
     .slice(0, 12);
-  return `${UPLOADED_COVER_PREFIX}${bare(pageId)}/${version}`;
 }
 
 /**
@@ -1499,9 +1503,15 @@ export async function getNotionGuide(name: GuideName): Promise<Guide> {
 export async function getNotionEntryBody(
   period: string
 ): Promise<string | undefined> {
-  const row = (await queryAll(CHANGELOG_DB)).find(
+  // The published row where a Draft sits beside it, as getNotionEntries
+  // prefers it: taking the first match let the intro come from the draft
+  // while the headline came from the published row, and Notion does not
+  // promise an order.
+  const rows = (await queryAll(CHANGELOG_DB)).filter(
     (candidate) => text(props(candidate).Period).trim() === period
   );
+  const row =
+    rows.find((r) => selectName(props(r).Status) !== "Draft") ?? rows[0];
   if (!row) return undefined;
   return readDetail(row.id as string, `Changelog entries → ${period}`);
 }
