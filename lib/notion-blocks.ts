@@ -129,11 +129,13 @@ function uploadedMediaPath(id: string, where: string): string {
   if (!BLOCK_ID.test(id)) {
     throw new Error(`${where}: an uploaded file's block id ${id} is not one.`);
   }
-  // Signed, so the route serves only ids a page rendered (media-signature).
-  const signature = signMediaId(id);
+  // Signed, so the route serves only ids a page rendered (media-signature),
+  // and in the one spelling the route accepts: 32 lowercase hex, no dashes.
+  const canonical = id.replace(/-/g, "").toLowerCase();
+  const signature = signMediaId(canonical);
   return signature
-    ? `/api/notion-media/${id}?s=${signature}`
-    : `/api/notion-media/${id}`;
+    ? `/api/notion-media/${canonical}?s=${signature}`
+    : `/api/notion-media/${canonical}`;
 }
 
 /**

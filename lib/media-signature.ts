@@ -26,14 +26,22 @@ function key(): string | null {
 
 const bare = (id: string) => id.replace(/-/g, "").toLowerCase();
 
-function sign(id: string, k: string): string {
-  return createHmac("sha256", k).update(bare(id)).digest("hex").slice(0, 24);
+function sign(subject: string, k: string): string {
+  return createHmac("sha256", k).update(subject).digest("hex").slice(0, 24);
+}
+
+function matches(subject: string, signature: string | null): boolean {
+  const k = key();
+  if (!k || !signature) return false;
+  const a = Buffer.from(signature);
+  const b = Buffer.from(sign(subject, k));
+  return a.length === b.length && timingSafeEqual(a, b);
 }
 
 /** The signature for a block id, or null when there is no token to sign with. */
 export function signMediaId(id: string): string | null {
   const k = key();
-  return k ? sign(id, k) : null;
+  return k ? sign(bare(id), k) : null;
 }
 
 /** Whether a signature is the one this deployment gives that block id. */
@@ -41,9 +49,24 @@ export function mediaSignatureMatches(
   id: string,
   signature: string | null
 ): boolean {
+  return matches(bare(id), signature);
+}
+
+/**
+ * The same for an uploaded blog cover (/api/notion-cover/[id]/[version]),
+ * over the page id and the version together, so neither a random page nor an
+ * invented version of a real one reaches Notion. A subject of its own, so a
+ * media signature can never stand in for a cover's.
+ */
+export function signCover(pageId: string, version: string): string | null {
   const k = key();
-  if (!k || !signature) return false;
-  const a = Buffer.from(signature);
-  const b = Buffer.from(sign(id, k));
-  return a.length === b.length && timingSafeEqual(a, b);
+  return k ? sign(`cover:${bare(pageId)}/${version}`, k) : null;
+}
+
+export function coverSignatureMatches(
+  pageId: string,
+  version: string,
+  signature: string | null
+): boolean {
+  return matches(`cover:${bare(pageId)}/${version}`, signature);
 }
