@@ -32,7 +32,9 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          # The project's runtime (.nvmrc, README), so CI runs what dev and
+          # production run.
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies

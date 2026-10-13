@@ -9,7 +9,8 @@ contributors:
   - name: Qiang Han
 targetDate: 2026-09-30
 targetPrecision: quarter
-shippedAt: 2026-08-20
+# The day its retrospective says everything landed (2026-09-10 retro).
+shippedAt: 2026-09-09
 # Verbatim from the board item, not paraphrased.
 funding: "Livepeer Foundation, Livepeer Inc + Network engineering funding SPE"
 

@@ -23,16 +23,21 @@ recreate the drift that moving to a CMS removed, and a post here that fails
 
 ## What is still served from here
 
-The body art is the exception, and it is not a fallback. Every image and video
-inside a post is a file committed under `public/images/blog/` and `public/videos/`, and
-Notion links to it by its `https://livepeer.org/...` address — Notion previews it
-from the live site, and the site rewrites the address back to the repo copy it
-already has. Notion never holds the file, because an upload comes back from the
-API as a link that expires within the hour.
+Images and video inside a post can get there two ways, and only one involves
+this repo.
 
-So adding art _inside_ a post is still a pull request: commit the file, then
-paste its livepeer.org address into the page. The build fails on an address that
-does not resolve to something in `public/`.
+- **Uploaded into Notion** (drag the file into the page): no pull request. The
+  site links it through `/api/notion-media/[id]`, which asks Notion for a fresh
+  address on each request, since Notion signs an upload's address for only
+  about an hour (`lib/notion-blocks.ts`). Use this for screenshots and one-off
+  art.
+- **Committed here**, under `public/images/blog/` or `public/videos/`, and
+  linked from Notion by its `https://livepeer.org/...` address: Notion previews
+  it from the live site, and the site rewrites the address back to the repo
+  copy. Use this for art several posts share. The build fails on an address
+  that does not resolve to something in `public/`.
+
+Media linked from any other host fails the build (`lib/notion-media.ts`).
 
 A post's own art — the index card, the header, the share image — is the Notion
 **page cover**, and needs no pull request at all: the covers are stock images on
