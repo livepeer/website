@@ -1,5 +1,6 @@
 import { coverSignatureMatches } from "@/lib/media-signature";
 import {
+  UPLOADED_COVER_PREFIX,
   coverVersion,
   getNotionBlogCover,
   hasNotionCredentials,
@@ -52,8 +53,13 @@ export async function GET(
   // ones (".sig.1", ".sig.2"), each a cache miss and a Notion call.
   const match = SIGNED_VERSION.exec(segment);
   const [, version = "", signature = null] = match ?? [];
+  // The raw address, not just the decoded params: Next decodes the path
+  // before the route sees it, so a percent-encoded character ("%61" for "a")
+  // would pass every check below as a distinct address.
+  const { pathname, search } = new URL(request.url);
   if (
-    new URL(request.url).search !== "" ||
+    pathname !== `${UPLOADED_COVER_PREFIX}${id}/${segment}` ||
+    search !== "" ||
     !PAGE_ID.test(id) ||
     !hasNotionCredentials() ||
     !coverSignatureMatches(id, version, signature)

@@ -39,8 +39,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const signature = QUERY.exec(new URL(request.url).search)?.[1] ?? null;
+  // The raw address, not just the decoded param: Next decodes the path, so a
+  // percent-encoded character would pass every check as a distinct address.
+  const { pathname, search } = new URL(request.url);
+  const signature = QUERY.exec(search)?.[1] ?? null;
   if (
+    pathname !== `/api/notion-media/${id}` ||
     !BLOCK_ID.test(id) ||
     !hasNotionCredentials() ||
     !mediaSignatureMatches(id, signature)
