@@ -1,8 +1,9 @@
+import { coverSignatureMatches } from "@/lib/media-signature";
 import {
-  UPLOADED_COVER_PREFIX,
   coverVersion,
   getNotionBlogCover,
   hasNotionCredentials,
+  uploadedCoverPath,
 } from "@/lib/notion";
 
 /**
@@ -22,6 +23,12 @@ import {
  * so an address that claimed to name one image could serve another. An
  * address whose version is out of date is sent on to the current one, briefly
  * cached, rather than refused: it is still in timelines and caches.
+ *
+ * The last segment is `<version>.<signature>` (uploadedCoverPath), and the
+ * signature is checked before Notion is asked anything, as the media route
+ * does: unsigned, any well-formed page id or invented version spent the
+ * Notion rate limit every Notion-backed page shares. A draft's cover is not
+ * served on livepeer.org (getNotionBlogCover).
  */
 
 const PAGE_ID =
@@ -31,8 +38,13 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string; version: string }> }
 ) {
-  const { id, version } = await params;
-  if (!PAGE_ID.test(id) || !hasNotionCredentials()) {
+  const { id, version: segment } = await params;
+  const [version = "", signature = null] = segment.split(".");
+  if (
+    !PAGE_ID.test(id) ||
+    !hasNotionCredentials() ||
+    !coverSignatureMatches(id, version, signature)
+  ) {
     return new Response(null, { status: 404 });
   }
   const file = await getNotionBlogCover(id).catch(() => null);
@@ -42,7 +54,7 @@ export async function GET(
     return new Response(null, {
       status: 307,
       headers: {
-        Location: `${UPLOADED_COVER_PREFIX}${id.replace(/-/g, "").toLowerCase()}/${current}`,
+        Location: uploadedCoverPath(id, current),
         "Cache-Control": "public, max-age=300, s-maxage=300",
       },
     });

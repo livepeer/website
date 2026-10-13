@@ -6,6 +6,7 @@ import readingTime from "reading-time";
 
 import type { Entry } from "./entries";
 import type { LegalPage, LegalSlug } from "./legal";
+import { signCover } from "./media-signature";
 import { blocksToHtml } from "./notion-blocks";
 import { parsePeriod } from "./period";
 import { readCoverUrl, resolveMediaSource } from "./notion-media";
@@ -282,7 +283,18 @@ export const UPLOADED_COVER_PREFIX = "/api/notion-cover/";
  * cached for good, and a new cover gets a new one.
  */
 function uploadedCover(pageId: string, fileUrl: string): string {
-  return `${UPLOADED_COVER_PREFIX}${bare(pageId)}/${coverVersion(fileUrl)}`;
+  return uploadedCoverPath(pageId, coverVersion(fileUrl));
+}
+
+/**
+ * The cover's address with its signature in the last segment, `<version>.<sig>`
+ * (lib/media-signature.ts), checked by the route before Notion is called. In
+ * the path rather than a query string, because next/image refuses a local
+ * address with a query string unless `images.localPatterns` allows it.
+ */
+export function uploadedCoverPath(pageId: string, version: string): string {
+  const signature = signCover(pageId, version);
+  return `${UPLOADED_COVER_PREFIX}${bare(pageId)}/${version}${signature ? `.${signature}` : ""}`;
 }
 
 /** The version in an uploaded cover's address; the route checks it. */
@@ -307,6 +319,16 @@ export async function getNotionBlogCover(
   if (
     home?.type !== "database_id" ||
     bare(home.database_id as string) !== bare(BLOG_DB)
+  ) {
+    return null;
+  }
+  // A draft's cover stays private on livepeer.org, as the draft does
+  // (isPublished in lib/blog.ts); previews and dev show drafts for review.
+  if (
+    process.env.VERCEL_ENV === "production" &&
+    selectName(
+      (page.properties as Json | undefined)?.Status as Json | undefined
+    ) === "Draft"
   ) {
     return null;
   }
