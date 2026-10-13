@@ -31,6 +31,9 @@ import {
  * served on livepeer.org (getNotionBlogCover).
  */
 
+/** `<version>.<signature>`: 12 hex from coverVersion, 24 from signCover. */
+const SIGNED_VERSION = /^([0-9a-f]{12})\.([0-9a-f]{24})$/;
+
 const PAGE_ID =
   /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
 
@@ -39,7 +42,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string; version: string }> }
 ) {
   const { id, version: segment } = await params;
-  const [version = "", signature = null] = segment.split(".");
+  // The whole segment, exactly: a split on "." ignored anything after a
+  // second dot, so one signed address could be made into endless distinct
+  // ones (".sig.1", ".sig.2"), each a cache miss and a Notion call.
+  const match = SIGNED_VERSION.exec(segment);
+  const [, version = "", signature = null] = match ?? [];
   if (
     !PAGE_ID.test(id) ||
     !hasNotionCredentials() ||

@@ -322,13 +322,16 @@ export async function getNotionBlogCover(
   ) {
     return null;
   }
-  // A draft's cover stays private on livepeer.org, as the draft does
-  // (isPublished in lib/blog.ts); previews and dev show drafts for review.
+  // Only a published post's cover on livepeer.org, as only a published post
+  // is shown there (isPublished in lib/blog.ts); previews and dev show drafts
+  // for review. "Published" exactly, not "not Draft": the blog reader accepts
+  // nothing else, and an empty or unexpected Status is a post that cannot be
+  // shown, so its cover is not served either.
   if (
     process.env.VERCEL_ENV === "production" &&
     selectName(
       (page.properties as Json | undefined)?.Status as Json | undefined
-    ) === "Draft"
+    ) !== "Published"
   ) {
     return null;
   }
