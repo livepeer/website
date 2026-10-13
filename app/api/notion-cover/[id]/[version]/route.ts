@@ -34,11 +34,16 @@ import {
 /** `<version>.<signature>`: 12 hex from coverVersion, 24 from signCover. */
 const SIGNED_VERSION = /^([0-9a-f]{12})\.([0-9a-f]{24})$/;
 
-const PAGE_ID =
-  /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
+/**
+ * The page id exactly as uploadedCoverPath writes it, 32 lowercase hex with no
+ * dashes. Uppercase or dashed spellings normalise to the same signature, so
+ * accepting them let one signed address be respelled into many, each a cache
+ * miss and a Notion call; the same reasoning refuses any query string below.
+ */
+const PAGE_ID = /^[0-9a-f]{32}$/;
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string; version: string }> }
 ) {
   const { id, version: segment } = await params;
@@ -48,6 +53,7 @@ export async function GET(
   const match = SIGNED_VERSION.exec(segment);
   const [, version = "", signature = null] = match ?? [];
   if (
+    new URL(request.url).search !== "" ||
     !PAGE_ID.test(id) ||
     !hasNotionCredentials() ||
     !coverSignatureMatches(id, version, signature)

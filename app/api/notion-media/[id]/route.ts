@@ -22,8 +22,14 @@ import { getNotionMediaUrl, hasNotionCredentials } from "@/lib/notion";
  * unsigned route spent the shared Notion rate limit on any id sent to it.
  */
 
-const BLOCK_ID =
-  /^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i;
+/**
+ * Exactly the address lib/notion-blocks.ts writes: the block id as 32
+ * lowercase hex and a query of `s=<24 hex>` and nothing else. Other
+ * spellings of the id, or extra query parameters, pass the same signature as
+ * distinct addresses, each a cache miss and a Notion call.
+ */
+const BLOCK_ID = /^[0-9a-f]{32}$/;
+const QUERY = /^\?s=([0-9a-f]{24})$/;
 
 /** At most half an hour, and five minutes short of the address expiring. */
 const MAX_CACHE_SECONDS = 1800;
@@ -33,7 +39,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const signature = new URL(request.url).searchParams.get("s");
+  const signature = QUERY.exec(new URL(request.url).search)?.[1] ?? null;
   if (
     !BLOCK_ID.test(id) ||
     !hasNotionCredentials() ||
