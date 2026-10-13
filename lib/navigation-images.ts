@@ -19,9 +19,13 @@ export const livepeerOrgNavigationImages: LivepeerOrgNavigationImages = {
   "Livepeer Agent": `${CDN}/284ddcce63e09dc485789f43254049e39f5a2e40-1456x816.png`,
   "Agent Playbooks": `${CDN}/c8bd525d1e15ddb91109450269e3d6eb484817ba-1456x816.png`,
   "Agent Documentation": `${CDN}/35e86eef94b247cae09883e48f991ba54b439c33-1456x816.png`,
-  Blog: `${CDN}/4a527a2ef16f7ef5aed60fc3a87cfe31f67844e8-1456x816.png`,
+  // Its own, not Ecosystem's: the two shared the office photograph, which
+  // read as a mistake in menus a reader opens one after another.
+  Blog: `${CDN}/287b8c54c694cb5bcaadb3efebe98f8191addaa3-1456x816.png`,
   Brand: `${CDN}/7ed804401d8fac1f4d9d0dec7c79e0cdbf53fbc4-1456x816.png`,
-  Roadmap: `${CDN}/05692e9bc603ddde4a3899e12e97c7d52b79a887-1456x816.png`,
+  // Not the blue-and-red waves it had, which sat beside Contribute's own
+  // waves in the same menu and read as one picture twice.
+  Roadmap: `${CDN}/e8e48a17c0bd78637afe243f8e5b786eac23a4a4-1456x816.png`,
   // The art /contribute's share card uses (ogArt.contribute in lib/og.tsx).
   Contribute: `${CDN}/6bda58163dac9238d28ecd67e2e147ae0aeddc8f-1456x816.png`,
   Documentation: `${CDN}/03bed02c0667d4017f995ac45d6339ea2a6c5cf0-1456x816.png`,
