@@ -14,14 +14,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * A missing page as a request nothing on the network picked up: the address
- * that was asked for written as a log line, over the home hero's field. Laid
- * out like the home hero, so a wrong turn still lands on the site's own
- * ground: full height under the header, the field behind the copy, the copy
- * centred. It was a plain message and a link home; an exploded GPU card was
- * tried here before that and cut, and so was a particle leaving the arc every
- * few seconds as the request nothing picked up, which read as too abstract
- * to be noticed (Adam, 2026-10-14).
+ * The missing address in mono over a plain headline, on the home hero's
+ * field: laid out like the home hero, so a wrong turn still lands on the
+ * site's own ground (full height under the header, the field behind the copy,
+ * the copy centred). Plain words on purpose. It said "Nothing on the network
+ * serves this page" over "route /x → 404 · no node serves this path", which
+ * implied the Livepeer network serves web pages; it runs AI video, and the
+ * site is hosted on Vercel (Adam, 2026-10-14). A particle leaving the arc as
+ * the request nothing picked up was cut too, as too abstract to be noticed,
+ * and an exploded GPU card before that.
  */
 export default function NotFound() {
   return (
@@ -31,11 +32,10 @@ export default function NotFound() {
         <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <NotFoundRequest />
           <h1 className="mt-6 text-display-sm text-balance sm:text-display-md">
-            Nothing on the network serves this page.
+            This page doesn’t exist.
           </h1>
           <p className="mt-5 max-w-md text-reading-body text-pretty text-muted-foreground">
-            It may have moved, or never existed. The rest of the network is
-            right where you left it.
+            It may have moved, or the link may be wrong.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button size="lg" nativeButton={false} render={<Link href="/" />}>
