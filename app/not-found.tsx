@@ -14,21 +14,19 @@ export const metadata: Metadata = {
 };
 
 /**
- * A missing page as a request nothing on the network picked up: the home
- * hero's field, with one particle every few seconds leaving the stream and
- * drifting off (`stray`), over the address that was asked for written as a
- * log line. Laid out like the home hero, so a wrong turn still lands on the
- * site's own ground: full height under the header, the field behind the copy,
- * the copy centred. It was a plain message and a link home; an exploded GPU
- * card was tried here before that and cut.
+ * A missing page as a request nothing on the network picked up: the address
+ * that was asked for written as a log line, over the home hero's field. Laid
+ * out like the home hero, so a wrong turn still lands on the site's own
+ * ground: full height under the header, the field behind the copy, the copy
+ * centred. It was a plain message and a link home; an exploded GPU card was
+ * tried here before that and cut, and so was a particle leaving the arc every
+ * few seconds as the request nothing picked up, which read as too abstract
+ * to be noticed (Adam, 2026-10-14).
  */
 export default function NotFound() {
   return (
     <section className="relative isolate -mt-16 flex min-h-[85svh] w-full items-center overflow-hidden bg-background pt-16">
-      <LivepeerCubeStream
-        stray
-        className="z-0 [mask-image:linear-gradient(to_bottom,black_0%,black_85%,transparent_100%)]"
-      />
+      <LivepeerCubeStream className="z-0 [mask-image:linear-gradient(to_bottom,black_0%,black_85%,transparent_100%)]" />
       <div className="relative z-10 mx-auto w-full max-w-page px-4 py-24 sm:px-6 lg:px-10">
         <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <NotFoundRequest />
