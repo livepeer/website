@@ -39,6 +39,14 @@ const SETTLE_SECONDS = 8;
 const WIDE_FEED = 1.03;
 const SETTLE_STEP_MS = 33.334;
 
+/**
+ * The stray (see `stray`): how long one drifts at full strength, how long it
+ * then takes to fade, and the pause before the next leaves the arc.
+ */
+const STRAY_HOLD_SECONDS = 1.6;
+const STRAY_FADE_SECONDS = 2.8;
+const STRAY_PAUSE_SECONDS = 2.2;
+
 function particleCountFor(width: number) {
   if (width < 640) return mobileParticleCount;
   const scale = Math.min(maxDensityScale, Math.max(1, width / referenceWidth));
@@ -215,6 +223,12 @@ function fieldCircle(
  * with the same outer edge, still descending where it leaves the section, so
  * the arc runs on into a `bleedBottom` strip; the stream is then fed in on
  * that curve under the strip, so the line itself is drawn from there up.
+ *
+ * `stray` is the 404 page's: every few seconds one particle on the arc turns
+ * the brand green, leaves the stream outward, away from the copy the circle
+ * clears, sinks a little and fades, the request nothing on the network
+ * picked up. Then another, after a pause. Never under reduced motion, whose
+ * still frame is the field as it runs.
  */
 function LivepeerCubeStream({
   arcRadius,
@@ -226,6 +240,7 @@ function LivepeerCubeStream({
   freezeAtSeconds,
   inverted = false,
   startAtSeconds = 0,
+  stray = false,
   variant = "default",
 }: {
   arcRadius?: number;
@@ -235,6 +250,7 @@ function LivepeerCubeStream({
   freezeAtSeconds?: number;
   inverted?: boolean;
   startAtSeconds?: number;
+  stray?: boolean;
   variant?: "banner" | "card" | "default";
   wideArcRadius?: number;
   wideRadius?: number;
@@ -264,6 +280,10 @@ function LivepeerCubeStream({
     let readyPaintFrame = 0;
     let start = performance.now() - startAtSeconds * 1000;
     let previousTime = start;
+    // The one particle out of the stream, if any, and when it left.
+    let strayIndex = -1;
+    let strayFrom = 0;
+    let nextStrayAt = 2.5;
 
     if (freezeAtSeconds !== undefined) {
       delete document.documentElement.dataset.captureReady;
@@ -418,7 +438,80 @@ function LivepeerCubeStream({
             ? -0.014
             : -0.0065;
 
+      // A resize can shorten the list under the stray; let it go.
+      if (strayIndex >= particles.length) strayIndex = -1;
+
+      // Pick the next stray: a particle on the arc and on screen, so its
+      // leaving is seen. The band is wide because at tablet widths the
+      // circle grows to clear the copy and only its top and foot show. Searched from a
+      // moving start so it is not the same particle every time.
+      if (
+        stray &&
+        painting &&
+        !reduceMotion &&
+        strayIndex < 0 &&
+        elapsed >= nextStrayAt &&
+        particles.length > 0
+      ) {
+        const from = Math.floor(noise(elapsed) * particles.length);
+        for (let step = 0; step < particles.length; step++) {
+          const index = (from + step) % particles.length;
+          const candidate = particles[index];
+          const dx = candidate.x - fieldCenterX;
+          const dy = candidate.y - fieldCenterY;
+          const distance = Math.hypot(dx, dy);
+          if (
+            Math.abs(distance - fieldRadius) < 6 &&
+            candidate.y > height * 0.08 &&
+            candidate.y < height * 0.92 &&
+            candidate.x > width * 0.03 &&
+            candidate.x < width * 0.97
+          ) {
+            strayIndex = index;
+            strayFrom = elapsed;
+            // Out along the radius, keeping a little of its run along the
+            // arc, so it peels off the line rather than jumping from it.
+            candidate.vx = (dx / distance) * 1.6 + candidate.vx * 0.3;
+            candidate.vy = (dy / distance) * 1.6 + candidate.vy * 0.3;
+            break;
+          }
+        }
+      }
+
+      let index = -1;
       for (const particle of particles) {
+        index++;
+        if (index === strayIndex) {
+          const age = elapsed - strayFrom;
+          if (age > STRAY_HOLD_SECONDS + STRAY_FADE_SECONDS) {
+            // Back into the stream: past the top, where the next frame
+            // recycles it to the feed like any other.
+            particle.y = -bleedTop - height;
+            strayIndex = -1;
+            nextStrayAt =
+              elapsed + STRAY_PAUSE_SECONDS + noise(elapsed + 5) * 2;
+            continue;
+          }
+          // Free of the field and the wind: it slows, and sinks a little.
+          particle.vx *= Math.pow(0.99, delta);
+          particle.vy = particle.vy * Math.pow(0.99, delta) + 0.006 * delta;
+          particle.x += particle.vx * delta;
+          particle.y += particle.vy * delta;
+          if (!painting) continue;
+          context.globalAlpha = Math.max(
+            0,
+            Math.min(1, 1 - (age - STRAY_HOLD_SECONDS) / STRAY_FADE_SECONDS)
+          );
+          context.fillStyle = palette[palette.length - 1];
+          context.fillRect(
+            Math.round(particle.x - (particleSize + 1) / 2),
+            Math.round(particle.y - (particleSize + 1) / 2),
+            particleSize + 1,
+            particleSize + 1
+          );
+          context.globalAlpha = 1;
+          continue;
+        }
         const waveX = Math.sin(elapsed * 1.4 + particle.wave) * 0.004;
         const waveY = Math.cos(elapsed * 1.1 + particle.wave) * 0.003;
         const riseProgress = Math.max(0, 1 - particle.y / height);
@@ -644,6 +737,7 @@ function LivepeerCubeStream({
     freezeAtSeconds,
     inverted,
     startAtSeconds,
+    stray,
     variant,
     wideArcRadius,
     wideRadius,
