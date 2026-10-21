@@ -284,7 +284,13 @@ export default function AgentPage() {
             when you&rsquo;re ready to go past the demo.
           </p>
           <div className="mt-10 w-full">
-            <AgentInstallTabs tools={install} />
+            <AgentInstallTabs
+              tools={install}
+              notice={{
+                lead: "Livepeer Agent is currently an alpha demo.",
+                body: "You may experience performance issues or instability while testing. Beta release coming soon.",
+              }}
+            />
           </div>
           <p className="mt-8 max-w-md text-sm leading-relaxed text-pretty text-muted-foreground">
             Building your own product? Point its agent runtime at the same

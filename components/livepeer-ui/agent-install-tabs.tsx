@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { PlugIcon } from "lucide-react";
+import { FlaskConicalIcon, PlugIcon } from "lucide-react";
 import { useId, useRef, useState } from "react";
 
 import { CopyButton } from "@/components/copy-button";
@@ -35,7 +35,15 @@ export type AgentInstallTool = {
  * "Compatible with" panel further down, so a reader finds their tool by its
  * face before its name. A WAI-ARIA tablist, arrow keys included.
  */
-export function AgentInstallTabs({ tools }: { tools: AgentInstallTool[] }) {
+export function AgentInstallTabs({
+  tools,
+  notice,
+}: {
+  tools: AgentInstallTool[];
+  /** A footnote on the card itself, such as the alpha caveat: its lead
+   * sentence is set in the foreground and the rest muted. */
+  notice?: { lead: string; body: string };
+}) {
   const [active, setActive] = useState(0);
   const id = useId();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -154,6 +162,18 @@ export function AgentInstallTabs({ tools }: { tools: AgentInstallTool[] }) {
           );
         })}
       </div>
+      {notice && (
+        <div className="flex gap-3 border-t border-border bg-muted/50 px-4 py-3.5 sm:px-5">
+          <FlaskConicalIcon
+            className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <p className="text-[0.8125rem] leading-relaxed text-pretty text-muted-foreground">
+            <span className="font-medium text-foreground">{notice.lead}</span>{" "}
+            {notice.body}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
