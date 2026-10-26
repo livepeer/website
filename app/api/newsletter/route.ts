@@ -4,9 +4,8 @@ import { NextResponse } from "next/server";
  * Newsletter signup from the footer form.
  *
  * Adds the address to Resend as a contact, then to the website-signups
- * segment. The weekly send targets segments, not All Contacts (see
- * ../email/newsletter.mjs), so the segment is what gets a signup the next
- * issue.
+ * segment. The weekly send targets segments, not All Contacts, so the
+ * segment is what gets a signup the next issue.
  *
  * Creating a contact that already exists returns 201 with the same id and
  * leaves it as it was — including `unsubscribed`. That is deliberate: there
@@ -19,8 +18,8 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /**
  * Per-IP throttle: 5 attempts per 10 minutes. In memory, so it is per
  * function instance and resets on a cold start — it stops a script looping
- * against a warm instance, not a distributed one. The durable limit is a
- * Vercel Firewall rate-limit rule on /api/newsletter.
+ * against a warm instance, not a distributed one. A durable limit needs a
+ * Vercel Firewall rate-limit rule on /api/newsletter, set in the dashboard.
  */
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
@@ -42,6 +41,10 @@ function throttled(ip: string): boolean {
   return false;
 }
 
+const FAILED = "Could not subscribe right now. Try again later.";
+
+/** fetch has no timeout of its own, so a hung Resend call would hold the
+ *  visitor's request open until the function limit. */
 async function resend(path: string, apiKey: string, body?: unknown) {
   return fetch(`https://api.resend.com${path}`, {
     method: "POST",
@@ -50,7 +53,12 @@ async function resend(path: string, apiKey: string, body?: unknown) {
       "Content-Type": "application/json",
     },
     body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(8000),
   });
+}
+
+function failed() {
+  return NextResponse.json({ error: FAILED }, { status: 502 });
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -90,30 +98,32 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  const created = await resend("/contacts", apiKey, { email });
-  const contact = (await created.json().catch(() => ({}))) as { id?: string };
-  if (!created.ok || !contact.id) {
-    console.error("newsletter: create contact failed", created.status, contact);
-    return NextResponse.json(
-      { error: "Could not subscribe right now. Try again later." },
-      { status: 502 }
-    );
-  }
+  // Status codes only: Resend's error bodies can echo the address, and the
+  // logs shouldn't hold subscribers' emails.
+  try {
+    const created = await resend("/contacts", apiKey, { email });
+    const contact = (await created.json().catch(() => ({}))) as {
+      id?: string;
+    };
+    if (!created.ok || !contact.id) {
+      console.error("newsletter: create contact failed", created.status);
+      return failed();
+    }
 
-  const added = await resend(
-    `/contacts/${contact.id}/segments/${segmentId}`,
-    apiKey
-  );
-  if (!added.ok) {
+    const added = await resend(
+      `/contacts/${contact.id}/segments/${segmentId}`,
+      apiKey
+    );
+    if (!added.ok) {
+      console.error("newsletter: add to segment failed", added.status);
+      return failed();
+    }
+  } catch (error) {
     console.error(
-      "newsletter: add to segment failed",
-      added.status,
-      await added.text().catch(() => "")
+      "newsletter: Resend unreachable",
+      error instanceof Error ? error.name : "unknown"
     );
-    return NextResponse.json(
-      { error: "Could not subscribe right now. Try again later." },
-      { status: 502 }
-    );
+    return failed();
   }
 
   return NextResponse.json({ ok: true });

@@ -11,7 +11,7 @@ export function NewsletterForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     setStatus("sending");
