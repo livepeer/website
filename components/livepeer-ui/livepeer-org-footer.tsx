@@ -7,6 +7,7 @@ import {
   XIcon,
 } from "@/components/brand-social-icons";
 import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
+import { NewsletterForm } from "@/components/livepeer-ui/newsletter-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const socialIcons = {
@@ -49,6 +50,13 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                   );
                 })}
               </nav>
+              {/* The weekly newsletter sits with the other ways to follow
+                  along, under Community's links. */}
+              {group._key === "community" && (
+                <div className="mt-10">
+                  <NewsletterForm />
+                </div>
+              )}
             </div>
           ))}
         </div>
