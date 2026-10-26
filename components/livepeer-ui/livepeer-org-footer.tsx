@@ -7,6 +7,7 @@ import {
   XIcon,
 } from "@/components/brand-social-icons";
 import type { LivepeerOrgSite } from "@/components/livepeer-ui/contracts";
+import { NewsletterForm } from "@/components/livepeer-ui/newsletter-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const socialIcons = {
@@ -17,6 +18,11 @@ const socialIcons = {
 };
 
 export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
+  // Server-only read: the footer renders in the root layout, never on the client.
+  const newsletterEnabled = Boolean(
+    process.env.RESEND_API_KEY && process.env.RESEND_NEWSLETTER_SEGMENT_ID
+  );
+
   return (
     <footer className="bg-background">
       <div className="mx-auto w-full max-w-page px-4 pt-12 pb-6 sm:px-6 lg:px-10">
@@ -49,6 +55,12 @@ export function LivepeerOrgFooter({ site }: { site: LivepeerOrgSite }) {
                   );
                 })}
               </nav>
+              {/* A component, not a link, so it's placed by key. Needs Resend configured. */}
+              {group._key === "community" && newsletterEnabled && (
+                <div className="mt-10">
+                  <NewsletterForm />
+                </div>
+              )}
             </div>
           ))}
         </div>
