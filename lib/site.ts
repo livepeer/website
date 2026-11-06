@@ -100,8 +100,9 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  *
  * A separate surface from this marketing site: accounts and the playbook
  * library live there. Centralised here because /agent links to it several
- * times, so a change of host is one edit. It is `earlyaccess.livepeer.org`
- * now, the console's own address; it was the Vercel preview before that.
+ * times, so a change of host is one edit. It is `agent.livepeer.org`, the
+ * same host as the MCP endpoint; it was `earlyaccess.livepeer.org` and the
+ * Vercel preview before that.
  *
  * It replaced `livepeer.peaceno.de`, which was the registry's mockup rather
  * than a deployment. The paths below moved with it and are the real ones the
@@ -118,18 +119,18 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * names models itself. Both are keyless; access is an emailed activation
  * code asked for in the chat, not a browser login.
  */
-const agentAppOrigin = "https://earlyaccess.livepeer.org";
+const agentAppOrigin = "https://agent.livepeer.org";
 
 /**
  * Where "Use Livepeer" and "Agent Console" point. ("Try Livepeer Agent" on
  * the home page goes to /agent instead, for a visitor with no account yet.)
  *
- * The console's own root, which sends a signed-out visitor to its login — the
- * right landing for a CTA that means "go and use the thing". A single constant
+ * The console's sign-in page — the right landing for a CTA that means "go and
+ * use the thing". A single constant
  * precisely so the CTAs that use it cannot drift apart, and so
  * repointing at launch is one edit.
  */
-const agentConsoleHref = agentAppOrigin;
+const agentConsoleHref = `${agentAppOrigin}/signin`;
 
 /**
  * The playbook library, which the console does not have yet.
@@ -159,7 +160,7 @@ export const agentApp = {
   mcpServerUrl: "https://agent.livepeer.org/api/mcp/creative",
   /** The signed-in surface behind the header's "Log in" menu. */
   console: agentConsoleHref,
-  signIn: `${agentAppOrigin}/login`,
-  createAccount: `${agentAppOrigin}/signup`,
+  signIn: `${agentAppOrigin}/signin`,
+  createAccount: `${agentAppOrigin}/signin`,
   playbooks: playbooksHref,
 } as const;
