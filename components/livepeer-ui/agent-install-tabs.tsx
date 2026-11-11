@@ -19,6 +19,9 @@ export type AgentInstallTool = {
   snippet: string;
   /** Whether the snippet is a terminal command, shown after a prompt. */
   command?: boolean;
+  /** Whether the snippet is a prompt in sentences, to paste into an agent:
+   * its lines are kept and it wraps between words. */
+  prose?: boolean;
   /** The steps around the snippet, in order; `backticks` mark code. */
   steps: string[];
 };
@@ -41,8 +44,9 @@ export function AgentInstallTabs({
 }: {
   tools: AgentInstallTool[];
   /** A footnote on the card itself, such as the alpha caveat: its lead
-   * sentence is set in the foreground and the rest muted. */
-  notice?: { lead: string; body: string };
+   * sentence is set in the foreground and the rest muted. An `email` ends
+   * it as a mailto link. */
+  notice?: { lead: string; body: string; email?: string };
 }) {
   const [active, setActive] = useState(0);
   const id = useId();
@@ -134,8 +138,20 @@ export function AgentInstallTabs({
                 !selected && "invisible"
               )}
             >
-              <div className="flex items-center gap-3 rounded-md bg-muted py-3 pr-2 pl-4">
-                <code className="min-w-0 flex-1 font-mono text-xs leading-relaxed break-all sm:text-[0.8125rem]">
+              <div
+                className={cn(
+                  "flex gap-3 rounded-md bg-muted py-3 pr-2 pl-4",
+                  item.prose ? "items-start" : "items-center"
+                )}
+              >
+                <code
+                  className={cn(
+                    "min-w-0 flex-1 font-mono text-xs leading-relaxed sm:text-[0.8125rem]",
+                    item.prose
+                      ? "wrap-anywhere whitespace-pre-wrap"
+                      : "break-all"
+                  )}
+                >
                   {item.command && (
                     <span className="text-muted-foreground select-none">
                       ${" "}
@@ -171,6 +187,18 @@ export function AgentInstallTabs({
           <p className="text-[0.8125rem] leading-relaxed text-pretty text-muted-foreground">
             <span className="font-medium text-foreground">{notice.lead}</span>{" "}
             {notice.body}
+            {notice.email && (
+              <>
+                {" "}
+                <a
+                  href={`mailto:${notice.email}`}
+                  className="text-foreground underline underline-offset-4 transition-opacity hover:opacity-70"
+                >
+                  {notice.email}
+                </a>
+                .
+              </>
+            )}
           </p>
         </div>
       )}

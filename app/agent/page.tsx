@@ -28,8 +28,7 @@ import { stockAssets } from "@/lib/stock-assets";
  * product and then list its parts. It opens on films the Agent made,
  * full-bleed, each with its credit (the request and the models); shows the
  * range beyond film, two more videos in the shapes they were made in, with
- * the requests that asked for them; and ends on the install, with the
- * builder's way in as a line beneath it.
+ * the requests that asked for them; and ends on the install.
  *
  * Video first and of every kind: one story read as a film tool, and a
  * picture book of stills read as an image tool. A section of pipeline stages
@@ -142,39 +141,60 @@ const range: AgentShowcaseItem[] = [
   },
 ];
 
-// The steps are the Agent's own get-started guide's:
-// keyless, no header and no OAuth, and a restart for the terminal tools.
+// The steps are the Agent's beta release guide's: the server signs people in
+// (OAuth, with Google or GitHub), and signing in activates the demo credit.
+// The prompt is the console's own "install prompt", copied from
+// agent.livepeer.org word for word; an agent that reads it adds the server
+// itself. Change it here when the console changes it.
+const FIRST_ASK =
+  "Open a new session and ask: \u201cUse Livepeer to create a short video of a paper boat floating under the Golden Gate Bridge.\u201d";
+
+const installPrompt = `Connect to Livepeer Agent.
+URL: ${agentApp.mcpServerUrl}
+
+Use local MCP configuration, Streamable HTTP, and OAuth. Reuse the connection if it already exists. Let me sign in with my account. Do not generate or spend credits.`;
+
 const install: AgentInstallTool[] = [
-  {
-    name: "Claude",
-    logo: stockAssets.agentCompatibility.claude,
-    snippet: agentApp.mcpServerUrl,
-    steps: [
-      "In Claude, open Settings, then Connectors, and choose Add custom connector.",
-      "Name it Livepeer Agent, paste this address and save. Leave the OAuth fields empty.",
-    ],
-  },
-  {
-    name: "Claude Code",
-    logo: stockAssets.agentCompatibility.claudeCode,
-    command: true,
-    snippet: `claude mcp add --transport http livepeer-agent ${agentApp.mcpServerUrl}`,
-    steps: ["Run this in your terminal, then restart Claude Code."],
-  },
   {
     name: "Codex",
     logo: stockAssets.agentCompatibility.codex,
     monochrome: true,
     opticalScale: true,
-    command: true,
-    snippet: `codex mcp add livepeer-agent --url ${agentApp.mcpServerUrl}`,
-    steps: ["Run this in your terminal, then restart Codex."],
+    prose: true,
+    snippet: installPrompt,
+    steps: [
+      "Open Codex in the ChatGPT desktop app and paste this prompt.",
+      "Sign in or create an account with Google or GitHub when it asks.",
+      FIRST_ASK,
+    ],
+  },
+  {
+    name: "Claude",
+    logo: stockAssets.agentCompatibility.claude,
+    snippet: agentApp.mcpServerUrl,
+    steps: [
+      "In the Claude desktop app, open Settings, then Connectors, and choose Add custom connector.",
+      "Name it Livepeer Agent beta, paste this address and save.",
+      "Connect it and sign in with Google or GitHub.",
+      FIRST_ASK,
+    ],
+  },
+  {
+    name: "Claude Code",
+    logo: stockAssets.agentCompatibility.claudeCode,
+    snippet: agentApp.mcpServerUrl,
+    steps: [
+      "Set it up in the Claude desktop app first: follow the steps under Claude with this address. Claude Code needs that connection.",
+      "Start a new Claude Code session and ask for a video.",
+    ],
   },
   {
     name: "Other",
-    snippet: agentApp.mcpServerUrl,
+    prose: true,
+    snippet: installPrompt,
     steps: [
-      "In Hermes, OpenClaw, Pi or any other MCP client, add this address as a remote (HTTP) server. No key or header.",
+      "Paste this prompt into Hermes, OpenClaw, Pi or any other agent that can add an MCP server, or add the address yourself as a remote (HTTP) server with OAuth.",
+      "Sign in or create an account with Google or GitHub when it asks.",
     ],
   },
 ];
@@ -261,8 +281,8 @@ export default function AgentPage() {
         </div>
       </section>
 
-      {/* Your turn, centred to answer the hero: the heading, one line, the
-          install, and the builder's way in said once and quietly beneath. */}
+      {/* Your turn, centred to answer the hero: the heading, one line and
+          the install. */}
       <section
         id="install"
         className="scroll-mt-16 border-t border-border bg-background px-4 pt-16 pb-20 sm:px-6 sm:pt-32 sm:pb-36 lg:px-10"
@@ -272,36 +292,25 @@ export default function AgentPage() {
             Your turn.
           </h2>
           <p className="mt-5 max-w-md text-base leading-relaxed text-pretty text-muted-foreground">
-            Try it free: add Livepeer Agent to your AI tool and it runs on demo
-            credit, with no key or account. Ask it to email you an activation
-            code for more, and{" "}
+            Try it free: add Livepeer Agent to your AI tool, then{" "}
             <Link
-              href={agentApp.createAccount}
+              href={agentApp.signIn}
               className="text-foreground underline underline-offset-4 transition-opacity hover:opacity-70"
             >
-              create an account
+              sign in
             </Link>{" "}
-            when you&rsquo;re ready to go past the demo.
+            with Google or GitHub to activate $100 in demo credit.
           </p>
           <div className="mt-10 w-full">
             <AgentInstallTabs
               tools={install}
               notice={{
-                lead: "Livepeer Agent is currently an alpha demo.",
-                body: "You may experience performance issues or instability while testing. Beta release coming soon.",
+                lead: "Livepeer Agent is in beta.",
+                body: "You may experience performance issues or instability while testing. For help, email",
+                email: "agent@livepeer.org",
               }}
             />
           </div>
-          <p className="mt-8 max-w-md text-sm leading-relaxed text-pretty text-muted-foreground">
-            Building your own product? Point its agent runtime at the same
-            server.{" "}
-            <Link
-              href={agentApp.createAccount}
-              className="text-foreground underline underline-offset-4 transition-opacity hover:opacity-70"
-            >
-              Create an account
-            </Link>
-          </p>
         </div>
       </section>
     </>

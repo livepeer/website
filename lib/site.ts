@@ -116,8 +116,9 @@ export const livepeerOrgSite: LivepeerOrgSite = {
  * the Creative surface (`/api/mcp/creative`), the one the Agent's own
  * get-started page tells people to add: describe the result and the Agent
  * picks the model. The bare `/api/mcp` is the Raw surface, for a caller that
- * names models itself. Both are keyless; access is an emailed activation
- * code asked for in the chat, not a browser login.
+ * names models itself. Both sign the caller in (OAuth, with Google or
+ * GitHub), which is also what activates the demo credit; they were keyless,
+ * with an emailed activation code, until the beta.
  */
 const agentAppOrigin = "https://agent.livepeer.org";
 
@@ -161,6 +162,5 @@ export const agentApp = {
   /** The signed-in surface behind the header's "Log in" menu. */
   console: agentConsoleHref,
   signIn: `${agentAppOrigin}/signin`,
-  createAccount: `${agentAppOrigin}/signin`,
   playbooks: playbooksHref,
 } as const;
